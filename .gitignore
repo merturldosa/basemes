@@ -1,0 +1,202 @@
+# SoIce MES - Git Ignore File
+
+# ============================================
+# Operating System Files
+# ============================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+.directory
+
+# ============================================
+# IDE & Editor
+# ============================================
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# NetBeans
+nbproject/
+
+# ============================================
+# Java / Spring Boot
+# ============================================
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Build directories
+target/
+build/
+dist/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Spring Boot
+application-local.yml
+application-local.properties
+
+# Logs
+logs/
+*.log
+
+# ============================================
+# Node.js / React
+# ============================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Production build
+build/
+dist/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Next.js
+.next/
+out/
+
+# ============================================
+# Database
+# ============================================
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL
+*.dump
+
+# Database credentials (보안!)
+database/credentials/
+*.pgpass
+
+# ============================================
+# Docker
+# ============================================
+
+# Docker volumes
+docker/volumes/
+docker/data/
+
+# ============================================
+# Temp / Cache
+# ============================================
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+
+# Cache
+.cache/
+*.cache
+
+# ============================================
+# Security & Credentials
+# ============================================
+
+# 절대 커밋하면 안 되는 파일들!
+*.key
+*.pem
+*.p12
+*.jks
+*.keystore
+secrets/
+credentials.json
+.aws/
+.env.production
+
+# ============================================
+# Project Specific
+# ============================================
+
+# Conversation logs (민감 정보 포함 가능)
+# conversation_logs/ 는 선택적으로 커밋 (민감 정보 제거 후)
+
+# PDF 원본 (용량이 크므로 제외)
+*.pdf
+
+# 분할된 화면설계서 이미지 (용량 문제)
+MES_화면설계서_분할/
+
+# Claude 임시 파일
+tmpclaude-*
+
+# Split PDF script
+split_pdf.py
+
+# ============================================
+# Miscellaneous
+# ============================================
+
+# Packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# ============================================
+# Keep empty directories
+# ============================================
+
+!.gitkeep
