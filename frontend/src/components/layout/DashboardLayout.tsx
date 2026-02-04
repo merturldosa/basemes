@@ -67,6 +67,8 @@ import {
   School,
   AssignmentInd,
   Scale,
+  Analytics,
+  BarChart,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/stores/authStore';
 import LanguageSelector from '@/components/common/LanguageSelector';
@@ -109,6 +111,8 @@ const getAllMenuItems = (tenantId: string | undefined, t: (key: string) => strin
     { text: t('navigation.menu.moldProductionHistories'), icon: <Timeline />, path: '/mold/production-histories', divider: true },
     { text: t('navigation.menu.skillMatrix'), icon: <School />, path: '/hr/skill-matrix', divider: false },
     { text: t('navigation.menu.employeeSkills'), icon: <AssignmentInd />, path: '/hr/employee-skills', divider: true },
+    { text: t('navigation.menu.analyticsDashboard'), icon: <Analytics />, path: '/analytics/dashboard', divider: false },
+    { text: t('navigation.menu.statisticalReports'), icon: <BarChart />, path: '/analytics/reports', divider: true },
     { text: t('navigation.menu.customers'), icon: <Business />, path: '/business/customers', divider: false },
     { text: t('navigation.menu.suppliers'), icon: <LocalShipping />, path: '/business/suppliers', divider: true },
     { text: t('navigation.menu.sites'), icon: <LocationCity />, path: '/common/sites', divider: false },

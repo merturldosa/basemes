@@ -107,6 +107,10 @@ import MoldProductionHistoriesPage from './pages/mold/MoldProductionHistoriesPag
 import SkillMatrixPage from './pages/hr/SkillMatrixPage';
 import EmployeeSkillsPage from './pages/hr/EmployeeSkillsPage';
 
+// Analytics Pages
+import AnalyticsDashboardPage from './pages/analytics/AnalyticsDashboardPage';
+import StatisticalReportsPage from './pages/analytics/StatisticalReportsPage';
+
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -231,6 +235,10 @@ function App() {
             {/* HR Management Routes */}
             <Route path="hr/skill-matrix" element={<SkillMatrixPage />} />
             <Route path="hr/employee-skills" element={<EmployeeSkillsPage />} />
+
+            {/* Analytics Routes */}
+            <Route path="analytics/dashboard" element={<AnalyticsDashboardPage />} />
+            <Route path="analytics/reports" element={<StatisticalReportsPage />} />
           </Route>
 
           {/* Catch all - redirect to home */}
