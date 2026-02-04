@@ -3,13 +3,11 @@ import apiClient from './api';
 export interface Weighing {
   weighingId: number;
   tenantId: string;
-  tenantName: string;
   weighingNo: string;
   weighingDate: string;
   weighingType: string; // INCOMING, OUTGOING, PRODUCTION, SAMPLING
-  referenceType?: string; // MATERIAL_REQUEST, WORK_ORDER, GOODS_RECEIPT, SHIPPING
+  referenceType?: string; // MATERIAL_REQUEST, WORK_ORDER, GOODS_RECEIPT, SHIPPING, QUALITY_INSPECTION
   referenceId?: number;
-  referenceNo?: string;
   productId: number;
   productCode: string;
   productName: string;
@@ -23,14 +21,17 @@ export interface Weighing {
   variancePercentage?: number;
   unit: string;
   scaleId?: number;
-  scaleCode?: string;
-  operatorId: number;
+  scaleName?: string;
+  operatorUserId: number;
+  operatorUsername: string;
   operatorName: string;
-  verifierId?: number;
+  verifierUserId?: number;
+  verifierUsername?: string;
   verifierName?: string;
   verificationStatus: string; // PENDING, VERIFIED, REJECTED
   verificationDate?: string;
   toleranceExceeded: boolean;
+  tolerancePercentage?: number;
   temperature?: number;
   humidity?: number;
   remarks?: string;
@@ -39,12 +40,10 @@ export interface Weighing {
 }
 
 export interface WeighingCreateRequest {
-  weighingNo?: string;
-  weighingDate: string;
+  weighingDate?: string;
   weighingType: string;
   referenceType?: string;
   referenceId?: number;
-  referenceNo?: string;
   productId: number;
   lotId?: number;
   tareWeight: number;
@@ -52,7 +51,9 @@ export interface WeighingCreateRequest {
   expectedWeight?: number;
   unit: string;
   scaleId?: number;
-  operatorId: number;
+  scaleName?: string;
+  operatorUserId: number;
+  tolerancePercentage?: number;
   temperature?: number;
   humidity?: number;
   remarks?: string;
@@ -63,13 +64,17 @@ export interface WeighingUpdateRequest {
   tareWeight?: number;
   grossWeight?: number;
   expectedWeight?: number;
+  scaleId?: number;
+  scaleName?: string;
+  tolerancePercentage?: number;
   temperature?: number;
   humidity?: number;
   remarks?: string;
 }
 
 export interface WeighingVerificationRequest {
-  verifierId: number;
+  verifierUserId: number;
+  action: 'VERIFY' | 'REJECT';
   remarks?: string;
 }
 
@@ -106,11 +111,6 @@ const weighingService = {
 
   verify: async (weighingId: number, request: WeighingVerificationRequest): Promise<Weighing> => {
     const response = await apiClient.post<Weighing>(`/weighings/${weighingId}/verify`, request);
-    return response.data;
-  },
-
-  reject: async (weighingId: number, request: WeighingVerificationRequest): Promise<Weighing> => {
-    const response = await apiClient.post<Weighing>(`/weighings/${weighingId}/reject`, request);
     return response.data;
   },
 

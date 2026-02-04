@@ -33,7 +33,8 @@ import weighingService, {
 } from '../../services/weighingService';
 import productService, { Product } from '../../services/productService';
 import lotService, { Lot } from '../../services/lotService';
-import userService, { User } from '../../services/userService';
+import userService from '../../services/userService';
+import { User } from '@/types';
 
 const WeighingsPage: React.FC = () => {
   const [weighings, setWeighings] = useState<Weighing[]>([]);
@@ -51,13 +52,14 @@ const WeighingsPage: React.FC = () => {
     unit: 'kg',
   });
   const [verifyData, setVerifyData] = useState<WeighingVerificationRequest>({
-    verifierId: 0,
+    verifierUserId: 0,
+    action: 'VERIFY',
     remarks: '',
   });
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
-    severity: 'success' | 'error';
+    severity: 'success' | 'error' | 'info' | 'warning';
   }>({
     open: false,
     message: '',
@@ -90,7 +92,7 @@ const WeighingsPage: React.FC = () => {
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
+      const data = await productService.getProducts();
       setProducts(data);
     } catch (error) {
       console.error('Failed to load products:', error);
@@ -108,8 +110,8 @@ const WeighingsPage: React.FC = () => {
 
   const loadUsers = async () => {
     try {
-      const data = await userService.getAll();
-      setUsers(data);
+      const response = await userService.getUsers({ size: 1000 });
+      setUsers(response.content);
     } catch (error) {
       console.error('Failed to load users:', error);
     }
@@ -137,7 +139,8 @@ const WeighingsPage: React.FC = () => {
   const handleOpenVerifyDialog = (weighing: Weighing) => {
     setSelectedWeighing(weighing);
     setVerifyData({
-      verifierId: 0,
+      verifierUserId: 0,
+      action: 'VERIFY',
       remarks: '',
     });
     setOpenVerifyDialog(true);
@@ -146,7 +149,7 @@ const WeighingsPage: React.FC = () => {
   const handleCloseVerifyDialog = () => {
     setOpenVerifyDialog(false);
     setSelectedWeighing(null);
-    setVerifyData({ verifierId: 0, remarks: '' });
+    setVerifyData({ verifierUserId: 0, action: 'VERIFY', remarks: '' });
   };
 
   const handleInputChange = (field: string, value: any) => {
@@ -196,7 +199,10 @@ const WeighingsPage: React.FC = () => {
     if (!selectedWeighing) return;
 
     try {
-      await weighingService.verify(selectedWeighing.weighingId, verifyData);
+      await weighingService.verify(selectedWeighing.weighingId, {
+        ...verifyData,
+        action: 'VERIFY',
+      });
       setSnackbar({
         open: true,
         message: '칭량 검증이 완료되었습니다',
@@ -204,11 +210,11 @@ const WeighingsPage: React.FC = () => {
       });
       handleCloseVerifyDialog();
       loadWeighings();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to verify weighing:', error);
       setSnackbar({
         open: true,
-        message: '칭량 검증 실패',
+        message: error.response?.data?.message || '칭량 검증 실패',
         severity: 'error',
       });
     }
@@ -218,7 +224,10 @@ const WeighingsPage: React.FC = () => {
     if (!selectedWeighing) return;
 
     try {
-      await weighingService.reject(selectedWeighing.weighingId, verifyData);
+      await weighingService.verify(selectedWeighing.weighingId, {
+        ...verifyData,
+        action: 'REJECT',
+      });
       setSnackbar({
         open: true,
         message: '칭량이 반려되었습니다',
@@ -226,11 +235,11 @@ const WeighingsPage: React.FC = () => {
       });
       handleCloseVerifyDialog();
       loadWeighings();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to reject weighing:', error);
       setSnackbar({
         open: true,
-        message: '칭량 반려 실패',
+        message: error.response?.data?.message || '칭량 반려 실패',
         severity: 'error',
       });
     }
@@ -624,9 +633,9 @@ const WeighingsPage: React.FC = () => {
               <FormControl fullWidth>
                 <InputLabel>작업자</InputLabel>
                 <Select
-                  value={formData.operatorId || ''}
+                  value={formData.operatorUserId || ''}
                   label="작업자"
-                  onChange={(e) => handleInputChange('operatorId', e.target.value)}
+                  onChange={(e) => handleInputChange('operatorUserId', e.target.value)}
                 >
                   {users.map((user) => (
                     <MenuItem key={user.userId} value={user.userId}>
@@ -676,7 +685,7 @@ const WeighingsPage: React.FC = () => {
           <Button
             onClick={handleSubmit}
             variant="contained"
-            disabled={!formData.productId || !formData.operatorId}
+            disabled={!formData.productId || !formData.operatorUserId}
           >
             생성
           </Button>
@@ -705,14 +714,14 @@ const WeighingsPage: React.FC = () => {
               <FormControl fullWidth sx={{ mb: 2 }}>
                 <InputLabel>검증자</InputLabel>
                 <Select
-                  value={verifyData.verifierId}
+                  value={verifyData.verifierUserId}
                   label="검증자"
                   onChange={(e) =>
-                    setVerifyData({ ...verifyData, verifierId: e.target.value as number })
+                    setVerifyData({ ...verifyData, verifierUserId: e.target.value as number })
                   }
                 >
                   {users
-                    .filter((user) => user.userId !== selectedWeighing.operatorId)
+                    .filter((user) => user.userId !== selectedWeighing.operatorUserId)
                     .map((user) => (
                       <MenuItem key={user.userId} value={user.userId}>
                         {user.username} ({user.fullName})
@@ -743,7 +752,7 @@ const WeighingsPage: React.FC = () => {
             color="error"
             variant="outlined"
             startIcon={<RejectIcon />}
-            disabled={!verifyData.verifierId}
+            disabled={!verifyData.verifierUserId}
           >
             반려
           </Button>
@@ -752,7 +761,7 @@ const WeighingsPage: React.FC = () => {
             color="success"
             variant="contained"
             startIcon={<VerifyIcon />}
-            disabled={!verifyData.verifierId}
+            disabled={!verifyData.verifierUserId}
           >
             검증 완료
           </Button>
