@@ -1,17 +1,14 @@
 package kr.co.softice.mes.common.dto.weighing;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Weighing Update Request DTO
- * 칭량 수정 요청 DTO
+ * Request data for updating an existing weighing record
  *
  * @author Moon Myung-seop
  */
@@ -21,32 +18,70 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WeighingUpdateRequest {
 
+    /**
+     * Weighing date/time
+     */
     private LocalDateTime weighingDate;
-    private String weighingType;  // INCOMING, OUTGOING, PRODUCTION, SAMPLING
 
-    private String referenceType;
-    private Long referenceId;
-
-    private Long productId;
-    private Long lotId;
-
-    @DecimalMin(value = "0.0", message = "Tare weight must be non-negative")
+    /**
+     * Tare weight (container weight)
+     */
+    @DecimalMin(value = "0.0", inclusive = true, message = "Tare weight must be non-negative")
     private BigDecimal tareWeight;
 
-    @DecimalMin(value = "0.0", message = "Gross weight must be non-negative")
+    /**
+     * Gross weight (total weight including container)
+     */
+    @DecimalMin(value = "0.0", inclusive = true, message = "Gross weight must be non-negative")
     private BigDecimal grossWeight;
 
+    /**
+     * Expected weight (from source document)
+     */
     private BigDecimal expectedWeight;
-    private String unit;
 
+    /**
+     * Scale ID
+     */
     private Long scaleId;
+
+    /**
+     * Scale name
+     */
     private String scaleName;
 
+    /**
+     * Tolerance percentage
+     */
+    @DecimalMin(value = "0.0", inclusive = true, message = "Tolerance percentage must be non-negative")
+    @DecimalMax(value = "100.0", inclusive = true, message = "Tolerance percentage cannot exceed 100")
     private BigDecimal tolerancePercentage;
 
+    /**
+     * Remarks
+     */
     private String remarks;
-    private String attachments;
 
+    /**
+     * Environmental temperature (°C)
+     */
     private BigDecimal temperature;
+
+    /**
+     * Environmental humidity (%)
+     */
+    @DecimalMin(value = "0.0", message = "Humidity must be non-negative")
+    @DecimalMax(value = "100.0", message = "Humidity cannot exceed 100")
     private BigDecimal humidity;
+
+    /**
+     * Validate that gross weight is greater than or equal to tare weight
+     */
+    @AssertTrue(message = "Gross weight must be greater than or equal to tare weight")
+    public boolean isGrossWeightValid() {
+        if (grossWeight == null || tareWeight == null) {
+            return true; // Let @NotNull handle null validation
+        }
+        return grossWeight.compareTo(tareWeight) >= 0;
+    }
 }

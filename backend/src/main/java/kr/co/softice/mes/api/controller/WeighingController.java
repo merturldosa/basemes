@@ -4,11 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.weighing.*;
-import kr.co.softice.mes.common.exception.EntityNotFoundException;
-import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.common.security.TenantContext;
-import kr.co.softice.mes.domain.entity.*;
-import kr.co.softice.mes.domain.repository.*;
 import kr.co.softice.mes.domain.service.WeighingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +44,6 @@ import java.util.stream.Collectors;
 public class WeighingController {
 
     private final WeighingService weighingService;
-    private final TenantRepository tenantRepository;
-    private final ProductRepository productRepository;
-    private final LotRepository lotRepository;
-    private final UserRepository userRepository;
 
     /**
      * 칭량 목록 조회
@@ -69,26 +61,30 @@ public class WeighingController {
         log.info("Getting weighings for tenant: {}, type: {}, status: {}, product: {}",
             tenantId, weighingType, verificationStatus, productId);
 
-        List<WeighingEntity> weighings;
+        // Get all weighings and filter in controller
+        // Note: For better performance, consider adding specific query methods to repository
+        List<WeighingResponse> responses = weighingService.getAllWeighings(tenantId);
 
+        // Filter by type if specified
         if (weighingType != null) {
-            weighings = weighingService.findByType(tenantId, weighingType);
-        } else if (verificationStatus != null) {
-            weighings = weighingService.findByVerificationStatus(tenantId, verificationStatus);
-        } else {
-            weighings = weighingService.findByTenant(tenantId);
+            responses = responses.stream()
+                .filter(w -> weighingType.equals(w.getWeighingType()))
+                .collect(Collectors.toList());
         }
 
-        // Additional filtering by product if needed
+        // Filter by verification status if specified
+        if (verificationStatus != null) {
+            responses = responses.stream()
+                .filter(w -> verificationStatus.equals(w.getVerificationStatus()))
+                .collect(Collectors.toList());
+        }
+
+        // Filter by product if specified
         if (productId != null) {
-            weighings = weighings.stream()
-                .filter(w -> w.getProduct().getProductId().equals(productId))
+            responses = responses.stream()
+                .filter(w -> w.getProductId().equals(productId))
                 .collect(Collectors.toList());
         }
-
-        List<WeighingResponse> responses = weighings.stream()
-                .map(this::toWeighingResponse)
-                .collect(Collectors.toList());
 
         return ResponseEntity.ok(ApiResponse.success("칭량 목록 조회 성공", responses));
     }
@@ -101,12 +97,12 @@ public class WeighingController {
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "칭량 상세 조회", description = "칭량 ID로 상세 정보 조회")
     public ResponseEntity<ApiResponse<WeighingResponse>> getWeighing(@PathVariable Long id) {
-        log.info("Getting weighing: {}", id);
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("Getting weighing: {} for tenant: {}", id, tenantId);
 
-        WeighingEntity weighing = weighingService.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.WEIGHING_NOT_FOUND));
+        WeighingResponse response = weighingService.getWeighingById(tenantId, id);
 
-        return ResponseEntity.ok(ApiResponse.success("칭량 조회 성공", toWeighingResponse(weighing)));
+        return ResponseEntity.ok(ApiResponse.success("칭량 조회 성공", response));
     }
 
     /**
@@ -120,10 +116,7 @@ public class WeighingController {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting tolerance exceeded weighings for tenant: {}", tenantId);
 
-        List<WeighingEntity> weighings = weighingService.findToleranceExceeded(tenantId);
-        List<WeighingResponse> responses = weighings.stream()
-                .map(this::toWeighingResponse)
-                .collect(Collectors.toList());
+        List<WeighingResponse> responses = weighingService.getToleranceExceededWeighings(tenantId);
 
         return ResponseEntity.ok(ApiResponse.success("허용 오차 초과 칭량 조회 성공", responses));
     }
@@ -139,10 +132,7 @@ public class WeighingController {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting pending verification weighings for tenant: {}", tenantId);
 
-        List<WeighingEntity> weighings = weighingService.findPendingVerification(tenantId);
-        List<WeighingResponse> responses = weighings.stream()
-                .map(this::toWeighingResponse)
-                .collect(Collectors.toList());
+        List<WeighingResponse> responses = weighingService.getPendingVerificationWeighings(tenantId);
 
         return ResponseEntity.ok(ApiResponse.success("검증 대기 칭량 조회 성공", responses));
     }
@@ -158,9 +148,9 @@ public class WeighingController {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting unverified tolerance exceeded weighings for tenant: {}", tenantId);
 
-        List<WeighingEntity> weighings = weighingService.findUnverifiedToleranceExceeded(tenantId);
-        List<WeighingResponse> responses = weighings.stream()
-                .map(this::toWeighingResponse)
+        // Get tolerance exceeded weighings and filter for pending verification status
+        List<WeighingResponse> responses = weighingService.getToleranceExceededWeighings(tenantId).stream()
+                .filter(w -> "PENDING".equals(w.getVerificationStatus()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(ApiResponse.success("미검증 허용 오차 초과 칭량 조회 성공", responses));
@@ -176,12 +166,10 @@ public class WeighingController {
     public ResponseEntity<ApiResponse<List<WeighingResponse>>> getWeighingsByReference(
             @PathVariable String type,
             @PathVariable Long id) {
-        log.info("Getting weighings for reference: type={}, id={}", type, id);
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("Getting weighings for tenant: {}, reference: type={}, id={}", tenantId, type, id);
 
-        List<WeighingEntity> weighings = weighingService.findByReference(type, id);
-        List<WeighingResponse> responses = weighings.stream()
-                .map(this::toWeighingResponse)
-                .collect(Collectors.toList());
+        List<WeighingResponse> responses = weighingService.getWeighingsByReference(tenantId, type, id);
 
         return ResponseEntity.ok(ApiResponse.success("참조 문서 칭량 조회 성공", responses));
     }
@@ -200,51 +188,11 @@ public class WeighingController {
         log.info("Creating weighing for tenant: {}, type: {}, product: {}",
             tenantId, request.getWeighingType(), request.getProductId());
 
-        // Resolve entities
-        TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.TENANT_NOT_FOUND));
-
-        ProductEntity product = productRepository.findById(request.getProductId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-
-        UserEntity operator = userRepository.findById(request.getOperatorUserId())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.USER_NOT_FOUND));
-
-        LotEntity lot = null;
-        if (request.getLotId() != null) {
-            lot = lotRepository.findById(request.getLotId())
-                    .orElse(null);
-        }
-
-        // Build weighing entity
-        WeighingEntity weighing = WeighingEntity.builder()
-                .tenant(tenant)
-                .weighingNo(request.getWeighingNo())
-                .weighingDate(request.getWeighingDate())
-                .weighingType(request.getWeighingType())
-                .referenceType(request.getReferenceType())
-                .referenceId(request.getReferenceId())
-                .product(product)
-                .lot(lot)
-                .tareWeight(request.getTareWeight())
-                .grossWeight(request.getGrossWeight())
-                .expectedWeight(request.getExpectedWeight())
-                .unit(request.getUnit())
-                .scaleId(request.getScaleId())
-                .scaleName(request.getScaleName())
-                .operator(operator)
-                .tolerancePercentage(request.getTolerancePercentage())
-                .remarks(request.getRemarks())
-                .attachments(request.getAttachments())
-                .temperature(request.getTemperature())
-                .humidity(request.getHumidity())
-                .build();
-
-        // Create weighing (with auto-calculation)
-        WeighingEntity created = weighingService.createWeighing(weighing);
+        // Create weighing using service (with auto-calculation)
+        WeighingResponse response = weighingService.createWeighing(tenantId, request);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success("칭량 생성 성공", toWeighingResponse(created)));
+                .body(ApiResponse.success("칭량 생성 성공", response));
     }
 
     /**
@@ -258,43 +206,13 @@ public class WeighingController {
             @PathVariable Long id,
             @Valid @RequestBody WeighingUpdateRequest request) {
 
-        log.info("Updating weighing: {}", id);
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("Updating weighing: {} for tenant: {}", id, tenantId);
 
-        // Build updates
-        WeighingEntity updates = WeighingEntity.builder()
-                .weighingDate(request.getWeighingDate())
-                .weighingType(request.getWeighingType())
-                .referenceType(request.getReferenceType())
-                .referenceId(request.getReferenceId())
-                .tareWeight(request.getTareWeight())
-                .grossWeight(request.getGrossWeight())
-                .expectedWeight(request.getExpectedWeight())
-                .unit(request.getUnit())
-                .scaleId(request.getScaleId())
-                .scaleName(request.getScaleName())
-                .tolerancePercentage(request.getTolerancePercentage())
-                .remarks(request.getRemarks())
-                .attachments(request.getAttachments())
-                .temperature(request.getTemperature())
-                .humidity(request.getHumidity())
-                .build();
+        // Update weighing using service
+        WeighingResponse response = weighingService.updateWeighing(tenantId, id, request);
 
-        // Resolve optional entities
-        if (request.getProductId() != null) {
-            ProductEntity product = productRepository.findById(request.getProductId())
-                    .orElseThrow(() -> new EntityNotFoundException(ErrorCode.PRODUCT_NOT_FOUND));
-            updates.setProduct(product);
-        }
-
-        if (request.getLotId() != null) {
-            LotEntity lot = lotRepository.findById(request.getLotId())
-                    .orElse(null);
-            updates.setLot(lot);
-        }
-
-        WeighingEntity updated = weighingService.updateWeighing(id, updates);
-
-        return ResponseEntity.ok(ApiResponse.success("칭량 수정 성공", toWeighingResponse(updated)));
+        return ResponseEntity.ok(ApiResponse.success("칭량 수정 성공", response));
     }
 
     /**
@@ -308,20 +226,14 @@ public class WeighingController {
             @PathVariable Long id,
             @Valid @RequestBody WeighingVerificationRequest request) {
 
-        log.info("Verifying weighing: {} with action: {}", id, request.getAction());
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("Verifying weighing: {} with action: {} for tenant: {}", id, request.getAction(), tenantId);
 
-        WeighingEntity result;
-
-        if ("VERIFY".equals(request.getAction())) {
-            result = weighingService.verifyWeighing(id, request.getVerifierUserId(), request.getRemarks());
-        } else if ("REJECT".equals(request.getAction())) {
-            result = weighingService.rejectWeighing(id, request.getVerifierUserId(), request.getRemarks());
-        } else {
-            throw new IllegalArgumentException("Invalid action: " + request.getAction());
-        }
+        // Verify or reject using service
+        WeighingResponse response = weighingService.verifyWeighing(tenantId, id, request);
 
         String message = "VERIFY".equals(request.getAction()) ? "칭량 검증 성공" : "칭량 거부 성공";
-        return ResponseEntity.ok(ApiResponse.success(message, toWeighingResponse(result)));
+        return ResponseEntity.ok(ApiResponse.success(message, response));
     }
 
     /**
@@ -332,60 +244,12 @@ public class WeighingController {
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "칭량 삭제", description = "칭량 삭제 (PENDING 또는 REJECTED만 가능, 관리자 권한)")
     public ResponseEntity<ApiResponse<Void>> deleteWeighing(@PathVariable Long id) {
-        log.info("Deleting weighing: {}", id);
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("Deleting weighing: {} for tenant: {}", id, tenantId);
 
-        weighingService.deleteWeighing(id);
+        weighingService.deleteWeighing(tenantId, id);
 
         return ResponseEntity.ok(ApiResponse.success("칭량 삭제 성공", null));
     }
 
-    // === Helper Methods ===
-
-    /**
-     * Convert WeighingEntity to WeighingResponse
-     */
-    private WeighingResponse toWeighingResponse(WeighingEntity weighing) {
-        return WeighingResponse.builder()
-                .weighingId(weighing.getWeighingId())
-                .tenantId(weighing.getTenant().getTenantId())
-                .tenantName(weighing.getTenant().getTenantName())
-                .weighingNo(weighing.getWeighingNo())
-                .weighingDate(weighing.getWeighingDate())
-                .weighingType(weighing.getWeighingType())
-                .referenceType(weighing.getReferenceType())
-                .referenceId(weighing.getReferenceId())
-                .productId(weighing.getProduct().getProductId())
-                .productCode(weighing.getProduct().getProductCode())
-                .productName(weighing.getProduct().getProductName())
-                .lotId(weighing.getLot() != null ? weighing.getLot().getLotId() : null)
-                .lotNo(weighing.getLot() != null ? weighing.getLot().getLotNo() : null)
-                .tareWeight(weighing.getTareWeight())
-                .grossWeight(weighing.getGrossWeight())
-                .netWeight(weighing.getNetWeight())
-                .expectedWeight(weighing.getExpectedWeight())
-                .variance(weighing.getVariance())
-                .variancePercentage(weighing.getVariancePercentage())
-                .unit(weighing.getUnit())
-                .scaleId(weighing.getScaleId())
-                .scaleName(weighing.getScaleName())
-                .operatorUserId(weighing.getOperator().getUserId())
-                .operatorUserName(weighing.getOperator().getUsername())
-                .operatorName(weighing.getOperator().getUsername())
-                .verifierUserId(weighing.getVerifier() != null ? weighing.getVerifier().getUserId() : null)
-                .verifierUserName(weighing.getVerifier() != null ? weighing.getVerifier().getUsername() : null)
-                .verifierName(weighing.getVerifier() != null ? weighing.getVerifier().getUsername() : null)
-                .verificationDate(weighing.getVerificationDate())
-                .verificationStatus(weighing.getVerificationStatus())
-                .toleranceExceeded(weighing.getToleranceExceeded())
-                .tolerancePercentage(weighing.getTolerancePercentage())
-                .remarks(weighing.getRemarks())
-                .attachments(weighing.getAttachments())
-                .temperature(weighing.getTemperature())
-                .humidity(weighing.getHumidity())
-                .createdAt(weighing.getCreatedAt())
-                .createdBy(null)
-                .updatedAt(weighing.getUpdatedAt())
-                .updatedBy(null)
-                .build();
-    }
 }

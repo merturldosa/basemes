@@ -1,16 +1,13 @@
 package kr.co.softice.mes.common.dto.weighing;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Weighing Response DTO
- * 칭량 응답 DTO
+ * Response data containing complete weighing information
  *
  * @author Moon Myung-seop
  */
@@ -20,67 +17,197 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WeighingResponse {
 
-    // Header
+    /**
+     * Weighing ID
+     */
     private Long weighingId;
+
+    /**
+     * Tenant ID
+     */
     private String tenantId;
-    private String tenantName;
+
+    /**
+     * Weighing number (auto-generated)
+     * Format: WG-YYYYMMDD-0001
+     */
     private String weighingNo;
+
+    /**
+     * Weighing date/time
+     */
     private LocalDateTime weighingDate;
-    private String weighingType;  // INCOMING, OUTGOING, PRODUCTION, SAMPLING
 
-    // Reference
+    /**
+     * Weighing type
+     * INCOMING, OUTGOING, PRODUCTION, SAMPLING
+     */
+    private String weighingType;
+
+    /**
+     * Reference type (polymorphic)
+     * MATERIAL_REQUEST, WORK_ORDER, GOODS_RECEIPT, SHIPPING, QUALITY_INSPECTION
+     */
     private String referenceType;
-    private Long referenceId;
-    private String referenceNo;  // For display purposes
 
-    // Product/Material
+    /**
+     * Reference ID
+     */
+    private Long referenceId;
+
+    /**
+     * Product ID
+     */
     private Long productId;
+
+    /**
+     * Product code
+     */
     private String productCode;
+
+    /**
+     * Product name
+     */
     private String productName;
 
-    // Lot
+    /**
+     * Lot ID
+     */
     private Long lotId;
+
+    /**
+     * Lot number
+     */
     private String lotNo;
 
-    // Weight Measurements
+    /**
+     * Tare weight (container weight)
+     */
     private BigDecimal tareWeight;
+
+    /**
+     * Gross weight (total weight)
+     */
     private BigDecimal grossWeight;
+
+    /**
+     * Net weight (gross - tare)
+     */
     private BigDecimal netWeight;
+
+    /**
+     * Expected weight
+     */
     private BigDecimal expectedWeight;
+
+    /**
+     * Variance (net - expected)
+     */
     private BigDecimal variance;
+
+    /**
+     * Variance percentage
+     */
     private BigDecimal variancePercentage;
+
+    /**
+     * Unit of measurement
+     */
     private String unit;
 
-    // Equipment
+    /**
+     * Scale ID
+     */
     private Long scaleId;
+
+    /**
+     * Scale name
+     */
     private String scaleName;
 
-    // Personnel (GMP Dual Verification)
+    /**
+     * Operator user ID
+     */
     private Long operatorUserId;
-    private String operatorUserName;
+
+    /**
+     * Operator username
+     */
+    private String operatorUsername;
+
+    /**
+     * Operator name
+     */
     private String operatorName;
 
+    /**
+     * Verifier user ID
+     */
     private Long verifierUserId;
-    private String verifierUserName;
-    private String verifierName;
-    private LocalDateTime verificationDate;
-    private String verificationStatus;  // PENDING, VERIFIED, REJECTED
 
-    // Tolerance Control
+    /**
+     * Verifier username
+     */
+    private String verifierUsername;
+
+    /**
+     * Verifier name
+     */
+    private String verifierName;
+
+    /**
+     * Verification date
+     */
+    private LocalDateTime verificationDate;
+
+    /**
+     * Verification status
+     * PENDING, VERIFIED, REJECTED
+     */
+    private String verificationStatus;
+
+    /**
+     * Tolerance exceeded flag
+     */
     private Boolean toleranceExceeded;
+
+    /**
+     * Tolerance percentage
+     */
     private BigDecimal tolerancePercentage;
 
-    // Additional
+    /**
+     * Remarks
+     */
     private String remarks;
-    private String attachments;
 
-    // Environmental Conditions
+    /**
+     * Environmental temperature (°C)
+     */
     private BigDecimal temperature;
+
+    /**
+     * Environmental humidity (%)
+     */
     private BigDecimal humidity;
 
-    // Audit
+    /**
+     * Creation timestamp
+     */
     private LocalDateTime createdAt;
-    private String createdBy;
+
+    /**
+     * Created by user ID
+     */
+    private Long createdBy;
+
+    /**
+     * Last update timestamp
+     */
     private LocalDateTime updatedAt;
-    private String updatedBy;
+
+    /**
+     * Updated by user ID
+     */
+    private Long updatedBy;
 }

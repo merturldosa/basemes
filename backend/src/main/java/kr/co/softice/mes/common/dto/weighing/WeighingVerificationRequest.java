@@ -1,16 +1,12 @@
 package kr.co.softice.mes.common.dto.weighing;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 /**
  * Weighing Verification Request DTO
- * 칭량 검증 요청 DTO (GMP 이중 검증)
+ * Request data for verifying or rejecting a weighing record (GMP dual verification)
  *
  * @author Moon Myung-seop
  */
@@ -20,11 +16,25 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class WeighingVerificationRequest {
 
+    /**
+     * Verifier user ID
+     * Required: User who is verifying the weighing
+     */
     @NotNull(message = "Verifier user ID is required")
+    @Positive(message = "Verifier user ID must be positive")
     private Long verifierUserId;
 
+    /**
+     * Verification action
+     * Required: VERIFY or REJECT
+     */
     @NotBlank(message = "Action is required")
-    private String action;  // VERIFY, REJECT
+    @Pattern(regexp = "VERIFY|REJECT", message = "Action must be VERIFY or REJECT")
+    private String action;
 
-    private String remarks;  // Verification notes or rejection reason
+    /**
+     * Verification remarks
+     * Optional: Additional notes for verification or rejection reason
+     */
+    private String remarks;
 }

@@ -1,33 +1,38 @@
 package kr.co.softice.mes.domain.service;
 
-import kr.co.softice.mes.domain.entity.*;
-import kr.co.softice.mes.domain.repository.*;
+import kr.co.softice.mes.common.dto.weighing.*;
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
+import kr.co.softice.mes.domain.entity.WeighingEntity;
+import kr.co.softice.mes.domain.entity.TenantEntity;
+import kr.co.softice.mes.domain.entity.ProductEntity;
+import kr.co.softice.mes.domain.entity.LotEntity;
+import kr.co.softice.mes.domain.entity.UserEntity;
+import kr.co.softice.mes.domain.repository.WeighingRepository;
+import kr.co.softice.mes.domain.repository.TenantRepository;
+import kr.co.softice.mes.domain.repository.ProductRepository;
+import kr.co.softice.mes.domain.repository.LotRepository;
+import kr.co.softice.mes.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * Weighing Service
- * 칭량 관리 서비스
+ * Service for managing weighing operations in compliance with GMP standards.
+ * Handles weighing creation, verification, and tolerance checking.
  *
- * 핵심 기능:
- * - 칭량 기록 생성 (자동 계산)
- * - GMP 이중 검증 워크플로우
- * - 허용 오차 모니터링
- * - 참조 문서 연계 (불출, 작업지시, 입고, 출하, 검사)
- *
- * @author Moon Myung-seop
+ * @author SoftIce MES Development Team
  */
-@Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Slf4j
 public class WeighingService {
 
     private final WeighingRepository weighingRepository;
@@ -37,376 +42,456 @@ public class WeighingService {
     private final UserRepository userRepository;
 
     /**
-     * Find all weighings by tenant
-     */
-    public List<WeighingEntity> findByTenant(String tenantId) {
-        return weighingRepository.findByTenantIdWithAllRelations(tenantId);
-    }
-
-    /**
-     * Find weighing by ID
-     */
-    public Optional<WeighingEntity> findById(Long weighingId) {
-        return weighingRepository.findByIdWithAllRelations(weighingId);
-    }
-
-    /**
-     * Find weighings by type
-     */
-    public List<WeighingEntity> findByType(String tenantId, String weighingType) {
-        return weighingRepository.findByTenant_TenantIdAndWeighingType(tenantId, weighingType);
-    }
-
-    /**
-     * Find weighings by verification status
-     */
-    public List<WeighingEntity> findByVerificationStatus(String tenantId, String verificationStatus) {
-        return weighingRepository.findByVerificationStatusAndTenantWithRelations(tenantId, verificationStatus);
-    }
-
-    /**
-     * Find weighings by reference (polymorphic lookup)
-     */
-    public List<WeighingEntity> findByReference(String referenceType, Long referenceId) {
-        return weighingRepository.findByReferenceTypeAndReferenceIdWithRelations(referenceType, referenceId);
-    }
-
-    /**
-     * Find tolerance exceeded weighings
-     */
-    public List<WeighingEntity> findToleranceExceeded(String tenantId) {
-        return weighingRepository.findToleranceExceededWeighings(tenantId);
-    }
-
-    /**
-     * Find pending verification weighings
-     */
-    public List<WeighingEntity> findPendingVerification(String tenantId) {
-        return weighingRepository.findPendingVerificationWeighings(tenantId);
-    }
-
-    /**
-     * Find unverified tolerance exceeded weighings (requires immediate attention)
-     */
-    public List<WeighingEntity> findUnverifiedToleranceExceeded(String tenantId) {
-        return weighingRepository.findUnverifiedToleranceExceeded(tenantId);
-    }
-
-    /**
-     * Create new weighing record
+     * Creates a new weighing record.
+     * Generates weighing number in format WG-YYYYMMDD-0001.
      *
-     * 워크플로우:
-     * 1. 칭량 번호 자동 생성 (WG-YYYYMMDD-0001)
-     * 2. 순중량 계산 (gross - tare)
-     * 3. 편차 계산 (net - expected)
-     * 4. 허용 오차 확인
-     * 5. 저장 (PENDING 상태)
+     * @param tenantId tenant identifier
+     * @param request weighing creation request
+     * @return created weighing response
+     * @throws BusinessException if tenant, product, lot, or operator not found
      */
-    @Transactional
-    public WeighingEntity createWeighing(WeighingEntity weighing) {
-        log.info("Creating weighing for tenant: {}, type: {}, product: {}",
-            weighing.getTenant().getTenantId(),
-            weighing.getWeighingType(),
-            weighing.getProduct().getProductCode());
+    public WeighingResponse createWeighing(String tenantId, WeighingCreateRequest request) {
+        log.info("Creating weighing for tenant: {}, product: {}", tenantId, request.getProductId());
 
-        // 1. Generate weighing number if not provided
-        if (weighing.getWeighingNo() == null || weighing.getWeighingNo().isEmpty()) {
-            weighing.setWeighingNo(generateWeighingNo(weighing.getTenant().getTenantId()));
+        // Resolve tenant
+        TenantEntity tenant = tenantRepository.findById(tenantId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND,
+                        "Tenant not found: " + tenantId));
+
+        // Resolve product
+        ProductEntity product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND,
+                        "Product not found: " + request.getProductId()));
+
+        // Resolve lot (optional)
+        LotEntity lot = null;
+        if (request.getLotId() != null) {
+            lot = lotRepository.findById(request.getLotId())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.LOT_NOT_FOUND,
+                            "Lot not found: " + request.getLotId()));
         }
 
-        // Check duplicate
-        if (weighingRepository.existsByTenant_TenantIdAndWeighingNo(
-                weighing.getTenant().getTenantId(), weighing.getWeighingNo())) {
-            throw new IllegalArgumentException("Weighing number already exists: " + weighing.getWeighingNo());
-        }
+        // Resolve operator
+        UserEntity operator = userRepository.findById(request.getOperatorUserId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,
+                        "Operator not found: " + request.getOperatorUserId()));
 
-        // 2. Perform all calculations
+        // Generate weighing number
+        String weighingNo = generateWeighingNo(tenantId);
+
+        // Create WeighingEntity
+        WeighingEntity weighing = WeighingEntity.builder()
+                .weighingNo(weighingNo)
+                .tenant(tenant)
+                .product(product)
+                .lot(lot)
+                .weighingType(request.getWeighingType())
+                .weighingDate(request.getWeighingDate() != null ? request.getWeighingDate() : LocalDateTime.now())
+                .grossWeight(request.getGrossWeight())
+                .tareWeight(request.getTareWeight())
+                .expectedWeight(request.getExpectedWeight())
+                .tolerancePercentage(request.getTolerancePercentage())
+                .operator(operator)
+                .scaleId(request.getScaleId())
+                .scaleName(request.getScaleName())
+                .referenceType(request.getReferenceType())
+                .referenceId(request.getReferenceId())
+                .unit(request.getUnit())
+                .temperature(request.getTemperature())
+                .humidity(request.getHumidity())
+                .verificationStatus("PENDING")
+                .remarks(request.getRemarks())
+                .build();
+
+        // Perform calculations
         weighing.performCalculations();
 
-        // 3. Set initial status if not provided
-        if (weighing.getVerificationStatus() == null || weighing.getVerificationStatus().isEmpty()) {
-            weighing.setVerificationStatus("PENDING");
-        }
-
-        // 4. Save weighing
+        // Save weighing
         WeighingEntity saved = weighingRepository.save(weighing);
+        log.info("Created weighing: {} with status: {}", saved.getWeighingNo(), saved.getVerificationStatus());
 
-        // 5. Log tolerance exceeded warning
-        if (saved.getToleranceExceeded()) {
-            log.warn("Tolerance exceeded for weighing: {}, variance: {}%, tolerance: {}%",
-                saved.getWeighingNo(),
-                saved.getVariancePercentage(),
-                saved.getTolerancePercentage());
-        }
-
-        log.info("Created weighing: {} with net weight: {} {}, variance: {}",
-            saved.getWeighingNo(),
-            saved.getNetWeight(),
-            saved.getUnit(),
-            saved.getVariance());
-
-        return weighingRepository.findByIdWithAllRelations(saved.getWeighingId())
-            .orElse(saved);
+        return convertToResponse(saved);
     }
 
     /**
-     * Update weighing record
+     * Updates an existing weighing record.
+     * Cannot update verified weighings.
      *
-     * Only PENDING weighings can be updated
+     * @param tenantId tenant identifier
+     * @param weighingId weighing ID
+     * @param request update request
+     * @return updated weighing response
+     * @throws BusinessException if weighing not found, tenant mismatch, or already verified
      */
-    @Transactional
-    public WeighingEntity updateWeighing(Long weighingId, WeighingEntity updates) {
-        log.info("Updating weighing: {}", weighingId);
+    public WeighingResponse updateWeighing(String tenantId, Long weighingId, WeighingUpdateRequest request) {
+        log.info("Updating weighing: {} for tenant: {}", weighingId, tenantId);
 
-        WeighingEntity existing = weighingRepository.findById(weighingId)
-            .orElseThrow(() -> new IllegalArgumentException("Weighing not found: " + weighingId));
+        // Get weighing with relations
+        WeighingEntity weighing = weighingRepository.findByIdWithAllRelations(weighingId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.WEIGHING_NOT_FOUND,
+                        "Weighing not found: " + weighingId));
 
-        // Only PENDING weighings can be updated
-        if (!"PENDING".equals(existing.getVerificationStatus())) {
-            throw new IllegalStateException("Cannot update verified or rejected weighing: " + weighingId);
-        }
-
-        // Update fields
-        if (updates.getWeighingDate() != null) {
-            existing.setWeighingDate(updates.getWeighingDate());
-        }
-        if (updates.getWeighingType() != null) {
-            existing.setWeighingType(updates.getWeighingType());
-        }
-        if (updates.getReferenceType() != null) {
-            existing.setReferenceType(updates.getReferenceType());
-        }
-        if (updates.getReferenceId() != null) {
-            existing.setReferenceId(updates.getReferenceId());
-        }
-        if (updates.getProduct() != null) {
-            existing.setProduct(updates.getProduct());
-        }
-        if (updates.getLot() != null) {
-            existing.setLot(updates.getLot());
-        }
-        if (updates.getTareWeight() != null) {
-            existing.setTareWeight(updates.getTareWeight());
-        }
-        if (updates.getGrossWeight() != null) {
-            existing.setGrossWeight(updates.getGrossWeight());
-        }
-        if (updates.getExpectedWeight() != null) {
-            existing.setExpectedWeight(updates.getExpectedWeight());
-        }
-        if (updates.getUnit() != null) {
-            existing.setUnit(updates.getUnit());
-        }
-        if (updates.getScaleId() != null) {
-            existing.setScaleId(updates.getScaleId());
-        }
-        if (updates.getScaleName() != null) {
-            existing.setScaleName(updates.getScaleName());
-        }
-        if (updates.getTolerancePercentage() != null) {
-            existing.setTolerancePercentage(updates.getTolerancePercentage());
-        }
-        if (updates.getRemarks() != null) {
-            existing.setRemarks(updates.getRemarks());
-        }
-        if (updates.getAttachments() != null) {
-            existing.setAttachments(updates.getAttachments());
-        }
-        if (updates.getTemperature() != null) {
-            existing.setTemperature(updates.getTemperature());
-        }
-        if (updates.getHumidity() != null) {
-            existing.setHumidity(updates.getHumidity());
+        // Check tenant access
+        if (!weighing.getTenant().getTenantId().equals(tenantId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,
+                    "Weighing does not belong to tenant: " + tenantId);
         }
 
-        // Recalculate all values
-        existing.performCalculations();
+        // Cannot update if VERIFIED
+        if ("VERIFIED".equals(weighing.getVerificationStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
+                    "Cannot update verified weighing: " + weighing.getWeighingNo());
+        }
 
-        WeighingEntity saved = weighingRepository.save(existing);
+        // Update non-null fields from request
+        if (request.getWeighingDate() != null) {
+            weighing.setWeighingDate(request.getWeighingDate());
+        }
+        if (request.getGrossWeight() != null) {
+            weighing.setGrossWeight(request.getGrossWeight());
+        }
+        if (request.getTareWeight() != null) {
+            weighing.setTareWeight(request.getTareWeight());
+        }
+        if (request.getExpectedWeight() != null) {
+            weighing.setExpectedWeight(request.getExpectedWeight());
+        }
+        if (request.getTolerancePercentage() != null) {
+            weighing.setTolerancePercentage(request.getTolerancePercentage());
+        }
+        if (request.getScaleId() != null) {
+            weighing.setScaleId(request.getScaleId());
+        }
+        if (request.getScaleName() != null) {
+            weighing.setScaleName(request.getScaleName());
+        }
+        if (request.getTemperature() != null) {
+            weighing.setTemperature(request.getTemperature());
+        }
+        if (request.getHumidity() != null) {
+            weighing.setHumidity(request.getHumidity());
+        }
+        if (request.getRemarks() != null) {
+            weighing.setRemarks(request.getRemarks());
+        }
 
-        log.info("Updated weighing: {}", saved.getWeighingNo());
+        // Recalculate
+        weighing.performCalculations();
 
-        return weighingRepository.findByIdWithAllRelations(saved.getWeighingId())
-            .orElse(saved);
+        // Save
+        WeighingEntity updated = weighingRepository.save(weighing);
+        log.info("Updated weighing: {}, tolerance exceeded: {}",
+                updated.getWeighingNo(), updated.getToleranceExceeded());
+
+        return convertToResponse(updated);
     }
 
     /**
-     * Verify weighing (GMP dual verification)
+     * Verifies or rejects a weighing record.
+     * Enforces GMP compliance by preventing self-verification.
      *
-     * 워크플로우:
-     * 1. 상태 검증 (PENDING만 검증 가능)
-     * 2. 검증자 != 작업자 확인 (GMP 요구사항)
-     * 3. 검증 정보 업데이트
-     * 4. 상태 → VERIFIED
+     * @param tenantId tenant identifier
+     * @param weighingId weighing ID
+     * @param request verification request
+     * @return verified weighing response
+     * @throws BusinessException if weighing not found, tenant mismatch, status invalid, or self-verification attempted
      */
-    @Transactional
-    public WeighingEntity verifyWeighing(Long weighingId, Long verifierId, String remarks) {
-        log.info("Verifying weighing: {} by user: {}", weighingId, verifierId);
+    public WeighingResponse verifyWeighing(String tenantId, Long weighingId, WeighingVerificationRequest request) {
+        log.info("Verifying weighing: {} for tenant: {}, action: {}",
+                weighingId, tenantId, request.getAction());
+
+        // Get weighing
+        WeighingEntity weighing = weighingRepository.findByIdWithAllRelations(weighingId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.WEIGHING_NOT_FOUND,
+                        "Weighing not found: " + weighingId));
+
+        // Check tenant
+        if (!weighing.getTenant().getTenantId().equals(tenantId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,
+                    "Weighing does not belong to tenant: " + tenantId);
+        }
+
+        // Check PENDING status
+        if (!"PENDING".equals(weighing.getVerificationStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
+                    "Weighing is not pending verification: " + weighing.getVerificationStatus());
+        }
+
+        // Resolve verifier
+        UserEntity verifier = userRepository.findById(request.getVerifierUserId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,
+                        "Verifier not found: " + request.getVerifierUserId()));
+
+        // Check not self-verification (GMP compliance)
+        if (weighing.getOperator() != null &&
+            weighing.getOperator().getUserId().equals(verifier.getUserId())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION,
+                    "Self-verification is not allowed (GMP compliance)");
+        }
+
+        // Verify or reject based on action
+        if ("VERIFY".equalsIgnoreCase(request.getAction())) {
+            weighing.verify(verifier, request.getRemarks());
+            log.info("Weighing verified: {} by user: {}", weighing.getWeighingNo(), verifier.getUserId());
+        } else if ("REJECT".equalsIgnoreCase(request.getAction())) {
+            weighing.reject(verifier, request.getRemarks());
+            log.info("Weighing rejected: {} by user: {}", weighing.getWeighingNo(), verifier.getUserId());
+        } else {
+            throw new BusinessException(ErrorCode.INVALID_INPUT,
+                    "Invalid verification action: " + request.getAction());
+        }
+
+        // Save
+        WeighingEntity verified = weighingRepository.save(weighing);
+
+        return convertToResponse(verified);
+    }
+
+    /**
+     * Retrieves a weighing record by ID.
+     *
+     * @param tenantId tenant identifier
+     * @param weighingId weighing ID
+     * @return weighing response
+     * @throws BusinessException if weighing not found or tenant mismatch
+     */
+    @Transactional(readOnly = true)
+    public WeighingResponse getWeighingById(String tenantId, Long weighingId) {
+        log.debug("Getting weighing: {} for tenant: {}", weighingId, tenantId);
 
         WeighingEntity weighing = weighingRepository.findByIdWithAllRelations(weighingId)
-            .orElseThrow(() -> new IllegalArgumentException("Weighing not found: " + weighingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.WEIGHING_NOT_FOUND,
+                        "Weighing not found: " + weighingId));
 
-        // Only PENDING weighings can be verified
-        if (!"PENDING".equals(weighing.getVerificationStatus())) {
-            throw new IllegalStateException("Weighing is not pending verification: " + weighingId);
+        if (!weighing.getTenant().getTenantId().equals(tenantId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,
+                    "Weighing does not belong to tenant: " + tenantId);
         }
 
-        // GMP requirement: Verifier must be different from operator
-        if (weighing.getOperator().getUserId().equals(verifierId)) {
-            throw new IllegalArgumentException("Verifier cannot be the same as operator (GMP dual verification requirement)");
-        }
-
-        // Get verifier user
-        UserEntity verifier = userRepository.findById(verifierId)
-            .orElseThrow(() -> new IllegalArgumentException("Verifier user not found: " + verifierId));
-
-        // Verify weighing
-        weighing.verify(verifier, remarks);
-
-        WeighingEntity saved = weighingRepository.save(weighing);
-
-        log.info("Verified weighing: {} by user: {}", saved.getWeighingNo(), verifier.getUsername());
-
-        return weighingRepository.findByIdWithAllRelations(saved.getWeighingId())
-            .orElse(saved);
+        return convertToResponse(weighing);
     }
 
     /**
-     * Reject weighing
+     * Retrieves all weighing records for a tenant.
      *
-     * 워크플로우:
-     * 1. 상태 검증 (PENDING만 거부 가능)
-     * 2. 거부 정보 업데이트
-     * 3. 상태 → REJECTED
-     * 4. 재측정 필요 플래그
+     * @param tenantId tenant identifier
+     * @return list of weighing responses
      */
-    @Transactional
-    public WeighingEntity rejectWeighing(Long weighingId, Long verifierId, String rejectionReason) {
-        log.info("Rejecting weighing: {} by user: {}", weighingId, verifierId);
+    @Transactional(readOnly = true)
+    public List<WeighingResponse> getAllWeighings(String tenantId) {
+        log.debug("Getting all weighings for tenant: {}", tenantId);
 
-        WeighingEntity weighing = weighingRepository.findByIdWithAllRelations(weighingId)
-            .orElseThrow(() -> new IllegalArgumentException("Weighing not found: " + weighingId));
+        List<WeighingEntity> weighings = weighingRepository.findByTenantIdWithAllRelations(tenantId);
 
-        // Only PENDING weighings can be rejected
-        if (!"PENDING".equals(weighing.getVerificationStatus())) {
-            throw new IllegalStateException("Weighing is not pending verification: " + weighingId);
-        }
-
-        // Get verifier user
-        UserEntity verifier = userRepository.findById(verifierId)
-            .orElseThrow(() -> new IllegalArgumentException("Verifier user not found: " + verifierId));
-
-        // Reject weighing
-        weighing.reject(verifier, rejectionReason);
-
-        WeighingEntity saved = weighingRepository.save(weighing);
-
-        log.warn("Rejected weighing: {} by user: {} - Reason: {}",
-            saved.getWeighingNo(), verifier.getUsername(), rejectionReason);
-
-        return weighingRepository.findByIdWithAllRelations(saved.getWeighingId())
-            .orElse(saved);
+        return weighings.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     /**
-     * Delete weighing
+     * Retrieves weighings by reference type and ID.
      *
-     * Only PENDING or REJECTED weighings can be deleted
+     * @param tenantId tenant identifier
+     * @param referenceType reference type (e.g., WORK_ORDER, PURCHASE_ORDER)
+     * @param referenceId reference ID
+     * @return list of weighing responses
      */
-    @Transactional
-    public void deleteWeighing(Long weighingId) {
-        log.info("Deleting weighing: {}", weighingId);
+    @Transactional(readOnly = true)
+    public List<WeighingResponse> getWeighingsByReference(String tenantId, String referenceType, Long referenceId) {
+        log.debug("Getting weighings for tenant: {}, reference: {}/{}", tenantId, referenceType, referenceId);
+
+        List<WeighingEntity> weighings = weighingRepository
+                .findByReferenceTypeAndReferenceIdWithRelations(referenceType, referenceId);
+
+        // Filter by tenant ID in service layer
+        return weighings.stream()
+                .filter(w -> w.getTenant().getTenantId().equals(tenantId))
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves weighings that exceed tolerance limits.
+     *
+     * @param tenantId tenant identifier
+     * @return list of weighing responses with tolerance exceeded
+     */
+    @Transactional(readOnly = true)
+    public List<WeighingResponse> getToleranceExceededWeighings(String tenantId) {
+        log.debug("Getting tolerance exceeded weighings for tenant: {}", tenantId);
+
+        List<WeighingEntity> weighings = weighingRepository
+                .findToleranceExceededWeighings(tenantId);
+
+        return weighings.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Retrieves weighings pending verification.
+     *
+     * @param tenantId tenant identifier
+     * @return list of weighing responses pending verification
+     */
+    @Transactional(readOnly = true)
+    public List<WeighingResponse> getPendingVerificationWeighings(String tenantId) {
+        log.debug("Getting pending verification weighings for tenant: {}", tenantId);
+
+        List<WeighingEntity> weighings = weighingRepository
+                .findPendingVerificationWeighings(tenantId);
+
+        return weighings.stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Deletes a weighing record.
+     * Cannot delete verified weighings (GMP compliance).
+     *
+     * @param tenantId tenant identifier
+     * @param weighingId weighing ID
+     * @throws BusinessException if weighing not found, tenant mismatch, or weighing is verified
+     */
+    public void deleteWeighing(String tenantId, Long weighingId) {
+        log.info("Deleting weighing: {} for tenant: {}", weighingId, tenantId);
 
         WeighingEntity weighing = weighingRepository.findById(weighingId)
-            .orElseThrow(() -> new IllegalArgumentException("Weighing not found: " + weighingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.WEIGHING_NOT_FOUND,
+                        "Weighing not found: " + weighingId));
 
-        // Only PENDING or REJECTED weighings can be deleted
+        if (!weighing.getTenant().getTenantId().equals(tenantId)) {
+            throw new BusinessException(ErrorCode.ACCESS_DENIED,
+                    "Weighing does not belong to tenant: " + tenantId);
+        }
+
+        // Cannot delete VERIFIED weighings (GMP)
         if ("VERIFIED".equals(weighing.getVerificationStatus())) {
-            throw new IllegalStateException("Cannot delete verified weighing: " + weighingId);
+            throw new BusinessException(ErrorCode.INVALID_OPERATION,
+                    "Cannot delete verified weighing (GMP compliance): " + weighing.getWeighingNo());
         }
 
         weighingRepository.delete(weighing);
-
         log.info("Deleted weighing: {}", weighing.getWeighingNo());
     }
 
     /**
-     * Generate weighing number: WG-YYYYMMDD-0001
+     * Finds weighings by tenant (for controller compatibility).
+     *
+     * @param tenantId tenant identifier
+     * @return list of weighing entities
      */
-    private String generateWeighingNo(String tenantId) {
-        String dateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String prefix = "WG-" + dateStr + "-";
-
-        // Find last weighing number for today
-        List<WeighingEntity> todayWeighings = weighingRepository.findByTenant_TenantId(tenantId);
-
-        int maxSeq = todayWeighings.stream()
-            .map(WeighingEntity::getWeighingNo)
-            .filter(no -> no.startsWith(prefix))
-            .map(no -> no.substring(prefix.length()))
-            .mapToInt(seq -> {
-                try {
-                    return Integer.parseInt(seq);
-                } catch (NumberFormatException e) {
-                    return 0;
-                }
-            })
-            .max()
-            .orElse(0);
-
-        return String.format("%s%04d", prefix, maxSeq + 1);
+    public List<WeighingEntity> findByTenant(String tenantId) {
+        log.debug("Finding weighings by tenant: {}", tenantId);
+        return weighingRepository.findByTenant_TenantId(tenantId);
     }
 
     /**
-     * Create weighing from reference (helper method for other services)
+     * Finds weighings by type (for controller compatibility).
      *
-     * This method can be called by MaterialRequestService, WorkOrderService, etc.
-     * to automatically create weighing records during their workflows
+     * @param tenantId tenant identifier
+     * @param weighingType weighing type
+     * @return list of weighing entities
      */
-    @Transactional
-    public WeighingEntity createWeighingFromReference(
-            String tenantId,
-            String weighingType,
-            String referenceType,
-            Long referenceId,
-            Long productId,
-            Long lotId,
-            java.math.BigDecimal tareWeight,
-            java.math.BigDecimal grossWeight,
-            java.math.BigDecimal expectedWeight,
-            Long operatorUserId,
-            String remarks) {
+    public List<WeighingEntity> findByType(String tenantId, String weighingType) {
+        log.debug("Finding weighings by tenant: {}, type: {}", tenantId, weighingType);
+        return weighingRepository.findByTenant_TenantIdAndWeighingType(tenantId, weighingType);
+    }
 
-        TenantEntity tenant = tenantRepository.findById(tenantId)
-            .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+    /**
+     * Finds weighings by verification status (for controller compatibility).
+     *
+     * @param tenantId tenant identifier
+     * @param status verification status
+     * @return list of weighing entities
+     */
+    public List<WeighingEntity> findByVerificationStatus(String tenantId, String status) {
+        log.debug("Finding weighings by tenant: {}, status: {}", tenantId, status);
+        return weighingRepository.findByTenant_TenantIdAndVerificationStatus(tenantId, status);
+    }
 
-        ProductEntity product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+    /**
+     * Generates weighing number in format WG-YYYYMMDD-0001.
+     *
+     * @param tenantId tenant identifier
+     * @return generated weighing number
+     */
+    private String generateWeighingNo(String tenantId) {
+        LocalDate today = LocalDate.now();
+        String dateStr = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String prefix = "WG-" + dateStr + "-";
 
-        UserEntity operator = userRepository.findById(operatorUserId)
-            .orElseThrow(() -> new IllegalArgumentException("Operator not found: " + operatorUserId));
+        // Find last weighing number for today by filtering in Java code
+        List<WeighingEntity> allWeighings = weighingRepository.findByTenant_TenantId(tenantId);
 
-        LotEntity lot = null;
-        if (lotId != null) {
-            lot = lotRepository.findById(lotId)
-                .orElse(null);
+        List<WeighingEntity> todayWeighings = allWeighings.stream()
+                .filter(w -> w.getWeighingNo() != null && w.getWeighingNo().startsWith(prefix))
+                .sorted((w1, w2) -> w2.getWeighingNo().compareTo(w1.getWeighingNo()))
+                .collect(Collectors.toList());
+
+        int nextSeq = 1;
+        if (!todayWeighings.isEmpty()) {
+            String lastNo = todayWeighings.get(0).getWeighingNo();
+            String seqStr = lastNo.substring(lastNo.lastIndexOf('-') + 1);
+            try {
+                nextSeq = Integer.parseInt(seqStr) + 1;
+            } catch (NumberFormatException e) {
+                log.warn("Failed to parse sequence from weighing number: {}", lastNo);
+                nextSeq = 1;
+            }
         }
 
-        WeighingEntity weighing = WeighingEntity.builder()
-                .tenant(tenant)
-                .weighingDate(LocalDateTime.now())
-                .weighingType(weighingType)
-                .referenceType(referenceType)
-                .referenceId(referenceId)
-                .product(product)
-                .lot(lot)
-                .tareWeight(tareWeight)
-                .grossWeight(grossWeight)
-                .expectedWeight(expectedWeight)
-                .operator(operator)
-                .remarks(remarks)
-                .build();
+        String weighingNo = prefix + String.format("%04d", nextSeq);
+        log.debug("Generated weighing number: {}", weighingNo);
 
-        return createWeighing(weighing);
+        return weighingNo;
+    }
+
+    /**
+     * Converts WeighingEntity to WeighingResponse DTO.
+     *
+     * @param weighing weighing entity
+     * @return weighing response DTO
+     */
+    private WeighingResponse convertToResponse(WeighingEntity weighing) {
+        return WeighingResponse.builder()
+                .weighingId(weighing.getWeighingId())
+                .weighingNo(weighing.getWeighingNo())
+                .tenantId(weighing.getTenant().getTenantId())
+                .weighingDate(weighing.getWeighingDate())
+                .weighingType(weighing.getWeighingType())
+                .referenceType(weighing.getReferenceType())
+                .referenceId(weighing.getReferenceId())
+                .productId(weighing.getProduct().getProductId())
+                .productCode(weighing.getProduct().getProductCode())
+                .productName(weighing.getProduct().getProductName())
+                .lotId(weighing.getLot() != null ? weighing.getLot().getLotId() : null)
+                .lotNo(weighing.getLot() != null ? weighing.getLot().getLotNo() : null)
+                .tareWeight(weighing.getTareWeight())
+                .grossWeight(weighing.getGrossWeight())
+                .netWeight(weighing.getNetWeight())
+                .expectedWeight(weighing.getExpectedWeight())
+                .variance(weighing.getVariance())
+                .variancePercentage(weighing.getVariancePercentage())
+                .unit(weighing.getUnit())
+                .scaleId(weighing.getScaleId())
+                .scaleName(weighing.getScaleName())
+                .operatorUserId(weighing.getOperator() != null ? weighing.getOperator().getUserId() : null)
+                .operatorUsername(weighing.getOperator() != null ? weighing.getOperator().getUsername() : null)
+                .operatorName(weighing.getOperator() != null ? weighing.getOperator().getFullName() : null)
+                .verifierUserId(weighing.getVerifier() != null ? weighing.getVerifier().getUserId() : null)
+                .verifierUsername(weighing.getVerifier() != null ? weighing.getVerifier().getUsername() : null)
+                .verifierName(weighing.getVerifier() != null ? weighing.getVerifier().getFullName() : null)
+                .verificationDate(weighing.getVerificationDate())
+                .verificationStatus(weighing.getVerificationStatus())
+                .toleranceExceeded(weighing.getToleranceExceeded())
+                .tolerancePercentage(weighing.getTolerancePercentage())
+                .remarks(weighing.getRemarks())
+                .temperature(weighing.getTemperature())
+                .humidity(weighing.getHumidity())
+                .createdAt(weighing.getCreatedAt())
+                .updatedAt(weighing.getUpdatedAt())
+                .build();
     }
 }

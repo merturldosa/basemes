@@ -1,19 +1,14 @@
 package kr.co.softice.mes.common.dto.weighing;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * Weighing Create Request DTO
- * 칭량 생성 요청 DTO
+ * Request data for creating a new weighing record
  *
  * @author Moon Myung-seop
  */
@@ -23,52 +18,137 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WeighingCreateRequest {
 
-    private String weighingNo;  // Optional: 자동 생성 가능 (WG-YYYYMMDD-0001)
-
-    @NotNull(message = "Weighing date is required")
+    /**
+     * Weighing date/time
+     * If not provided, current timestamp will be used
+     */
     private LocalDateTime weighingDate;
 
+    /**
+     * Weighing type
+     * Required: INCOMING, OUTGOING, PRODUCTION, SAMPLING
+     */
     @NotBlank(message = "Weighing type is required")
-    private String weighingType;  // INCOMING, OUTGOING, PRODUCTION, SAMPLING
+    @Pattern(regexp = "INCOMING|OUTGOING|PRODUCTION|SAMPLING",
+             message = "Weighing type must be INCOMING, OUTGOING, PRODUCTION, or SAMPLING")
+    private String weighingType;
 
-    private String referenceType;  // MATERIAL_REQUEST, WORK_ORDER, GOODS_RECEIPT, SHIPPING, QUALITY_INSPECTION
+    /**
+     * Reference type (polymorphic)
+     * Optional: MATERIAL_REQUEST, WORK_ORDER, GOODS_RECEIPT, SHIPPING, QUALITY_INSPECTION
+     */
+    @Pattern(regexp = "MATERIAL_REQUEST|WORK_ORDER|GOODS_RECEIPT|SHIPPING|QUALITY_INSPECTION",
+             message = "Invalid reference type")
+    private String referenceType;
+
+    /**
+     * Reference ID
+     * ID of the referenced document
+     */
     private Long referenceId;
 
+    /**
+     * Product ID
+     * Required: Product being weighed
+     */
     @NotNull(message = "Product ID is required")
+    @Positive(message = "Product ID must be positive")
     private Long productId;
 
-    private Long lotId;  // Optional: Lot tracking
+    /**
+     * Lot ID
+     * Optional: Lot/Batch number
+     */
+    private Long lotId;
 
+    /**
+     * Tare weight (container weight)
+     * Required: Must be non-negative
+     */
     @NotNull(message = "Tare weight is required")
-    @DecimalMin(value = "0.0", message = "Tare weight must be non-negative")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Tare weight must be non-negative")
     private BigDecimal tareWeight;
 
+    /**
+     * Gross weight (total weight including container)
+     * Required: Must be greater than or equal to tare weight
+     */
     @NotNull(message = "Gross weight is required")
-    @DecimalMin(value = "0.0", message = "Gross weight must be non-negative")
+    @DecimalMin(value = "0.0", inclusive = true, message = "Gross weight must be non-negative")
     private BigDecimal grossWeight;
 
-    // Net weight will be calculated automatically (gross - tare)
-    // No need to provide from client
+    /**
+     * Expected weight (from source document)
+     * Optional: Used for variance calculation
+     */
+    private BigDecimal expectedWeight;
 
-    private BigDecimal expectedWeight;  // Optional: For variance calculation
-
+    /**
+     * Unit of measurement
+     * Default: kg
+     */
     @NotBlank(message = "Unit is required")
     @Builder.Default
     private String unit = "kg";
 
-    private Long scaleId;  // Optional: Equipment tracking
+    /**
+     * Scale ID
+     * Optional: Equipment used for weighing
+     */
+    private Long scaleId;
+
+    /**
+     * Scale name
+     * Optional: Equipment name
+     */
     private String scaleName;
 
+    /**
+     * Operator user ID
+     * Required: User who performed the weighing
+     */
     @NotNull(message = "Operator user ID is required")
+    @Positive(message = "Operator user ID must be positive")
     private Long operatorUserId;
 
+    /**
+     * Tolerance percentage
+     * Default: 2.0 (2%)
+     * Acceptable variance percentage
+     */
+    @DecimalMin(value = "0.0", inclusive = true, message = "Tolerance percentage must be non-negative")
+    @DecimalMax(value = "100.0", inclusive = true, message = "Tolerance percentage cannot exceed 100")
     @Builder.Default
-    private BigDecimal tolerancePercentage = new BigDecimal("2.0");  // Default 2%
+    private BigDecimal tolerancePercentage = new BigDecimal("2.0");
 
+    /**
+     * Remarks
+     * Optional: Additional notes
+     */
     private String remarks;
-    private String attachments;  // JSON string for file attachments
 
-    // Environmental conditions (GMP)
+    /**
+     * Environmental temperature (°C)
+     * Optional: For GMP compliance
+     */
     private BigDecimal temperature;
+
+    /**
+     * Environmental humidity (%)
+     * Optional: For GMP compliance
+     */
+    @DecimalMin(value = "0.0", message = "Humidity must be non-negative")
+    @DecimalMax(value = "100.0", message = "Humidity cannot exceed 100")
     private BigDecimal humidity;
+
+    /**
+     * Validate that gross weight is greater than or equal to tare weight
+     */
+    @AssertTrue(message = "Gross weight must be greater than or equal to tare weight")
+    public boolean isGrossWeightValid() {
+        if (grossWeight == null || tareWeight == null) {
+            return true; // Let @NotNull handle null validation
+        }
+        return grossWeight.compareTo(tareWeight) >= 0;
+    }
 }

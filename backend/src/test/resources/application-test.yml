@@ -16,6 +16,7 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+        hbm2ddl.create_namespaces: true
     show-sql: false
 
   flyway:
