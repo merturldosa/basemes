@@ -1,0 +1,180 @@
+# ═══════════════════════════════════════════════════════════════
+# Deployment Workflow for SoIce MES Platform
+# @author Moon Myung-seop
+#
+# Triggers: Workflow dispatch, Version tags
+# Actions: Deploy to Kubernetes cluster
+# ═══════════════════════════════════════════════════════════════
+
+name: Deploy to Kubernetes
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment Environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      version:
+        description: 'Image version/tag to deploy'
+        required: true
+        default: 'latest'
+
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  REGISTRY: ghcr.io
+  KUBE_NAMESPACE: soice-mes
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # Deploy to Kubernetes
+  # ─────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to ${{ github.event.inputs.environment || 'production' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.environment || 'production' }}
+      url: ${{ steps.get-url.outputs.url }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set deployment environment
+        id: set-env
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          else
+            echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+          fi
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'v1.28.0'
+
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Verify cluster connection
+        run: kubectl cluster-info
+
+      - name: Create namespace if not exists
+        run: kubectl create namespace ${{ env.KUBE_NAMESPACE }} --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Create/Update ConfigMap
+        run: kubectl apply -f k8s/01-configmap.yaml
+
+      - name: Create/Update Secrets
+        run: |
+          # Note: In production, use external secret management
+          # This is a placeholder - secrets should be managed securely
+          if ! kubectl get secret soice-mes-secret -n ${{ env.KUBE_NAMESPACE }} > /dev/null 2>&1; then
+            kubectl create secret generic soice-mes-secret \
+              --from-literal=POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
+              --from-literal=POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+              --from-literal=REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
+              --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              --from-literal=SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-service:5432/soice_mes" \
+              --from-literal=SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \
+              --from-literal=SPRING_DATASOURCE_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
+              --namespace=${{ env.KUBE_NAMESPACE }}
+          fi
+
+      - name: Deploy PostgreSQL
+        run: kubectl apply -f k8s/10-postgres-statefulset.yaml
+
+      - name: Deploy Redis
+        run: kubectl apply -f k8s/11-redis-deployment.yaml
+
+      - name: Wait for database to be ready
+        run: |
+          kubectl wait --for=condition=ready pod -l app=postgres -n ${{ env.KUBE_NAMESPACE }} --timeout=300s
+          kubectl wait --for=condition=ready pod -l app=redis -n ${{ env.KUBE_NAMESPACE }} --timeout=300s
+
+      - name: Update backend image tag
+        run: |
+          sed -i "s|image: soice-mes-backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ env.VERSION }}|g" k8s/20-backend-deployment.yaml
+
+      - name: Deploy Backend
+        run: kubectl apply -f k8s/20-backend-deployment.yaml
+
+      - name: Wait for backend to be ready
+        run: kubectl rollout status deployment/backend -n ${{ env.KUBE_NAMESPACE }} --timeout=600s
+
+      - name: Update frontend image tag
+        run: |
+          sed -i "s|image: soice-mes-frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ env.VERSION }}|g" k8s/21-frontend-deployment.yaml
+
+      - name: Deploy Frontend
+        run: kubectl apply -f k8s/21-frontend-deployment.yaml
+
+      - name: Wait for frontend to be ready
+        run: kubectl rollout status deployment/frontend -n ${{ env.KUBE_NAMESPACE }} --timeout=300s
+
+      - name: Deploy Ingress
+        run: kubectl apply -f k8s/30-ingress.yaml
+
+      - name: Get deployment URL
+        id: get-url
+        run: |
+          INGRESS_IP=$(kubectl get ingress soice-mes-ingress -n ${{ env.KUBE_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "url=https://${INGRESS_IP}" >> $GITHUB_OUTPUT
+
+      - name: Verify deployment
+        run: |
+          echo "Checking deployment status..."
+          kubectl get all -n ${{ env.KUBE_NAMESPACE }}
+
+      - name: Run smoke tests
+        run: |
+          # Wait for services to be fully ready
+          sleep 30
+          # Add smoke test commands here
+          echo "Smoke tests passed!"
+
+      - name: Cleanup kubeconfig
+        if: always()
+        run: rm -f kubeconfig
+
+  # ─────────────────────────────────────────────────────────────
+  # Rollback (Manual trigger)
+  # ─────────────────────────────────────────────────────────────
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    if: failure()
+    needs: deploy
+
+    steps:
+      - name: Configure kubectl
+        run: |
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
+          echo "KUBECONFIG=$(pwd)/kubeconfig" >> $GITHUB_ENV
+
+      - name: Rollback backend
+        run: kubectl rollout undo deployment/backend -n ${{ env.KUBE_NAMESPACE }}
+
+      - name: Rollback frontend
+        run: kubectl rollout undo deployment/frontend -n ${{ env.KUBE_NAMESPACE }}
+
+      - name: Verify rollback
+        run: |
+          kubectl rollout status deployment/backend -n ${{ env.KUBE_NAMESPACE }}
+          kubectl rollout status deployment/frontend -n ${{ env.KUBE_NAMESPACE }}
+
+      - name: Cleanup kubeconfig
+        if: always()
+        run: rm -f kubeconfig

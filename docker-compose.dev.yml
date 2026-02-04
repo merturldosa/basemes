@@ -1,0 +1,86 @@
+# ═══════════════════════════════════════════════════════════════
+# Docker Compose Override for Development
+# @author Moon Myung-seop
+#
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+# ═══════════════════════════════════════════════════════════════
+
+version: '3.8'
+
+services:
+  # ─────────────────────────────────────────────────────────────
+  # Backend - Development Mode
+  # ─────────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: builder
+    command: >
+      sh -c "mvn spring-boot:run -Dspring-boot.run.profiles=dev"
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DEVTOOLS_RESTART_ENABLED: "true"
+      SPRING_JPA_SHOW_SQL: "true"
+      LOGGING_LEVEL_KR_CO_SOFTICE: DEBUG
+    volumes:
+      - ./backend/src:/build/src:ro
+      - ./backend/pom.xml:/build/pom.xml:ro
+      - maven_cache:/root/.m2
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    stdin_open: true
+    tty: true
+
+  # ─────────────────────────────────────────────────────────────
+  # Frontend - Development Mode
+  # ─────────────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: builder
+    command: npm run dev -- --host
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api
+      VITE_WS_BASE_URL: ws://localhost:8080/ws
+    volumes:
+      - ./frontend/src:/build/src:ro
+      - ./frontend/public:/build/public:ro
+      - ./frontend/index.html:/build/index.html:ro
+      - ./frontend/vite.config.ts:/build/vite.config.ts:ro
+      - ./frontend/tsconfig.json:/build/tsconfig.json:ro
+      - node_modules:/build/node_modules
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+
+  # ─────────────────────────────────────────────────────────────
+  # PostgreSQL - Development Mode
+  # ─────────────────────────────────────────────────────────────
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: soice_mes_dev
+      POSTGRES_USER: dev_admin
+      POSTGRES_PASSWORD: dev_password
+
+  # ─────────────────────────────────────────────────────────────
+  # Redis - Development Mode
+  # ─────────────────────────────────────────────────────────────
+  redis:
+    command: redis-server --requirepass dev_redis_password
+    ports:
+      - "6379:6379"
+
+# ═══════════════════════════════════════════════════════════════
+# Development Volumes
+# ═══════════════════════════════════════════════════════════════
+volumes:
+  maven_cache:
+    name: soice-mes-maven-cache
+  node_modules:
+    name: soice-mes-node-modules

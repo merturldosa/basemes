@@ -1,0 +1,297 @@
+package kr.co.softice.mes.api.controller;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
+import kr.co.softice.mes.common.dto.schedule.*;
+import kr.co.softice.mes.domain.entity.*;
+import kr.co.softice.mes.domain.repository.*;
+import kr.co.softice.mes.domain.service.ProductionScheduleService;
+import kr.co.softice.mes.common.security.TenantContext;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Production Schedule Controller
+ * 생산 일정 관리 REST API
+ *
+ * @author Moon Myung-seop
+ */
+@Slf4j
+@RestController
+@RequestMapping("/api/schedules")
+@RequiredArgsConstructor
+@Tag(name = "Production Schedule", description = "생산 일정 관리 API")
+public class ProductionScheduleController {
+
+    private final ProductionScheduleService scheduleService;
+    private final WorkOrderRepository workOrderRepository;
+    private final ProcessRoutingStepRepository routingStepRepository;
+    private final EquipmentRepository equipmentRepository;
+    private final UserRepository userRepository;
+    private final TenantRepository tenantRepository;
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<List<ScheduleResponse>> getAllSchedules(
+        @RequestParam(required = false) String status
+    ) {
+        String tenantId = TenantContext.getCurrentTenant();
+        List<ProductionScheduleEntity> schedules = status != null ?
+            scheduleService.findByStatus(tenantId, status) :
+            scheduleService.findByTenant(tenantId);
+
+        return ResponseEntity.ok(schedules.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/period")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<List<ScheduleResponse>> getSchedulesByPeriod(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        String tenantId = TenantContext.getCurrentTenant();
+        List<ProductionScheduleEntity> schedules = scheduleService.findByPeriod(tenantId, startDate, endDate);
+
+        return ResponseEntity.ok(schedules.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/work-order/{workOrderId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<List<ScheduleResponse>> getSchedulesByWorkOrder(@PathVariable Long workOrderId) {
+        List<ProductionScheduleEntity> schedules = scheduleService.findByWorkOrder(workOrderId);
+
+        return ResponseEntity.ok(schedules.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/delayed")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<List<ScheduleResponse>> getDelayedSchedules() {
+        String tenantId = TenantContext.getCurrentTenant();
+        List<ProductionScheduleEntity> schedules = scheduleService.findDelayedSchedules(tenantId);
+
+        return ResponseEntity.ok(schedules.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{scheduleId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<ScheduleResponse> getScheduleById(@PathVariable Long scheduleId) {
+        return scheduleService.findById(scheduleId)
+            .map(schedule -> ResponseEntity.ok(toResponse(schedule)))
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/generate/{workOrderId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
+    public ResponseEntity<List<ScheduleResponse>> generateSchedules(@PathVariable Long workOrderId) {
+        List<ProductionScheduleEntity> schedules = scheduleService.generateSchedulesFromWorkOrder(workOrderId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(schedules.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
+    public ResponseEntity<ScheduleResponse> createSchedule(@Valid @RequestBody ScheduleCreateRequest request) {
+        String tenantId = TenantContext.getCurrentTenant();
+        TenantEntity tenant = tenantRepository.findById(tenantId)
+            .orElseThrow(() -> new IllegalArgumentException("Tenant not found"));
+
+        WorkOrderEntity workOrder = workOrderRepository.findById(request.getWorkOrderId())
+            .orElseThrow(() -> new IllegalArgumentException("WorkOrder not found"));
+
+        ProcessRoutingStepEntity routingStep = routingStepRepository.findById(request.getRoutingStepId())
+            .orElseThrow(() -> new IllegalArgumentException("Routing step not found"));
+
+        EquipmentEntity equipment = null;
+        if (request.getAssignedEquipmentId() != null) {
+            equipment = equipmentRepository.findById(request.getAssignedEquipmentId())
+                .orElseThrow(() -> new IllegalArgumentException("Equipment not found"));
+        }
+
+        UserEntity user = null;
+        if (request.getAssignedUserId() != null) {
+            user = userRepository.findById(request.getAssignedUserId())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        }
+
+        ProductionScheduleEntity schedule = ProductionScheduleEntity.builder()
+            .tenant(tenant)
+            .workOrder(workOrder)
+            .routingStep(routingStep)
+            .sequenceOrder(request.getSequenceOrder())
+            .plannedStartTime(request.getPlannedStartTime())
+            .plannedEndTime(request.getPlannedEndTime())
+            .plannedDuration(request.getPlannedDuration())
+            .assignedEquipment(equipment)
+            .assignedWorkers(request.getAssignedWorkers())
+            .assignedUser(user)
+            .status("SCHEDULED")
+            .remarks(request.getRemarks())
+            .build();
+
+        ProductionScheduleEntity created = scheduleService.createSchedule(schedule);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(created));
+    }
+
+    @PutMapping("/{scheduleId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
+    public ResponseEntity<ScheduleResponse> updateSchedule(
+        @PathVariable Long scheduleId,
+        @Valid @RequestBody ScheduleUpdateRequest request
+    ) {
+        return scheduleService.findById(scheduleId)
+            .map(schedule -> {
+                // 계획 일정 수정
+                if (request.getPlannedStartTime() != null) {
+                    schedule.setPlannedStartTime(request.getPlannedStartTime());
+                }
+                if (request.getPlannedEndTime() != null) {
+                    schedule.setPlannedEndTime(request.getPlannedEndTime());
+                }
+                if (request.getPlannedDuration() != null) {
+                    schedule.setPlannedDuration(request.getPlannedDuration());
+                }
+
+                // 실제 일정 수정
+                if (request.getActualStartTime() != null) {
+                    schedule.setActualStartTime(request.getActualStartTime());
+                }
+                if (request.getActualEndTime() != null) {
+                    schedule.setActualEndTime(request.getActualEndTime());
+                }
+
+                // 리소스 수정
+                if (request.getAssignedEquipmentId() != null) {
+                    EquipmentEntity equipment = equipmentRepository.findById(request.getAssignedEquipmentId())
+                        .orElseThrow(() -> new IllegalArgumentException("Equipment not found"));
+                    schedule.setAssignedEquipment(equipment);
+                }
+                if (request.getAssignedWorkers() != null) {
+                    schedule.setAssignedWorkers(request.getAssignedWorkers());
+                }
+                if (request.getAssignedUserId() != null) {
+                    UserEntity user = userRepository.findById(request.getAssignedUserId())
+                        .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                    schedule.setAssignedUser(user);
+                }
+
+                // 상태 수정
+                if (request.getStatus() != null) {
+                    schedule.setStatus(request.getStatus());
+                }
+                if (request.getProgressRate() != null) {
+                    schedule.setProgressRate(request.getProgressRate());
+                }
+
+                // 지연 정보
+                if (request.getDelayReason() != null) {
+                    schedule.setDelayReason(request.getDelayReason());
+                }
+                if (request.getRemarks() != null) {
+                    schedule.setRemarks(request.getRemarks());
+                }
+
+                ProductionScheduleEntity updated = scheduleService.updateSchedule(schedule);
+                return ResponseEntity.ok(toResponse(updated));
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId) {
+        scheduleService.deleteSchedule(scheduleId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{scheduleId}/status")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
+    public ResponseEntity<ScheduleResponse> updateStatus(
+        @PathVariable Long scheduleId,
+        @RequestParam String status
+    ) {
+        ProductionScheduleEntity schedule = scheduleService.updateStatus(scheduleId, status);
+        return ResponseEntity.ok(toResponse(schedule));
+    }
+
+    @GetMapping("/gantt")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    public ResponseEntity<GanttChartData> getGanttChart(
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+        String tenantId = TenantContext.getCurrentTenant();
+        GanttChartData ganttData = scheduleService.getGanttChartData(tenantId, startDate, endDate);
+        return ResponseEntity.ok(ganttData);
+    }
+
+    @GetMapping("/{scheduleId}/conflicts")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
+    public ResponseEntity<List<ScheduleResponse>> checkConflicts(@PathVariable Long scheduleId) {
+        List<ProductionScheduleEntity> conflicts = scheduleService.checkResourceConflicts(scheduleId);
+        return ResponseEntity.ok(conflicts.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    private ScheduleResponse toResponse(ProductionScheduleEntity schedule) {
+        return ScheduleResponse.builder()
+            .scheduleId(schedule.getScheduleId())
+            .tenantId(schedule.getTenant().getTenantId())
+            .tenantName(schedule.getTenant().getTenantName())
+            .workOrderId(schedule.getWorkOrder().getWorkOrderId())
+            .workOrderNo(schedule.getWorkOrder().getWorkOrderNo())
+            .productId(schedule.getWorkOrder().getProduct().getProductId())
+            .productCode(schedule.getWorkOrder().getProduct().getProductCode())
+            .productName(schedule.getWorkOrder().getProduct().getProductName())
+            .routingStepId(schedule.getRoutingStep().getRoutingStepId())
+            .sequenceOrder(schedule.getSequenceOrder())
+            .processId(schedule.getRoutingStep().getProcess().getProcessId())
+            .processCode(schedule.getRoutingStep().getProcess().getProcessCode())
+            .processName(schedule.getRoutingStep().getProcess().getProcessName())
+            .plannedStartTime(schedule.getPlannedStartTime())
+            .plannedEndTime(schedule.getPlannedEndTime())
+            .plannedDuration(schedule.getPlannedDuration())
+            .actualStartTime(schedule.getActualStartTime())
+            .actualEndTime(schedule.getActualEndTime())
+            .actualDuration(schedule.getActualDuration())
+            .assignedEquipmentId(schedule.getAssignedEquipment() != null ?
+                schedule.getAssignedEquipment().getEquipmentId() : null)
+            .assignedEquipmentCode(schedule.getAssignedEquipment() != null ?
+                schedule.getAssignedEquipment().getEquipmentCode() : null)
+            .assignedEquipmentName(schedule.getAssignedEquipment() != null ?
+                schedule.getAssignedEquipment().getEquipmentName() : null)
+            .assignedWorkers(schedule.getAssignedWorkers())
+            .assignedUserId(schedule.getAssignedUser() != null ?
+                schedule.getAssignedUser().getUserId() : null)
+            .assignedUserName(schedule.getAssignedUser() != null ?
+                schedule.getAssignedUser().getUsername() : null)
+            .status(schedule.getStatus())
+            .progressRate(schedule.getProgressRate())
+            .isDelayed(schedule.getIsDelayed())
+            .delayMinutes(schedule.getDelayMinutes())
+            .delayReason(schedule.getDelayReason())
+            .remarks(schedule.getRemarks())
+            .createdAt(schedule.getCreatedAt())
+            .updatedAt(schedule.getUpdatedAt())
+            .build();
+    }
+}

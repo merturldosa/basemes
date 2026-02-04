@@ -1,0 +1,154 @@
+package kr.co.softice.mes.api.controller;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
+import kr.co.softice.mes.common.dto.inventory.WarehouseCreateRequest;
+import kr.co.softice.mes.common.dto.inventory.WarehouseResponse;
+import kr.co.softice.mes.common.dto.inventory.WarehouseUpdateRequest;
+import kr.co.softice.mes.domain.entity.TenantEntity;
+import kr.co.softice.mes.domain.entity.UserEntity;
+import kr.co.softice.mes.domain.entity.WarehouseEntity;
+import kr.co.softice.mes.domain.repository.UserRepository;
+import kr.co.softice.mes.domain.service.WarehouseService;
+import kr.co.softice.mes.common.security.TenantContext;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Warehouse Controller
+ * 창고 마스터 REST API
+ *
+ * @author Moon Myung-seop
+ */
+@Slf4j
+@RestController
+@RequestMapping("/api/warehouses")
+@RequiredArgsConstructor
+@Tag(name = "Warehouse", description = "창고 마스터 관리 API")
+public class WarehouseController {
+
+    private final WarehouseService warehouseService;
+    private final UserRepository userRepository;
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
+    public ResponseEntity<List<WarehouseResponse>> getAllWarehouses() {
+        String tenantId = TenantContext.getCurrentTenant();
+        List<WarehouseEntity> warehouses = warehouseService.findByTenant(tenantId);
+        return ResponseEntity.ok(warehouses.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
+    public ResponseEntity<List<WarehouseResponse>> getActiveWarehouses() {
+        String tenantId = TenantContext.getCurrentTenant();
+        List<WarehouseEntity> warehouses = warehouseService.findActiveByTenant(tenantId);
+        return ResponseEntity.ok(warehouses.stream()
+            .map(this::toResponse)
+            .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/{warehouseId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
+    public ResponseEntity<WarehouseResponse> getWarehouseById(@PathVariable Long warehouseId) {
+        return warehouseService.findById(warehouseId)
+            .map(warehouse -> ResponseEntity.ok(toResponse(warehouse)))
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER')")
+    public ResponseEntity<WarehouseResponse> createWarehouse(@Valid @RequestBody WarehouseCreateRequest request) {
+        TenantEntity tenant = TenantContext.getCurrentTenantEntity();
+        UserEntity manager = userRepository.findById(request.getManagerUserId())
+            .orElseThrow(() -> new IllegalArgumentException("Manager user not found"));
+
+        WarehouseEntity warehouse = WarehouseEntity.builder()
+            .tenant(tenant)
+            .warehouseCode(request.getWarehouseCode())
+            .warehouseName(request.getWarehouseName())
+            .warehouseType(request.getWarehouseType())
+            .location(request.getLocation())
+            .manager(manager)
+            .contactNumber(request.getContactNumber())
+            .capacity(request.getCapacity())
+            .unit(request.getUnit())
+            .isActive(request.getIsActive())
+            .remarks(request.getRemarks())
+            .build();
+
+        WarehouseEntity created = warehouseService.createWarehouse(warehouse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(created));
+    }
+
+    @PutMapping("/{warehouseId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER')")
+    public ResponseEntity<WarehouseResponse> updateWarehouse(
+        @PathVariable Long warehouseId,
+        @Valid @RequestBody WarehouseUpdateRequest request) {
+
+        return warehouseService.findById(warehouseId)
+            .map(warehouse -> {
+                UserEntity manager = userRepository.findById(request.getManagerUserId())
+                    .orElseThrow(() -> new IllegalArgumentException("Manager user not found"));
+
+                warehouse.setWarehouseName(request.getWarehouseName());
+                warehouse.setWarehouseType(request.getWarehouseType());
+                warehouse.setLocation(request.getLocation());
+                warehouse.setManager(manager);
+                warehouse.setContactNumber(request.getContactNumber());
+                warehouse.setCapacity(request.getCapacity());
+                warehouse.setUnit(request.getUnit());
+                warehouse.setIsActive(request.getIsActive());
+                warehouse.setRemarks(request.getRemarks());
+
+                WarehouseEntity updated = warehouseService.updateWarehouse(warehouse);
+                return ResponseEntity.ok(toResponse(updated));
+            })
+            .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{warehouseId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteWarehouse(@PathVariable Long warehouseId) {
+        warehouseService.deleteWarehouse(warehouseId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{warehouseId}/toggle-active")
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER')")
+    public ResponseEntity<WarehouseResponse> toggleActive(@PathVariable Long warehouseId) {
+        WarehouseEntity warehouse = warehouseService.toggleActive(warehouseId);
+        return ResponseEntity.ok(toResponse(warehouse));
+    }
+
+    private WarehouseResponse toResponse(WarehouseEntity warehouse) {
+        return WarehouseResponse.builder()
+            .warehouseId(warehouse.getWarehouseId())
+            .tenantId(warehouse.getTenant().getTenantId())
+            .tenantName(warehouse.getTenant().getTenantName())
+            .warehouseCode(warehouse.getWarehouseCode())
+            .warehouseName(warehouse.getWarehouseName())
+            .warehouseType(warehouse.getWarehouseType())
+            .location(warehouse.getLocation())
+            .managerUserId(warehouse.getManager().getUserId())
+            .managerUserName(warehouse.getManager().getUsername())
+            .contactNumber(warehouse.getContactNumber())
+            .capacity(warehouse.getCapacity())
+            .unit(warehouse.getUnit())
+            .isActive(warehouse.getIsActive())
+            .remarks(warehouse.getRemarks())
+            .createdAt(warehouse.getCreatedAt())
+            .updatedAt(warehouse.getUpdatedAt())
+            .build();
+    }
+}

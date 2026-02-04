@@ -1,0 +1,337 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SoIce MES - Spring Boot Application Configuration
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Environment: Development
+# Author: Moon Myung-seop <msmoon@softice.co.kr>
+# Date: 2026-01-17
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+spring:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Application
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  application:
+    name: soice-mes-backend
+
+  profiles:
+    active: local
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Database (PostgreSQL)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  datasource:
+    url: jdbc:postgresql://localhost:5432/soice_mes_dev
+    username: mes_admin
+    password: mes_password_dev_2026
+    driver-class-name: org.postgresql.Driver
+
+    # HikariCP Settings
+    hikari:
+      pool-name: SoIceMesHikariCP
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      auto-commit: true
+      connection-test-query: SELECT 1
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JPA / Hibernate
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update  # create, update, validate, none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        show_sql: false
+        jdbc:
+          batch_size: 20
+          time_zone: Asia/Seoul
+        order_inserts: true
+        order_updates: true
+    show-sql: false
+    open-in-view: false
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Redis
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0  # Session storage
+      timeout: 60000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Cache
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000  # 1 hour (ms)
+      cache-null-values: false
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Jackson (JSON)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: Asia/Seoul
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Web MVC
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+    throw-exception-if-no-handler-found: true
+
+  web:
+    resources:
+      add-mappings: false
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # Servlet
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Server
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: on_param
+    include-exception: false
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Logging
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+logging:
+  level:
+    root: INFO
+    kr.co.softice.mes: DEBUG
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.zaxxer.hikari: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/soice-mes-backend.log
+    max-size: 10MB
+    max-history: 30
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Actuator (Monitoring)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SpringDoc OpenAPI (Swagger)
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    doc-expansion: none
+    default-models-expand-depth: 1
+    default-model-expand-depth: 1
+  show-actuator: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  group-configs:
+    - group: auth
+      paths-to-match: /auth/**
+      display-name: "1. Authentication & Authorization"
+    - group: user-management
+      paths-to-match:
+        - /users/**
+        - /roles/**
+        - /permissions/**
+      display-name: "2. User, Role & Permission Management"
+    - group: dashboard
+      paths-to-match: /dashboard/**
+      display-name: "3. Dashboard & Analytics"
+    - group: production
+      paths-to-match:
+        - /products/**
+        - /processes/**
+        - /work-orders/**
+        - /work-results/**
+      display-name: "4. Production Management"
+    - group: quality
+      paths-to-match:
+        - /quality-standards/**
+        - /quality-inspections/**
+      display-name: "5. Quality Management System (QMS)"
+    - group: inventory
+      paths-to-match:
+        - /warehouses/**
+        - /lots/**
+        - /inventory/**
+        - /inventory-transactions/**
+        - /goods-receipts/**
+        - /physical-inventory/**
+      display-name: "6. Inventory & Warehouse Management (WMS)"
+    - group: bom
+      paths-to-match: /boms/**
+      display-name: "7. Bill of Materials (BOM)"
+    - group: business
+      paths-to-match:
+        - /customers/**
+        - /suppliers/**
+      display-name: "8. Customer & Supplier Management"
+    - group: material
+      paths-to-match: /materials/**
+      display-name: "9. Material Management"
+    - group: purchase
+      paths-to-match:
+        - /purchase-requests/**
+        - /purchase-orders/**
+      display-name: "10. Purchase Management"
+    - group: sales
+      paths-to-match:
+        - /sales-orders/**
+        - /deliveries/**
+      display-name: "11. Sales & Delivery Management"
+    - group: equipment
+      paths-to-match:
+        - /equipments/**
+        - /equipment-operations/**
+        - /equipment-inspections/**
+      display-name: "12. Equipment Management"
+    - group: downtime
+      paths-to-match: /downtimes/**
+      display-name: "13. Downtime Management"
+    - group: mold
+      paths-to-match:
+        - /molds/**
+        - /mold-maintenances/**
+        - /mold-production-histories/**
+      display-name: "14. Mold Management"
+    - group: hr
+      paths-to-match:
+        - /skill-matrix/**
+        - /employee-skills/**
+      display-name: "15. Human Resources"
+    - group: defect
+      paths-to-match:
+        - /defects/**
+        - /after-sales/**
+        - /claims/**
+      display-name: "16. Defect Management"
+    - group: common
+      paths-to-match:
+        - /sites/**
+        - /departments/**
+        - /common-codes/**
+        - /sops/**
+        - /holidays/**
+        - /approvals/**
+        - /alarms/**
+      display-name: "17. Common Management"
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Application Custom Properties
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+app:
+  # JWT Settings
+  jwt:
+    secret: SoIceMES-JWT-Secret-Key-For-Development-2026-Please-Change-In-Production
+    access-token-expiration: 3600000      # 1 hour (ms)
+    refresh-token-expiration: 604800000   # 7 days (ms)
+    issuer: SoIce-MES
+
+  # CORS Settings
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:3001
+      - http://localhost:5173
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    exposed-headers:
+      - Authorization
+      - Content-Disposition
+    allow-credentials: true
+    max-age: 3600
+
+  # Multi-Tenant Settings
+  tenant:
+    header-name: X-Tenant-ID
+    default-tenant: softice
+    cache-enabled: true
+    cache-ttl: 3600
+
+  # File Upload Settings
+  file:
+    upload-dir: ./uploads
+    max-file-size: 104857600  # 100MB (bytes)
+    allowed-extensions:
+      - jpg
+      - jpeg
+      - png
+      - pdf
+      - xlsx
+      - xls
+      - csv
+      - txt

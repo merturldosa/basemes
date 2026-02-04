@@ -1,0 +1,99 @@
+# ═══════════════════════════════════════════════════════════════
+# Alertmanager Configuration for SoIce MES Platform
+# @author Moon Myung-seop
+# ═══════════════════════════════════════════════════════════════
+
+global:
+  resolve_timeout: 5m
+  # SMTP configuration (for email alerts)
+  # smtp_smarthost: 'smtp.gmail.com:587'
+  # smtp_from: 'alerts@soice-mes.com'
+  # smtp_auth_username: 'your-email@gmail.com'
+  # smtp_auth_password: 'your-app-password'
+
+# Templates
+templates:
+  - '/etc/alertmanager/template/*.tmpl'
+
+# Route tree
+route:
+  receiver: 'default'
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 12h
+
+  routes:
+    # Critical alerts
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      continue: true
+
+    # Warning alerts
+    - match:
+        severity: warning
+      receiver: 'warning-alerts'
+
+    # Database alerts
+    - match:
+        component: database
+      receiver: 'database-team'
+
+    # Application alerts
+    - match:
+        component: application
+      receiver: 'dev-team'
+
+# Inhibition rules
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'cluster', 'service']
+
+# Receivers
+receivers:
+  # Default receiver
+  - name: 'default'
+    webhook_configs:
+      - url: 'http://localhost:5001/webhook'
+        send_resolved: true
+
+  # Critical alerts - multiple channels
+  - name: 'critical-alerts'
+    # Email notifications
+    # email_configs:
+    #   - to: 'oncall@soice-mes.com'
+    #     headers:
+    #       Subject: '[CRITICAL] SoIce MES Alert'
+
+    # Slack notifications
+    # slack_configs:
+    #   - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    #     channel: '#alerts-critical'
+    #     title: 'Critical Alert - SoIce MES'
+    #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+    # PagerDuty
+    # pagerduty_configs:
+    #   - service_key: 'YOUR_PAGERDUTY_KEY'
+
+  # Warning alerts
+  - name: 'warning-alerts'
+    # Slack notifications
+    # slack_configs:
+    #   - api_url: 'YOUR_SLACK_WEBHOOK_URL'
+    #     channel: '#alerts-warning'
+    #     title: 'Warning - SoIce MES'
+
+  # Database team
+  - name: 'database-team'
+    # email_configs:
+    #   - to: 'database-team@soice-mes.com'
+
+  # Development team
+  - name: 'dev-team'
+    # email_configs:
+    #   - to: 'dev-team@soice-mes.com'

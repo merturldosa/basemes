@@ -1,0 +1,13 @@
+# ═══════════════════════════════════════════════════════════════
+# Namespace for SoIce MES Platform
+# @author Moon Myung-seop
+# ═══════════════════════════════════════════════════════════════
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: soice-mes
+  labels:
+    name: soice-mes
+    environment: production
+    app: soice-mes-platform

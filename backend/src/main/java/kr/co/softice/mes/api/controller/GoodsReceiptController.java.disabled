@@ -1,0 +1,246 @@
+package kr.co.softice.mes.api.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import javax.validation.Valid;
+import kr.co.softice.mes.common.dto.purchase.*;
+import kr.co.softice.mes.common.security.TenantContext;
+import kr.co.softice.mes.domain.entity.*;
+import kr.co.softice.mes.domain.service.GoodsReceiptService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * Goods Receipt Controller
+ * 입하 컨트롤러
+ *
+ * @author Moon Myung-seop
+ */
+@RestController
+@RequestMapping("/api/goods-receipts")
+@RequiredArgsConstructor
+@Slf4j
+@Tag(name = "Goods Receipt Management", description = "입하 관리 API")
+public class GoodsReceiptController {
+
+    private final GoodsReceiptService goodsReceiptService;
+
+    /**
+     * 모든 입하 조회
+     */
+    @GetMapping
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "모든 입하 조회", description = "테넌트의 모든 입하를 조회합니다")
+    public ResponseEntity<List<GoodsReceiptResponse>> getAllGoodsReceipts() {
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("GET /api/goods-receipts - tenant: {}", tenantId);
+
+        List<GoodsReceiptEntity> receipts = goodsReceiptService.getAllGoodsReceipts(tenantId);
+        List<GoodsReceiptResponse> responses = receipts.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
+    }
+
+    /**
+     * 상태별 입하 조회
+     */
+    @GetMapping("/status/{status}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "상태별 입하 조회", description = "특정 상태의 입하를 조회합니다")
+    public ResponseEntity<List<GoodsReceiptResponse>> getGoodsReceiptsByStatus(@PathVariable String status) {
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("GET /api/goods-receipts/status/{} - tenant: {}", status, tenantId);
+
+        List<GoodsReceiptEntity> receipts = goodsReceiptService.getGoodsReceiptsByStatus(tenantId, status);
+        List<GoodsReceiptResponse> responses = receipts.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
+    }
+
+    /**
+     * 구매 주문별 입하 조회
+     */
+    @GetMapping("/purchase-order/{purchaseOrderId}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "구매 주문별 입하 조회", description = "특정 구매 주문의 입하를 조회합니다")
+    public ResponseEntity<List<GoodsReceiptResponse>> getGoodsReceiptsByPurchaseOrder(@PathVariable Long purchaseOrderId) {
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("GET /api/goods-receipts/purchase-order/{} - tenant: {}", purchaseOrderId, tenantId);
+
+        List<GoodsReceiptEntity> receipts = goodsReceiptService.getGoodsReceiptsByPurchaseOrder(tenantId, purchaseOrderId);
+        List<GoodsReceiptResponse> responses = receipts.stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responses);
+    }
+
+    /**
+     * 입하 ID로 조회
+     */
+    @GetMapping("/{goodsReceiptId}")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "입하 조회", description = "입하 ID로 입하를 조회합니다")
+    public ResponseEntity<GoodsReceiptResponse> getGoodsReceiptById(@PathVariable Long goodsReceiptId) {
+        log.info("GET /api/goods-receipts/{}", goodsReceiptId);
+
+        GoodsReceiptEntity receipt = goodsReceiptService.getGoodsReceiptById(goodsReceiptId);
+        return ResponseEntity.ok(toResponse(receipt));
+    }
+
+    /**
+     * 입하 생성
+     */
+    @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'PURCHASE_MANAGER')")
+    @Operation(summary = "입하 생성", description = "새로운 입하를 생성합니다")
+    public ResponseEntity<GoodsReceiptResponse> createGoodsReceipt(@Valid @RequestBody GoodsReceiptCreateRequest request) {
+        String tenantId = TenantContext.getCurrentTenant();
+        log.info("POST /api/goods-receipts - tenant: {}, receiptNo: {}", tenantId, request.getReceiptNo());
+
+        GoodsReceiptEntity goodsReceipt = toEntity(request);
+        GoodsReceiptEntity created = goodsReceiptService.createGoodsReceipt(tenantId, goodsReceipt);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(created));
+    }
+
+    /**
+     * 입하 완료 처리
+     */
+    @PostMapping("/{goodsReceiptId}/complete")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'PURCHASE_MANAGER')")
+    @Operation(summary = "입하 완료", description = "입하를 완료 처리합니다")
+    public ResponseEntity<GoodsReceiptResponse> completeGoodsReceipt(@PathVariable Long goodsReceiptId) {
+        log.info("POST /api/goods-receipts/{}/complete", goodsReceiptId);
+
+        GoodsReceiptEntity completed = goodsReceiptService.completeGoodsReceipt(goodsReceiptId);
+        return ResponseEntity.ok(toResponse(completed));
+    }
+
+    /**
+     * 입하 삭제
+     */
+    @DeleteMapping("/{goodsReceiptId}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER')")
+    @Operation(summary = "입하 삭제", description = "입하를 삭제합니다")
+    public ResponseEntity<Void> deleteGoodsReceipt(@PathVariable Long goodsReceiptId) {
+        log.info("DELETE /api/goods-receipts/{}", goodsReceiptId);
+
+        goodsReceiptService.deleteGoodsReceipt(goodsReceiptId);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Entity를 Response DTO로 변환
+     */
+    private GoodsReceiptResponse toResponse(GoodsReceiptEntity entity) {
+        List<GoodsReceiptItemResponse> itemResponses = entity.getItems().stream()
+                .map(this::toItemResponse)
+                .collect(Collectors.toList());
+
+        return GoodsReceiptResponse.builder()
+                .goodsReceiptId(entity.getGoodsReceiptId())
+                .tenantId(entity.getTenant().getTenantId())
+                .tenantName(entity.getTenant().getTenantName())
+                .receiptNo(entity.getReceiptNo())
+                .receiptDate(entity.getReceiptDate())
+                .purchaseOrderId(entity.getPurchaseOrder().getPurchaseOrderId())
+                .purchaseOrderNo(entity.getPurchaseOrder().getOrderNo())
+                .supplierId(entity.getPurchaseOrder().getSupplier().getSupplierId())
+                .supplierName(entity.getPurchaseOrder().getSupplier().getSupplierName())
+                .warehouseId(entity.getWarehouse().getWarehouseId())
+                .warehouseCode(entity.getWarehouse().getWarehouseCode())
+                .warehouseName(entity.getWarehouse().getWarehouseName())
+                .inspectionStatus(entity.getInspectionStatus())
+                .inspectorUserId(entity.getInspector() != null ? entity.getInspector().getUserId() : null)
+                .inspectorUsername(entity.getInspector() != null ? entity.getInspector().getUsername() : null)
+                .inspectorFullName(entity.getInspector() != null ? entity.getInspector().getFullName() : null)
+                .inspectionDate(entity.getInspectionDate())
+                .status(entity.getStatus())
+                .receiverUserId(entity.getReceiver().getUserId())
+                .receiverUsername(entity.getReceiver().getUsername())
+                .receiverFullName(entity.getReceiver().getFullName())
+                .remarks(entity.getRemarks())
+                .items(itemResponses)
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .build();
+    }
+
+    /**
+     * Item Entity를 Response DTO로 변환
+     */
+    private GoodsReceiptItemResponse toItemResponse(GoodsReceiptItemEntity entity) {
+        return GoodsReceiptItemResponse.builder()
+                .goodsReceiptItemId(entity.getGoodsReceiptItemId())
+                .lineNo(entity.getLineNo())
+                .purchaseOrderItemId(entity.getPurchaseOrderItem().getPurchaseOrderItemId())
+                .materialId(entity.getMaterial().getMaterialId())
+                .materialCode(entity.getMaterial().getMaterialCode())
+                .materialName(entity.getMaterial().getMaterialName())
+                .receivedQuantity(entity.getReceivedQuantity())
+                .acceptedQuantity(entity.getAcceptedQuantity())
+                .rejectedQuantity(entity.getRejectedQuantity())
+                .unit(entity.getUnit())
+                .lotId(entity.getLot() != null ? entity.getLot().getLotId() : null)
+                .lotNo(entity.getLot() != null ? entity.getLot().getLotNo() : null)
+                .location(entity.getLocation())
+                .remarks(entity.getRemarks())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .build();
+    }
+
+    /**
+     * CreateRequest를 Entity로 변환
+     */
+    private GoodsReceiptEntity toEntity(GoodsReceiptCreateRequest request) {
+        GoodsReceiptEntity.GoodsReceiptEntityBuilder builder = GoodsReceiptEntity.builder()
+                .receiptNo(request.getReceiptNo())
+                .purchaseOrder(PurchaseOrderEntity.builder().purchaseOrderId(request.getPurchaseOrderId()).build())
+                .warehouse(WarehouseEntity.builder().warehouseId(request.getWarehouseId()).build())
+                .receiver(UserEntity.builder().userId(request.getReceiverUserId()).build())
+                .receiptDate(request.getReceiptDate())
+                .remarks(request.getRemarks());
+
+        // Add items
+        if (request.getItems() != null && !request.getItems().isEmpty()) {
+            List<GoodsReceiptItemEntity> items = new ArrayList<>();
+            for (GoodsReceiptItemRequest itemReq : request.getItems()) {
+                GoodsReceiptItemEntity item = GoodsReceiptItemEntity.builder()
+                        .lineNo(itemReq.getLineNo())
+                        .purchaseOrderItem(PurchaseOrderItemEntity.builder()
+                                .purchaseOrderItemId(itemReq.getPurchaseOrderItemId()).build())
+                        .material(MaterialEntity.builder().materialId(itemReq.getMaterialId()).build())
+                        .receivedQuantity(itemReq.getReceivedQuantity())
+                        .acceptedQuantity(itemReq.getAcceptedQuantity())
+                        .rejectedQuantity(itemReq.getRejectedQuantity())
+                        .unit(itemReq.getUnit())
+                        .location(itemReq.getLocation())
+                        .remarks(itemReq.getRemarks())
+                        .build();
+
+                if (itemReq.getLotId() != null) {
+                    item.setLot(LotEntity.builder().lotId(itemReq.getLotId()).build());
+                }
+
+                items.add(item);
+            }
+            builder.items(items);
+        }
+
+        return builder.build();
+    }
+}
