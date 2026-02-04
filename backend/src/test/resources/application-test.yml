@@ -1,0 +1,44 @@
+# Test Profile Configuration
+# In-memory H2 database for fast integration tests
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    show-sql: false
+
+  flyway:
+    enabled: false  # Disable Flyway for tests, use JPA ddl-auto instead
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# Logging
+logging:
+  level:
+    kr.co.softice.mes: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+# JWT Configuration
+jwt:
+  secret: test-secret-key-for-integration-testing-only-do-not-use-in-production
+  expiration: 3600000  # 1 hour
+
+# Security
+security:
+  enabled: false  # Disable security for integration tests
