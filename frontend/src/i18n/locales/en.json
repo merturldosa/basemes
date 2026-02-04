@@ -1,0 +1,252 @@
+{
+  "common": {
+    "appName": "SoIce MES",
+    "appFullName": "SoftIce Manufacturing Execution System",
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "add": "Add",
+      "search": "Search",
+      "reset": "Reset",
+      "close": "Close",
+      "confirm": "Confirm",
+      "submit": "Submit",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "refresh": "Refresh",
+      "export": "Export",
+      "import": "Import",
+      "download": "Download",
+      "upload": "Upload",
+      "print": "Print"
+    },
+    "labels": {
+      "status": "Status",
+      "createdAt": "Created At",
+      "updatedAt": "Updated At",
+      "createdBy": "Created By",
+      "updatedBy": "Updated By",
+      "actions": "Actions",
+      "description": "Description",
+      "name": "Name",
+      "code": "Code",
+      "type": "Type",
+      "category": "Category",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "quantity": "Quantity",
+      "total": "Total",
+      "remarks": "Remarks"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "cancelled": "Cancelled"
+    },
+    "messages": {
+      "loading": "Loading...",
+      "noData": "No data available",
+      "error": "An error occurred",
+      "success": "Operation completed successfully",
+      "confirmDelete": "Are you sure you want to delete?",
+      "saveSuccess": "Saved successfully",
+      "deleteSuccess": "Deleted successfully",
+      "updateSuccess": "Updated successfully",
+      "networkError": "Network error occurred",
+      "serverError": "Server error occurred"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "welcomeMessage": "Welcome to SoftIce MES Platform",
+      "tenantId": "Tenant ID",
+      "username": "Username",
+      "password": "Password",
+      "rememberMe": "Remember Me",
+      "forgotPassword": "Forgot Password?",
+      "loginButton": "Login",
+      "loggingIn": "Logging in...",
+      "errors": {
+        "invalidCredentials": "Invalid username or password",
+        "tenantRequired": "Please enter Tenant ID",
+        "usernameRequired": "Please enter username",
+        "passwordRequired": "Please enter password",
+        "loginFailed": "Login failed"
+      }
+    },
+    "logout": {
+      "button": "Logout",
+      "confirm": "Are you sure you want to logout?",
+      "success": "Logged out successfully"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "production": "Production",
+    "quality": "Quality",
+    "inventory": "Inventory",
+    "warehouse": "Warehouse",
+    "purchase": "Purchase",
+    "sales": "Sales",
+    "equipment": "Equipment",
+    "mold": "Mold",
+    "bom": "BOM",
+    "material": "Material",
+    "hr": "HR",
+    "settings": "Settings",
+    "admin": "Admin",
+    "reports": "Reports",
+    "menu": {
+      "dashboard": "Dashboard",
+      "overview": "Overview",
+      "products": "Product Master",
+      "processes": "Process Master",
+      "workOrders": "Work Orders",
+      "workResults": "Work Results",
+      "productionSchedules": "Production Schedule",
+      "qualityStandards": "Quality Standards",
+      "qualityInspections": "Quality Inspections",
+      "warehouses": "Warehouse Master",
+      "lots": "LOT Management",
+      "inventoryStatus": "Inventory Status",
+      "inventoryTransactions": "Inventory Transactions",
+      "boms": "BOM Management",
+      "processRoutings": "Process Routing",
+      "materials": "Material Management",
+      "purchaseOrders": "Purchase Orders",
+      "salesOrders": "Sales Orders",
+      "deliveries": "Delivery Management",
+      "receiving": "Receiving Management",
+      "shipping": "Shipping Registration",
+      "weighings": "Weighing Management",
+      "defects": "Defect Management",
+      "afterSales": "After Sales",
+      "claims": "Claims Management",
+      "equipments": "Equipment Management",
+      "equipmentOperations": "Operation History",
+      "equipmentInspections": "Inspection Management",
+      "downtimes": "Downtime Management",
+      "molds": "Mold Management",
+      "moldMaintenances": "Mold Maintenance",
+      "moldProductionHistories": "Mold Production History",
+      "skillMatrix": "Skill Matrix",
+      "employeeSkills": "Employee Skills",
+      "customers": "Customer Management",
+      "suppliers": "Supplier Management",
+      "sites": "Site Management",
+      "departments": "Department Management",
+      "employees": "Employee Management",
+      "users": "User Management",
+      "roles": "Role Management",
+      "permissions": "Permission Management",
+      "auditLogs": "Audit Logs",
+      "themes": "Theme Settings",
+      "profile": "Profile"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "overview": "Overview",
+    "statistics": {
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Users",
+      "todayLogins": "Today's Logins",
+      "activeSessions": "Active Sessions",
+      "totalRoles": "Total Roles",
+      "totalPermissions": "Total Permissions"
+    },
+    "charts": {
+      "loginTrend": "Login Trend",
+      "userActivity": "User Activity",
+      "systemStatus": "System Status",
+      "performanceMetrics": "Performance Metrics"
+    },
+    "filters": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
+      "thisMonth": "This Month",
+      "lastMonth": "Last Month",
+      "custom": "Custom"
+    }
+  },
+  "production": {
+    "title": "Production Management",
+    "workOrder": {
+      "title": "Work Orders",
+      "orderNumber": "Order Number",
+      "product": "Product",
+      "quantity": "Quantity",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "priority": "Priority",
+      "status": "Status"
+    },
+    "workResult": {
+      "title": "Work Results",
+      "producedQuantity": "Produced Quantity",
+      "defectQuantity": "Defect Quantity",
+      "goodQuantity": "Good Quantity",
+      "operator": "Operator"
+    }
+  },
+  "quality": {
+    "title": "Quality Management",
+    "inspection": {
+      "title": "Quality Inspection",
+      "type": "Inspection Type",
+      "result": "Inspection Result",
+      "inspector": "Inspector",
+      "inspectionDate": "Inspection Date"
+    },
+    "standard": {
+      "title": "Quality Standards",
+      "criteria": "Inspection Criteria",
+      "specification": "Specification"
+    }
+  },
+  "inventory": {
+    "title": "Inventory Management",
+    "warehouse": "Warehouse",
+    "location": "Location",
+    "currentStock": "Current Stock",
+    "availableStock": "Available Stock",
+    "allocatedStock": "Allocated Stock",
+    "safetyStock": "Safety Stock",
+    "lotNumber": "LOT Number",
+    "expiryDate": "Expiry Date"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "profile": "Profile",
+    "account": "Account",
+    "security": "Security",
+    "notifications": "Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "preferences": "Preferences"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "minLength": "Minimum {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed",
+    "number": "Only numbers are allowed",
+    "positive": "Only positive numbers are allowed",
+    "integer": "Only integers are allowed",
+    "date": "Please select a valid date",
+    "future": "Please select a future date",
+    "past": "Please select a past date"
+  }
+}

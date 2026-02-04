@@ -1,0 +1,251 @@
+{
+  "common": {
+    "appName": "SoIce MES",
+    "appFullName": "软冰制造执行系统",
+    "buttons": {
+      "save": "保存",
+      "cancel": "取消",
+      "delete": "删除",
+      "edit": "编辑",
+      "add": "添加",
+      "search": "搜索",
+      "reset": "重置",
+      "close": "关闭",
+      "confirm": "确认",
+      "submit": "提交",
+      "back": "返回",
+      "next": "下一步",
+      "previous": "上一步",
+      "refresh": "刷新",
+      "export": "导出",
+      "import": "导入",
+      "download": "下载",
+      "upload": "上传",
+      "print": "打印"
+    },
+    "labels": {
+      "status": "状态",
+      "createdAt": "创建时间",
+      "updatedAt": "更新时间",
+      "createdBy": "创建人",
+      "updatedBy": "更新人",
+      "actions": "操作",
+      "description": "描述",
+      "name": "名称",
+      "code": "代码",
+      "type": "类型",
+      "category": "类别",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "quantity": "数量",
+      "total": "总计",
+      "remarks": "备注"
+    },
+    "status": {
+      "active": "活跃",
+      "inactive": "非活跃",
+      "pending": "待处理",
+      "approved": "已批准",
+      "rejected": "已拒绝",
+      "completed": "已完成",
+      "inProgress": "进行中",
+      "cancelled": "已取消"
+    },
+    "messages": {
+      "loading": "加载中...",
+      "noData": "无数据",
+      "error": "发生错误",
+      "success": "操作成功",
+      "confirmDelete": "确定要删除吗？",
+      "saveSuccess": "保存成功",
+      "deleteSuccess": "删除成功",
+      "updateSuccess": "更新成功",
+      "networkError": "网络错误",
+      "serverError": "服务器错误"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "登录",
+      "welcomeMessage": "欢迎使用软冰MES平台",
+      "tenantId": "租户ID",
+      "username": "用户名",
+      "password": "密码",
+      "rememberMe": "记住我",
+      "forgotPassword": "忘记密码？",
+      "loginButton": "登录",
+      "loggingIn": "登录中...",
+      "errors": {
+        "invalidCredentials": "用户名或密码无效",
+        "tenantRequired": "请输入租户ID",
+        "usernameRequired": "请输入用户名",
+        "passwordRequired": "请输入密码",
+        "loginFailed": "登录失败"
+      }
+    },
+    "logout": {
+      "button": "退出登录",
+      "confirm": "确定要退出登录吗？",
+      "success": "已成功退出登录"
+    }
+  },
+  "navigation": {
+    "dashboard": "仪表板",
+    "production": "生产管理",
+    "quality": "质量管理",
+    "inventory": "库存管理",
+    "warehouse": "仓库管理",
+    "purchase": "采购管理",
+    "sales": "销售管理",
+    "equipment": "设备管理",
+    "mold": "模具管理",
+    "bom": "物料清单",
+    "material": "物料管理",
+    "hr": "人力资源",
+    "settings": "设置",
+    "admin": "管理",
+    "reports": "报表",
+    "menu": {
+      "dashboard": "仪表板",
+      "overview": "概览",
+      "products": "产品主数据",
+      "processes": "工艺主数据",
+      "workOrders": "工作订单",
+      "workResults": "工作结果",
+      "productionSchedules": "生产计划",
+      "qualityStandards": "质量标准",
+      "qualityInspections": "质量检验",
+      "warehouses": "仓库主数据",
+      "lots": "批次管理",
+      "inventoryStatus": "库存状态",
+      "inventoryTransactions": "库存移动",
+      "boms": "物料清单管理",
+      "processRoutings": "工艺路线",
+      "materials": "物料管理",
+      "purchaseOrders": "采购订单",
+      "salesOrders": "销售订单",
+      "deliveries": "发货管理",
+      "receiving": "收货管理",
+      "shipping": "发货登记",
+      "weighings": "称重管理",
+      "defects": "不良品管理",
+      "afterSales": "售后服务",
+      "claims": "索赔管理",
+      "equipments": "设备管理",
+      "equipmentOperations": "运行历史",
+      "equipmentInspections": "检查管理",
+      "downtimes": "停机管理",
+      "molds": "模具管理",
+      "moldMaintenances": "模具维护",
+      "moldProductionHistories": "模具生产历史",
+      "skillMatrix": "技能矩阵",
+      "employeeSkills": "员工技能",
+      "customers": "客户管理",
+      "suppliers": "供应商管理",
+      "sites": "工厂管理",
+      "departments": "部门管理",
+      "users": "用户管理",
+      "roles": "角色管理",
+      "permissions": "权限管理",
+      "auditLogs": "审计日志",
+      "themes": "主题设置",
+      "profile": "个人资料"
+    }
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "overview": "概览",
+    "statistics": {
+      "totalUsers": "总用户数",
+      "activeUsers": "活跃用户",
+      "todayLogins": "今日登录",
+      "activeSessions": "活跃会话",
+      "totalRoles": "总角色数",
+      "totalPermissions": "总权限数"
+    },
+    "charts": {
+      "loginTrend": "登录趋势",
+      "userActivity": "用户活动",
+      "systemStatus": "系统状态",
+      "performanceMetrics": "性能指标"
+    },
+    "filters": {
+      "today": "今天",
+      "yesterday": "昨天",
+      "last7Days": "最近7天",
+      "last30Days": "最近30天",
+      "thisMonth": "本月",
+      "lastMonth": "上月",
+      "custom": "自定义"
+    }
+  },
+  "production": {
+    "title": "生产管理",
+    "workOrder": {
+      "title": "工作订单",
+      "orderNumber": "订单编号",
+      "product": "产品",
+      "quantity": "数量",
+      "startDate": "开始日期",
+      "endDate": "结束日期",
+      "priority": "优先级",
+      "status": "状态"
+    },
+    "workResult": {
+      "title": "工作结果",
+      "producedQuantity": "生产数量",
+      "defectQuantity": "不良数量",
+      "goodQuantity": "合格数量",
+      "operator": "操作员"
+    }
+  },
+  "quality": {
+    "title": "质量管理",
+    "inspection": {
+      "title": "质量检验",
+      "type": "检验类型",
+      "result": "检验结果",
+      "inspector": "检验员",
+      "inspectionDate": "检验日期"
+    },
+    "standard": {
+      "title": "质量标准",
+      "criteria": "检验标准",
+      "specification": "规格"
+    }
+  },
+  "inventory": {
+    "title": "库存管理",
+    "warehouse": "仓库",
+    "location": "位置",
+    "currentStock": "当前库存",
+    "availableStock": "可用库存",
+    "allocatedStock": "已分配库存",
+    "safetyStock": "安全库存",
+    "lotNumber": "批次号",
+    "expiryDate": "有效期"
+  },
+  "settings": {
+    "title": "设置",
+    "general": "常规",
+    "profile": "个人资料",
+    "account": "账户",
+    "security": "安全",
+    "notifications": "通知",
+    "language": "语言",
+    "theme": "主题",
+    "preferences": "偏好设置"
+  },
+  "validation": {
+    "required": "此字段为必填项",
+    "email": "请输入有效的电子邮件地址",
+    "minLength": "最少需要{{min}}个字符",
+    "maxLength": "最多允许{{max}}个字符",
+    "number": "只允许输入数字",
+    "positive": "只允许输入正数",
+    "integer": "只允许输入整数",
+    "date": "请选择有效日期",
+    "future": "请选择未来日期",
+    "past": "请选择过去日期"
+  }
+}
