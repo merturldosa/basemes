@@ -51,6 +51,7 @@ public class WorkOrderController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시 목록 조회", description = "테넌트의 모든 작업 지시 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WorkOrderResponse>>> getWorkOrders() {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting work orders for tenant: {}", tenantId);
@@ -69,6 +70,7 @@ public class WorkOrderController {
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시 상세 조회", description = "작업 지시 ID로 상세 정보 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<WorkOrderResponse>> getWorkOrder(@PathVariable Long id) {
         log.info("Getting work order: {}", id);
 
@@ -85,6 +87,7 @@ public class WorkOrderController {
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 작업 지시 조회", description = "특정 상태의 작업 지시 목록 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WorkOrderResponse>>> getWorkOrdersByStatus(
             @PathVariable String status) {
 

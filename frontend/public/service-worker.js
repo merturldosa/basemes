@@ -75,6 +75,11 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
+  // chrome-extension, data, blob 등 비-HTTP(S) URL은 무시
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
   // POP API 요청 처리 (특별한 오프라인 처리)
   if (url.pathname.startsWith('/api/pop/')) {
     event.respondWith(popApiStrategy(request));
