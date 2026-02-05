@@ -1,7 +1,7 @@
 // SoIce MES - Service Worker
-// 오프라인 지원 및 캐싱
+// 오프라인 지원 및 캐싱 (Phase 2 Enhanced)
 
-const CACHE_NAME = 'soice-mes-v2';
+const CACHE_NAME = 'soice-mes-v3';
 const OFFLINE_URL = '/offline.html';
 
 // 캐시할 정적 리소스
@@ -13,15 +13,26 @@ const STATIC_ASSETS = [
   '/icons/icon-512x512.png',
   // POP routes
   '/pop',
+  '/pop/home',
   '/pop/work-orders',
   '/pop/scanner',
   '/pop/sop',
-  '/pop/performance'
+  '/pop/performance',
+  '/pop/work-progress'
 ];
 
 // API 캐시 전략
-const API_CACHE_NAME = 'soice-mes-api-v2';
+const API_CACHE_NAME = 'soice-mes-api-v3';
 const API_CACHE_DURATION = 5 * 60 * 1000; // 5분
+
+// POP 페이지 캐시 (더 긴 유효 기간)
+const POP_CACHE_NAME = 'soice-mes-pop-v3';
+const POP_CACHE_DURATION = 60 * 60 * 1000; // 60분
+
+// IndexedDB 설정
+const DB_NAME = 'SoIceMES';
+const DB_VERSION = 1;
+const QUEUE_STORE = 'offline_queue';
 
 // 설치 이벤트 - 정적 리소스 캐싱
 self.addEventListener('install', (event) => {
@@ -46,7 +57,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME) {
+          if (cacheName !== CACHE_NAME && cacheName !== API_CACHE_NAME && cacheName !== POP_CACHE_NAME) {
             console.log('[Service Worker] Deleting old cache:', cacheName);
             return caches.delete(cacheName);
           }
@@ -64,9 +75,21 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API 요청 처리
+  // POP API 요청 처리 (특별한 오프라인 처리)
+  if (url.pathname.startsWith('/api/pop/')) {
+    event.respondWith(popApiStrategy(request));
+    return;
+  }
+
+  // 일반 API 요청 처리
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(networkFirstStrategy(request));
+    return;
+  }
+
+  // POP 페이지 - Cache First 전략 (빠른 로드)
+  if (url.pathname.startsWith('/pop/')) {
+    event.respondWith(popPageStrategy(request));
     return;
   }
 
@@ -152,21 +175,192 @@ async function networkFirstStrategy(request) {
   }
 }
 
+// POP 페이지 전용 캐시 전략 (Cache First for fast loading)
+async function popPageStrategy(request) {
+  const cache = await caches.open(POP_CACHE_NAME);
+  const cached = await cache.match(request);
+
+  if (cached) {
+    console.log('[Service Worker] POP page cache hit:', request.url);
+    // 백그라운드에서 네트워크 갱신
+    fetch(request).then((response) => {
+      if (response.status === 200) {
+        cache.put(request, response);
+      }
+    }).catch(() => {
+      // 네트워크 실패는 무시 (이미 캐시 반환함)
+    });
+    return cached;
+  }
+
+  try {
+    const response = await fetch(request);
+    if (response.status === 200) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.error('[Service Worker] POP page fetch failed:', error);
+    // 오프라인 페이지 반환
+    const offlinePage = await cache.match(OFFLINE_URL);
+    if (offlinePage) {
+      return offlinePage;
+    }
+    throw error;
+  }
+}
+
+// POP API 전용 전략 (오프라인 큐잉 지원)
+async function popApiStrategy(request) {
+  const url = new URL(request.url);
+
+  // POST/PUT/PATCH/DELETE 요청은 오프라인 시 큐에 저장
+  if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method)) {
+    try {
+      const response = await fetch(request);
+      return response;
+    } catch (error) {
+      console.warn('[Service Worker] POP API offline, queueing request:', url.pathname);
+
+      // 요청을 IndexedDB 큐에 저장
+      const requestData = {
+        url: request.url,
+        method: request.method,
+        headers: Object.fromEntries(request.headers.entries()),
+        body: await request.clone().text(),
+        timestamp: Date.now(),
+      };
+
+      await queueOfflineRequest(requestData);
+
+      // 백그라운드 동기화 등록
+      if ('sync' in self.registration) {
+        await self.registration.sync.register('sync-pop-data');
+      }
+
+      // 오프라인 응답 반환 (클라이언트에서 처리 가능하도록)
+      return new Response(
+        JSON.stringify({ offline: true, queued: true }),
+        {
+          status: 202,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+  }
+
+  // GET 요청은 Network First 전략
+  return networkFirstStrategy(request);
+}
+
+// IndexedDB에 오프라인 요청 저장
+async function queueOfflineRequest(requestData) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction([QUEUE_STORE], 'readwrite');
+      const store = transaction.objectStore(QUEUE_STORE);
+      const addRequest = store.add(requestData);
+
+      addRequest.onsuccess = () => resolve();
+      addRequest.onerror = () => reject(addRequest.error);
+    };
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains(QUEUE_STORE)) {
+        db.createObjectStore(QUEUE_STORE, { keyPath: 'timestamp' });
+      }
+    };
+  });
+}
+
+// IndexedDB에서 대기 중인 요청 가져오기
+async function getQueuedRequests() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction([QUEUE_STORE], 'readonly');
+      const store = transaction.objectStore(QUEUE_STORE);
+      const getAllRequest = store.getAll();
+
+      getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+      getAllRequest.onerror = () => reject(getAllRequest.error);
+    };
+  });
+}
+
+// 큐에서 요청 삭제
+async function removeQueuedRequest(timestamp) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction([QUEUE_STORE], 'readwrite');
+      const store = transaction.objectStore(QUEUE_STORE);
+      const deleteRequest = store.delete(timestamp);
+
+      deleteRequest.onsuccess = () => resolve();
+      deleteRequest.onerror = () => reject(deleteRequest.error);
+    };
+  });
+}
+
 // 백그라운드 동기화 (Background Sync)
 self.addEventListener('sync', (event) => {
   console.log('[Service Worker] Background sync:', event.tag);
 
-  if (event.tag === 'sync-inventory') {
+  if (event.tag === 'sync-pop-data') {
+    event.waitUntil(syncPOPData());
+  } else if (event.tag === 'sync-inventory') {
     event.waitUntil(syncInventoryData());
   }
 });
 
-async function syncInventoryData() {
-  // IndexedDB에서 대기 중인 데이터 가져오기
-  // 서버로 전송
-  console.log('[Service Worker] Syncing inventory data...');
+// POP 데이터 동기화
+async function syncPOPData() {
+  console.log('[Service Worker] Syncing POP data...');
 
-  // TODO: 실제 동기화 로직 구현
+  try {
+    const queuedRequests = await getQueuedRequests();
+
+    for (const requestData of queuedRequests) {
+      try {
+        const response = await fetch(requestData.url, {
+          method: requestData.method,
+          headers: requestData.headers,
+          body: requestData.body,
+        });
+
+        if (response.ok) {
+          console.log('[Service Worker] Synced request:', requestData.url);
+          await removeQueuedRequest(requestData.timestamp);
+        } else {
+          console.warn('[Service Worker] Sync failed (non-OK response):', response.status);
+        }
+      } catch (error) {
+        console.error('[Service Worker] Sync failed for request:', error);
+        // 실패한 요청은 큐에 유지 (다음 동기화 시 재시도)
+      }
+    }
+
+    console.log('[Service Worker] POP data sync complete');
+  } catch (error) {
+    console.error('[Service Worker] POP sync error:', error);
+  }
+}
+
+async function syncInventoryData() {
+  console.log('[Service Worker] Syncing inventory data...');
+  // 기존 재고 동기화 로직 유지
 }
 
 // 푸시 알림

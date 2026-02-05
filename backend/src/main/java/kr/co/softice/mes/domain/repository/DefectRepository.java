@@ -94,4 +94,9 @@ public interface DefectRepository extends JpaRepository<DefectEntity, Long> {
      * Check if defect number exists for tenant
      */
     boolean existsByTenant_TenantIdAndDefectNo(String tenantId, String defectNo);
+
+    /**
+     * Count defects by tenant and defect number prefix (for auto-generation)
+     */
+    long countByTenant_TenantIdAndDefectNoStartingWith(String tenantId, String prefix);
 }

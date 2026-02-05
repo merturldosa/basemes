@@ -28,6 +28,15 @@ public interface SOPExecutionStepRepository extends JpaRepository<SOPExecutionSt
     List<SOPExecutionStepEntity> findByExecutionId(@Param("executionId") Long executionId);
 
     /**
+     * Find all execution steps by execution entity
+     */
+    @Query("SELECT ses FROM SOPExecutionStepEntity ses " +
+            "LEFT JOIN FETCH ses.sopStep " +
+            "WHERE ses.execution = :execution " +
+            "ORDER BY ses.stepNumber ASC")
+    List<SOPExecutionStepEntity> findByExecution(@Param("execution") kr.co.softice.mes.domain.entity.SOPExecutionEntity execution);
+
+    /**
      * Find execution step by execution and SOP step
      */
     @Query("SELECT ses FROM SOPExecutionStepEntity ses " +

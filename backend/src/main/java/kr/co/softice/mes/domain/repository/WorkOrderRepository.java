@@ -144,4 +144,31 @@ public interface WorkOrderRepository extends JpaRepository<WorkOrderEntity, Long
            "LEFT JOIN FETCH wo.assignedUser " +
            "WHERE wo.workOrderId = :workOrderId")
     Optional<WorkOrderEntity> findByIdWithAllRelations(@Param("workOrderId") Long workOrderId);
+
+    /**
+     * Find work orders by tenant ID and assigned user ID
+     */
+    @Query("SELECT wo FROM WorkOrderEntity wo " +
+           "JOIN FETCH wo.tenant " +
+           "JOIN FETCH wo.product " +
+           "JOIN FETCH wo.process " +
+           "JOIN FETCH wo.assignedUser " +
+           "WHERE wo.tenant.tenantId = :tenantId AND wo.assignedUser.userId = :userId " +
+           "ORDER BY wo.plannedStartDate DESC")
+    List<WorkOrderEntity> findByTenant_TenantIdAndAssignedUser_UserId(
+        @Param("tenantId") String tenantId,
+        @Param("userId") Long userId
+    );
+
+    /**
+     * Find work orders by tenant ID with all relations (alternative name for consistency)
+     */
+    @Query("SELECT wo FROM WorkOrderEntity wo " +
+           "JOIN FETCH wo.tenant " +
+           "JOIN FETCH wo.product " +
+           "JOIN FETCH wo.process " +
+           "LEFT JOIN FETCH wo.assignedUser " +
+           "WHERE wo.tenant.tenantId = :tenantId " +
+           "ORDER BY wo.plannedStartDate DESC")
+    List<WorkOrderEntity> findByTenant_TenantIdWithAllRelations(@Param("tenantId") String tenantId);
 }

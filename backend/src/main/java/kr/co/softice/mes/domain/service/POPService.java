@@ -1,19 +1,24 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.dto.pop.*;
 import kr.co.softice.mes.common.exception.BusinessException;
 import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * POP Service
@@ -28,10 +33,12 @@ import java.util.List;
 public class POPService {
 
     private final WorkOrderRepository workOrderRepository;
-    // Note: WorkProgressRepository, DefectRepository need to be created
-    // private final WorkProgressRepository workProgressRepository;
-    // private final DefectRepository defectRepository;
-    private final InventoryService inventoryService;
+    private final WorkProgressRepository workProgressRepository;
+    private final PauseResumeRepository pauseResumeRepository;
+    private final DefectRepository defectRepository;
+    private final UserRepository userRepository;
+    private final TenantRepository tenantRepository;
+    private final WorkResultRepository workResultRepository;
     private final SimpMessagingTemplate messagingTemplate;
 
     /**
@@ -45,13 +52,16 @@ public class POPService {
     public List<WorkOrderEntity> getActiveWorkOrders(String tenantId, Long operatorId) {
         if (operatorId != null) {
             // Return work orders assigned to specific operator
-            return workOrderRepository.findByTenantIdAndOperatorUserId(tenantId, operatorId);
-        } else {
-            // Return all ready and in-progress work orders
-            return workOrderRepository.findByTenantIdWithRelations(tenantId)
+            return workOrderRepository.findByTenant_TenantIdAndAssignedUser_UserId(tenantId, operatorId)
                 .stream()
                 .filter(wo -> "READY".equals(wo.getStatus()) || "IN_PROGRESS".equals(wo.getStatus()))
-                .toList();
+                .collect(Collectors.toList());
+        } else {
+            // Return all ready and in-progress work orders
+            return workOrderRepository.findByTenant_TenantIdWithAllRelations(tenantId)
+                .stream()
+                .filter(wo -> "READY".equals(wo.getStatus()) || "IN_PROGRESS".equals(wo.getStatus()))
+                .collect(Collectors.toList());
         }
     }
 
@@ -61,128 +71,176 @@ public class POPService {
      * @param tenantId Tenant ID
      * @param workOrderId Work order ID
      * @param operatorId Operator user ID
-     * @return Created work progress entity
+     * @return Created work progress response
      */
-    public WorkProgressEntity startWorkOrder(String tenantId, Long workOrderId, Long operatorId) {
+    public WorkProgressResponse startWorkOrder(String tenantId, Long workOrderId, Long operatorId) {
         // 1. Get work order
         WorkOrderEntity workOrder = workOrderRepository.findById(workOrderId)
             .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND));
 
-        // 2. Validate status
-        if (!"READY".equals(workOrder.getStatus())) {
-            throw new BusinessException(ErrorCode.WORK_ORDER_ALREADY_STARTED,
-                "Work order is already started or completed");
+        // 2. Validate tenant
+        if (!tenantId.equals(workOrder.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "Work order belongs to different tenant");
         }
 
-        // 3. Update work order status
+        // 3. Check if already started
+        if ("IN_PROGRESS".equals(workOrder.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work order is already in progress");
+        }
+
+        if ("COMPLETED".equals(workOrder.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work order is already completed");
+        }
+
+        // 4. Get operator
+        UserEntity operator = userRepository.findById(operatorId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
+        // 5. Update work order status
         workOrder.setStatus("IN_PROGRESS");
         workOrder.setActualStartDate(LocalDateTime.now());
-        workOrder.setOperatorUserId(operatorId);
+        if (workOrder.getAssignedUser() == null) {
+            workOrder.setAssignedUser(operator);
+        }
         workOrderRepository.save(workOrder);
 
-        // 4. Create work progress record
-        // Note: This requires WorkProgressEntity and WorkProgressRepository
-        // WorkProgressEntity progress = WorkProgressEntity.builder()
-        //     .tenant(workOrder.getTenant())
-        //     .workOrder(workOrder)
-        //     .operatorUserId(operatorId)
-        //     .startTime(LocalDateTime.now())
-        //     .producedQuantity(0)
-        //     .defectQuantity(0)
-        //     .status("IN_PROGRESS")
-        //     .build();
-        //
-        // WorkProgressEntity saved = workProgressRepository.save(progress);
+        // 6. Create work progress record
+        WorkProgressEntity progress = WorkProgressEntity.builder()
+            .tenant(workOrder.getTenant())
+            .workOrder(workOrder)
+            .operator(operator)
+            .recordDate(LocalDate.now())
+            .startTime(LocalTime.now())
+            .producedQuantity(BigDecimal.ZERO)
+            .goodQuantity(BigDecimal.ZERO)
+            .defectQuantity(BigDecimal.ZERO)
+            .status("IN_PROGRESS")
+            .pauseCount(0)
+            .totalPauseDuration(0)
+            .isActive(true)
+            .build();
 
-        // 5. Broadcast real-time update
+        WorkProgressEntity saved = workProgressRepository.save(progress);
+
+        // 7. Broadcast real-time update
         broadcastWorkOrderUpdate(tenantId, workOrder);
 
         log.info("Work order started: {} by operator {}", workOrderId, operatorId);
 
-        // Temporary: Return mock progress entity
-        return createMockWorkProgress(workOrder, operatorId);
+        return convertToWorkProgressResponse(saved);
     }
 
     /**
      * Record work progress (production quantity)
      *
      * @param tenantId Tenant ID
-     * @param progressId Work progress ID
-     * @param quantity Quantity produced
-     * @param operatorId Operator user ID
-     * @return Updated work progress entity
+     * @param request Work progress record request
+     * @return Updated work progress response
      */
-    public WorkProgressEntity recordProgress(String tenantId, Long progressId, Integer quantity, Long operatorId) {
-        // Note: This requires WorkProgressRepository
+    public WorkProgressResponse recordProgress(String tenantId, WorkProgressRecordRequest request) {
         // 1. Get work progress
-        // WorkProgressEntity progress = workProgressRepository.findById(progressId)
-        //     .orElseThrow(() -> new BusinessException(ErrorCode.WORK_PROGRESS_NOT_FOUND));
-        //
-        // 2. Update produced quantity
-        // int newQuantity = progress.getProducedQuantity() + quantity;
-        // progress.setProducedQuantity(newQuantity);
-        // progress.setLastUpdateTime(LocalDateTime.now());
-        //
-        // WorkProgressEntity saved = workProgressRepository.save(progress);
-        //
-        // 3. Update work order produced quantity
-        // WorkOrderEntity workOrder = progress.getWorkOrder();
-        // workOrder.setProducedQuantity(newQuantity);
-        // workOrderRepository.save(workOrder);
-        //
-        // 4. Broadcast real-time update
-        // broadcastWorkProgressUpdate(tenantId, saved);
+        WorkProgressEntity progress = workProgressRepository.findById(request.getProgressId())
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "Work progress not found"));
 
-        log.info("Work progress recorded: {} units for progress {}", quantity, progressId);
+        // 2. Validate tenant
+        if (!tenantId.equals(progress.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "Work progress belongs to different tenant");
+        }
 
-        // Temporary: Return mock progress entity
-        return createMockWorkProgress(null, operatorId);
+        // 3. Validate status
+        if ("COMPLETED".equals(progress.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work progress is already completed");
+        }
+
+        // 4. Update produced quantity
+        BigDecimal newProducedQuantity = progress.getProducedQuantity().add(request.getQuantity());
+        progress.setProducedQuantity(newProducedQuantity);
+
+        // Assume good quantity = produced quantity - defect quantity
+        progress.setGoodQuantity(newProducedQuantity.subtract(progress.getDefectQuantity()));
+
+        if (request.getNotes() != null) {
+            progress.setWorkNotes(request.getNotes());
+        }
+
+        WorkProgressEntity saved = workProgressRepository.save(progress);
+
+        // 5. Update work order aggregate quantities
+        WorkOrderEntity workOrder = progress.getWorkOrder();
+        workOrder.setActualQuantity(newProducedQuantity);
+        workOrder.setGoodQuantity(progress.getGoodQuantity());
+        workOrderRepository.save(workOrder);
+
+        // 6. Broadcast real-time update
+        broadcastWorkProgressUpdate(tenantId, saved);
+
+        log.info("Work progress recorded: {} units for progress {}", request.getQuantity(), request.getProgressId());
+
+        return convertToWorkProgressResponse(saved);
     }
 
     /**
      * Record defect
      *
      * @param tenantId Tenant ID
-     * @param progressId Work progress ID
-     * @param quantity Defect quantity
-     * @param defectType Type of defect
-     * @param reason Defect reason
-     * @param operatorId Operator user ID
+     * @param request Defect record request
      * @return Defect entity
      */
-    public DefectEntity recordDefect(String tenantId, Long progressId, Integer quantity,
-                                      String defectType, String reason, Long operatorId) {
-        // Note: This requires DefectRepository and DefectEntity
+    public DefectEntity recordDefect(String tenantId, DefectRecordRequest request) {
         // 1. Get work progress
-        // WorkProgressEntity progress = workProgressRepository.findById(progressId)
-        //     .orElseThrow(() -> new BusinessException(ErrorCode.WORK_PROGRESS_NOT_FOUND));
-        //
-        // 2. Create defect record
-        // DefectEntity defect = DefectEntity.builder()
-        //     .tenant(progress.getTenant())
-        //     .workOrder(progress.getWorkOrder())
-        //     .defectType(defectType)
-        //     .defectQuantity(quantity)
-        //     .defectReason(reason)
-        //     .detectedDate(LocalDateTime.now())
-        //     .detectedBy(operatorId)
-        //     .status("DETECTED")
-        //     .build();
-        //
-        // DefectEntity saved = defectRepository.save(defect);
-        //
-        // 3. Update work progress defect quantity
-        // int newDefectQuantity = progress.getDefectQuantity() + quantity;
-        // progress.setDefectQuantity(newDefectQuantity);
-        // workProgressRepository.save(progress);
-        //
-        // 4. Broadcast real-time update
-        // broadcastDefectUpdate(tenantId, saved);
+        WorkProgressEntity progress = workProgressRepository.findById(request.getProgressId())
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "Work progress not found"));
 
-        log.info("Defect recorded: {} units of type {} for progress {}", quantity, defectType, progressId);
+        // 2. Validate tenant
+        if (!tenantId.equals(progress.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "Work progress belongs to different tenant");
+        }
 
-        // Temporary: Return mock defect entity
-        return createMockDefect(quantity, defectType, reason);
+        // 3. Generate defect number
+        String defectNo = generateDefectNo(tenantId);
+
+        // 4. Create defect record
+        DefectEntity defect = DefectEntity.builder()
+            .tenant(progress.getTenant())
+            .defectNo(defectNo)
+            .defectDate(LocalDateTime.now())
+            .sourceType("PRODUCTION")
+            .workOrder(progress.getWorkOrder())
+            .product(progress.getWorkOrder().getProduct())
+            .productCode(progress.getWorkOrder().getProduct().getProductCode())
+            .defectType(request.getDefectType())
+            .defectQuantity(request.getDefectQuantity())
+            .defectDescription(request.getDefectReason())
+            .defectLocation(request.getDefectLocation())
+            .severity(request.getSeverity() != null ? request.getSeverity() : "MINOR")
+            .status("REPORTED")
+            .reporterUser(progress.getOperator())
+            .reporterName(progress.getOperator().getUsername())
+            .remarks(request.getNotes())
+            .isActive(true)
+            .build();
+
+        DefectEntity saved = defectRepository.save(defect);
+
+        // 5. Update work progress defect quantity
+        BigDecimal newDefectQuantity = progress.getDefectQuantity().add(request.getDefectQuantity());
+        progress.setDefectQuantity(newDefectQuantity);
+        progress.setGoodQuantity(progress.getProducedQuantity().subtract(newDefectQuantity));
+        workProgressRepository.save(progress);
+
+        // 6. Update work order aggregate defect quantity
+        WorkOrderEntity workOrder = progress.getWorkOrder();
+        workOrder.setDefectQuantity(newDefectQuantity);
+        workOrder.setGoodQuantity(progress.getGoodQuantity());
+        workOrderRepository.save(workOrder);
+
+        // 7. Broadcast real-time update
+        broadcastDefectUpdate(tenantId, saved);
+
+        log.info("Defect recorded: {} units of type {} for progress {}",
+            request.getDefectQuantity(), request.getDefectType(), request.getProgressId());
+
+        return saved;
     }
 
     /**
@@ -190,21 +248,50 @@ public class POPService {
      *
      * @param tenantId Tenant ID
      * @param workOrderId Work order ID
-     * @param reason Pause reason
-     * @return Updated work progress entity
+     * @param request Pause work request
+     * @return Updated work progress response
      */
-    public WorkProgressEntity pauseWork(String tenantId, Long workOrderId, String reason) {
-        // Note: Requires WorkProgressRepository
-        // WorkProgressEntity progress = getCurrentProgress(workOrderId);
-        // progress.setStatus("PAUSED");
-        // progress.setPauseTime(LocalDateTime.now());
-        // progress.setPauseReason(reason);
-        // WorkProgressEntity saved = workProgressRepository.save(progress);
-        // broadcastWorkProgressUpdate(tenantId, saved);
+    public WorkProgressResponse pauseWork(String tenantId, Long workOrderId, PauseWorkRequest request) {
+        // 1. Get active work progress for this work order
+        WorkProgressEntity progress = workProgressRepository.findByWorkOrder_WorkOrderIdAndIsActiveTrue(workOrderId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "No active work progress found"));
 
-        log.info("Work paused for work order {}: {}", workOrderId, reason);
+        // 2. Validate tenant
+        if (!tenantId.equals(progress.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
 
-        return createMockWorkProgress(null, null);
+        // 3. Validate status
+        if ("PAUSED".equals(progress.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work is already paused");
+        }
+
+        // 4. Update progress status
+        progress.setStatus("PAUSED");
+        workProgressRepository.save(progress);
+
+        // 5. Create pause record
+        PauseResumeEntity pauseResume = PauseResumeEntity.builder()
+            .tenant(progress.getTenant())
+            .workProgress(progress)
+            .pauseTime(LocalDateTime.now())
+            .pauseReason(request.getPauseReason())
+            .pauseType(request.getPauseType() != null ? request.getPauseType() : "OTHER")
+            .requiresApproval(request.getRequiresApproval() != null ? request.getRequiresApproval() : false)
+            .build();
+
+        pauseResumeRepository.save(pauseResume);
+
+        // 6. Increment pause count
+        progress.setPauseCount(progress.getPauseCount() + 1);
+        WorkProgressEntity saved = workProgressRepository.save(progress);
+
+        // 7. Broadcast update
+        broadcastWorkProgressUpdate(tenantId, saved);
+
+        log.info("Work paused for work order {}: {}", workOrderId, request.getPauseReason());
+
+        return convertToWorkProgressResponse(saved);
     }
 
     /**
@@ -212,19 +299,47 @@ public class POPService {
      *
      * @param tenantId Tenant ID
      * @param workOrderId Work order ID
-     * @return Updated work progress entity
+     * @return Updated work progress response
      */
-    public WorkProgressEntity resumeWork(String tenantId, Long workOrderId) {
-        // Note: Requires WorkProgressRepository
-        // WorkProgressEntity progress = getCurrentProgress(workOrderId);
-        // progress.setStatus("IN_PROGRESS");
-        // progress.setResumeTime(LocalDateTime.now());
-        // WorkProgressEntity saved = workProgressRepository.save(progress);
-        // broadcastWorkProgressUpdate(tenantId, saved);
+    public WorkProgressResponse resumeWork(String tenantId, Long workOrderId) {
+        // 1. Get active work progress
+        WorkProgressEntity progress = workProgressRepository.findByWorkOrder_WorkOrderIdAndIsActiveTrue(workOrderId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "No active work progress found"));
 
-        log.info("Work resumed for work order {}", workOrderId);
+        // 2. Validate tenant
+        if (!tenantId.equals(progress.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
 
-        return createMockWorkProgress(null, null);
+        // 3. Validate status
+        if (!"PAUSED".equals(progress.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work is not paused");
+        }
+
+        // 4. Find active pause (not resumed yet)
+        PauseResumeEntity pauseResume = pauseResumeRepository.findByWorkProgress_ProgressIdAndResumeTimeIsNull(progress.getProgressId())
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "No active pause found"));
+
+        // 5. Update pause record
+        LocalDateTime resumeTime = LocalDateTime.now();
+        pauseResume.setResumeTime(resumeTime);
+
+        // Calculate duration in minutes
+        long durationMinutes = Duration.between(pauseResume.getPauseTime(), resumeTime).toMinutes();
+        pauseResume.setDurationMinutes((int) durationMinutes);
+        pauseResumeRepository.save(pauseResume);
+
+        // 6. Update progress status and total pause duration
+        progress.setStatus("IN_PROGRESS");
+        progress.setTotalPauseDuration(progress.getTotalPauseDuration() + (int) durationMinutes);
+        WorkProgressEntity saved = workProgressRepository.save(progress);
+
+        // 7. Broadcast update
+        broadcastWorkProgressUpdate(tenantId, saved);
+
+        log.info("Work resumed for work order {}, pause duration: {} minutes", workOrderId, durationMinutes);
+
+        return convertToWorkProgressResponse(saved);
     }
 
     /**
@@ -240,21 +355,55 @@ public class POPService {
         WorkOrderEntity workOrder = workOrderRepository.findById(workOrderId)
             .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND));
 
-        // 2. Update work order status
+        // 2. Validate tenant
+        if (!tenantId.equals(workOrder.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 3. Validate status
+        if ("COMPLETED".equals(workOrder.getStatus())) {
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Work order is already completed");
+        }
+
+        // 4. Get active work progress
+        WorkProgressEntity progress = workProgressRepository.findByWorkOrder_WorkOrderIdAndIsActiveTrue(workOrderId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "No active work progress found"));
+
+        // 5. Complete work progress
+        progress.setStatus("COMPLETED");
+        progress.setEndTime(LocalTime.now());
+        progress.setIsActive(false);
+        workProgressRepository.save(progress);
+
+        // 6. Create work result record
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startDateTime = LocalDateTime.of(progress.getRecordDate(), progress.getStartTime());
+        long workDuration = Duration.between(startDateTime, now).toMinutes();
+
+        WorkResultEntity workResult = WorkResultEntity.builder()
+            .workOrder(workOrder)
+            .tenant(workOrder.getTenant())
+            .resultDate(now)
+            .quantity(progress.getProducedQuantity())
+            .goodQuantity(progress.getGoodQuantity())
+            .defectQuantity(progress.getDefectQuantity())
+            .workStartTime(startDateTime)
+            .workEndTime(now)
+            .workDuration((int) workDuration)
+            .worker(progress.getOperator())
+            .workerName(progress.getOperator().getUsername())
+            .remarks(remarks)
+            .build();
+
+        workResultRepository.save(workResult);
+
+        // 7. Update work order status
         workOrder.setStatus("COMPLETED");
-        workOrder.setActualEndDate(LocalDateTime.now());
+        workOrder.setActualEndDate(now);
+        workOrder.setRemarks(remarks);
         WorkOrderEntity saved = workOrderRepository.save(workOrder);
 
-        // 3. Complete progress (requires WorkProgressRepository)
-        // WorkProgressEntity progress = getCurrentProgress(workOrderId);
-        // progress.setStatus("COMPLETED");
-        // progress.setEndTime(LocalDateTime.now());
-        // workProgressRepository.save(progress);
-
-        // 4. Update inventory (finished goods)
-        // inventoryService.recordProduction(...)
-
-        // 5. Broadcast real-time update
+        // 8. Broadcast update
         broadcastWorkOrderUpdate(tenantId, saved);
 
         log.info("Work order completed: {} with remarks: {}", workOrderId, remarks);
@@ -267,17 +416,18 @@ public class POPService {
      *
      * @param tenantId Tenant ID
      * @param workOrderId Work order ID
-     * @return Work progress entity
+     * @return Work progress response
      */
     @Transactional(readOnly = true)
-    public WorkProgressEntity getWorkProgress(String tenantId, Long workOrderId) {
-        // Note: Requires WorkProgressRepository
-        // return workProgressRepository.findByWorkOrderId(workOrderId)
-        //     .orElseThrow(() -> new BusinessException(ErrorCode.WORK_PROGRESS_NOT_FOUND));
+    public WorkProgressResponse getWorkProgress(String tenantId, Long workOrderId) {
+        WorkProgressEntity progress = workProgressRepository.findByWorkOrder_WorkOrderIdAndIsActiveTrue(workOrderId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.ENTITY_NOT_FOUND, "No active work progress found"));
 
-        log.info("Getting work progress for work order {}", workOrderId);
+        if (!tenantId.equals(progress.getTenant().getTenantId())) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED);
+        }
 
-        return createMockWorkProgress(null, null);
+        return convertToWorkProgressResponse(progress);
     }
 
     /**
@@ -288,24 +438,92 @@ public class POPService {
      * @return Production statistics
      */
     @Transactional(readOnly = true)
-    public ProductionStatistics getTodayStatistics(String tenantId, Long operatorId) {
-        LocalDateTime startOfDay = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS);
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
+    public ProductionStatisticsResponse getTodayStatistics(String tenantId, Long operatorId) {
+        LocalDate today = LocalDate.now();
 
-        // Note: This requires WorkProgressRepository
-        // List<WorkProgressEntity> todayProgress = ...
-        // Calculate statistics from work progress records
+        List<WorkProgressEntity> todayProgress;
+        if (operatorId != null) {
+            todayProgress = workProgressRepository.findByOperator_UserIdAndRecordDate(operatorId, today);
+        } else {
+            todayProgress = workProgressRepository.findByTenant_TenantIdAndRecordDate(tenantId, today);
+        }
 
-        log.info("Getting today's statistics for tenant {} and operator {}", tenantId, operatorId);
+        // Calculate statistics
+        BigDecimal totalProduced = todayProgress.stream()
+            .map(WorkProgressEntity::getProducedQuantity)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        // Temporary: Return mock statistics
-        return ProductionStatistics.builder()
-            .date(LocalDate.now())
-            .totalProduced(0)
-            .totalDefects(0)
-            .completedOrders(0L)
-            .defectRate(0.0)
-            .build();
+        BigDecimal totalGood = todayProgress.stream()
+            .map(WorkProgressEntity::getGoodQuantity)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal totalDefects = todayProgress.stream()
+            .map(WorkProgressEntity::getDefectQuantity)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        long completedOrders = todayProgress.stream()
+            .filter(wp -> "COMPLETED".equals(wp.getStatus()))
+            .map(WorkProgressEntity::getWorkOrder)
+            .distinct()
+            .count();
+
+        long inProgressOrders = todayProgress.stream()
+            .filter(wp -> "IN_PROGRESS".equals(wp.getStatus()) || "PAUSED".equals(wp.getStatus()))
+            .map(WorkProgressEntity::getWorkOrder)
+            .distinct()
+            .count();
+
+        // Calculate rates
+        double defectRate = totalProduced.compareTo(BigDecimal.ZERO) > 0
+            ? totalDefects.divide(totalProduced, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).doubleValue()
+            : 0.0;
+
+        double yieldRate = totalProduced.compareTo(BigDecimal.ZERO) > 0
+            ? totalGood.divide(totalProduced, 4, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100)).doubleValue()
+            : 0.0;
+
+        // Calculate time metrics
+        int totalWorkMinutes = todayProgress.stream()
+            .mapToInt(wp -> {
+                if (wp.getEndTime() != null) {
+                    return (int) Duration.between(wp.getStartTime(), wp.getEndTime()).toMinutes();
+                } else {
+                    return (int) Duration.between(wp.getStartTime(), LocalTime.now()).toMinutes();
+                }
+            })
+            .sum();
+
+        int totalPauseMinutes = todayProgress.stream()
+            .mapToInt(WorkProgressEntity::getTotalPauseDuration)
+            .sum();
+
+        double efficiency = totalWorkMinutes > 0
+            ? ((double) (totalWorkMinutes - totalPauseMinutes) / totalWorkMinutes) * 100
+            : 0.0;
+
+        ProductionStatisticsResponse.ProductionStatisticsResponseBuilder builder = ProductionStatisticsResponse.builder()
+            .date(today)
+            .tenantId(tenantId)
+            .totalProduced(totalProduced)
+            .totalGood(totalGood)
+            .totalDefects(totalDefects)
+            .completedWorkOrders(completedOrders)
+            .inProgressWorkOrders(inProgressOrders)
+            .defectRate(defectRate)
+            .yieldRate(yieldRate)
+            .totalWorkMinutes(totalWorkMinutes)
+            .totalPauseMinutes(totalPauseMinutes)
+            .efficiency(efficiency);
+
+        if (operatorId != null) {
+            UserEntity operator = userRepository.findById(operatorId).orElse(null);
+            if (operator != null) {
+                builder.operatorUserId(operatorId);
+                builder.operatorUserName(operator.getUsername());
+            }
+        }
+
+        return builder.build();
     }
 
     /**
@@ -318,21 +536,20 @@ public class POPService {
      */
     @Transactional(readOnly = true)
     public Object scanBarcode(String tenantId, String barcode, String type) {
-        switch (type) {
+        switch (type.toUpperCase()) {
             case "WORK_ORDER":
-                return workOrderRepository.findByWorkOrderNo(barcode)
+                return workOrderRepository.findByTenant_TenantIdAndWorkOrderNo(tenantId, barcode)
                     .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND,
                         "Work order not found: " + barcode));
 
             case "MATERIAL":
             case "PRODUCT":
             case "LOT":
-                // Note: Requires respective repositories
-                throw new BusinessException(ErrorCode.NOT_IMPLEMENTED,
+                throw new BusinessException(ErrorCode.INVALID_OPERATION,
                     "Scan type not yet implemented: " + type);
 
             default:
-                throw new BusinessException(ErrorCode.INVALID_REQUEST,
+                throw new BusinessException(ErrorCode.INVALID_OPERATION,
                     "Invalid scan type: " + type);
         }
     }
@@ -350,51 +567,76 @@ public class POPService {
         }
     }
 
-    // Mock methods (temporary until entities are created)
-
-    private WorkProgressEntity createMockWorkProgress(WorkOrderEntity workOrder, Long operatorId) {
-        // This is a temporary mock - replace with actual entity when WorkProgressEntity is created
-        log.warn("Using mock WorkProgressEntity - actual implementation required");
-        return null; // Placeholder
+    private void broadcastWorkProgressUpdate(String tenantId, WorkProgressEntity progress) {
+        try {
+            messagingTemplate.convertAndSend(
+                "/topic/work-progress/" + tenantId,
+                convertToWorkProgressResponse(progress)
+            );
+        } catch (Exception e) {
+            log.error("Failed to broadcast work progress update: {}", e.getMessage());
+        }
     }
 
-    private DefectEntity createMockDefect(Integer quantity, String defectType, String reason) {
-        // This is a temporary mock - replace with actual entity when DefectEntity is created
-        log.warn("Using mock DefectEntity - actual implementation required");
-        return null; // Placeholder
+    private void broadcastDefectUpdate(String tenantId, DefectEntity defect) {
+        try {
+            messagingTemplate.convertAndSend(
+                "/topic/defects/" + tenantId,
+                defect
+            );
+        } catch (Exception e) {
+            log.error("Failed to broadcast defect update: {}", e.getMessage());
+        }
     }
 
-    /**
-     * Production Statistics DTO
-     */
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ProductionStatistics {
-        private LocalDate date;
-        private Integer totalProduced;
-        private Integer totalDefects;
-        private Long completedOrders;
-        private Double defectRate;
+    private WorkProgressResponse convertToWorkProgressResponse(WorkProgressEntity entity) {
+        WorkOrderEntity workOrder = entity.getWorkOrder();
+
+        BigDecimal plannedQuantity = workOrder.getPlannedQuantity();
+        double completionRate = plannedQuantity.compareTo(BigDecimal.ZERO) > 0
+            ? entity.getProducedQuantity().divide(plannedQuantity, 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100)).doubleValue()
+            : 0.0;
+
+        double defectRate = entity.getProducedQuantity().compareTo(BigDecimal.ZERO) > 0
+            ? entity.getDefectQuantity().divide(entity.getProducedQuantity(), 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100)).doubleValue()
+            : 0.0;
+
+        return WorkProgressResponse.builder()
+            .progressId(entity.getProgressId())
+            .tenantId(entity.getTenant().getTenantId())
+            .workOrderId(workOrder.getWorkOrderId())
+            .workOrderNo(workOrder.getWorkOrderNo())
+            .productName(workOrder.getProduct().getProductName())
+            .productCode(workOrder.getProduct().getProductCode())
+            .processName(workOrder.getProcess().getProcessName())
+            .operatorUserId(entity.getOperator().getUserId())
+            .operatorUserName(entity.getOperator().getUsername())
+            .recordDate(entity.getRecordDate())
+            .startTime(entity.getStartTime())
+            .endTime(entity.getEndTime())
+            .producedQuantity(entity.getProducedQuantity())
+            .goodQuantity(entity.getGoodQuantity())
+            .defectQuantity(entity.getDefectQuantity())
+            .plannedQuantity(plannedQuantity)
+            .completionRate(completionRate)
+            .defectRate(defectRate)
+            .status(entity.getStatus())
+            .pauseCount(entity.getPauseCount())
+            .totalPauseDuration(entity.getTotalPauseDuration())
+            .workNotes(entity.getWorkNotes())
+            .isActive(entity.getIsActive())
+            .equipmentId(entity.getEquipment() != null ? entity.getEquipment().getEquipmentId() : null)
+            .equipmentName(entity.getEquipment() != null ? entity.getEquipment().getEquipmentName() : null)
+            .createdAt(entity.getCreatedAt() != null ? entity.getCreatedAt().toString() : null)
+            .updatedAt(entity.getUpdatedAt() != null ? entity.getUpdatedAt().toString() : null)
+            .build();
     }
 
-    /**
-     * Work Progress Entity (Placeholder)
-     * TODO: Move to domain/entity package
-     */
-    @Data
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class WorkProgressEntity {
-        private Long progressId;
-        private Long workOrderId;
-        private Long operatorUserId;
-        private LocalDateTime startTime;
-        private LocalDateTime endTime;
-        private Integer producedQuantity;
-        private Integer defectQuantity;
-        private String status;
+    private String generateDefectNo(String tenantId) {
+        String prefix = "DEF-" + LocalDate.now().toString().replace("-", "") + "-";
+        long count = defectRepository.countByTenant_TenantIdAndDefectNoStartingWith(tenantId, prefix);
+        return prefix + String.format("%04d", count + 1);
     }
 }

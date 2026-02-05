@@ -176,4 +176,9 @@ public interface SOPExecutionRepository extends JpaRepository<SOPExecutionEntity
     List<String> findExecutionNumbersWithPrefix(
             @Param("tenantId") String tenantId,
             @Param("prefix") String prefix);
+
+    /**
+     * Count executions by tenant and execution number prefix (for auto-generation)
+     */
+    long countByTenant_TenantIdAndExecutionNoStartingWith(String tenantId, String prefix);
 }

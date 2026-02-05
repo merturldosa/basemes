@@ -1,7 +1,7 @@
 package kr.co.softice.mes.api.controller;
 
 import kr.co.softice.mes.common.dto.ApiResponse;
-import kr.co.softice.mes.config.TenantContext;
+import kr.co.softice.mes.common.security.TenantContext;
 import kr.co.softice.mes.domain.entity.NotificationEntity;
 import kr.co.softice.mes.domain.service.NotificationService;
 import lombok.RequiredArgsConstructor;
