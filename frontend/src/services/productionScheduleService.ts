@@ -122,9 +122,7 @@ const productionScheduleService = {
 
   // 기간별 일정 조회
   getByPeriod: async (startDate: string, endDate: string): Promise<ProductionSchedule[]> => {
-    const response = await apiClient.get<ProductionSchedule[]>('/schedules/period', {
-      params: { startDate, endDate },
-    });
+    const response = await apiClient.get<ProductionSchedule[]>('/schedules/period', { startDate, endDate });
     return response.data;
   },
 

@@ -73,7 +73,7 @@ const ProductionSchedulePage: React.FC = () => {
 
   const loadWorkOrders = async () => {
     try {
-      const data = await workOrderService.getAll();
+      const data = await workOrderService.getWorkOrders();
       // routing이 있는 WorkOrder만 필터링
       setWorkOrders(data.filter((wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'));
     } catch (error) {
