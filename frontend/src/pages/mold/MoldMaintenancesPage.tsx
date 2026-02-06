@@ -58,9 +58,10 @@ const MoldMaintenancesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await moldMaintenanceService.getAll();
-      setMaintenances(data);
+      setMaintenances(data || []);
     } catch (error) {
       showSnackbar('보전 이력을 불러오는데 실패했습니다.', 'error');
+      setMaintenances([]);
     } finally {
       setLoading(false);
     }
@@ -69,9 +70,10 @@ const MoldMaintenancesPage: React.FC = () => {
   const loadMolds = async () => {
     try {
       const data = await moldService.getActive();
-      setMolds(data);
+      setMolds(data || []);
     } catch (error) {
       console.error('Failed to load molds:', error);
+      setMolds([]);
     }
   };
 

@@ -56,8 +56,9 @@ const EquipmentsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await equipmentService.getAll();
-      setEquipments(data);
+      setEquipments(data || []);
     } catch (error) {
+      setEquipments([]);
       showSnackbar('설비 목록을 불러오는데 실패했습니다.', 'error');
     } finally {
       setLoading(false);

@@ -58,9 +58,10 @@ const ProductsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await productService.getProducts();
-      setProducts(data);
+      setProducts(data || []);
     } catch (error) {
       showSnackbar('제품 목록 조회 실패', 'error');
+      setProducts([]);
     } finally {
       setLoading(false);
     }

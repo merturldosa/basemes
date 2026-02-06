@@ -102,9 +102,10 @@ const CommonCodesPage: React.FC = () => {
     try {
       setLoadingGroups(true);
       const data = await commonCodeService.getCodeGroups();
-      setCodeGroups(data);
+      setCodeGroups(data || []);
     } catch (error) {
       showSnackbar('코드 그룹 목록 조회 실패', 'error');
+      setCodeGroups([]);
     } finally {
       setLoadingGroups(false);
     }
@@ -114,7 +115,7 @@ const CommonCodesPage: React.FC = () => {
     try {
       setLoadingDetails(true);
       const data = await commonCodeService.getCodeDetails(groupId);
-      setCodeDetails(data);
+      setCodeDetails(data || []);
     } catch (error) {
       showSnackbar('코드 상세 목록 조회 실패', 'error');
       setCodeDetails([]);

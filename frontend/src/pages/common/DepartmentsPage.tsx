@@ -56,9 +56,10 @@ const DepartmentsPage: React.FC = () => {
     try {
       setLoading(true);
       const deptData = await departmentService.getAll();
-      setDepartments(deptData);
+      setDepartments(deptData || []);
     } catch (error) {
       setSnackbar({ open: true, message: 'Failed to load departments', severity: 'error' });
+      setDepartments([]);
     } finally {
       setLoading(false);
     }
@@ -174,7 +175,7 @@ const DepartmentsPage: React.FC = () => {
     },
   ];
 
-  const topLevelDepartments = departments.filter(d => !d.parentDepartmentId);
+  const topLevelDepartments = (departments || []).filter(d => !d.parentDepartmentId);
 
   return (
     <Box sx={{ height: '100%', p: 3 }}>

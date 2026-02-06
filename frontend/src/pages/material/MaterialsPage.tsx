@@ -61,10 +61,11 @@ const MaterialsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await materialService.getAll();
-      setMaterials(data);
+      setMaterials(data || []);
     } catch (error) {
       console.error('Failed to load materials:', error);
       setSnackbar({ open: true, message: '자재 목록 조회 실패', severity: 'error' });
+      setMaterials([]);
     } finally {
       setLoading(false);
     }
@@ -73,9 +74,10 @@ const MaterialsPage: React.FC = () => {
   const loadSuppliers = async () => {
     try {
       const data = await supplierService.getActive();
-      setSuppliers(data);
+      setSuppliers(data || []);
     } catch (error) {
       console.error('Failed to load suppliers:', error);
+      setSuppliers([]);
     }
   };
 

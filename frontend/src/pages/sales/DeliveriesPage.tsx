@@ -52,8 +52,9 @@ const DeliveriesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await deliveryService.getAll();
-      setDeliveries(data);
+      setDeliveries(data || []);
     } catch (error) {
+      setDeliveries([]);
       setSnackbar({ open: true, message: 'Failed to load deliveries', severity: 'error' });
     } finally {
       setLoading(false);

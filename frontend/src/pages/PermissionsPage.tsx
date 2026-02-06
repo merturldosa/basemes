@@ -81,9 +81,10 @@ export default function PermissionsPage() {
       setLoading(true);
       setError(null);
       const data = await permissionService.getPermissions();
-      setPermissions(data);
+      setPermissions(data || []);
     } catch (err: any) {
       console.error('Failed to load permissions:', err);
+      setPermissions([]);
       setError(err.response?.data?.message || '권한 목록 로드 실패');
     } finally {
       setLoading(false);

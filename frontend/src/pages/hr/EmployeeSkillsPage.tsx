@@ -86,10 +86,12 @@ const EmployeeSkillsPage: React.FC = () => {
         employeeSkillService.getAll(),
         skillMatrixService.getActive(),
       ]);
-      setEmployeeSkills(employeeSkillsData);
-      setSkills(skillsData);
+      setEmployeeSkills(employeeSkillsData || []);
+      setSkills(skillsData || []);
     } catch (error) {
       showSnackbar('데이터 조회 실패', 'error');
+      setEmployeeSkills([]);
+      setSkills([]);
     } finally {
       setLoading(false);
     }
@@ -353,7 +355,7 @@ const EmployeeSkillsPage: React.FC = () => {
                     label="스킬"
                     onChange={(e) => handleSelectChange('skillId', e.target.value as number)}
                   >
-                    {skills.map((skill) => (
+                    {(skills || []).map((skill) => (
                       <MenuItem key={skill.skillId} value={skill.skillId}>
                         {skill.skillCode} - {skill.skillName}
                       </MenuItem>

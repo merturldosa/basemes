@@ -53,10 +53,11 @@ const WarehousesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await warehouseService.getAll();
-      setWarehouses(data);
+      setWarehouses(data || []);
     } catch (error) {
       console.error('Failed to load warehouses:', error);
       setSnackbar({ open: true, message: '창고 목록 조회 실패', severity: 'error' });
+      setWarehouses([]);
     } finally {
       setLoading(false);
     }
@@ -64,10 +65,11 @@ const WarehousesPage: React.FC = () => {
 
   const loadUsers = async () => {
     try {
-      const data = await userService.getAll();
-      setUsers(data);
+      const response = await userService.getUsers();
+      setUsers(response?.content || []);
     } catch (error) {
       console.error('Failed to load users:', error);
+      setUsers([]);
     }
   };
 

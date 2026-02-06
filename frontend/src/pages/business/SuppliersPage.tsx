@@ -53,10 +53,11 @@ const SuppliersPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await supplierService.getAll();
-      setSuppliers(data);
+      setSuppliers(data || []);
     } catch (error) {
       console.error('Failed to load suppliers:', error);
       setSnackbar({ open: true, message: '공급업체 목록 조회 실패', severity: 'error' });
+      setSuppliers([]);
     } finally {
       setLoading(false);
     }

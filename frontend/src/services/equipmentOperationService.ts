@@ -69,7 +69,7 @@ const equipmentOperationService = {
    * Get all operations
    */
   getAll: async (): Promise<EquipmentOperation[]> => {
-    const response = await apiClient.get<EquipmentOperation[]>('/api/equipment-operations');
+    const response = await apiClient.get<EquipmentOperation[]>('/equipment-operations');
     return response.data;
   },
 
@@ -93,7 +93,7 @@ const equipmentOperationService = {
    * Get operations by date range
    */
   getByDateRange: async (startDate: string, endDate: string): Promise<EquipmentOperation[]> => {
-    const response = await apiClient.get<EquipmentOperation[]>('/api/equipment-operations/date-range', {
+    const response = await apiClient.get<EquipmentOperation[]>('/equipment-operations/date-range', {
       params: { startDate, endDate }
     });
     return response.data;
@@ -111,7 +111,7 @@ const equipmentOperationService = {
    * Create operation
    */
   create: async (data: EquipmentOperationCreateRequest): Promise<EquipmentOperation> => {
-    const response = await apiClient.post<EquipmentOperation>('/api/equipment-operations', data);
+    const response = await apiClient.post<EquipmentOperation>('/equipment-operations', data);
     return response.data;
   },
 

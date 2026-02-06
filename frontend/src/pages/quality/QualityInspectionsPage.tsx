@@ -74,13 +74,18 @@ const QualityInspectionsPage: React.FC = () => {
         workOrderService.getWorkOrders(),
         userService.getUsers(),
       ]);
-      setQualityInspections(inspectionsData);
-      setQualityStandards(standardsData);
-      setProducts(productsData);
-      setWorkOrders(workOrdersData);
-      setUsers(usersResponse.content);
+      setQualityInspections(inspectionsData || []);
+      setQualityStandards(standardsData || []);
+      setProducts(productsData || []);
+      setWorkOrders(workOrdersData || []);
+      setUsers(usersResponse?.content || []);
     } catch (error) {
       showSnackbar('품질 검사 목록 조회 실패', 'error');
+      setQualityInspections([]);
+      setQualityStandards([]);
+      setProducts([]);
+      setWorkOrders([]);
+      setUsers([]);
     } finally {
       setLoading(false);
     }

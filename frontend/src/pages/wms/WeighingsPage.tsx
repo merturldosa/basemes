@@ -77,9 +77,10 @@ const WeighingsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await weighingService.getAll();
-      setWeighings(data);
+      setWeighings(data || []);
     } catch (error) {
       console.error('Failed to load weighings:', error);
+      setWeighings([]);
       setSnackbar({
         open: true,
         message: '칭량 기록 조회 실패',
@@ -93,27 +94,30 @@ const WeighingsPage: React.FC = () => {
   const loadProducts = async () => {
     try {
       const data = await productService.getProducts();
-      setProducts(data);
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
   const loadLots = async () => {
     try {
       const data = await lotService.getAll();
-      setLots(data);
+      setLots(data || []);
     } catch (error) {
       console.error('Failed to load lots:', error);
+      setLots([]);
     }
   };
 
   const loadUsers = async () => {
     try {
       const response = await userService.getUsers({ size: 1000 });
-      setUsers(response.content);
+      setUsers(response?.content || []);
     } catch (error) {
       console.error('Failed to load users:', error);
+      setUsers([]);
     }
   };
 

@@ -38,9 +38,10 @@ const DepartmentsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await departmentService.getAll();
-      setDepartments(data);
+      setDepartments(data || []);
     } catch (error) {
       console.error('Failed to load departments:', error);
+      setDepartments([]);
     } finally {
       setLoading(false);
     }

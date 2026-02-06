@@ -61,7 +61,7 @@ const downtimeService = {
    * Get all downtimes
    */
   getAll: async (): Promise<Downtime[]> => {
-    const response = await apiClient.get<Downtime[]>('/api/downtimes');
+    const response = await apiClient.get<Downtime[]>('/downtimes');
     return response.data;
   },
 
@@ -93,7 +93,7 @@ const downtimeService = {
    * Get downtimes by date range
    */
   getByDateRange: async (startDate: string, endDate: string): Promise<Downtime[]> => {
-    const response = await apiClient.get<Downtime[]>('/api/downtimes/date-range', {
+    const response = await apiClient.get<Downtime[]>('/downtimes/date-range', {
       params: { startDate, endDate }
     });
     return response.data;
@@ -103,7 +103,7 @@ const downtimeService = {
    * Get unresolved downtimes
    */
   getUnresolved: async (): Promise<Downtime[]> => {
-    const response = await apiClient.get<Downtime[]>('/api/downtimes/unresolved');
+    const response = await apiClient.get<Downtime[]>('/downtimes/unresolved');
     return response.data;
   },
 
@@ -111,7 +111,7 @@ const downtimeService = {
    * Get ongoing downtimes
    */
   getOngoing: async (): Promise<Downtime[]> => {
-    const response = await apiClient.get<Downtime[]>('/api/downtimes/ongoing');
+    const response = await apiClient.get<Downtime[]>('/downtimes/ongoing');
     return response.data;
   },
 
@@ -119,7 +119,7 @@ const downtimeService = {
    * Create downtime
    */
   create: async (data: DowntimeCreateRequest): Promise<Downtime> => {
-    const response = await apiClient.post<Downtime>('/api/downtimes', data);
+    const response = await apiClient.post<Downtime>('/downtimes', data);
     return response.data;
   },
 

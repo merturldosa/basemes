@@ -67,10 +67,11 @@ const BomsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await bomService.getAll();
-      setBoms(data);
+      setBoms(data || []);
     } catch (error) {
       console.error('Failed to load BOMs:', error);
       setSnackbar({ open: true, message: 'BOM 목록 조회 실패', severity: 'error' });
+      setBoms([]);
     } finally {
       setLoading(false);
     }
@@ -78,19 +79,21 @@ const BomsPage: React.FC = () => {
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
-      setProducts(data);
+      const data = await productService.getProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
   const loadProcesses = async () => {
     try {
-      const data = await processService.getAll();
-      setProcesses(data);
+      const data = await processService.getProcesses();
+      setProcesses(data || []);
     } catch (error) {
       console.error('Failed to load processes:', error);
+      setProcesses([]);
     }
   };
 
@@ -106,7 +109,7 @@ const BomsPage: React.FC = () => {
         expiryDate: bom.expiryDate,
         isActive: bom.isActive,
         remarks: bom.remarks,
-        details: bom.details.map(d => ({
+        details: (bom.details || []).map(d => ({
           sequence: d.sequence,
           materialProductId: d.materialProductId,
           processId: d.processId,

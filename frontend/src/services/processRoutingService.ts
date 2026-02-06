@@ -42,7 +42,7 @@ export interface ProcessRouting {
   isActive: boolean;
   totalStandardTime?: number;
   remarks?: string;
-  steps: RoutingStep[];
+  steps?: RoutingStep[];
   createdAt: string;
   updatedAt: string;
 }

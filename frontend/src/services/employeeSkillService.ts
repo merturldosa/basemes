@@ -77,7 +77,7 @@ const employeeSkillService = {
    * Get all employee skills
    */
   getAll: async (): Promise<EmployeeSkill[]> => {
-    const response = await apiClient.get<EmployeeSkill[]>('/api/employee-skills');
+    const response = await apiClient.get<EmployeeSkill[]>('/employee-skills');
     return response.data;
   },
 
@@ -119,7 +119,7 @@ const employeeSkillService = {
    * Get expiring certifications
    */
   getExpiringCertifications: async (expiryDate: string): Promise<EmployeeSkill[]> => {
-    const response = await apiClient.get<EmployeeSkill[]>('/api/employee-skills/expiring-certifications', {
+    const response = await apiClient.get<EmployeeSkill[]>('/employee-skills/expiring-certifications', {
       params: { expiryDate },
     });
     return response.data;
@@ -129,7 +129,7 @@ const employeeSkillService = {
    * Get pending assessments
    */
   getPendingAssessments: async (assessmentDate: string): Promise<EmployeeSkill[]> => {
-    const response = await apiClient.get<EmployeeSkill[]>('/api/employee-skills/pending-assessments', {
+    const response = await apiClient.get<EmployeeSkill[]>('/employee-skills/pending-assessments', {
       params: { assessmentDate },
     });
     return response.data;
@@ -139,7 +139,7 @@ const employeeSkillService = {
    * Create employee skill
    */
   create: async (data: EmployeeSkillCreateRequest): Promise<EmployeeSkill> => {
-    const response = await apiClient.post<EmployeeSkill>('/api/employee-skills', data);
+    const response = await apiClient.post<EmployeeSkill>('/employee-skills', data);
     return response.data;
   },
 

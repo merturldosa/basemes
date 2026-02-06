@@ -72,11 +72,14 @@ const WorkOrdersPage: React.FC = () => {
         productService.getActiveProducts(),
         processService.getActiveProcesses(),
       ]);
-      setWorkOrders(workOrdersData);
-      setProducts(productsData);
-      setProcesses(processesData);
+      setWorkOrders(workOrdersData || []);
+      setProducts(productsData || []);
+      setProcesses(processesData || []);
     } catch (error) {
       showSnackbar('데이터 조회 실패', 'error');
+      setWorkOrders([]);
+      setProducts([]);
+      setProcesses([]);
     } finally {
       setLoading(false);
     }

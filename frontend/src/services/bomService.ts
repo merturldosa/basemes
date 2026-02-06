@@ -33,7 +33,7 @@ export interface Bom {
   expiryDate?: string;
   isActive: boolean;
   remarks?: string;
-  details: BomDetail[];
+  details?: BomDetail[];
   createdAt: string;
   updatedAt: string;
 }

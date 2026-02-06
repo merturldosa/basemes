@@ -66,8 +66,9 @@ const SitesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await siteService.getAll();
-      setSites(data);
+      setSites(data || []);
     } catch (error) {
+      setSites([]);
       setSnackbar({ open: true, message: 'Failed to load sites', severity: 'error' });
     } finally {
       setLoading(false);

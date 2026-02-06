@@ -39,9 +39,10 @@ const EmployeesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await employeeService.getAll();
-      setEmployees(data);
+      setEmployees(data || []);
     } catch (error) {
       console.error('Failed to load employees:', error);
+      setEmployees([]);
     } finally {
       setLoading(false);
     }

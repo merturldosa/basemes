@@ -79,7 +79,7 @@ const moldMaintenanceService = {
    * Get all mold maintenances
    */
   getAll: async (): Promise<MoldMaintenance[]> => {
-    const response = await apiClient.get<MoldMaintenance[]>('/api/mold-maintenances');
+    const response = await apiClient.get<MoldMaintenance[]>('/mold-maintenances');
     return response.data;
   },
 
@@ -111,7 +111,7 @@ const moldMaintenanceService = {
    * Get maintenances by date range
    */
   getByDateRange: async (startDate: string, endDate: string): Promise<MoldMaintenance[]> => {
-    const response = await apiClient.get<MoldMaintenance[]>('/api/mold-maintenances/date-range', {
+    const response = await apiClient.get<MoldMaintenance[]>('/mold-maintenances/date-range', {
       params: { startDate, endDate }
     });
     return response.data;
@@ -121,7 +121,7 @@ const moldMaintenanceService = {
    * Create mold maintenance
    */
   create: async (data: MoldMaintenanceCreateRequest): Promise<MoldMaintenance> => {
-    const response = await apiClient.post<MoldMaintenance>('/api/mold-maintenances', data);
+    const response = await apiClient.post<MoldMaintenance>('/mold-maintenances', data);
     return response.data;
   },
 

@@ -55,7 +55,7 @@ const moldProductionHistoryService = {
    * Get all mold production histories
    */
   getAll: async (): Promise<MoldProductionHistory[]> => {
-    const response = await apiClient.get<MoldProductionHistory[]>('/api/mold-production-histories');
+    const response = await apiClient.get<MoldProductionHistory[]>('/mold-production-histories');
     return response.data;
   },
 
@@ -79,7 +79,7 @@ const moldProductionHistoryService = {
    * Get histories by date range
    */
   getByDateRange: async (startDate: string, endDate: string): Promise<MoldProductionHistory[]> => {
-    const response = await apiClient.get<MoldProductionHistory[]>('/api/mold-production-histories/date-range', {
+    const response = await apiClient.get<MoldProductionHistory[]>('/mold-production-histories/date-range', {
       params: { startDate, endDate }
     });
     return response.data;
@@ -97,7 +97,7 @@ const moldProductionHistoryService = {
    * Create production history
    */
   create: async (data: MoldProductionHistoryCreateRequest): Promise<MoldProductionHistory> => {
-    const response = await apiClient.post<MoldProductionHistory>('/api/mold-production-histories', data);
+    const response = await apiClient.post<MoldProductionHistory>('/mold-production-histories', data);
     return response.data;
   },
 

@@ -110,9 +110,10 @@ const SOPsPage: React.FC = () => {
       setLoading(true);
       setError(null);
       const data = await sopService.getSOPs();
-      setSOPs(data);
+      setSOPs(data || []);
     } catch (err: any) {
       setError(err.message || 'SOP 목록 조회 실패');
+      setSOPs([]);
     } finally {
       setLoading(false);
     }
@@ -121,9 +122,10 @@ const SOPsPage: React.FC = () => {
   const loadSteps = async (sopId: number) => {
     try {
       const sop = await sopService.getSOPById(sopId);
-      setSteps(sop.steps || []);
+      setSteps(sop?.steps || []);
     } catch (err: any) {
       setError(err.message || 'SOP 단계 조회 실패');
+      setSteps([]);
     }
   };
 

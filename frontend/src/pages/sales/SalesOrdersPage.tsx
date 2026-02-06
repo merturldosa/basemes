@@ -75,8 +75,9 @@ const SalesOrdersPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await salesOrderService.getAll();
-      setSalesOrders(data);
+      setSalesOrders(data || []);
     } catch (error) {
+      setSalesOrders([]);
       setSnackbar({ open: true, message: 'Failed to load sales orders', severity: 'error' });
     } finally {
       setLoading(false);
@@ -86,9 +87,10 @@ const SalesOrdersPage: React.FC = () => {
   const loadCustomers = async () => {
     try {
       const data = await customerService.getActive();
-      setCustomers(data);
+      setCustomers(data || []);
     } catch (error) {
       console.error('Failed to load customers:', error);
+      setCustomers([]);
     }
   };
 

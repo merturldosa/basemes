@@ -65,10 +65,12 @@ const QualityStandardsPage: React.FC = () => {
         qualityStandardService.getQualityStandards(),
         productService.getActiveProducts(),
       ]);
-      setQualityStandards(standardsData);
-      setProducts(productsData);
+      setQualityStandards(standardsData || []);
+      setProducts(productsData || []);
     } catch (error) {
       showSnackbar('품질 기준 목록 조회 실패', 'error');
+      setQualityStandards([]);
+      setProducts([]);
     } finally {
       setLoading(false);
     }

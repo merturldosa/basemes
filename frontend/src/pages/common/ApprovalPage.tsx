@@ -102,15 +102,15 @@ export default function ApprovalPage() {
       if (currentTab === 0) {
         // Load pending approvals
         const data = await approvalService.getPendingApprovals(tenantId, userId);
-        setPendingApprovals(data);
+        setPendingApprovals(data || []);
       } else if (currentTab === 1) {
         // Load templates
         const data = await approvalService.getAllTemplates(tenantId);
-        setTemplates(data);
+        setTemplates(data || []);
       } else if (currentTab === 2) {
         // Load delegations
         const data = await approvalService.getCurrentDelegations(tenantId);
-        setDelegations(data);
+        setDelegations(data || []);
       } else if (currentTab === 3) {
         // Load statistics
         const stats = await approvalService.getStatistics(tenantId);
@@ -118,6 +118,13 @@ export default function ApprovalPage() {
       }
     } catch (err: any) {
       setError(err.message || '데이터 로드 실패');
+      if (currentTab === 0) {
+        setPendingApprovals([]);
+      } else if (currentTab === 1) {
+        setTemplates([]);
+      } else if (currentTab === 2) {
+        setDelegations([]);
+      }
     } finally {
       setLoading(false);
     }

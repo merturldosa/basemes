@@ -88,7 +88,7 @@ const moldService = {
    * Get all molds
    */
   getAll: async (): Promise<Mold[]> => {
-    const response = await apiClient.get<Mold[]>('/api/molds');
+    const response = await apiClient.get<Mold[]>('/molds');
     return response.data;
   },
 
@@ -96,7 +96,7 @@ const moldService = {
    * Get active molds
    */
   getActive: async (): Promise<Mold[]> => {
-    const response = await apiClient.get<Mold[]>('/api/molds/active');
+    const response = await apiClient.get<Mold[]>('/molds/active');
     return response.data;
   },
 
@@ -120,7 +120,7 @@ const moldService = {
    * Get molds requiring maintenance
    */
   getRequiringMaintenance: async (): Promise<Mold[]> => {
-    const response = await apiClient.get<Mold[]>('/api/molds/requiring-maintenance');
+    const response = await apiClient.get<Mold[]>('/molds/requiring-maintenance');
     return response.data;
   },
 
@@ -128,7 +128,7 @@ const moldService = {
    * Create mold
    */
   create: async (data: MoldCreateRequest): Promise<Mold> => {
-    const response = await apiClient.post<Mold>('/api/molds', data);
+    const response = await apiClient.post<Mold>('/molds', data);
     return response.data;
   },
 

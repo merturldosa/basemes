@@ -62,9 +62,10 @@ const ProductionSchedulePage: React.FC = () => {
     try {
       setLoading(true);
       const data = await productionScheduleService.getByPeriod(startDate, endDate);
-      setSchedules(data);
+      setSchedules(data || []);
     } catch (error) {
       console.error('Failed to load schedules:', error);
+      setSchedules([]);
       setSnackbar({ open: true, message: '일정 목록 조회 실패', severity: 'error' });
     } finally {
       setLoading(false);
@@ -75,9 +76,10 @@ const ProductionSchedulePage: React.FC = () => {
     try {
       const data = await workOrderService.getWorkOrders();
       // routing이 있는 WorkOrder만 필터링
-      setWorkOrders(data.filter((wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'));
+      setWorkOrders((data || []).filter((wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'));
     } catch (error) {
       console.error('Failed to load work orders:', error);
+      setWorkOrders([]);
     }
   };
 

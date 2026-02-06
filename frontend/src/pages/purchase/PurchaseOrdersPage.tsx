@@ -40,9 +40,10 @@ const PurchaseOrdersPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await purchaseOrderService.getAll();
-      setPurchaseOrders(data);
+      setPurchaseOrders(data || []);
     } catch (error) {
       console.error('Failed to load purchase orders:', error);
+      setPurchaseOrders([]);
       setSnackbar({ open: true, message: '구매 주문 목록 조회 실패', severity: 'error' });
     } finally {
       setLoading(false);

@@ -56,9 +56,10 @@ const MoldsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await moldService.getAll();
-      setMolds(data);
+      setMolds(data || []);
     } catch (error) {
       showSnackbar('금형 목록을 불러오는데 실패했습니다.', 'error');
+      setMolds([]);
     } finally {
       setLoading(false);
     }

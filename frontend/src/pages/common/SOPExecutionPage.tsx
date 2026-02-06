@@ -82,9 +82,10 @@ const SOPExecutionPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await sopService.getApprovedSOPs();
-      setApprovedSOPs(data);
+      setApprovedSOPs(data || []);
     } catch (err: any) {
       setError(err.message || 'SOP 목록 조회 실패');
+      setApprovedSOPs([]);
     } finally {
       setLoading(false);
     }

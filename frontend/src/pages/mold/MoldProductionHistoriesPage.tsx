@@ -53,9 +53,10 @@ const MoldProductionHistoriesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await moldProductionHistoryService.getAll();
-      setHistories(data);
+      setHistories(data || []);
     } catch (error) {
       showSnackbar('생산 이력을 불러오는데 실패했습니다.', 'error');
+      setHistories([]);
     } finally {
       setLoading(false);
     }
@@ -64,9 +65,10 @@ const MoldProductionHistoriesPage: React.FC = () => {
   const loadMolds = async () => {
     try {
       const data = await moldService.getActive();
-      setMolds(data);
+      setMolds(data || []);
     } catch (error) {
       console.error('Failed to load molds:', error);
+      setMolds([]);
     }
   };
 

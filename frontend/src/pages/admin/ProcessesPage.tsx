@@ -55,9 +55,10 @@ const ProcessesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await processService.getProcesses();
-      setProcesses(data);
+      setProcesses(data || []);
     } catch (error) {
       showSnackbar('공정 목록 조회 실패', 'error');
+      setProcesses([]);
     } finally {
       setLoading(false);
     }

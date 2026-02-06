@@ -73,9 +73,10 @@ const SkillMatrixPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await skillMatrixService.getAll();
-      setSkills(data);
+      setSkills(data || []);
     } catch (error) {
       showSnackbar('스킬 목록 조회 실패', 'error');
+      setSkills([]);
     } finally {
       setLoading(false);
     }

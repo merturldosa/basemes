@@ -294,7 +294,7 @@ const POPSOPPage: React.FC = () => {
 
       {/* Stepper */}
       <Stepper activeStep={activeStep} orientation="vertical">
-        {selectedSOP.steps.map((step, index) => (
+        {(selectedSOP.steps || []).map((step, index) => (
           <Step key={step.id} completed={completedSteps.has(step.id)}>
             <StepLabel
               optional={

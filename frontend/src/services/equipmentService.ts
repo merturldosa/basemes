@@ -93,7 +93,7 @@ const equipmentService = {
    * Get all equipments
    */
   getAll: async (): Promise<Equipment[]> => {
-    const response = await apiClient.get<Equipment[]>('/api/equipments');
+    const response = await apiClient.get<Equipment[]>('/equipments');
     return response.data;
   },
 
@@ -101,7 +101,7 @@ const equipmentService = {
    * Get active equipments
    */
   getActive: async (): Promise<Equipment[]> => {
-    const response = await apiClient.get<Equipment[]>('/api/equipments/active');
+    const response = await apiClient.get<Equipment[]>('/equipments/active');
     return response.data;
   },
 
@@ -109,7 +109,7 @@ const equipmentService = {
    * Get equipment by ID
    */
   getById: async (equipmentId: number): Promise<Equipment> => {
-    const response = await apiClient.get<Equipment>(`/api/equipments/${equipmentId}`);
+    const response = await apiClient.get<Equipment>(`/equipments/${equipmentId}`);
     return response.data;
   },
 
@@ -117,7 +117,7 @@ const equipmentService = {
    * Get equipments by status
    */
   getByStatus: async (status: string): Promise<Equipment[]> => {
-    const response = await apiClient.get<Equipment[]>(`/api/equipments/status/${status}`);
+    const response = await apiClient.get<Equipment[]>(`/equipments/status/${status}`);
     return response.data;
   },
 
@@ -125,7 +125,7 @@ const equipmentService = {
    * Get equipments by type
    */
   getByType: async (equipmentType: string): Promise<Equipment[]> => {
-    const response = await apiClient.get<Equipment[]>(`/api/equipments/type/${equipmentType}`);
+    const response = await apiClient.get<Equipment[]>(`/equipments/type/${equipmentType}`);
     return response.data;
   },
 
@@ -133,7 +133,7 @@ const equipmentService = {
    * Create equipment
    */
   create: async (data: EquipmentCreateRequest): Promise<Equipment> => {
-    const response = await apiClient.post<Equipment>('/api/equipments', data);
+    const response = await apiClient.post<Equipment>('/equipments', data);
     return response.data;
   },
 
@@ -141,7 +141,7 @@ const equipmentService = {
    * Update equipment
    */
   update: async (equipmentId: number, data: EquipmentUpdateRequest): Promise<Equipment> => {
-    const response = await apiClient.put<Equipment>(`/api/equipments/${equipmentId}`, data);
+    const response = await apiClient.put<Equipment>(`/equipments/${equipmentId}`, data);
     return response.data;
   },
 
@@ -149,7 +149,7 @@ const equipmentService = {
    * Change equipment status
    */
   changeStatus: async (equipmentId: number, status: string): Promise<Equipment> => {
-    const response = await apiClient.patch<Equipment>(`/api/equipments/${equipmentId}/status`, null, {
+    const response = await apiClient.patch<Equipment>(`/equipments/${equipmentId}/status`, null, {
       params: { status }
     });
     return response.data;
@@ -159,7 +159,7 @@ const equipmentService = {
    * Activate equipment
    */
   activate: async (equipmentId: number): Promise<Equipment> => {
-    const response = await apiClient.patch<Equipment>(`/api/equipments/${equipmentId}/activate`);
+    const response = await apiClient.patch<Equipment>(`/equipments/${equipmentId}/activate`);
     return response.data;
   },
 
@@ -167,7 +167,7 @@ const equipmentService = {
    * Deactivate equipment
    */
   deactivate: async (equipmentId: number): Promise<Equipment> => {
-    const response = await apiClient.patch<Equipment>(`/api/equipments/${equipmentId}/deactivate`);
+    const response = await apiClient.patch<Equipment>(`/equipments/${equipmentId}/deactivate`);
     return response.data;
   },
 
@@ -175,7 +175,7 @@ const equipmentService = {
    * Delete equipment
    */
   delete: async (equipmentId: number): Promise<void> => {
-    await apiClient.delete(`/api/equipments/${equipmentId}`);
+    await apiClient.delete(`/equipments/${equipmentId}`);
   }
 };
 

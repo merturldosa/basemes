@@ -71,11 +71,14 @@ const ShippingPage: React.FC = () => {
         warehouseService.getActive(),
         salesOrderService.getAll(),
       ]);
-      setShippings(shippingsData);
-      setWarehouses(warehousesData);
-      setSalesOrders(salesOrdersData);
+      setShippings(shippingsData || []);
+      setWarehouses(warehousesData || []);
+      setSalesOrders(salesOrdersData || []);
     } catch (error) {
       setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setShippings([]);
+      setWarehouses([]);
+      setSalesOrders([]);
     } finally {
       setLoading(false);
     }

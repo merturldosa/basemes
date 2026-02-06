@@ -53,10 +53,11 @@ const LotsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await lotService.getAll();
-      setLots(data);
+      setLots(data || []);
     } catch (error) {
       console.error('Failed to load lots:', error);
       setSnackbar({ open: true, message: 'LOT 목록 조회 실패', severity: 'error' });
+      setLots([]);
     } finally {
       setLoading(false);
     }
@@ -64,19 +65,21 @@ const LotsPage: React.FC = () => {
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
-      setProducts(data);
+      const data = await productService.getProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
   const loadWorkOrders = async () => {
     try {
-      const data = await workOrderService.getAll();
-      setWorkOrders(data);
+      const data = await workOrderService.getWorkOrders();
+      setWorkOrders(data || []);
     } catch (error) {
       console.error('Failed to load work orders:', error);
+      setWorkOrders([]);
     }
   };
 

@@ -57,8 +57,9 @@ const EquipmentInspectionsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await equipmentInspectionService.getAll();
-      setInspections(data);
+      setInspections(data || []);
     } catch (error) {
+      setInspections([]);
       showSnackbar('점검 이력을 불러오는데 실패했습니다.', 'error');
     } finally {
       setLoading(false);
@@ -68,9 +69,10 @@ const EquipmentInspectionsPage: React.FC = () => {
   const loadEquipments = async () => {
     try {
       const data = await equipmentService.getActive();
-      setEquipments(data);
+      setEquipments(data || []);
     } catch (error) {
       console.error('Failed to load equipments:', error);
+      setEquipments([]);
     }
   };
 

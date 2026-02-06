@@ -75,7 +75,7 @@ const equipmentInspectionService = {
    * Get all inspections
    */
   getAll: async (): Promise<EquipmentInspection[]> => {
-    const response = await apiClient.get<EquipmentInspection[]>('/api/equipment-inspections');
+    const response = await apiClient.get<EquipmentInspection[]>('/equipment-inspections');
     return response.data;
   },
 
@@ -115,7 +115,7 @@ const equipmentInspectionService = {
    * Create inspection
    */
   create: async (data: EquipmentInspectionCreateRequest): Promise<EquipmentInspection> => {
-    const response = await apiClient.post<EquipmentInspection>('/api/equipment-inspections', data);
+    const response = await apiClient.post<EquipmentInspection>('/equipment-inspections', data);
     return response.data;
   },
 

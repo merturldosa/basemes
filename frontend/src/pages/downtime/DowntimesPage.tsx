@@ -59,8 +59,9 @@ const DowntimesPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await downtimeService.getAll();
-      setDowntimes(data);
+      setDowntimes(data || []);
     } catch (error) {
+      setDowntimes([]);
       showSnackbar('비가동 목록을 불러오는데 실패했습니다.', 'error');
     } finally {
       setLoading(false);
@@ -70,9 +71,10 @@ const DowntimesPage: React.FC = () => {
   const loadEquipments = async () => {
     try {
       const data = await equipmentService.getActive();
-      setEquipments(data);
+      setEquipments(data || []);
     } catch (error) {
       console.error('Failed to load equipments:', error);
+      setEquipments([]);
     }
   };
 

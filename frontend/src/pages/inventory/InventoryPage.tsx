@@ -45,10 +45,11 @@ const InventoryPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await inventoryService.getAll();
-      setInventory(data);
+      setInventory(data || []);
     } catch (error) {
       console.error('Failed to load inventory:', error);
       setSnackbar({ open: true, message: '재고 목록 조회 실패', severity: 'error' });
+      setInventory([]);
     } finally {
       setLoading(false);
     }
@@ -57,18 +58,20 @@ const InventoryPage: React.FC = () => {
   const loadWarehouses = async () => {
     try {
       const data = await warehouseService.getAll();
-      setWarehouses(data);
+      setWarehouses(data || []);
     } catch (error) {
       console.error('Failed to load warehouses:', error);
+      setWarehouses([]);
     }
   };
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
-      setProducts(data);
+      const data = await productService.getProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
@@ -82,10 +85,11 @@ const InventoryPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await inventoryService.getByWarehouse(warehouseId);
-      setInventory(data);
+      setInventory(data || []);
     } catch (error) {
       console.error('Failed to filter by warehouse:', error);
       setSnackbar({ open: true, message: '창고별 재고 조회 실패', severity: 'error' });
+      setInventory([]);
     } finally {
       setLoading(false);
     }
@@ -101,10 +105,11 @@ const InventoryPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await inventoryService.getByProduct(productId);
-      setInventory(data);
+      setInventory(data || []);
     } catch (error) {
       console.error('Failed to filter by product:', error);
       setSnackbar({ open: true, message: '제품별 재고 조회 실패', severity: 'error' });
+      setInventory([]);
     } finally {
       setLoading(false);
     }

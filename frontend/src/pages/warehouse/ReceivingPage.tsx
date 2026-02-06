@@ -69,11 +69,14 @@ const ReceivingPage: React.FC = () => {
         warehouseService.getActive(),
         purchaseOrderService.getAll(),
       ]);
-      setReceipts(receiptsData);
-      setWarehouses(warehousesData);
-      setPurchaseOrders(purchaseOrdersData);
+      setReceipts(receiptsData || []);
+      setWarehouses(warehousesData || []);
+      setPurchaseOrders(purchaseOrdersData || []);
     } catch (error) {
       setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setReceipts([]);
+      setWarehouses([]);
+      setPurchaseOrders([]);
     } finally {
       setLoading(false);
     }

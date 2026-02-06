@@ -149,11 +149,12 @@ const DisposalsPage: React.FC = () => {
         setLoading(true);
         try {
             const response = await axios.get('/api/disposals');
-            const data = response.data.data;
+            const data = response?.data?.data || [];
             setDisposals(data);
             calculateStatistics(data);
         } catch (error) {
             console.error('Failed to fetch disposals:', error);
+            setDisposals([]);
         } finally {
             setLoading(false);
         }

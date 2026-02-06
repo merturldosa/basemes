@@ -52,10 +52,11 @@ const CustomersPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await customerService.getAll();
-      setCustomers(data);
+      setCustomers(data || []);
     } catch (error) {
       console.error('Failed to load customers:', error);
       setSnackbar({ open: true, message: '고객 목록 조회 실패', severity: 'error' });
+      setCustomers([]);
     } finally {
       setLoading(false);
     }

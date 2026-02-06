@@ -72,10 +72,12 @@ export default function AuditLogsPage() {
         success: filters.success === 'ALL' ? undefined : filters.success === 'SUCCESS',
       });
 
-      setAuditLogs(response.content);
-      setTotalElements(response.totalElements);
+      setAuditLogs(response?.content || []);
+      setTotalElements(response?.totalElements || 0);
     } catch (error: any) {
       console.error('Failed to load audit logs:', error);
+      setAuditLogs([]);
+      setTotalElements(0);
     } finally {
       setLoading(false);
     }
@@ -117,7 +119,16 @@ export default function AuditLogsPage() {
       field: 'timestamp',
       headerName: '시간',
       width: 180,
-      renderCell: (params) => format(new Date(params.value), 'yyyy-MM-dd HH:mm:ss'),
+      renderCell: (params) => {
+        try {
+          if (!params.value) return '-';
+          const date = new Date(params.value);
+          if (isNaN(date.getTime())) return '-';
+          return format(date, 'yyyy-MM-dd HH:mm:ss');
+        } catch {
+          return '-';
+        }
+      },
     },
     {
       field: 'username',
@@ -346,7 +357,16 @@ export default function AuditLogsPage() {
                     작업 시간
                   </Typography>
                   <Typography variant="body1">
-                    {format(new Date(selectedLog.timestamp), 'yyyy-MM-dd HH:mm:ss')}
+                    {(() => {
+                      try {
+                        if (!selectedLog.timestamp) return '-';
+                        const date = new Date(selectedLog.timestamp);
+                        if (isNaN(date.getTime())) return '-';
+                        return format(date, 'yyyy-MM-dd HH:mm:ss');
+                      } catch {
+                        return '-';
+                      }
+                    })()}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>

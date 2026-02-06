@@ -55,10 +55,11 @@ const InventoryTransactionsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await inventoryTransactionService.getAll();
-      setTransactions(data);
+      setTransactions(data || []);
     } catch (error) {
       console.error('Failed to load transactions:', error);
       setSnackbar({ open: true, message: '재고 이동 내역 조회 실패', severity: 'error' });
+      setTransactions([]);
     } finally {
       setLoading(false);
     }
@@ -67,36 +68,40 @@ const InventoryTransactionsPage: React.FC = () => {
   const loadWarehouses = async () => {
     try {
       const data = await warehouseService.getAll();
-      setWarehouses(data);
+      setWarehouses(data || []);
     } catch (error) {
       console.error('Failed to load warehouses:', error);
+      setWarehouses([]);
     }
   };
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
-      setProducts(data);
+      const data = await productService.getProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
   const loadLots = async () => {
     try {
       const data = await lotService.getAll();
-      setLots(data);
+      setLots(data || []);
     } catch (error) {
       console.error('Failed to load lots:', error);
+      setLots([]);
     }
   };
 
   const loadUsers = async () => {
     try {
-      const data = await userService.getAll();
-      setUsers(data);
+      const response = await userService.getUsers();
+      setUsers(response?.content || []);
     } catch (error) {
       console.error('Failed to load users:', error);
+      setUsers([]);
     }
   };
 

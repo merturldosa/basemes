@@ -123,9 +123,10 @@ export default function HolidaysPage() {
       setLoading(true);
       setError(null);
       const data = await holidayService.getHolidaysByYear(tenantId, selectedYear);
-      setHolidays(data);
+      setHolidays(data || []);
     } catch (err: any) {
       setError(err.message || '휴일 목록 로드 실패');
+      setHolidays([]);
     } finally {
       setLoading(false);
     }
@@ -134,9 +135,10 @@ export default function HolidaysPage() {
   const loadWorkingHours = async () => {
     try {
       const data = await workingHoursService.getAllWorkingHours(tenantId);
-      setWorkingHours(data);
+      setWorkingHours(data || []);
     } catch (err: any) {
       console.error('Failed to load working hours:', err);
+      setWorkingHours([]);
     }
   };
 

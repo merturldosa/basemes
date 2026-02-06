@@ -79,10 +79,11 @@ const ProcessRoutingsPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await processRoutingService.getAll();
-      setRoutings(data);
+      setRoutings(data || []);
     } catch (error) {
       console.error('Failed to load routings:', error);
       setSnackbar({ open: true, message: '라우팅 목록 조회 실패', severity: 'error' });
+      setRoutings([]);
     } finally {
       setLoading(false);
     }
@@ -90,28 +91,31 @@ const ProcessRoutingsPage: React.FC = () => {
 
   const loadProducts = async () => {
     try {
-      const data = await productService.getAll();
-      setProducts(data);
+      const data = await productService.getProducts();
+      setProducts(data || []);
     } catch (error) {
       console.error('Failed to load products:', error);
+      setProducts([]);
     }
   };
 
   const loadProcesses = async () => {
     try {
-      const data = await processService.getAll();
-      setProcesses(data);
+      const data = await processService.getProcesses();
+      setProcesses(data || []);
     } catch (error) {
       console.error('Failed to load processes:', error);
+      setProcesses([]);
     }
   };
 
   const loadEquipments = async () => {
     try {
       const data = await equipmentService.getAll();
-      setEquipments(data);
+      setEquipments(data || []);
     } catch (error) {
       console.error('Failed to load equipments:', error);
+      setEquipments([]);
     }
   };
 
@@ -127,7 +131,7 @@ const ProcessRoutingsPage: React.FC = () => {
         expiryDate: routing.expiryDate,
         isActive: routing.isActive,
         remarks: routing.remarks,
-        steps: routing.steps.map((s) => ({
+        steps: (routing.steps || []).map((s) => ({
           sequenceOrder: s.sequenceOrder,
           processId: s.processId,
           standardTime: s.standardTime,

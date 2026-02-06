@@ -58,7 +58,7 @@ const skillMatrixService = {
    * Get all skills
    */
   getAll: async (): Promise<SkillMatrix[]> => {
-    const response = await apiClient.get<SkillMatrix[]>('/api/skill-matrix');
+    const response = await apiClient.get<SkillMatrix[]>('/skill-matrix');
     return response.data;
   },
 
@@ -66,7 +66,7 @@ const skillMatrixService = {
    * Get active skills only
    */
   getActive: async (): Promise<SkillMatrix[]> => {
-    const response = await apiClient.get<SkillMatrix[]>('/api/skill-matrix/active');
+    const response = await apiClient.get<SkillMatrix[]>('/skill-matrix/active');
     return response.data;
   },
 
@@ -90,7 +90,7 @@ const skillMatrixService = {
    * Get skills requiring certification
    */
   getRequiringCertification: async (): Promise<SkillMatrix[]> => {
-    const response = await apiClient.get<SkillMatrix[]>('/api/skill-matrix/certification-required');
+    const response = await apiClient.get<SkillMatrix[]>('/skill-matrix/certification-required');
     return response.data;
   },
 
@@ -98,7 +98,7 @@ const skillMatrixService = {
    * Create new skill
    */
   create: async (data: SkillMatrixCreateRequest): Promise<SkillMatrix> => {
-    const response = await apiClient.post<SkillMatrix>('/api/skill-matrix', data);
+    const response = await apiClient.post<SkillMatrix>('/skill-matrix', data);
     return response.data;
   },
 
