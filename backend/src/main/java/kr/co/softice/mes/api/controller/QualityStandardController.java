@@ -33,7 +33,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/quality-standards")
+@RequestMapping("/api/quality-standards")
 @RequiredArgsConstructor
 @Tag(name = "Quality Standard Management", description = "품질 기준 관리 API")
 public class QualityStandardController {

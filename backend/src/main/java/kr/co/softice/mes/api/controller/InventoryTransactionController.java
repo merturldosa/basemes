@@ -2,6 +2,7 @@ package kr.co.softice.mes.api.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
+import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.inventory.InventoryTransactionCreateRequest;
 import kr.co.softice.mes.common.dto.inventory.InventoryTransactionResponse;
 import kr.co.softice.mes.domain.entity.*;
@@ -43,12 +44,14 @@ public class InventoryTransactionController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
-    public ResponseEntity<List<InventoryTransactionResponse>> getAllTransactions() {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<List<InventoryTransactionResponse>>> getAllTransactions() {
         String tenantId = TenantContext.getCurrentTenant();
         List<InventoryTransactionEntity> transactions = inventoryTransactionService.findByTenant(tenantId);
-        return ResponseEntity.ok(transactions.stream()
+        List<InventoryTransactionResponse> responses = transactions.stream()
             .map(this::toResponse)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("재고 이동 목록 조회 성공", responses));
     }
 
     @GetMapping("/{transactionId}")

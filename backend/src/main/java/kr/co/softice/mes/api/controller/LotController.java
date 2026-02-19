@@ -2,6 +2,7 @@ package kr.co.softice.mes.api.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
+import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.inventory.LotCreateRequest;
 import kr.co.softice.mes.common.dto.inventory.LotResponse;
 import kr.co.softice.mes.common.dto.inventory.LotUpdateRequest;
@@ -44,39 +45,46 @@ public class LotController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    public ResponseEntity<List<LotResponse>> getAllLots() {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<List<LotResponse>>> getAllLots() {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenant(tenantId);
-        return ResponseEntity.ok(lots.stream()
+        List<LotResponse> responses = lots.stream()
             .map(this::toResponse)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("LOT 목록 조회 성공", responses));
     }
 
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    public ResponseEntity<List<LotResponse>> getLotsByProduct(@PathVariable Long productId) {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<List<LotResponse>>> getLotsByProduct(@PathVariable Long productId) {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenantAndProduct(tenantId, productId);
-        return ResponseEntity.ok(lots.stream()
+        List<LotResponse> responses = lots.stream()
             .map(this::toResponse)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("제품별 LOT 조회 성공", responses));
     }
 
     @GetMapping("/quality-status/{qualityStatus}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    public ResponseEntity<List<LotResponse>> getLotsByQualityStatus(@PathVariable String qualityStatus) {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<List<LotResponse>>> getLotsByQualityStatus(@PathVariable String qualityStatus) {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenantAndQualityStatus(tenantId, qualityStatus);
-        return ResponseEntity.ok(lots.stream()
+        List<LotResponse> responses = lots.stream()
             .map(this::toResponse)
-            .collect(Collectors.toList()));
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(ApiResponse.success("품질상태별 LOT 조회 성공", responses));
     }
 
     @GetMapping("/{lotId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    public ResponseEntity<LotResponse> getLotById(@PathVariable Long lotId) {
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<LotResponse>> getLotById(@PathVariable Long lotId) {
         return lotService.findById(lotId)
-            .map(lot -> ResponseEntity.ok(toResponse(lot)))
+            .map(lot -> ResponseEntity.ok(ApiResponse.success("LOT 조회 성공", toResponse(lot))))
             .orElse(ResponseEntity.notFound().build());
     }
 

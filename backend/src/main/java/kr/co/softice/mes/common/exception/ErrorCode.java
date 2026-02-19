@@ -169,6 +169,11 @@ public enum ErrorCode {
     EQUIPMENT_OPERATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "EO20101", "이미 존재하는 설비 가동 이력입니다."),
     EQUIPMENT_INSPECTION_NOT_FOUND(HttpStatus.NOT_FOUND, "EI20200", "설비 점검을 찾을 수 없습니다."),
     EQUIPMENT_INSPECTION_ALREADY_EXISTS(HttpStatus.CONFLICT, "EI20201", "이미 존재하는 설비 점검입니다."),
+    INSPECTION_FORM_NOT_FOUND(HttpStatus.NOT_FOUND, "IF20300", "점검 양식을 찾을 수 없습니다."),
+    INSPECTION_FORM_ALREADY_EXISTS(HttpStatus.CONFLICT, "IF20301", "이미 존재하는 점검 양식입니다."),
+    INSPECTION_PLAN_NOT_FOUND(HttpStatus.NOT_FOUND, "IP20400", "점검 계획을 찾을 수 없습니다."),
+    INSPECTION_PLAN_ALREADY_EXISTS(HttpStatus.CONFLICT, "IP20401", "이미 존재하는 점검 계획입니다."),
+    INSPECTION_ACTION_NOT_FOUND(HttpStatus.NOT_FOUND, "IA20500", "점검 조치를 찾을 수 없습니다."),
 
     // Downtime Management (21xxx)
     DOWNTIME_NOT_FOUND(HttpStatus.NOT_FOUND, "DT21000", "비가동을 찾을 수 없습니다."),
@@ -185,7 +190,32 @@ public enum ErrorCode {
     SKILL_NOT_FOUND(HttpStatus.NOT_FOUND, "SK23000", "스킬을 찾을 수 없습니다."),
     SKILL_ALREADY_EXISTS(HttpStatus.CONFLICT, "SK23001", "이미 존재하는 스킬입니다."),
     EMPLOYEE_SKILL_NOT_FOUND(HttpStatus.NOT_FOUND, "ES23100", "사원 스킬을 찾을 수 없습니다."),
-    EMPLOYEE_SKILL_ALREADY_EXISTS(HttpStatus.CONFLICT, "ES23101", "이미 존재하는 사원 스킬입니다.");
+    EMPLOYEE_SKILL_ALREADY_EXISTS(HttpStatus.CONFLICT, "ES23101", "이미 존재하는 사원 스킬입니다."),
+
+    // Gauge Management (24xxx)
+    GAUGE_NOT_FOUND(HttpStatus.NOT_FOUND, "GA24000", "계측기를 찾을 수 없습니다."),
+    GAUGE_ALREADY_EXISTS(HttpStatus.CONFLICT, "GA24001", "이미 존재하는 계측기입니다."),
+
+    // Consumable Management (25xxx)
+    CONSUMABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "CS25000", "소모품을 찾을 수 없습니다."),
+    CONSUMABLE_ALREADY_EXISTS(HttpStatus.CONFLICT, "CS25001", "이미 존재하는 소모품입니다."),
+
+    // Equipment Part Management (26xxx)
+    EQUIPMENT_PART_NOT_FOUND(HttpStatus.NOT_FOUND, "EP26000", "설비 부품을 찾을 수 없습니다."),
+    EQUIPMENT_PART_ALREADY_EXISTS(HttpStatus.CONFLICT, "EP26001", "이미 존재하는 설비 부품입니다."),
+
+    // Breakdown Management (27xxx)
+    BREAKDOWN_NOT_FOUND(HttpStatus.NOT_FOUND, "BK27000", "고장을 찾을 수 없습니다."),
+    BREAKDOWN_ALREADY_EXISTS(HttpStatus.CONFLICT, "BK27001", "이미 존재하는 고장입니다."),
+    BREAKDOWN_INVALID_STATUS_TRANSITION(HttpStatus.BAD_REQUEST, "BK27002", "잘못된 고장 상태 전환입니다."),
+
+    // Deviation Management (28xxx)
+    DEVIATION_NOT_FOUND(HttpStatus.NOT_FOUND, "DV28000", "이탈을 찾을 수 없습니다."),
+    DEVIATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "DV28001", "이미 존재하는 이탈입니다."),
+
+    // External Calibration Management (29xxx)
+    EXTERNAL_CALIBRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "EC29000", "외부 검교정을 찾을 수 없습니다."),
+    EXTERNAL_CALIBRATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "EC29001", "이미 존재하는 외부 검교정입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

@@ -95,4 +95,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      */
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.tenant WHERE u.tenant.tenantId = :tenantId AND u.status = :status")
     List<UserEntity> findByTenantIdAndStatusWithTenant(@Param("tenantId") String tenantId, @Param("status") String status);
+
+    /**
+     * Find user by ID with all relations (JOIN FETCH)
+     */
+    @Query("SELECT u FROM UserEntity u JOIN FETCH u.tenant WHERE u.userId = :userId")
+    Optional<UserEntity> findByIdWithAllRelations(@Param("userId") Long userId);
 }

@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/schedules")
+@RequestMapping("/api/schedules")
 @RequiredArgsConstructor
 @Tag(name = "Production Schedule", description = "생산 일정 관리 API")
 public class ProductionScheduleController {

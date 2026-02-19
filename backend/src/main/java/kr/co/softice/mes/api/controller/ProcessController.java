@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/processes")
+@RequestMapping("/api/processes")
 @RequiredArgsConstructor
 @Tag(name = "Process Management", description = "공정 마스터 관리 API")
 public class ProcessController {

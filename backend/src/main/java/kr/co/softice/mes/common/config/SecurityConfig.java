@@ -62,12 +62,30 @@ public class SecurityConfig {
                 .authorizeRequests(auth -> auth
                         // Public 엔드포인트 (인증 불필요)
                         .antMatchers(
+                                "/",
+                                "/index.html",
+                                "/login",
                                 "/health/**",
                                 "/actuator/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/auth/login",
-                                "/auth/refresh"
+                                "/api/auth/**",
+                                "/ws/**",
+                                "/assets/**",
+                                "/static/**",
+                                "/**/*.html",
+                                "/**/*.js",
+                                "/**/*.css",
+                                "/**/*.ico",
+                                "/**/*.png",
+                                "/**/*.jpg",
+                                "/**/*.svg",
+                                "/**/*.woff",
+                                "/**/*.woff2",
+                                "/**/*.ttf",
+                                "/**/*.json",
+                                "/manifest.json",
+                                "/service-worker.js"
                         ).permitAll()
 
                         // 나머지 모든 요청은 인증 필요

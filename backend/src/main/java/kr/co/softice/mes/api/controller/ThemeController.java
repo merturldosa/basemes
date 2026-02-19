@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/themes")
+@RequestMapping("/api/themes")
 @RequiredArgsConstructor
 @Tag(name = "Theme Management", description = "테마 관리 API")
 public class ThemeController {

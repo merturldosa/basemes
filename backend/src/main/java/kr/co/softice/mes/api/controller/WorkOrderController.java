@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/work-orders")
+@RequestMapping("/api/work-orders")
 @RequiredArgsConstructor
 @Tag(name = "Work Order Management", description = "작업 지시 관리 API")
 public class WorkOrderController {

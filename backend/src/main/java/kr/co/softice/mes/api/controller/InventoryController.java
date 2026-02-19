@@ -53,6 +53,7 @@ public class InventoryController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재고 현황 조회", description = "테넌트의 모든 재고 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventory() {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting inventory for tenant: {}", tenantId);
@@ -72,6 +73,7 @@ public class InventoryController {
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재고 상세 조회", description = "재고 ID로 상세 정보 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<InventoryResponse>> getInventoryById(@PathVariable Long id) {
         log.info("Getting inventory: {}", id);
 
@@ -88,6 +90,7 @@ public class InventoryController {
     @GetMapping("/warehouse/{warehouseId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "창고별 재고 조회", description = "특정 창고의 재고 목록 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoryByWarehouse(
             @PathVariable Long warehouseId) {
 
@@ -109,6 +112,7 @@ public class InventoryController {
     @GetMapping("/product/{productId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "제품별 재고 조회", description = "특정 제품의 재고 목록 조회 (모든 창고)")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoryByProduct(
             @PathVariable Long productId) {
 
@@ -133,6 +137,7 @@ public class InventoryController {
     @GetMapping("/low-stock")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "저재고 알림", description = "기준 수량 미만인 재고 목록 조회")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getLowStockInventory(
             @RequestParam(required = false, defaultValue = "100") BigDecimal threshold) {
 

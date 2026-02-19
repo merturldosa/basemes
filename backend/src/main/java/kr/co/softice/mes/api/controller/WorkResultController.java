@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/work-results")
+@RequestMapping("/api/work-results")
 @RequiredArgsConstructor
 @Tag(name = "Work Result Management", description = "작업 실적 관리 API")
 public class WorkResultController {

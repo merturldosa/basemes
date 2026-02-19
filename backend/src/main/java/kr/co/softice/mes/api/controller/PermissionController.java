@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RestController
-@RequestMapping("/permissions")
+@RequestMapping("/api/permissions")
 @RequiredArgsConstructor
 @Tag(name = "Permission Management", description = "권한 관리 API")
 public class PermissionController {

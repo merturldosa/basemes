@@ -95,6 +95,17 @@ import EquipmentsPage from './pages/equipment/EquipmentsPage';
 import EquipmentOperationsPage from './pages/equipment/EquipmentOperationsPage';
 import EquipmentInspectionsPage from './pages/equipment/EquipmentInspectionsPage';
 
+// FMS Extension Pages
+import InspectionFormsPage from './pages/equipment/InspectionFormsPage';
+import InspectionPlansPage from './pages/equipment/InspectionPlansPage';
+import GaugesPage from './pages/equipment/GaugesPage';
+import ConsumablesPage from './pages/equipment/ConsumablesPage';
+import EquipmentPartsPage from './pages/equipment/EquipmentPartsPage';
+import BreakdownsPage from './pages/equipment/BreakdownsPage';
+import BreakdownStatisticsPage from './pages/equipment/BreakdownStatisticsPage';
+import DeviationsPage from './pages/equipment/DeviationsPage';
+import ExternalCalibrationsPage from './pages/equipment/ExternalCalibrationsPage';
+
 // Downtime Management Pages
 import DowntimesPage from './pages/downtime/DowntimesPage';
 
@@ -223,6 +234,15 @@ function App() {
             <Route path="equipment/equipments" element={<EquipmentsPage />} />
             <Route path="equipment/operations" element={<EquipmentOperationsPage />} />
             <Route path="equipment/inspections" element={<EquipmentInspectionsPage />} />
+            <Route path="equipment/inspection-forms" element={<InspectionFormsPage />} />
+            <Route path="equipment/inspection-plans" element={<InspectionPlansPage />} />
+            <Route path="equipment/gauges" element={<GaugesPage />} />
+            <Route path="equipment/consumables" element={<ConsumablesPage />} />
+            <Route path="equipment/parts" element={<EquipmentPartsPage />} />
+            <Route path="equipment/breakdowns" element={<BreakdownsPage />} />
+            <Route path="equipment/breakdown-statistics" element={<BreakdownStatisticsPage />} />
+            <Route path="equipment/deviations" element={<DeviationsPage />} />
+            <Route path="equipment/external-calibrations" element={<ExternalCalibrationsPage />} />
 
             {/* Downtime Management Routes */}
             <Route path="downtime/downtimes" element={<DowntimesPage />} />

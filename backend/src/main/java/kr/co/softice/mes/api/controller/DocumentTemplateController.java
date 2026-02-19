@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/document-templates")
+@RequestMapping("/api/document-templates")
 @RequiredArgsConstructor
 @Tag(name = "Document Template Management", description = "문서 양식 관리 API")
 public class DocumentTemplateController {

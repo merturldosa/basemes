@@ -30,7 +30,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/quality-inspections")
+@RequestMapping("/api/quality-inspections")
 @RequiredArgsConstructor
 @Tag(name = "Quality Inspection Management", description = "품질 검사 관리 API")
 public class QualityInspectionController {

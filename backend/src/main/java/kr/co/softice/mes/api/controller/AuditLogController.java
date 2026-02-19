@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("/audit-logs")
+@RequestMapping("/api/audit-logs")
 @RequiredArgsConstructor
 @Tag(name = "Audit Log Management", description = "감사 로그 조회 API")
 public class AuditLogController {

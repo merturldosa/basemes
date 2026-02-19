@@ -39,6 +39,7 @@ public class BomController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getAllBoms() {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findByTenant(tenantId);
@@ -49,6 +50,7 @@ public class BomController {
 
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getActiveBoms() {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findActiveByTenant(tenantId);
@@ -59,6 +61,7 @@ public class BomController {
 
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getBomsByProduct(@PathVariable Long productId) {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findByTenantAndProduct(tenantId, productId);
@@ -69,6 +72,7 @@ public class BomController {
 
     @GetMapping("/{bomId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<BomResponse> getBomById(@PathVariable Long bomId) {
         return bomService.findById(bomId)
             .map(bom -> ResponseEntity.ok(toResponse(bom)))
@@ -196,9 +200,11 @@ public class BomController {
     }
 
     private BomResponse toResponse(BomEntity bom) {
-        List<BomDetailResponse> detailResponses = bom.getDetails().stream()
-            .map(this::toDetailResponse)
-            .collect(Collectors.toList());
+        List<BomDetailResponse> detailResponses = bom.getDetails() != null
+            ? bom.getDetails().stream()
+                .map(this::toDetailResponse)
+                .collect(Collectors.toList())
+            : new ArrayList<>();
 
         return BomResponse.builder()
             .bomId(bom.getBomId())
