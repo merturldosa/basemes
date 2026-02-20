@@ -84,6 +84,7 @@ export default function AuditLogsPage() {
 
   useEffect(() => {
     loadAuditLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paginationModel]);
 
   // Handle Search

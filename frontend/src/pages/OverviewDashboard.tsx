@@ -129,6 +129,7 @@ export default function OverviewDashboard() {
     }, 60000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trendDays]);
 
   // 사용자 상태 도넛 차트

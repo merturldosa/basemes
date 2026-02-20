@@ -52,7 +52,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
   const { user, logout } = useAuthStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [currentWorkOrder, setCurrentWorkOrder] = useState<string | null>(null);
+  const [currentWorkOrder] = useState<string | null>(null);
 
   // Monitor online/offline status
   useEffect(() => {

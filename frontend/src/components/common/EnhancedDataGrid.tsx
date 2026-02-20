@@ -16,9 +16,7 @@ import {
 } from '@mui/material';
 import {
   DataGrid,
-  GridColDef,
   GridPaginationModel,
-  GridRowParams,
   DataGridProps,
 } from '@mui/x-data-grid';
 

@@ -229,6 +229,7 @@ export function useInfiniteScroll<T>({
     if (enabled && items.length === 0 && !isLoadingRef.current) {
       loadMore();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enabled]); // Only run on mount or when enabled changes
 
   return {

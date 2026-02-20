@@ -5,7 +5,7 @@
  */
 
 import { useMemo } from 'react';
-import { Box, useTheme, Typography } from '@mui/material';
+import { Box, useTheme } from '@mui/material';
 
 export interface HeatMapCell {
   row: number;

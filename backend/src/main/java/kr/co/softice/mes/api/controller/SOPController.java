@@ -1,5 +1,6 @@
 package kr.co.softice.mes.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.sop.SOPSimplifiedResponse;
 import kr.co.softice.mes.common.security.TenantContext;
@@ -19,6 +20,7 @@ import java.util.List;
  * 표준 작업 절차 관리 API (Operator endpoints)
  * @author Moon Myung-seop
  */
+@Tag(name = "SOP", description = "SOP(표준작업절차) API")
 @Slf4j
 @RestController
 @RequestMapping("/api/sop")

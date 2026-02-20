@@ -1,5 +1,6 @@
 package kr.co.softice.mes.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.department.DepartmentRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Department", description = "부서 관리 API")
 @RestController
 @RequestMapping("/api/departments")
 @RequiredArgsConstructor

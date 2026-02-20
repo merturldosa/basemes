@@ -21,7 +21,6 @@ import {
   Snackbar,
   MenuItem,
   Stack,
-  InputAdornment,
   List,
   ListItem,
   ListItemText,
@@ -33,7 +32,6 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Search as SearchIcon,
   CheckCircle as ActiveIcon,
   Cancel as InactiveIcon,
   Refresh as RefreshIcon,
@@ -106,6 +104,7 @@ export default function RolesPage() {
 
   useEffect(() => {
     loadRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter]);
 
   // Load All Permissions

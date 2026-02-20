@@ -1,5 +1,6 @@
 package kr.co.softice.mes.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.pop.*;
 import kr.co.softice.mes.common.security.TenantContext;
@@ -21,6 +22,7 @@ import java.util.List;
  * Provides real-time work order execution and tracking for field workers
  * @author Moon Myung-seop
  */
+@Tag(name = "POP", description = "POP(Point of Production) API")
 @RestController
 @RequestMapping("/api/pop")
 @RequiredArgsConstructor

@@ -49,6 +49,7 @@ const ProcessesPage: React.FC = () => {
 
   useEffect(() => {
     loadProcesses();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProcesses = async () => {

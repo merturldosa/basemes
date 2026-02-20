@@ -1,22 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Box,
-  Button,
   IconButton,
-  Paper,
   Typography,
   Alert,
   CircularProgress,
   Snackbar
 } from '@mui/material';
 import {
-  CameraAlt as CameraIcon,
   FlipCameraAndroid as FlipCameraIcon,
   Close as CloseIcon,
   FlashlightOn as FlashOnIcon,
   FlashlightOff as FlashOffIcon
 } from '@mui/icons-material';
-import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
+import { BrowserMultiFormatReader } from '@zxing/library';
 
 interface QRScannerProps {
   onScan: (data: string) => void;
@@ -51,6 +48,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
     return () => {
       stopCamera();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentDeviceIndex]);
 
   // 카메라 장치 목록 가져오기

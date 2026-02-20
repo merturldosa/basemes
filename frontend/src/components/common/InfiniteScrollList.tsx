@@ -138,7 +138,6 @@ export default function InfiniteScrollList<T>({
     hasMore,
     error,
     sentinelRef,
-    loadMore: triggerLoadMore,
     reset,
   } = useInfiniteScroll<T>({
     loadMore,

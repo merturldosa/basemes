@@ -62,6 +62,7 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
       client.deactivate();
       clientRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const subscribe = (topic: string, callback: (message: any) => void) => {

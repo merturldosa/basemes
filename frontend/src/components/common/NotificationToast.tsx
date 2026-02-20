@@ -65,6 +65,7 @@ const NotificationToast: React.FC = () => {
       unsubscribe();
       notificationService.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, tenantId]);
 
   const loadNotifications = async () => {

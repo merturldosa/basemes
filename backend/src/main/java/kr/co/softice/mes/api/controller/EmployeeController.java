@@ -1,5 +1,6 @@
 package kr.co.softice.mes.api.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import javax.validation.Valid;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.employee.EmployeeRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Employee", description = "사원 관리 API")
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor

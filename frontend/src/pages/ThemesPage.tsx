@@ -27,7 +27,7 @@ interface ThemeCardProps {
   onSelect: () => void;
 }
 
-function ThemeCard({ code, name, industry, description, isActive, onSelect }: ThemeCardProps) {
+function ThemeCard({ name, industry, description, isActive, onSelect }: ThemeCardProps) {
   return (
     <Card
       sx={{

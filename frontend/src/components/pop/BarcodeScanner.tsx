@@ -4,7 +4,7 @@
  * @author Moon Myung-seop
  */
 
-import { Box, Button, Typography, Paper, Alert, CircularProgress, TextField } from '@mui/material';
+import { Box, Button, Typography, Paper, Alert, TextField } from '@mui/material';
 import {
   QrCodeScanner as ScannerIcon,
   CameraAlt as CameraIcon,

@@ -37,7 +37,7 @@ const PieChart: React.FC<PieChartProps> = ({
   const centerX = size / 2;
   const centerY = size / 2;
 
-  const defaultColors = [
+  const defaultColors = useMemo(() => [
     theme.palette.primary.main,
     theme.palette.secondary.main,
     theme.palette.success.main,
@@ -46,7 +46,7 @@ const PieChart: React.FC<PieChartProps> = ({
     theme.palette.info.main,
     '#9c27b0',
     '#ff9800',
-  ];
+  ], [theme.palette.primary.main, theme.palette.secondary.main, theme.palette.success.main, theme.palette.warning.main, theme.palette.error.main, theme.palette.info.main]);
 
   const { slices, total } = useMemo(() => {
     const totalValue = data.reduce((sum, d) => sum + d.value, 0);

@@ -54,7 +54,6 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     const sortedThresholds = [...thresholds].sort((a, b) => a.value - b.value);
     const segs: Array<{ startAngle: number; endAngle: number; color: string; label?: string }> = [];
 
-    let prevThreshold = min;
     let prevAngle = startAngle;
 
     sortedThresholds.forEach((threshold) => {
@@ -68,7 +67,6 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
         label: threshold.label,
       });
 
-      prevThreshold = threshold.value;
       prevAngle = thresholdAngle;
     });
 

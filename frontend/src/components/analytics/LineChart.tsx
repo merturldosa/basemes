@@ -45,7 +45,7 @@ const LineChart: React.FC<LineChartProps> = ({
   const innerHeight = chartHeight - padding.top - padding.bottom;
 
   // Calculate scales
-  const { xScale, yScale, yTicks, maxValue, minValue } = useMemo(() => {
+  const { xScale, yScale, yTicks, minValue } = useMemo(() => {
     if (series.length === 0 || series[0].data.length === 0) {
       return { xScale: [] as number[], yScale: 0, yTicks: [] as number[], maxValue: 0, minValue: 0 };
     }
