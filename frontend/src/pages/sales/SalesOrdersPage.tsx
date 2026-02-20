@@ -270,14 +270,14 @@ const SalesOrdersPage: React.FC = () => {
       field: 'orderDate',
       headerName: '주문일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'customerName', headerName: '고객명', width: 200 },
     {
       field: 'totalAmount',
       headerName: '주문금액',
       width: 130,
-      valueFormatter: (params) => params ? `₩${params.toLocaleString()}` : '',
+      valueFormatter: (params) => params.value ? `₩${params.value.toLocaleString()}` : '',
     },
     {
       field: 'status',
@@ -292,7 +292,7 @@ const SalesOrdersPage: React.FC = () => {
       field: 'requestedDeliveryDate',
       headerName: '요청납기일',
       width: 180,
-      valueFormatter: (params) => params ? new Date(params).toLocaleString('ko-KR') : '-',
+      valueFormatter: (params) => params.value ? new Date(params.value).toLocaleString('ko-KR') : '-',
     },
     {
       field: 'actions',

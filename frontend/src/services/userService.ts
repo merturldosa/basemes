@@ -108,5 +108,6 @@ class UserService {
   }
 }
 
+export type { User };
 export const userService = new UserService();
 export default userService;

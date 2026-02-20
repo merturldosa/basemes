@@ -28,6 +28,15 @@ const inventoryService = {
     return response.data;
   },
 
+  getInventoryStatus: async (params?: {
+    page?: number;
+    size?: number;
+    search?: string;
+  }): Promise<{ content: Inventory[] }> => {
+    const response = await apiClient.get<{ content: Inventory[] }>('/inventory/status', params);
+    return response.data;
+  },
+
   getByWarehouse: async (warehouseId: number): Promise<Inventory[]> => {
     const response = await apiClient.get<Inventory[]>(`/inventory/warehouse/${warehouseId}`);
     return response.data;

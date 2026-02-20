@@ -88,7 +88,7 @@ const POPWorkOrderPage: React.FC = () => {
 
   // Timer effect
   useEffect(() => {
-    let interval: NodeJS.Timeout | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     if (isWorking) {
       interval = setInterval(() => {
         setElapsedTime((prev) => prev + 1);
@@ -386,7 +386,7 @@ const POPWorkOrderPage: React.FC = () => {
                   variant="contained"
                   size="large"
                   fullWidth
-                  startIcon={<PlayArrow />}
+                  startIcon={<StartIcon />}
                   onClick={handleResumeWork}
                   color="success"
                   sx={{ py: 3, fontSize: '1.2rem' }}

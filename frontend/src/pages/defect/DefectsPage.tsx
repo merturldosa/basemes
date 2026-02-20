@@ -68,7 +68,7 @@ const DefectsPage: React.FC = () => {
       setLoading(true);
       const [defectsData, productsData] = await Promise.all([
         defectService.getAll(),
-        productService.getActive(),
+        productService.getActiveProducts(),
       ]);
       setDefects(defectsData);
       setProducts(productsData);
@@ -178,7 +178,7 @@ const DefectsPage: React.FC = () => {
       field: 'defectDate',
       headerName: '불량일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     {
       field: 'sourceType',
@@ -192,7 +192,7 @@ const DefectsPage: React.FC = () => {
           INSPECTION: '검사',
           CUSTOMER: '고객',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     { field: 'productName', headerName: '제품', width: 150 },
@@ -209,7 +209,7 @@ const DefectsPage: React.FC = () => {
           ASSEMBLY: '조립',
           OTHER: '기타',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     { field: 'defectQuantity', headerName: '불량수량', width: 100 },

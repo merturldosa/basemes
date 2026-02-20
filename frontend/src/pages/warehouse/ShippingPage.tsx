@@ -179,7 +179,7 @@ const ShippingPage: React.FC = () => {
       field: 'shippingDate',
       headerName: '출하일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'salesOrderNo', headerName: '판매주문번호', width: 150 },
     { field: 'customerName', headerName: '고객', width: 150 },
@@ -195,7 +195,7 @@ const ShippingPage: React.FC = () => {
           TRANSFER: '이동',
           OTHER: '기타',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     {
@@ -205,7 +205,7 @@ const ShippingPage: React.FC = () => {
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'success' | 'error' } = {
           PENDING: 'warning',
-          INSPECTING: 'info',
+          INSPECTING: 'default',
           SHIPPED: 'success',
           CANCELLED: 'default',
         };

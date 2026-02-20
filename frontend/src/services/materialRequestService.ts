@@ -4,7 +4,7 @@
  * @author Moon Myung-seop
  */
 
-import apiClient from './apiClient';
+import apiClient from './api';
 
 export interface MaterialRequestItem {
   materialRequestItemId?: number;

@@ -83,6 +83,22 @@ class RoleService {
   async removePermission(roleId: number, permissionId: number): Promise<void> {
     await apiClient.delete(`${this.basePath}/${roleId}/permissions/${permissionId}`);
   }
+
+  /**
+   * 역할 활성화
+   */
+  async activateRole(roleId: number): Promise<Role> {
+    const response = await apiClient.patch<Role>(`${this.basePath}/${roleId}/activate`);
+    return response.data;
+  }
+
+  /**
+   * 역할 비활성화
+   */
+  async deactivateRole(roleId: number): Promise<Role> {
+    const response = await apiClient.patch<Role>(`${this.basePath}/${roleId}/deactivate`);
+    return response.data;
+  }
 }
 
 export const roleService = new RoleService();

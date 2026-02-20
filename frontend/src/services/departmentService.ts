@@ -24,25 +24,25 @@ export interface DepartmentRequest {
 
 const departmentService = {
   getAll: async (): Promise<Department[]> => {
-    const response = await apiClient.get('/departments');
-    return response.data.data;
+    const response = await apiClient.get<Department[]>('/departments');
+    return response.data;
   },
 
   getPage: async (page: number, size: number) => {
-    const response = await apiClient.get('/departments/page', {
+    const response = await apiClient.get<any>('/departments/page', {
       params: { page, size },
     });
-    return response.data.data;
+    return response.data;
   },
 
   create: async (department: DepartmentRequest): Promise<Department> => {
-    const response = await apiClient.post('/departments', department);
-    return response.data.data;
+    const response = await apiClient.post<Department>('/departments', department);
+    return response.data;
   },
 
   update: async (id: number, department: DepartmentRequest): Promise<Department> => {
-    const response = await apiClient.put(`/departments/${id}`, department);
-    return response.data.data;
+    const response = await apiClient.put<Department>(`/departments/${id}`, department);
+    return response.data;
   },
 
   delete: async (id: number): Promise<void> => {

@@ -146,7 +146,7 @@ const ReceivingPage: React.FC = () => {
     if (!selectedReceipt) return;
 
     try {
-      await goodsReceiptService.delete(selectedReceipt.goodsReceiptId);
+      await goodsReceiptService.cancel(selectedReceipt.goodsReceiptId);
       setSnackbar({ open: true, message: 'Goods receipt deleted successfully', severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
@@ -181,7 +181,7 @@ const ReceivingPage: React.FC = () => {
       field: 'receiptDate',
       headerName: '입하일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'purchaseOrderNo', headerName: '구매주문번호', width: 150 },
     { field: 'supplierName', headerName: '공급업체', width: 150 },
@@ -197,7 +197,7 @@ const ReceivingPage: React.FC = () => {
           TRANSFER: '이동',
           OTHER: '기타',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     {
@@ -207,7 +207,7 @@ const ReceivingPage: React.FC = () => {
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'success' | 'error' } = {
           PENDING: 'warning',
-          INSPECTING: 'info',
+          INSPECTING: 'default',
           COMPLETED: 'success',
           REJECTED: 'error',
           CANCELLED: 'default',

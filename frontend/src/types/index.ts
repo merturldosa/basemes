@@ -41,6 +41,7 @@ export interface User {
   username: string;
   email: string;
   fullName: string;
+  departmentName?: string;
   status: string;
   preferredLanguage: string;
   tenantId: string;
@@ -187,6 +188,7 @@ export interface AuditLog {
   endpoint?: string;
   success: boolean;
   errorMessage?: string;
+  timestamp?: string;
   createdAt: string;
   metadata?: string;
 }

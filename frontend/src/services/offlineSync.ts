@@ -283,7 +283,7 @@ class OfflineSyncService {
       }
 
       try {
-        await popService.recordProgress(item.progressId, item.quantity);
+        await popService.recordProgress({ progressId: item.progressId, quantity: item.quantity });
         await workProgressQueue.removeItem(key);
       } catch {
         // Failed to sync work progress - increment retry count
@@ -309,7 +309,8 @@ class OfflineSyncService {
       }
 
       try {
-        await popService.recordDefect(item.progressId, {
+        await popService.recordDefect({
+          progressId: item.progressId,
           defectQuantity: item.defectQuantity,
           defectType: item.defectType,
           defectReason: item.defectReason,
@@ -342,7 +343,7 @@ class OfflineSyncService {
       }
 
       try {
-        await sopOperatorService.completeStep(item.executionId, item.stepId, item.passed, item.notes);
+        await sopOperatorService.completeStep(item.executionId, item.stepId, { passed: item.passed, notes: item.notes });
         await sopQueue.removeItem(key);
       } catch {
         // Failed to sync SOP step - increment retry count

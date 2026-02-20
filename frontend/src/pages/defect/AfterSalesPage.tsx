@@ -65,7 +65,7 @@ const AfterSalesPage: React.FC = () => {
       const [afterSalesData, customersData, productsData] = await Promise.all([
         afterSalesService.getAll(),
         customerService.getActive(),
-        productService.getActive(),
+        productService.getActiveProducts(),
       ]);
       setAfterSales(afterSalesData);
       setCustomers(customersData);
@@ -185,7 +185,7 @@ const AfterSalesPage: React.FC = () => {
       field: 'receiptDate',
       headerName: '접수일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'customerName', headerName: '고객', width: 150 },
     { field: 'productName', headerName: '제품', width: 150 },

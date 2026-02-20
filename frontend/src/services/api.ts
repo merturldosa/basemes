@@ -99,8 +99,8 @@ class ApiClient {
   }
 
   // POST request
-  async post<T>(url: string, data?: any): Promise<ApiResponse<T>> {
-    const response = await this.client.post<ApiResponse<T>>(url, data);
+  async post<T>(url: string, data?: any, config?: any): Promise<ApiResponse<T>> {
+    const response = await this.client.post<ApiResponse<T>>(url, data, config);
     return response.data;
   }
 
@@ -117,8 +117,8 @@ class ApiClient {
   }
 
   // PATCH request
-  async patch<T>(url: string, data?: any): Promise<ApiResponse<T>> {
-    const response = await this.client.patch<ApiResponse<T>>(url, data);
+  async patch<T>(url: string, data?: any, config?: any): Promise<ApiResponse<T>> {
+    const response = await this.client.patch<ApiResponse<T>>(url, data, config);
     return response.data;
   }
 }

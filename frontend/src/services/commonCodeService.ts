@@ -61,33 +61,33 @@ class CommonCodeService {
   // ==================== Code Group APIs ====================
 
   async getCodeGroups(): Promise<CommonCodeGroup[]> {
-    const response = await api.get('/common-codes/groups');
-    return response.data.data;
+    const response = await api.get<CommonCodeGroup[]>('/common-codes/groups');
+    return response.data;
   }
 
   async getActiveCodeGroups(): Promise<CommonCodeGroup[]> {
-    const response = await api.get('/common-codes/groups/active');
-    return response.data.data;
+    const response = await api.get<CommonCodeGroup[]>('/common-codes/groups/active');
+    return response.data;
   }
 
   async getCodeGroupById(id: number): Promise<CommonCodeGroup> {
-    const response = await api.get(`/common-codes/groups/${id}`);
-    return response.data.data;
+    const response = await api.get<CommonCodeGroup>(`/common-codes/groups/${id}`);
+    return response.data;
   }
 
   async getCodeGroupByCode(codeGroup: string): Promise<CommonCodeGroup> {
-    const response = await api.get(`/common-codes/groups/by-code/${codeGroup}`);
-    return response.data.data;
+    const response = await api.get<CommonCodeGroup>(`/common-codes/groups/by-code/${codeGroup}`);
+    return response.data;
   }
 
   async createCodeGroup(data: CommonCodeGroupCreateRequest): Promise<CommonCodeGroup> {
-    const response = await api.post('/common-codes/groups', data);
-    return response.data.data;
+    const response = await api.post<CommonCodeGroup>('/common-codes/groups', data);
+    return response.data;
   }
 
   async updateCodeGroup(id: number, data: Partial<CommonCodeGroupCreateRequest>): Promise<CommonCodeGroup> {
-    const response = await api.put(`/common-codes/groups/${id}`, data);
-    return response.data.data;
+    const response = await api.put<CommonCodeGroup>(`/common-codes/groups/${id}`, data);
+    return response.data;
   }
 
   async deleteCodeGroup(id: number): Promise<void> {
@@ -97,33 +97,33 @@ class CommonCodeService {
   // ==================== Code Detail APIs ====================
 
   async getCodeDetails(groupId: number): Promise<CommonCodeDetail[]> {
-    const response = await api.get(`/common-codes/groups/${groupId}/details`);
-    return response.data.data;
+    const response = await api.get<CommonCodeDetail[]>(`/common-codes/groups/${groupId}/details`);
+    return response.data;
   }
 
   async getActiveCodeDetails(groupId: number): Promise<CommonCodeDetail[]> {
-    const response = await api.get(`/common-codes/groups/${groupId}/details/active`);
-    return response.data.data;
+    const response = await api.get<CommonCodeDetail[]>(`/common-codes/groups/${groupId}/details/active`);
+    return response.data;
   }
 
   async getCodesByGroupCode(codeGroup: string): Promise<CommonCodeDetail[]> {
-    const response = await api.get(`/common-codes/${codeGroup}/codes`);
-    return response.data.data;
+    const response = await api.get<CommonCodeDetail[]>(`/common-codes/${codeGroup}/codes`);
+    return response.data;
   }
 
   async getCodeDetailById(id: number): Promise<CommonCodeDetail> {
-    const response = await api.get(`/common-codes/details/${id}`);
-    return response.data.data;
+    const response = await api.get<CommonCodeDetail>(`/common-codes/details/${id}`);
+    return response.data;
   }
 
   async createCodeDetail(groupId: number, data: CommonCodeDetailCreateRequest): Promise<CommonCodeDetail> {
-    const response = await api.post(`/common-codes/groups/${groupId}/details`, data);
-    return response.data.data;
+    const response = await api.post<CommonCodeDetail>(`/common-codes/groups/${groupId}/details`, data);
+    return response.data;
   }
 
   async updateCodeDetail(id: number, data: Partial<CommonCodeDetailCreateRequest>): Promise<CommonCodeDetail> {
-    const response = await api.put(`/common-codes/details/${id}`, data);
-    return response.data.data;
+    const response = await api.put<CommonCodeDetail>(`/common-codes/details/${id}`, data);
+    return response.data;
   }
 
   async deleteCodeDetail(id: number): Promise<void> {
@@ -133,18 +133,18 @@ class CommonCodeService {
   // ==================== Utility APIs ====================
 
   async getAllCodesAsMap(): Promise<Record<string, CommonCodeDetail[]>> {
-    const response = await api.get('/common-codes/all');
-    return response.data.data;
+    const response = await api.get<Record<string, CommonCodeDetail[]>>('/common-codes/all');
+    return response.data;
   }
 
   async getCodeName(codeGroup: string, code: string): Promise<string> {
-    const response = await api.get(`/common-codes/${codeGroup}/${code}/name`);
-    return response.data.data;
+    const response = await api.get<string>(`/common-codes/${codeGroup}/${code}/name`);
+    return response.data;
   }
 
   async validateCode(codeGroup: string, code: string): Promise<boolean> {
-    const response = await api.get(`/common-codes/${codeGroup}/${code}/validate`);
-    return response.data.data;
+    const response = await api.get<boolean>(`/common-codes/${codeGroup}/${code}/validate`);
+    return response.data;
   }
 
   // ==================== Helper Methods ====================

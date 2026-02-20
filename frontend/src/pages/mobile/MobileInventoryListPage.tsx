@@ -53,7 +53,7 @@ export default function MobileInventoryListPage() {
       size: 20,
       search: searchText || undefined,
     });
-    return response.content;
+    return response.content as unknown as InventoryItem[];
   };
 
   /**

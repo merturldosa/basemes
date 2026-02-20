@@ -9,6 +9,7 @@ export interface QRScanRequest {
 export interface LotInfo {
   lotId: number;
   lotNo: string;
+  itemId?: number;
   productCode: string;
   productName: string;
   currentQuantity: number;

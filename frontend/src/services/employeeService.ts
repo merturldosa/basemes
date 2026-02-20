@@ -34,32 +34,32 @@ export interface EmployeeRequest {
 
 const employeeService = {
   getAll: async (): Promise<Employee[]> => {
-    const response = await apiClient.get('/employees');
-    return response.data.data;
+    const response = await apiClient.get<Employee[]>('/employees');
+    return response.data;
   },
 
   getPage: async (page: number, size: number) => {
-    const response = await apiClient.get('/employees/page', {
+    const response = await apiClient.get<any>('/employees/page', {
       params: { page, size },
     });
-    return response.data.data;
+    return response.data;
   },
 
   search: async (keyword: string, page: number, size: number) => {
-    const response = await apiClient.get('/employees/search', {
+    const response = await apiClient.get<any>('/employees/search', {
       params: { keyword, page, size },
     });
-    return response.data.data;
+    return response.data;
   },
 
   create: async (employee: EmployeeRequest): Promise<Employee> => {
-    const response = await apiClient.post('/employees', employee);
-    return response.data.data;
+    const response = await apiClient.post<Employee>('/employees', employee);
+    return response.data;
   },
 
   update: async (id: number, employee: EmployeeRequest): Promise<Employee> => {
-    const response = await apiClient.put(`/employees/${id}`, employee);
-    return response.data.data;
+    const response = await apiClient.put<Employee>(`/employees/${id}`, employee);
+    return response.data;
   },
 
   delete: async (id: number): Promise<void> => {

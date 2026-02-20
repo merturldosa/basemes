@@ -186,7 +186,7 @@ const SitesPage: React.FC = () => {
           OFFICE: '사무실',
           RD_CENTER: '연구소',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     { field: 'address', headerName: '주소', width: 250 },

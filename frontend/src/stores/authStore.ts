@@ -10,6 +10,7 @@ import authService from '@/services/authService';
 
 interface AuthState {
   user: User | null;
+  tenantId: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -24,6 +25,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
+  tenantId: null,
   isAuthenticated: false,
   isLoading: false,
   error: null,
@@ -34,6 +36,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       const response = await authService.login(credentials);
       set({
         user: response.user,
+        tenantId: response.user?.tenantId || null,
         isAuthenticated: true,
         isLoading: false,
       });
@@ -53,6 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } finally {
       set({
         user: null,
+        tenantId: null,
         isAuthenticated: false,
         isLoading: false,
       });
@@ -62,6 +66,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   setUser: (user: User | null) => {
     set({
       user,
+      tenantId: user?.tenantId || null,
       isAuthenticated: !!user,
     });
   },
@@ -73,6 +78,6 @@ export const useAuthStore = create<AuthState>((set) => ({
   initialize: () => {
     const user = authService.getCurrentUser();
     const isAuthenticated = authService.isAuthenticated();
-    set({ user, isAuthenticated });
+    set({ user, tenantId: user?.tenantId || null, isAuthenticated });
   },
 }));

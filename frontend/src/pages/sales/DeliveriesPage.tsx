@@ -126,7 +126,7 @@ const DeliveriesPage: React.FC = () => {
       field: 'deliveryDate',
       headerName: '출하일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'salesOrderNo', headerName: '판매주문번호', width: 150 },
     { field: 'customerName', headerName: '고객명', width: 200 },

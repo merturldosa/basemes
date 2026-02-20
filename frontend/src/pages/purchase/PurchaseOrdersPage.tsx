@@ -360,7 +360,7 @@ const PurchaseOrdersPage: React.FC = () => {
       field: 'orderDate',
       headerName: '주문일자',
       width: 120,
-      valueFormatter: (params) => params ? new Date(params as string).toLocaleDateString('ko-KR') : '-',
+      valueFormatter: (params) => params.value ? new Date(params.value as string).toLocaleDateString('ko-KR') : '-',
     },
     { field: 'supplierName', headerName: '공급업체', width: 200 },
     { field: 'buyerFullName', headerName: '구매담당자', width: 120 },
@@ -377,7 +377,7 @@ const PurchaseOrdersPage: React.FC = () => {
       field: 'expectedDeliveryDate',
       headerName: '납기예정일',
       width: 120,
-      valueFormatter: (params) => params ? new Date(params as string).toLocaleDateString('ko-KR') : '-',
+      valueFormatter: (params) => params.value ? new Date(params.value as string).toLocaleDateString('ko-KR') : '-',
     },
     {
       field: 'status',

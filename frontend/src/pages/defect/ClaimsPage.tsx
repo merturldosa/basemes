@@ -64,7 +64,7 @@ const ClaimsPage: React.FC = () => {
       const [claimsData, customersData, productsData] = await Promise.all([
         claimService.getAll(),
         customerService.getActive(),
-        productService.getActive(),
+        productService.getActiveProducts(),
       ]);
       setClaims(claimsData);
       setCustomers(customersData);
@@ -184,7 +184,7 @@ const ClaimsPage: React.FC = () => {
       field: 'claimDate',
       headerName: '클레임일자',
       width: 180,
-      valueFormatter: (params) => new Date(params).toLocaleString('ko-KR'),
+      valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     { field: 'customerName', headerName: '고객', width: 150 },
     { field: 'productName', headerName: '제품', width: 150 },
@@ -203,7 +203,7 @@ const ClaimsPage: React.FC = () => {
           PRICE: '가격',
           OTHER: '기타',
         };
-        return types[params] || params;
+        return types[params.value] || params.value;
       },
     },
     {

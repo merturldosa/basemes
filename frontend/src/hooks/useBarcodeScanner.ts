@@ -32,7 +32,7 @@ export const useBarcodeScanner = (options: BarcodeScannerOptions = {}) => {
   const [error, setError] = useState<string | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const scanTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scanTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Request camera permission and start video stream
   const startScanning = useCallback(async () => {
