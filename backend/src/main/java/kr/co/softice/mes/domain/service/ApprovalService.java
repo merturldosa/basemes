@@ -238,11 +238,34 @@ public class ApprovalService {
      * Resolve approver from template step
      */
     private Long resolveApprover(ApprovalLineStepEntity templateStep) {
-        // Simplified - in real implementation:
-        // - Query UserEntity by role/position/department
-        // - Handle multiple approvers for ALL/MAJORITY methods
-        // - Check delegation
-        return 1L;  // Placeholder
+        // If a specific user is designated, use that directly
+        if (templateStep.isApproverSpecificUser() && templateStep.getApproverUserId() != null) {
+            userRepository.findById(templateStep.getApproverUserId())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND,
+                            "Designated approver user not found: " + templateStep.getApproverUserId()));
+            return templateStep.getApproverUserId();
+        }
+
+        String tenantId = templateStep.getTemplate().getTenant().getTenantId();
+        List<UserEntity> candidates = java.util.Collections.emptyList();
+
+        // Find approver based on approver type
+        if (templateStep.isApproverByRole() && templateStep.getApproverRole() != null) {
+            candidates = userRepository.findActiveUsersByRoleCode(tenantId, templateStep.getApproverRole());
+        } else if (templateStep.isApproverByDepartment() && templateStep.getApproverDepartment() != null) {
+            candidates = userRepository.findActiveUsersByDepartmentName(tenantId, templateStep.getApproverDepartment());
+        } else if (templateStep.isApproverByPosition() && templateStep.getApproverPosition() != null) {
+            candidates = userRepository.findActiveUsersByPosition(tenantId, templateStep.getApproverPosition());
+        }
+
+        if (candidates.isEmpty()) {
+            throw new BusinessException(ErrorCode.RESOURCE_NOT_FOUND,
+                    "No approver found for step: " + templateStep.getStepName()
+                            + " (type=" + templateStep.getApproverType()
+                            + ", identifier=" + templateStep.getApproverIdentifier() + ")");
+        }
+
+        return candidates.get(0).getUserId();
     }
 
     /**

@@ -31,6 +31,7 @@ import {
 import QRScanner from '../../components/QRScanner';
 import { barcodeService } from '../../services/barcodeService';
 import { physicalInventoryService } from '../../services/physicalInventoryService';
+import { useAuthStore } from '@/stores/authStore';
 
 interface ScannedItem {
   lotNo: string;
@@ -40,6 +41,7 @@ interface ScannedItem {
   countedQuantity?: number;
   unit: string;
   status: 'pending' | 'counted' | 'error';
+  itemId?: number;
 }
 
 /**
@@ -47,6 +49,7 @@ interface ScannedItem {
  * QR 스캔 기반 간편 실사
  */
 const MobileInventoryCheckPage: React.FC = () => {
+  const { user } = useAuthStore();
   const [physicalInventoryId, setPhysicalInventoryId] = useState<number | null>(null);
   const [showScanner, setShowScanner] = useState(false);
   const [scannedItems, setScannedItems] = useState<ScannedItem[]>([]);
@@ -86,7 +89,8 @@ const MobileInventoryCheckPage: React.FC = () => {
         productName: lotInfo.productName,
         systemQuantity: lotInfo.currentQuantity,
         unit: lotInfo.unit,
-        status: 'pending'
+        status: 'pending',
+        itemId: lotInfo.itemId,
       };
 
       setScannedItems(prev => [...prev, newItem]);
@@ -145,15 +149,17 @@ const MobileInventoryCheckPage: React.FC = () => {
       }
 
       // 서버로 실사 결과 전송
-      // TODO: 실제 API 호출
+      if (!physicalInventoryId) {
+        setError('실사 ID가 설정되지 않았습니다.');
+        return;
+      }
+
       for (const item of scannedItems) {
-        // await physicalInventoryService.updateCount({
-        //   physicalInventoryId,
-        //   itemId: item.itemId,
-        //   countedQuantity: item.countedQuantity!,
-        //   countedByUserId: currentUserId
-        // });
-        console.log('Submitting count:', item);
+        await physicalInventoryService.updateCount(physicalInventoryId, {
+          itemId: item.itemId ?? 0,
+          countedQuantity: item.countedQuantity!,
+          countedByUserId: user?.userId ?? 0,
+        });
       }
 
       alert('실사가 완료되었습니다!');

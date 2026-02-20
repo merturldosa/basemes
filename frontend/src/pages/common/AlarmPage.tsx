@@ -61,6 +61,7 @@ import {
   formatDateTime,
   getRelativeTime,
 } from '../../services/alarmService';
+import { useAuthStore } from '@/stores/authStore';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -84,6 +85,10 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const AlarmPage: React.FC = () => {
+  const { user } = useAuthStore();
+  const tenantId = user?.tenantId ?? '';
+  const userId = user?.userId ?? 0;
+
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,10 +104,6 @@ const AlarmPage: React.FC = () => {
   // Dialogs
   const [detailDialog, setDetailDialog] = useState(false);
   const [selectedAlarm, setSelectedAlarm] = useState<AlarmHistory | null>(null);
-
-  // Dummy tenant and user (in production, get from auth context)
-  const tenantId = 'TENANT001';
-  const userId = 1;
 
   // Load data
   useEffect(() => {

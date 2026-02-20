@@ -169,7 +169,8 @@ const SOPExecutionPage: React.FC = () => {
     try {
       await sopService.startExecutionStep(execution.executionId, step.sopStepId);
       // Reload execution to get updated status
-      // TODO: Implement execution detail fetch
+      const updatedExecution = await sopService.getExecutionById(execution.executionId);
+      setExecution(updatedExecution);
       handleCloseStepDialog();
       handleOpenStepDialog(currentStepIndex);
     } catch (err: any) {

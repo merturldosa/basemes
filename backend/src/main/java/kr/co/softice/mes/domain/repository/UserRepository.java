@@ -108,4 +108,39 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      */
     @Query("SELECT u FROM UserEntity u JOIN FETCH u.tenant WHERE u.userId = :userId")
     Optional<UserEntity> findByIdWithAllRelations(@Param("userId") Long userId);
+
+    /**
+     * Find first active user by role code within a tenant
+     * Used for approval line approver resolution
+     */
+    @Query("SELECT ur.user FROM UserRoleEntity ur " +
+           "WHERE ur.role.tenant.tenantId = :tenantId " +
+           "AND ur.role.roleCode = :roleCode " +
+           "AND ur.user.status = 'active' " +
+           "ORDER BY ur.user.userId ASC")
+    List<UserEntity> findActiveUsersByRoleCode(@Param("tenantId") String tenantId, @Param("roleCode") String roleCode);
+
+    /**
+     * Find first active user by department name within a tenant
+     * Used for approval line approver resolution
+     */
+    @Query("SELECT e.user FROM EmployeeEntity e " +
+           "WHERE e.tenant.tenantId = :tenantId " +
+           "AND e.department.departmentName = :departmentName " +
+           "AND e.user IS NOT NULL " +
+           "AND e.isActive = true " +
+           "ORDER BY e.employeeId ASC")
+    List<UserEntity> findActiveUsersByDepartmentName(@Param("tenantId") String tenantId, @Param("departmentName") String departmentName);
+
+    /**
+     * Find first active user by position within a tenant
+     * Used for approval line approver resolution
+     */
+    @Query("SELECT e.user FROM EmployeeEntity e " +
+           "WHERE e.tenant.tenantId = :tenantId " +
+           "AND e.position = :position " +
+           "AND e.user IS NOT NULL " +
+           "AND e.isActive = true " +
+           "ORDER BY e.employeeId ASC")
+    List<UserEntity> findActiveUsersByPosition(@Param("tenantId") String tenantId, @Param("position") String position);
 }

@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -412,7 +414,8 @@ public class MaterialRequestService {
             }
         }
 
-        return null; // No suitable LOT found
+        throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY,
+                "No suitable LOT found for the requested quantity of product: " + item.getProductCode());
     }
 
     /**

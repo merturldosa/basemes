@@ -3,6 +3,8 @@ package kr.co.softice.mes.domain.service;
 import kr.co.softice.mes.common.dto.auth.LoginRequest;
 import kr.co.softice.mes.common.dto.auth.LoginResponse;
 import kr.co.softice.mes.common.dto.auth.TokenRefreshResponse;
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.common.security.JwtTokenProvider;
 import kr.co.softice.mes.common.security.TenantContext;
 import kr.co.softice.mes.common.security.UserPrincipal;
@@ -67,7 +69,7 @@ public class AuthService {
             // 사용자 정보 조회
             UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
             UserEntity user = userRepository.findById(userPrincipal.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found"));
 
             // 마지막 로그인 시간 업데이트
             user.setLastLoginAt(LocalDateTime.now());
@@ -103,7 +105,7 @@ public class AuthService {
 
         // Refresh Token 유효성 검증
         if (!tokenProvider.validateToken(refreshToken)) {
-            throw new RuntimeException("Invalid refresh token");
+            throw new BusinessException(ErrorCode.INVALID_TOKEN, "Invalid refresh token");
         }
 
         // User ID 추출
@@ -116,11 +118,11 @@ public class AuthService {
         try {
             // 사용자 조회
             UserEntity user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found"));
 
             // 사용자 활성 상태 확인
             if (!"active".equals(user.getStatus())) {
-                throw new RuntimeException("User is not active");
+                throw new BusinessException(ErrorCode.USER_NOT_ACTIVE, "User is not active");
             }
 
             // 새로운 Access Token 생성을 위한 Authentication 객체 생성

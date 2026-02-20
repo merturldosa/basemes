@@ -2,6 +2,8 @@ package kr.co.softice.mes.domain.service;
 
 import kr.co.softice.mes.common.dto.department.DepartmentRequest;
 import kr.co.softice.mes.common.dto.department.DepartmentResponse;
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.DepartmentEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.repository.DepartmentRepository;
@@ -42,7 +44,7 @@ public class DepartmentService {
         TenantEntity tenant = getTenant(tenantId);
         
         if (departmentRepository.existsByTenantAndDepartmentCode(tenant, request.getDepartmentCode())) {
-            throw new RuntimeException("이미 존재하는 부서 코드입니다");
+            throw new BusinessException(ErrorCode.DEPARTMENT_ALREADY_EXISTS, "이미 존재하는 부서 코드입니다: " + request.getDepartmentCode());
         }
 
         DepartmentEntity department = DepartmentEntity.builder()
@@ -63,8 +65,8 @@ public class DepartmentService {
     @Transactional
     public DepartmentResponse updateDepartment(String tenantId, Long id, DepartmentRequest request, String username) {
         DepartmentEntity department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다"));
-        
+                .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND, "부서를 찾을 수 없습니다: " + id));
+
         department.setDepartmentCode(request.getDepartmentCode());
         department.setDepartmentName(request.getDepartmentName());
         department.setDescription(request.getDescription());
@@ -78,7 +80,7 @@ public class DepartmentService {
     @Transactional
     public void deleteDepartment(String tenantId, Long id) {
         DepartmentEntity department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND, "부서를 찾을 수 없습니다: " + id));
         departmentRepository.delete(department);
     }
 
@@ -97,6 +99,6 @@ public class DepartmentService {
 
     private TenantEntity getTenant(String tenantId) {
         return tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new RuntimeException("테넌트를 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND, "테넌트를 찾을 수 없습니다: " + tenantId));
     }
 }

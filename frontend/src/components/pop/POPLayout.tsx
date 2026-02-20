@@ -4,7 +4,7 @@
  * @author Moon Myung-seop
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -55,7 +55,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
   const [currentWorkOrder, setCurrentWorkOrder] = useState<string | null>(null);
 
   // Monitor online/offline status
-  useState(() => {
+  useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -66,7 +66,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  });
+  }, []);
 
   const menuItems = [
     { text: t('navigation.pop.home'), icon: <HomeIcon />, path: '/pop' },

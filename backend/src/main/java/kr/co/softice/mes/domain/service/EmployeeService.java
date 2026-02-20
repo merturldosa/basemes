@@ -2,6 +2,8 @@ package kr.co.softice.mes.domain.service;
 
 import kr.co.softice.mes.common.dto.employee.EmployeeRequest;
 import kr.co.softice.mes.common.dto.employee.EmployeeResponse;
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.DepartmentEntity;
 import kr.co.softice.mes.domain.entity.EmployeeEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
@@ -53,7 +55,7 @@ public class EmployeeService {
         TenantEntity tenant = getTenant(tenantId);
         
         if (employeeRepository.existsByTenantAndEmployeeNo(tenant, request.getEmployeeNo())) {
-            throw new RuntimeException("이미 존재하는 사원 코드입니다");
+            throw new BusinessException(ErrorCode.EMPLOYEE_ALREADY_EXISTS, "이미 존재하는 사원 코드입니다: " + request.getEmployeeNo());
         }
 
         EmployeeEntity.EmployeeEntityBuilder builder = EmployeeEntity.builder()
@@ -79,13 +81,13 @@ public class EmployeeService {
 
         if (request.getDepartmentId() != null) {
             DepartmentEntity department = departmentRepository.findById(request.getDepartmentId())
-                    .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND, "부서를 찾을 수 없습니다: " + request.getDepartmentId()));
             builder.department(department);
         }
 
         if (request.getUserId() != null) {
             UserEntity user = userRepository.findById(request.getUserId())
-                    .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "사용자를 찾을 수 없습니다: " + request.getUserId()));
             builder.user(user);
         }
 
@@ -96,8 +98,8 @@ public class EmployeeService {
     @Transactional
     public EmployeeResponse updateEmployee(String tenantId, Long id, EmployeeRequest request, String username) {
         EmployeeEntity employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("사원을 찾을 수 없습니다"));
-        
+                .orElseThrow(() -> new BusinessException(ErrorCode.EMPLOYEE_NOT_FOUND, "사원을 찾을 수 없습니다: " + id));
+
         employee.setEmployeeNo(request.getEmployeeNo());
         employee.setEmployeeName(request.getEmployeeName());
         employee.setPosition(request.getPosition());
@@ -118,7 +120,7 @@ public class EmployeeService {
 
         if (request.getDepartmentId() != null) {
             DepartmentEntity department = departmentRepository.findById(request.getDepartmentId())
-                    .orElseThrow(() -> new RuntimeException("부서를 찾을 수 없습니다"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND, "부서를 찾을 수 없습니다: " + request.getDepartmentId()));
             employee.setDepartment(department);
         }
         
@@ -128,7 +130,7 @@ public class EmployeeService {
     @Transactional
     public void deleteEmployee(String tenantId, Long id) {
         EmployeeEntity employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("사원을 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.EMPLOYEE_NOT_FOUND, "사원을 찾을 수 없습니다: " + id));
         employeeRepository.delete(employee);
     }
 
@@ -170,6 +172,6 @@ public class EmployeeService {
 
     private TenantEntity getTenant(String tenantId) {
         return tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new RuntimeException("테넌트를 찾을 수 없습니다"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND, "테넌트를 찾을 수 없습니다: " + tenantId));
     }
 }

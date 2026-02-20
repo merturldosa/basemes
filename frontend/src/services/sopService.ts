@@ -341,6 +341,11 @@ class SOPService {
   }
 
   // SOP Execution
+  async getExecutionById(executionId: number): Promise<SOPExecution> {
+    const response = await api.get<SOPExecution>(`/sops/executions/${executionId}`);
+    return response.data;
+  }
+
   async startExecution(sopId: number, data: ExecutionStartRequest): Promise<SOPExecution> {
     const response = await api.post<SOPExecution>(`/sops/${sopId}/executions`, data);
     return response.data;
