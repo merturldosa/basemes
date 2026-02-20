@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -81,16 +83,16 @@ public class MaterialHandoverService {
         log.info("Confirming handover: {} by user: {}", materialHandoverId, receiverId);
 
         MaterialHandoverEntity handover = materialHandoverRepository.findByIdWithAllRelations(materialHandoverId)
-            .orElseThrow(() -> new IllegalArgumentException("Material handover not found: " + materialHandoverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_HANDOVER_NOT_FOUND, "Material handover not found: " + materialHandoverId));
 
         // Validate status
         if (!"PENDING".equals(handover.getHandoverStatus())) {
-            throw new IllegalStateException("Cannot confirm handover in status: " + handover.getHandoverStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot confirm handover in status: " + handover.getHandoverStatus());
         }
 
         // Validate receiver
         if (!receiverId.equals(handover.getReceiver().getUserId())) {
-            throw new IllegalStateException("Only assigned receiver can confirm handover");
+            throw new BusinessException(ErrorCode.FORBIDDEN, "Only assigned receiver can confirm handover");
         }
 
         // Update handover
@@ -117,16 +119,16 @@ public class MaterialHandoverService {
         log.info("Rejecting handover: {} by user: {}", materialHandoverId, receiverId);
 
         MaterialHandoverEntity handover = materialHandoverRepository.findByIdWithAllRelations(materialHandoverId)
-            .orElseThrow(() -> new IllegalArgumentException("Material handover not found: " + materialHandoverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_HANDOVER_NOT_FOUND, "Material handover not found: " + materialHandoverId));
 
         // Validate status
         if (!"PENDING".equals(handover.getHandoverStatus())) {
-            throw new IllegalStateException("Cannot reject handover in status: " + handover.getHandoverStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot reject handover in status: " + handover.getHandoverStatus());
         }
 
         // Validate receiver
         if (!receiverId.equals(handover.getReceiver().getUserId())) {
-            throw new IllegalStateException("Only assigned receiver can reject handover");
+            throw new BusinessException(ErrorCode.FORBIDDEN, "Only assigned receiver can reject handover");
         }
 
         // Update handover
@@ -156,7 +158,7 @@ public class MaterialHandoverService {
 
         if (allConfirmed && !handovers.isEmpty()) {
             MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
             if ("ISSUED".equals(request.getRequestStatus())) {
                 request.setRequestStatus("COMPLETED");

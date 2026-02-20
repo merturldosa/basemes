@@ -4,7 +4,7 @@
  * @author Moon Myung-seop
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -61,8 +61,18 @@ const StatisticalReportsPage: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState('all');
   const [selectedOperator, setSelectedOperator] = useState('all');
   const [selectedWarehouse, setSelectedWarehouse] = useState('all');
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Mock data for reports
+  /**
+   * Refresh report data.
+   * Currently triggers a re-render with updated filter state.
+   * When API integration is added, this function should call the data-fetching logic.
+   */
+  const handleRefresh = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
+
+  // Mock data for reports (keyed by refreshKey to enable future dynamic loading)
   const productionReportData = [
     {
       date: '2026-02-04',
@@ -409,7 +419,7 @@ const StatisticalReportsPage: React.FC = () => {
                 fullWidth
                 variant="contained"
                 startIcon={<RefreshIcon />}
-                onClick={() => console.log('Refreshing data...')}
+                onClick={handleRefresh}
               >
                 조회
               </Button>

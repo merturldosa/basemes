@@ -110,7 +110,7 @@ public class MaterialRequestService {
         // Check duplicate
         if (materialRequestRepository.existsByTenant_TenantIdAndRequestNo(
                 request.getTenant().getTenantId(), request.getRequestNo())) {
-            throw new IllegalArgumentException("Request number already exists: " + request.getRequestNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Request number already exists: " + request.getRequestNo());
         }
 
         // 2. Set initial status
@@ -151,16 +151,16 @@ public class MaterialRequestService {
         log.info("Approving material request: {} by user: {}", materialRequestId, approverId);
 
         MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
         // Validate status
         if (!"PENDING".equals(request.getRequestStatus())) {
-            throw new IllegalStateException("Cannot approve request in status: " + request.getRequestStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot approve request in status: " + request.getRequestStatus());
         }
 
         // Find approver
         UserEntity approver = userRepository.findById(approverId)
-            .orElseThrow(() -> new IllegalArgumentException("Approver not found: " + approverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Approver not found: " + approverId));
 
         // Update approval info
         request.setApprover(approver);
@@ -191,16 +191,16 @@ public class MaterialRequestService {
         log.info("Rejecting material request: {} by user: {}", materialRequestId, approverId);
 
         MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
         // Validate status
         if (!"PENDING".equals(request.getRequestStatus())) {
-            throw new IllegalStateException("Cannot reject request in status: " + request.getRequestStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot reject request in status: " + request.getRequestStatus());
         }
 
         // Find approver
         UserEntity approver = userRepository.findById(approverId)
-            .orElseThrow(() -> new IllegalArgumentException("Approver not found: " + approverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Approver not found: " + approverId));
 
         // Update approval info
         request.setApprover(approver);
@@ -233,16 +233,16 @@ public class MaterialRequestService {
         log.info("Issuing materials for request: {} by user: {}", materialRequestId, issuerUserId);
 
         MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
         // Validate status
         if (!"APPROVED".equals(request.getRequestStatus())) {
-            throw new IllegalStateException("Cannot issue request in status: " + request.getRequestStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot issue request in status: " + request.getRequestStatus());
         }
 
         // Find issuer
         UserEntity issuer = userRepository.findById(issuerUserId)
-            .orElseThrow(() -> new IllegalArgumentException("Issuer not found: " + issuerUserId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Issuer not found: " + issuerUserId));
 
         // Process each item
         for (MaterialRequestItemEntity item : request.getItems()) {
@@ -271,14 +271,14 @@ public class MaterialRequestService {
         log.info("Completing material request: {}", materialRequestId);
 
         MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
         // Check all items are completed
         boolean allCompleted = request.getItems().stream()
             .allMatch(item -> "COMPLETED".equals(item.getIssueStatus()));
 
         if (!allCompleted) {
-            throw new IllegalStateException("Cannot complete request with incomplete items");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot complete request with incomplete items");
         }
 
         request.setRequestStatus("COMPLETED");
@@ -298,11 +298,11 @@ public class MaterialRequestService {
         log.info("Cancelling material request: {}", materialRequestId);
 
         MaterialRequestEntity request = materialRequestRepository.findByIdWithAllRelations(materialRequestId)
-            .orElseThrow(() -> new IllegalArgumentException("Material request not found: " + materialRequestId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_REQUEST_NOT_FOUND, "Material request not found: " + materialRequestId));
 
         // Can only cancel PENDING or APPROVED requests
         if (!"PENDING".equals(request.getRequestStatus()) && !"APPROVED".equals(request.getRequestStatus())) {
-            throw new IllegalStateException("Cannot cancel request in status: " + request.getRequestStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot cancel request in status: " + request.getRequestStatus());
         }
 
         request.setRequestStatus("CANCELLED");
@@ -369,7 +369,7 @@ public class MaterialRequestService {
         LotEntity lot = selectLotForIssue(request, item);
 
         if (lot == null) {
-            throw new IllegalStateException("No available LOT for product: " + item.getProductCode());
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY, "No available LOT for product: " + item.getProductCode());
         }
 
         // Create inventory transaction
@@ -467,7 +467,7 @@ public class MaterialRequestService {
             );
 
         if (!existingInventory.isPresent()) {
-            throw new IllegalStateException("Inventory not found for LOT: " + lot.getLotNo());
+            throw new BusinessException(ErrorCode.INVENTORY_NOT_FOUND, "Inventory not found for LOT: " + lot.getLotNo());
         }
 
         InventoryEntity inventory = existingInventory.get();

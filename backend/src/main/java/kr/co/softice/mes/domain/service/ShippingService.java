@@ -98,7 +98,7 @@ public class ShippingService {
 
         // 1. Resolve tenant
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND, "Tenant not found: " + tenantId));
         shipping.setTenant(tenant);
 
         // 2. Generate shipping number if not provided
@@ -108,18 +108,18 @@ public class ShippingService {
 
         // Check duplicate
         if (shippingRepository.existsByTenant_TenantIdAndShippingNo(tenantId, shipping.getShippingNo())) {
-            throw new IllegalArgumentException("Shipping number already exists: " + shipping.getShippingNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Shipping number already exists: " + shipping.getShippingNo());
         }
 
         // 3. Resolve warehouse
         WarehouseEntity warehouse = warehouseRepository.findById(shipping.getWarehouse().getWarehouseId())
-                .orElseThrow(() -> new IllegalArgumentException("Warehouse not found"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.WAREHOUSE_NOT_FOUND, "Warehouse not found"));
         shipping.setWarehouse(warehouse);
 
         // 4. Resolve optional entities
         if (shipping.getSalesOrder() != null) {
             SalesOrderEntity salesOrder = salesOrderRepository.findById(shipping.getSalesOrder().getSalesOrderId())
-                    .orElseThrow(() -> new IllegalArgumentException("Sales order not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found"));
             shipping.setSalesOrder(salesOrder);
 
             // Use sales order customer if not provided
@@ -161,7 +161,7 @@ public class ShippingService {
 
             // Resolve product
             ProductEntity product = productRepository.findById(item.getProduct().getProductId())
-                    .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found"));
             item.setProduct(product);
             item.setProductCode(product.getProductCode());
             item.setProductName(product.getProductName());
@@ -209,11 +209,11 @@ public class ShippingService {
         log.info("Updating shipping: {}", shippingId);
 
         ShippingEntity existing = shippingRepository.findById(shippingId)
-                .orElseThrow(() -> new IllegalArgumentException("Shipping not found: " + shippingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SHIPPING_NOT_FOUND, "Shipping not found: " + shippingId));
 
         // Only PENDING shippings can be updated
         if (!"PENDING".equals(existing.getShippingStatus())) {
-            throw new IllegalStateException("Only PENDING shippings can be updated: " + shippingId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only PENDING shippings can be updated: " + shippingId);
         }
 
         // Update fields
@@ -256,21 +256,21 @@ public class ShippingService {
         log.info("Processing shipping: {}", shippingId);
 
         ShippingEntity shipping = shippingRepository.findByIdWithAllRelations(shippingId)
-                .orElseThrow(() -> new IllegalArgumentException("Shipping not found: " + shippingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SHIPPING_NOT_FOUND, "Shipping not found: " + shippingId));
 
         // Only PENDING shippings can be processed
         if (!"PENDING".equals(shipping.getShippingStatus())) {
-            throw new IllegalStateException("Only PENDING shippings can be processed: " + shippingId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only PENDING shippings can be processed: " + shippingId);
         }
 
         // Process each item
         for (ShippingItemEntity item : shipping.getItems()) {
             // Check OQC if required
             if ("PENDING".equals(item.getInspectionStatus())) {
-                throw new IllegalStateException("Cannot ship item with pending OQC inspection: " + item.getProductCode());
+                throw new BusinessException(ErrorCode.INSPECTION_NOT_COMPLETED, "Cannot ship item with pending OQC inspection: " + item.getProductCode());
             }
             if ("FAIL".equals(item.getInspectionStatus())) {
-                throw new IllegalStateException("Cannot ship item with failed OQC inspection: " + item.getProductCode());
+                throw new BusinessException(ErrorCode.INSPECTION_FAILED, "Cannot ship item with failed OQC inspection: " + item.getProductCode());
             }
 
             // Deduct inventory
@@ -312,11 +312,11 @@ public class ShippingService {
         log.info("Cancelling shipping: {}", shippingId);
 
         ShippingEntity shipping = shippingRepository.findById(shippingId)
-                .orElseThrow(() -> new IllegalArgumentException("Shipping not found: " + shippingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SHIPPING_NOT_FOUND, "Shipping not found: " + shippingId));
 
         // Only PENDING or INSPECTING shippings can be cancelled
         if (!("PENDING".equals(shipping.getShippingStatus()) || "INSPECTING".equals(shipping.getShippingStatus()))) {
-            throw new IllegalStateException("Only PENDING or INSPECTING shippings can be cancelled: " + shippingId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only PENDING or INSPECTING shippings can be cancelled: " + shippingId);
         }
 
         shipping.setShippingStatus("CANCELLED");
@@ -343,11 +343,11 @@ public class ShippingService {
         log.info("Deleting shipping: {}", shippingId);
 
         ShippingEntity shipping = shippingRepository.findById(shippingId)
-                .orElseThrow(() -> new IllegalArgumentException("Shipping not found: " + shippingId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SHIPPING_NOT_FOUND, "Shipping not found: " + shippingId));
 
         // Only PENDING or CANCELLED shippings can be deleted
         if (!("PENDING".equals(shipping.getShippingStatus()) || "CANCELLED".equals(shipping.getShippingStatus()))) {
-            throw new IllegalStateException("Only PENDING or CANCELLED shippings can be deleted: " + shippingId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only PENDING or CANCELLED shippings can be deleted: " + shippingId);
         }
 
         shippingRepository.delete(shipping);
@@ -371,7 +371,7 @@ public class ShippingService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         if (totalAvailable.compareTo(quantity) < 0) {
-            throw new IllegalStateException(String.format(
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY, String.format(
                     "Insufficient inventory for product: %s, requested: %s, available: %s",
                     product.getProductCode(), quantity, totalAvailable));
         }
@@ -388,7 +388,7 @@ public class ShippingService {
         LotEntity lot = selectLotForShipping(shipping, item);
 
         if (lot == null) {
-            throw new IllegalStateException("No available LOT for product: " + item.getProductCode());
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY, "No available LOT for product: " + item.getProductCode());
         }
 
         // Create inventory transaction

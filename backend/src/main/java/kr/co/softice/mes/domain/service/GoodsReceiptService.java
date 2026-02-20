@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -112,7 +114,7 @@ public class GoodsReceiptService {
         // Check duplicate receipt number
         if (goodsReceiptRepository.existsByTenant_TenantIdAndReceiptNo(
                 goodsReceipt.getTenant().getTenantId(), goodsReceipt.getReceiptNo())) {
-            throw new IllegalArgumentException("Receipt number already exists: " + goodsReceipt.getReceiptNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Receipt number already exists: " + goodsReceipt.getReceiptNo());
         }
 
         // 2. Set initial status
@@ -151,12 +153,12 @@ public class GoodsReceiptService {
         log.info("Updating goods receipt: {}", goodsReceipt.getGoodsReceiptId());
 
         GoodsReceiptEntity existing = goodsReceiptRepository.findById(goodsReceipt.getGoodsReceiptId())
-            .orElseThrow(() -> new IllegalArgumentException(
+            .orElseThrow(() -> new BusinessException(ErrorCode.GOODS_RECEIPT_NOT_FOUND,
                 "Goods receipt not found: " + goodsReceipt.getGoodsReceiptId()));
 
         // Only PENDING receipts can be updated
         if (!"PENDING".equals(existing.getReceiptStatus())) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
                 "Cannot update goods receipt in status: " + existing.getReceiptStatus());
         }
 
@@ -183,11 +185,11 @@ public class GoodsReceiptService {
         log.info("Completing goods receipt: {}", goodsReceiptId);
 
         GoodsReceiptEntity receipt = goodsReceiptRepository.findByIdWithAllRelations(goodsReceiptId)
-            .orElseThrow(() -> new IllegalArgumentException("Goods receipt not found: " + goodsReceiptId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.GOODS_RECEIPT_NOT_FOUND, "Goods receipt not found: " + goodsReceiptId));
 
         // Validate status
         if (!"PENDING".equals(receipt.getReceiptStatus()) && !"INSPECTING".equals(receipt.getReceiptStatus())) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
                 "Cannot complete goods receipt in status: " + receipt.getReceiptStatus());
         }
 
@@ -220,11 +222,11 @@ public class GoodsReceiptService {
         log.info("Cancelling goods receipt: {}", goodsReceiptId);
 
         GoodsReceiptEntity receipt = goodsReceiptRepository.findByIdWithAllRelations(goodsReceiptId)
-            .orElseThrow(() -> new IllegalArgumentException("Goods receipt not found: " + goodsReceiptId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.GOODS_RECEIPT_NOT_FOUND, "Goods receipt not found: " + goodsReceiptId));
 
         // Cannot cancel completed receipts
         if ("CANCELLED".equals(receipt.getReceiptStatus())) {
-            throw new IllegalStateException("Goods receipt already cancelled");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Goods receipt already cancelled");
         }
 
         // Reverse inventory transactions for each item
@@ -349,7 +351,7 @@ public class GoodsReceiptService {
         UserEntity inspector = receipt.getReceiver() != null ?
             receipt.getReceiver() :
             userRepository.findById(1L).orElseThrow(() ->
-                new IllegalArgumentException("No inspector user found"));
+                new BusinessException(ErrorCode.USER_NOT_FOUND, "No inspector user found"));
 
         // Generate inspection number
         String inspectionNo = generateInspectionNo(receipt.getTenant().getTenantId(), "IQC");

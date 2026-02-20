@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.WorkOrderEntity;
 import kr.co.softice.mes.domain.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -85,10 +87,10 @@ public class WorkOrderService {
     @Transactional
     public WorkOrderEntity startWorkOrder(Long workOrderId) {
         WorkOrderEntity workOrder = findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND, "작업 지시를 찾을 수 없습니다: " + workOrderId));
 
         if (!"READY".equals(workOrder.getStatus()) && !"PENDING".equals(workOrder.getStatus())) {
-            throw new IllegalStateException("작업을 시작할 수 없는 상태입니다: " + workOrder.getStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "작업을 시작할 수 없는 상태입니다: " + workOrder.getStatus());
         }
 
         workOrder.setStatus("IN_PROGRESS");
@@ -103,10 +105,10 @@ public class WorkOrderService {
     @Transactional
     public WorkOrderEntity completeWorkOrder(Long workOrderId) {
         WorkOrderEntity workOrder = findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND, "작업 지시를 찾을 수 없습니다: " + workOrderId));
 
         if (!"IN_PROGRESS".equals(workOrder.getStatus())) {
-            throw new IllegalStateException("진행 중인 작업만 완료할 수 있습니다");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "진행 중인 작업만 완료할 수 있습니다");
         }
 
         workOrder.setStatus("COMPLETED");
@@ -121,10 +123,10 @@ public class WorkOrderService {
     @Transactional
     public WorkOrderEntity cancelWorkOrder(Long workOrderId) {
         WorkOrderEntity workOrder = findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND, "작업 지시를 찾을 수 없습니다: " + workOrderId));
 
         if ("COMPLETED".equals(workOrder.getStatus())) {
-            throw new IllegalStateException("완료된 작업은 취소할 수 없습니다");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "완료된 작업은 취소할 수 없습니다");
         }
 
         workOrder.setStatus("CANCELLED");
@@ -138,10 +140,10 @@ public class WorkOrderService {
     @Transactional
     public WorkOrderEntity readyWorkOrder(Long workOrderId) {
         WorkOrderEntity workOrder = findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND, "작업 지시를 찾을 수 없습니다: " + workOrderId));
 
         if (!"PENDING".equals(workOrder.getStatus())) {
-            throw new IllegalStateException("대기 중인 작업만 준비 완료로 변경할 수 있습니다");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "대기 중인 작업만 준비 완료로 변경할 수 있습니다");
         }
 
         workOrder.setStatus("READY");

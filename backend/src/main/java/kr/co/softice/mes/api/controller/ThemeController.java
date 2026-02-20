@@ -8,6 +8,7 @@ import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.theme.ThemeCreateRequest;
 import kr.co.softice.mes.common.dto.theme.ThemeResponse;
 import kr.co.softice.mes.common.dto.theme.ThemeUpdateRequest;
+import kr.co.softice.mes.common.exception.BusinessException;
 import kr.co.softice.mes.common.exception.EntityNotFoundException;
 import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.common.security.TenantContext;
@@ -45,7 +46,7 @@ public class ThemeController {
         String tenantId = TenantContext.getCurrentTenant();
         if (!"softice".equals(tenantId)) {
             log.warn("Unauthorized theme management attempt by tenant: {}", tenantId);
-            throw new AccessDeniedException("테마 관리는 개발사(SoftIce)만 접근 가능합니다.");
+            throw new BusinessException(ErrorCode.FORBIDDEN, "테마 관리는 개발사(SoftIce)만 접근 가능합니다.");
         }
     }
 

@@ -4,6 +4,8 @@
  * @author Moon Myung-seop
  */
 
+import { apiClient } from './api';
+
 // IndexedDB configuration
 const DB_NAME = 'SoIceMES_POP';
 const DB_VERSION = 1;
@@ -209,9 +211,8 @@ class OfflineSyncService {
         try {
           await this.updateSyncItemStatus(item.id, 'SYNCING');
 
-          // TODO: Actual API call based on item type and entity
-          // For now, simulate API call
-          await this.simulateAPICall(item);
+          // Execute actual API call based on entity type and action
+          await this.syncItem(item);
 
           // Mark as success and delete
           await this.updateSyncItemStatus(item.id, 'SUCCESS');
@@ -240,15 +241,38 @@ class OfflineSyncService {
   }
 
   /**
-   * Simulate API call (replace with actual API calls)
+   * Execute actual API call based on entity type and action
    */
-  private async simulateAPICall(item: SyncQueueItem): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('API call simulated for:', item.entity, item.type);
-        resolve();
-      }, 500);
-    });
+  private async syncItem(item: SyncQueueItem): Promise<void> {
+    const { entity, type: action, data } = item;
+
+    switch (entity) {
+      case 'WORK_ORDER':
+        if (action === 'CREATE') await apiClient.post('/work-orders', data);
+        else if (action === 'UPDATE') await apiClient.put(`/work-orders/${data.id}`, data);
+        else if (action === 'DELETE') await apiClient.delete(`/work-orders/${data.id}`);
+        break;
+      case 'DEFECT':
+        if (action === 'CREATE') await apiClient.post('/defects', data);
+        else if (action === 'UPDATE') await apiClient.put(`/defects/${data.id}`, data);
+        else if (action === 'DELETE') await apiClient.delete(`/defects/${data.id}`);
+        break;
+      case 'SOP_STEP':
+        if (action === 'UPDATE') await apiClient.put(`/sops/executions/${data.executionId}/steps/${data.stepId}`, data);
+        break;
+      case 'PRODUCTION_DATA':
+        if (action === 'CREATE') await apiClient.post('/production-results', data);
+        else if (action === 'UPDATE') await apiClient.put(`/production-results/${data.id}`, data);
+        break;
+      default: {
+        // Generic fallback: derive endpoint from entity name
+        const endpoint = `/${entity.toLowerCase().replace(/_/g, '-')}s`;
+        if (action === 'CREATE') await apiClient.post(endpoint, data);
+        else if (action === 'UPDATE') await apiClient.put(`${endpoint}/${data.id}`, data);
+        else if (action === 'DELETE') await apiClient.delete(`${endpoint}/${data.id}`);
+        break;
+      }
+    }
   }
 
   /**

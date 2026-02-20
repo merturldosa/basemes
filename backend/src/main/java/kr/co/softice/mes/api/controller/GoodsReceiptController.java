@@ -7,6 +7,7 @@ import kr.co.softice.mes.common.dto.wms.GoodsReceiptCreateRequest;
 import kr.co.softice.mes.common.dto.wms.GoodsReceiptItemRequest;
 import kr.co.softice.mes.common.dto.wms.GoodsReceiptItemResponse;
 import kr.co.softice.mes.common.dto.wms.GoodsReceiptResponse;
+import kr.co.softice.mes.common.exception.BusinessException;
 import kr.co.softice.mes.common.exception.EntityNotFoundException;
 import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.common.security.TenantContext;
@@ -249,7 +250,7 @@ public class GoodsReceiptController {
 
         // Only PENDING receipts can be updated
         if (!"PENDING".equals(existing.getReceiptStatus())) {
-            throw new IllegalStateException("Cannot update goods receipt in status: " + existing.getReceiptStatus());
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Cannot update goods receipt in status: " + existing.getReceiptStatus());
         }
 
         // Update basic fields

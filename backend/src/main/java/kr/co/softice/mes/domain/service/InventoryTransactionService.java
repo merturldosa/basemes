@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +59,7 @@ public class InventoryTransactionService {
 
         if (inventoryTransactionRepository.existsByTenantAndTransactionNo(
             transaction.getTenant(), transaction.getTransactionNo())) {
-            throw new IllegalArgumentException("Transaction number already exists: " + transaction.getTransactionNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Transaction number already exists: " + transaction.getTransactionNo());
         }
 
         // Auto-approve for now (can be changed to require approval)
@@ -126,11 +128,11 @@ public class InventoryTransactionService {
                 transaction.getProduct().getProductId(),
                 transaction.getLot() != null ? transaction.getLot().getLotId() : null
             )
-            .orElseThrow(() -> new IllegalArgumentException("Inventory not found"));
+            .orElseThrow(() -> new BusinessException(ErrorCode.INVENTORY_NOT_FOUND, "Inventory not found"));
 
         BigDecimal newQuantity = inventory.getAvailableQuantity().subtract(transaction.getQuantity());
         if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Insufficient inventory");
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY, "Insufficient inventory");
         }
 
         inventory.setAvailableQuantity(newQuantity);
@@ -229,17 +231,17 @@ public class InventoryTransactionService {
         log.info("Approving transaction: {} by user: {}", transactionId, approverId);
 
         InventoryTransactionEntity transaction = inventoryTransactionRepository.findById(transactionId)
-            .orElseThrow(() -> new IllegalArgumentException("Transaction not found: " + transactionId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.INVENTORY_TRANSACTION_NOT_FOUND, "Transaction not found: " + transactionId));
 
         // Validate status (only PENDING can be approved)
         if (!"PENDING".equals(transaction.getApprovalStatus())) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
                 "Cannot approve transaction in status: " + transaction.getApprovalStatus());
         }
 
         // Find approver user
         UserEntity approver = userRepository.findById(approverId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + approverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found: " + approverId));
 
         // Update approval status
         transaction.setApprovalStatus("APPROVED");
@@ -269,17 +271,17 @@ public class InventoryTransactionService {
             transactionId, approverId, reason);
 
         InventoryTransactionEntity transaction = inventoryTransactionRepository.findById(transactionId)
-            .orElseThrow(() -> new IllegalArgumentException("Transaction not found: " + transactionId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.INVENTORY_TRANSACTION_NOT_FOUND, "Transaction not found: " + transactionId));
 
         // Validate status (only PENDING can be rejected)
         if (!"PENDING".equals(transaction.getApprovalStatus())) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION,
                 "Cannot reject transaction in status: " + transaction.getApprovalStatus());
         }
 
         // Find approver user
         UserEntity approver = userRepository.findById(approverId)
-            .orElseThrow(() -> new IllegalArgumentException("User not found: " + approverId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "User not found: " + approverId));
 
         // Update approval status
         transaction.setApprovalStatus("REJECTED");
@@ -308,7 +310,7 @@ public class InventoryTransactionService {
 
         if (inventoryTransactionRepository.existsByTenantAndTransactionNo(
             transaction.getTenant(), transaction.getTransactionNo())) {
-            throw new IllegalArgumentException("Transaction number already exists: " + transaction.getTransactionNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Transaction number already exists: " + transaction.getTransactionNo());
         }
 
         // Set to PENDING for approval

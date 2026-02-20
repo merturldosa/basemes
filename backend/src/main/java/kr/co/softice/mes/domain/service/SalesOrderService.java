@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -89,7 +91,7 @@ public class SalesOrderService {
 
         // 1. Resolve tenant
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND, "Tenant not found: " + tenantId));
         salesOrder.setTenant(tenant);
 
         // 2. Generate order number if not provided
@@ -99,17 +101,17 @@ public class SalesOrderService {
 
         // Check duplicate
         if (salesOrderRepository.existsByTenant_TenantIdAndOrderNo(tenantId, salesOrder.getOrderNo())) {
-            throw new IllegalArgumentException("Order number already exists: " + salesOrder.getOrderNo());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE, "Order number already exists: " + salesOrder.getOrderNo());
         }
 
         // 3. Resolve customer
         CustomerEntity customer = customerRepository.findById(salesOrder.getCustomer().getCustomerId())
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + salesOrder.getCustomer().getCustomerId()));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOMER_NOT_FOUND, "Customer not found: " + salesOrder.getCustomer().getCustomerId()));
         salesOrder.setCustomer(customer);
 
         // 4. Resolve sales user
         UserEntity salesUser = userRepository.findById(salesOrder.getSalesUser().getUserId())
-                .orElseThrow(() -> new IllegalArgumentException("Sales user not found: " + salesOrder.getSalesUser().getUserId()));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Sales user not found: " + salesOrder.getSalesUser().getUserId()));
         salesOrder.setSalesUser(salesUser);
 
         // 5. Set initial status
@@ -125,12 +127,12 @@ public class SalesOrderService {
             // Resolve product or material
             if (item.getProduct() != null) {
                 ProductEntity product = productRepository.findById(item.getProduct().getProductId())
-                        .orElseThrow(() -> new IllegalArgumentException("Product not found: " + item.getProduct().getProductId()));
+                        .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found: " + item.getProduct().getProductId()));
                 item.setProduct(product);
                 // Product code and name will be retrieved from product entity
             } else if (item.getMaterial() != null) {
                 MaterialEntity material = materialRepository.findById(item.getMaterial().getMaterialId())
-                        .orElseThrow(() -> new IllegalArgumentException("Material not found: " + item.getMaterial().getMaterialId()));
+                        .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND, "Material not found: " + item.getMaterial().getMaterialId()));
                 item.setMaterial(material);
                 // Material code and name will be retrieved from material entity
             }
@@ -173,11 +175,11 @@ public class SalesOrderService {
         log.info("Updating sales order: {}", salesOrderId);
 
         SalesOrderEntity existing = salesOrderRepository.findById(salesOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sales order not found: " + salesOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found: " + salesOrderId));
 
         // Only DRAFT orders can be updated
         if (!"DRAFT".equals(existing.getStatus())) {
-            throw new IllegalStateException("Only DRAFT orders can be updated: " + salesOrderId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only DRAFT orders can be updated: " + salesOrderId);
         }
 
         // Update fields
@@ -186,7 +188,7 @@ public class SalesOrderService {
         }
         if (updates.getCustomer() != null) {
             CustomerEntity customer = customerRepository.findById(updates.getCustomer().getCustomerId())
-                    .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOMER_NOT_FOUND, "Customer not found"));
             existing.setCustomer(customer);
         }
         if (updates.getRequestedDeliveryDate() != null) {
@@ -216,7 +218,7 @@ public class SalesOrderService {
                 // Resolve product or material
                 if (item.getProduct() != null) {
                     ProductEntity product = productRepository.findById(item.getProduct().getProductId())
-                            .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+                            .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND, "Product not found"));
                     item.setProduct(product);
                     // Product code and name will be retrieved from product entity
                 }
@@ -256,11 +258,11 @@ public class SalesOrderService {
         log.info("Confirming sales order: {}", salesOrderId);
 
         SalesOrderEntity salesOrder = salesOrderRepository.findById(salesOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sales order not found: " + salesOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found: " + salesOrderId));
 
         // Only DRAFT orders can be confirmed
         if (!"DRAFT".equals(salesOrder.getStatus())) {
-            throw new IllegalStateException("Only DRAFT orders can be confirmed: " + salesOrderId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only DRAFT orders can be confirmed: " + salesOrderId);
         }
 
         salesOrder.setStatus("CONFIRMED");
@@ -283,11 +285,11 @@ public class SalesOrderService {
         log.info("Cancelling sales order: {}", salesOrderId);
 
         SalesOrderEntity salesOrder = salesOrderRepository.findById(salesOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sales order not found: " + salesOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found: " + salesOrderId));
 
         // Only DRAFT or CONFIRMED orders can be cancelled
         if (!("DRAFT".equals(salesOrder.getStatus()) || "CONFIRMED".equals(salesOrder.getStatus()))) {
-            throw new IllegalStateException("Only DRAFT or CONFIRMED orders can be cancelled: " + salesOrderId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only DRAFT or CONFIRMED orders can be cancelled: " + salesOrderId);
         }
 
         salesOrder.setStatus("CANCELLED");
@@ -314,7 +316,7 @@ public class SalesOrderService {
         log.info("Updating delivery status for sales order: {}", salesOrderId);
 
         SalesOrderEntity salesOrder = salesOrderRepository.findByIdWithAllRelations(salesOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sales order not found: " + salesOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found: " + salesOrderId));
 
         // Check if all items are fully delivered
         boolean fullyDelivered = true;
@@ -351,11 +353,11 @@ public class SalesOrderService {
         log.info("Deleting sales order: {}", salesOrderId);
 
         SalesOrderEntity salesOrder = salesOrderRepository.findById(salesOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sales order not found: " + salesOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SALES_ORDER_NOT_FOUND, "Sales order not found: " + salesOrderId));
 
         // Only DRAFT or CANCELLED orders can be deleted
         if (!("DRAFT".equals(salesOrder.getStatus()) || "CANCELLED".equals(salesOrder.getStatus()))) {
-            throw new IllegalStateException("Only DRAFT or CANCELLED orders can be deleted: " + salesOrderId);
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only DRAFT or CANCELLED orders can be deleted: " + salesOrderId);
         }
 
         salesOrderRepository.delete(salesOrder);

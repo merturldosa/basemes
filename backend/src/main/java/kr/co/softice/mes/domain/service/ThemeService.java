@@ -1,5 +1,6 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
 import kr.co.softice.mes.common.exception.DuplicateEntityException;
 import kr.co.softice.mes.common.exception.EntityNotFoundException;
 import kr.co.softice.mes.common.exception.ErrorCode;
@@ -119,7 +120,7 @@ public class ThemeService {
 
         // 기본 테마는 삭제 불가
         if (Boolean.TRUE.equals(theme.getIsDefault())) {
-            throw new IllegalStateException("기본 테마는 삭제할 수 없습니다");
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "기본 테마는 삭제할 수 없습니다");
         }
 
         themeRepository.delete(theme);
@@ -151,7 +152,7 @@ public class ThemeService {
 
         // 기본 테마는 비활성화 불가
         if (Boolean.TRUE.equals(theme.getIsDefault())) {
-            throw new IllegalStateException("기본 테마는 비활성화할 수 없습니다");
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "기본 테마는 비활성화할 수 없습니다");
         }
 
         theme.setStatus("inactive");

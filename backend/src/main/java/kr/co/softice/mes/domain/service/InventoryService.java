@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.InventoryRepository;
 import kr.co.softice.mes.domain.repository.LotRepository;
@@ -106,11 +108,11 @@ public class InventoryService {
         }
 
         InventoryEntity inventory = inventoryOpt
-            .orElseThrow(() -> new IllegalStateException("Insufficient inventory available"));
+            .orElseThrow(() -> new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY, "Insufficient inventory available"));
 
         // Check if sufficient quantity available
         if (inventory.getAvailableQuantity().compareTo(quantity) < 0) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY,
                 String.format("Insufficient inventory: available=%s, requested=%s",
                     inventory.getAvailableQuantity(), quantity));
         }
@@ -146,11 +148,11 @@ public class InventoryService {
                 tenantId, warehouseId, productId, lotId);
 
         InventoryEntity inventory = inventoryOpt
-            .orElseThrow(() -> new IllegalArgumentException("Inventory record not found"));
+            .orElseThrow(() -> new BusinessException(ErrorCode.INVENTORY_NOT_FOUND, "Inventory record not found"));
 
         // Check if sufficient reserved quantity
         if (inventory.getReservedQuantity().compareTo(quantity) < 0) {
-            throw new IllegalStateException(
+            throw new BusinessException(ErrorCode.INSUFFICIENT_INVENTORY,
                 String.format("Insufficient reserved inventory: reserved=%s, requested=%s",
                     inventory.getReservedQuantity(), quantity));
         }

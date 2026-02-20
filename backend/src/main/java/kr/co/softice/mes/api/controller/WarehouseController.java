@@ -6,6 +6,7 @@ import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.inventory.WarehouseCreateRequest;
 import kr.co.softice.mes.common.dto.inventory.WarehouseResponse;
 import kr.co.softice.mes.common.dto.inventory.WarehouseUpdateRequest;
+import kr.co.softice.mes.common.exception.BusinessException;
 import kr.co.softice.mes.common.exception.EntityNotFoundException;
 import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.common.security.TenantContext;
@@ -118,7 +119,7 @@ public class WarehouseController {
 
         // Validate warehouse type
         if (!isValidWarehouseType(type)) {
-            throw new IllegalArgumentException("Invalid warehouse type: " + type);
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR, "Invalid warehouse type: " + type);
         }
 
         List<WarehouseEntity> warehouses = warehouseService.findByTenant(tenantId).stream()
@@ -158,7 +159,7 @@ public class WarehouseController {
 
         // Validate warehouse type
         if (!isValidWarehouseType(request.getWarehouseType())) {
-            throw new IllegalArgumentException("Invalid warehouse type: " + request.getWarehouseType());
+            throw new BusinessException(ErrorCode.VALIDATION_ERROR, "Invalid warehouse type: " + request.getWarehouseType());
         }
 
         // Build warehouse entity
@@ -204,7 +205,7 @@ public class WarehouseController {
         }
         if (request.getWarehouseType() != null) {
             if (!isValidWarehouseType(request.getWarehouseType())) {
-                throw new IllegalArgumentException("Invalid warehouse type: " + request.getWarehouseType());
+                throw new BusinessException(ErrorCode.VALIDATION_ERROR, "Invalid warehouse type: " + request.getWarehouseType());
             }
             existing.setWarehouseType(request.getWarehouseType());
         }
