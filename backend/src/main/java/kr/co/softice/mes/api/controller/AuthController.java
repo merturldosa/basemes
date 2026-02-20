@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -93,6 +94,7 @@ public class AuthController {
      * 현재 사용자 정보 조회
      * GET /api/auth/me
      */
+    @Transactional(readOnly = true)
     @GetMapping("/me")
     @Operation(summary = "현재 사용자 정보", description = "인증된 사용자의 정보 조회")
     public ResponseEntity<ApiResponse<Object>> getCurrentUser() {

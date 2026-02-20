@@ -78,8 +78,6 @@ const QRScanner: React.FC<QRScannerProps> = ({
       setDevices(cameras);
       startScanning(cameras[currentDeviceIndex].deviceId);
     } catch (err: any) {
-      console.error('Camera initialization error:', err);
-
       if (err.name === 'NotAllowedError') {
         setError('카메라 권한이 거부되었습니다. 브라우저 설정에서 카메라 권한을 허용해주세요.');
       } else if (err.name === 'NotFoundError') {
@@ -125,7 +123,6 @@ const QRScanner: React.FC<QRScannerProps> = ({
 
             // 중복 스캔 방지 (1초 내 같은 데이터)
             if (scannedData !== lastScannedData) {
-              console.log('QR scanned:', scannedData);
               setLastScannedData(scannedData);
               setShowSuccess(true);
 
@@ -149,13 +146,10 @@ const QRScanner: React.FC<QRScannerProps> = ({
             }
           }
 
-          if (error && !(error instanceof NotFoundException)) {
-            console.warn('Decode error:', error);
-          }
+          // Non-NotFoundException decode errors are silently ignored
         }
       );
     } catch (err: any) {
-      console.error('Scanning error:', err);
       setError('스캔 시작 실패: ' + err.message);
       setIsScanning(false);
     }
@@ -200,7 +194,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
         });
         setTorchEnabled(!torchEnabled);
       } catch (err) {
-        console.error('Torch toggle error:', err);
+        // Torch toggle failed silently
       }
     }
   };

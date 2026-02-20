@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -36,6 +37,7 @@ public class HolidayController {
     private final HolidayService holidayService;
     private final TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "휴일 목록 조회", description = "모든 휴일을 조회합니다.")
@@ -46,6 +48,7 @@ public class HolidayController {
         return ResponseEntity.ok(holidays);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 휴일 목록 조회", description = "활성 상태의 휴일을 조회합니다.")
@@ -56,6 +59,7 @@ public class HolidayController {
         return ResponseEntity.ok(holidays);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{holidayId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "휴일 상세 조회", description = "ID로 휴일을 조회합니다.")
@@ -66,6 +70,7 @@ public class HolidayController {
         return ResponseEntity.ok(holiday);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/year/{year}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "연도별 휴일 조회", description = "특정 연도의 휴일을 조회합니다.")
@@ -76,6 +81,7 @@ public class HolidayController {
         return ResponseEntity.ok(holidays);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 휴일 조회", description = "기간 내 휴일을 조회합니다.")
@@ -88,6 +94,7 @@ public class HolidayController {
         return ResponseEntity.ok(holidays);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{holidayType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "유형별 휴일 조회", description = "특정 유형의 휴일을 조회합니다.")
@@ -98,6 +105,7 @@ public class HolidayController {
         return ResponseEntity.ok(holidays);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/check-business-day")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "영업일 확인", description = "특정 날짜가 영업일인지 확인합니다.")
@@ -108,6 +116,7 @@ public class HolidayController {
         return ResponseEntity.ok(result);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/business-days")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "영업일 수 계산", description = "기간 내 영업일 수를 계산합니다.")

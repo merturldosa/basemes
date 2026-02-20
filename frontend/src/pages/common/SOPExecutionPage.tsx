@@ -138,7 +138,7 @@ const SOPExecutionPage: React.FC = () => {
       try {
         checklistItems = JSON.parse(step.checklistItems);
       } catch (e) {
-        console.error('Failed to parse checklist items:', e);
+        // Failed to parse checklist items
       }
     }
 

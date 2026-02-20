@@ -41,18 +41,15 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
       heartbeatIncoming: 10000,
       heartbeatOutgoing: 10000,
       onConnect: () => {
-        console.log('WebSocket connected');
         setIsConnected(true);
         setError(null);
         options?.onConnect?.();
       },
       onDisconnect: () => {
-        console.log('WebSocket disconnected');
         setIsConnected(false);
         options?.onDisconnect?.();
       },
       onStompError: (frame) => {
-        console.error('STOMP error:', frame);
         setError(frame.headers?.message || 'WebSocket error');
         options?.onError?.(frame);
       },
@@ -69,7 +66,6 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
 
   const subscribe = (topic: string, callback: (message: any) => void) => {
     if (!clientRef.current || !isConnected) {
-      console.warn('WebSocket not connected, cannot subscribe');
       return () => {};
     }
 
@@ -77,8 +73,8 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
       try {
         const data = JSON.parse(message.body);
         callback(data);
-      } catch (err) {
-        console.error('Failed to parse WebSocket message:', err);
+      } catch {
+        // Failed to parse WebSocket message
       }
     });
 
@@ -89,7 +85,6 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
 
   const send = (destination: string, body: any) => {
     if (!clientRef.current || !isConnected) {
-      console.warn('WebSocket not connected, cannot send message');
       return;
     }
 

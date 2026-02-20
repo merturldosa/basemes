@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.CustomerEntity;
 import kr.co.softice.mes.domain.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +53,7 @@ public class CustomerService {
 
         if (customerRepository.existsByTenantAndCustomerCode(
             customer.getTenant(), customer.getCustomerCode())) {
-            throw new IllegalArgumentException("Customer code already exists: " + customer.getCustomerCode());
+            throw new BusinessException(ErrorCode.CUSTOMER_ALREADY_EXISTS);
         }
 
         CustomerEntity saved = customerRepository.save(customer);
@@ -74,7 +76,7 @@ public class CustomerService {
     @Transactional
     public CustomerEntity toggleActive(Long customerId) {
         CustomerEntity customer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new IllegalArgumentException("Customer not found: " + customerId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.CUSTOMER_NOT_FOUND));
 
         log.info("Toggling customer {} active status from {} to {}",
             customer.getCustomerCode(), customer.getIsActive(), !customer.getIsActive());

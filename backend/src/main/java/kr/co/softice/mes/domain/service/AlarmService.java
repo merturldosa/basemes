@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.AlarmHistoryEntity;
 import kr.co.softice.mes.domain.entity.AlarmTemplateEntity;
 import kr.co.softice.mes.domain.repository.AlarmHistoryRepository;
@@ -65,13 +67,12 @@ public class AlarmService {
         log.info("Sending alarm: eventType={}, recipient={}", eventType, recipientUserId);
 
         // Find template
-        Optional<AlarmTemplateEntity> templateOpt = findTemplateByEventType(tenantId, eventType);
-        if (!templateOpt.isPresent()) {
-            log.warn("No template found for event type: {}", eventType);
-            return null;
-        }
-
-        AlarmTemplateEntity template = templateOpt.get();
+        AlarmTemplateEntity template = findTemplateByEventType(tenantId, eventType)
+                .orElseThrow(() -> {
+                    log.warn("No template found for event type: {}", eventType);
+                    return new BusinessException(ErrorCode.ALARM_TEMPLATE_NOT_FOUND,
+                            "알람 템플릿을 찾을 수 없습니다: eventType=" + eventType);
+                });
 
         // Render message
         String title = template.renderTitle(variables);

@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class GaugeController {
     /**
      * Get all gauges
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "계측기 목록 조회", description = "모든 계측기를 조회합니다.")
@@ -56,6 +58,7 @@ public class GaugeController {
     /**
      * Get gauge by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{gaugeId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "계측기 상세 조회", description = "ID로 계측기를 조회합니다.")
@@ -71,6 +74,7 @@ public class GaugeController {
     /**
      * Get gauges with calibration due
      */
+    @Transactional(readOnly = true)
     @GetMapping("/calibration-due")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "교정 예정 계측기 조회", description = "지정 일자까지 교정이 필요한 계측기를 조회합니다.")

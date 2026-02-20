@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ public class WorkResultController {
      * 작업 실적 목록 조회
      * GET /api/work-results
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 실적 목록 조회", description = "테넌트의 모든 작업 실적 조회")
@@ -66,6 +68,7 @@ public class WorkResultController {
      * 작업 실적 상세 조회
      * GET /api/work-results/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 실적 상세 조회", description = "작업 실적 ID로 상세 정보 조회")
@@ -82,6 +85,7 @@ public class WorkResultController {
      * 작업 지시별 작업 실적 조회
      * GET /api/work-results/work-order/{workOrderId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/work-order/{workOrderId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시별 작업 실적 조회", description = "특정 작업 지시의 모든 작업 실적 조회")
@@ -101,6 +105,7 @@ public class WorkResultController {
      * 기간별 작업 실적 조회
      * GET /api/work-results/date-range
      */
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 작업 실적 조회", description = "시작일과 종료일 사이의 작업 실적 조회")
@@ -122,6 +127,7 @@ public class WorkResultController {
      * 작업자별 작업 실적 조회
      * GET /api/work-results/worker/{userId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/worker/{userId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업자별 작업 실적 조회", description = "특정 작업자의 모든 작업 실적 조회")

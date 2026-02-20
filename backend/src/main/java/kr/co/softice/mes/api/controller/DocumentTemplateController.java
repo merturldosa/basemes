@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class DocumentTemplateController {
      * 문서 양식 목록 조회
      * GET /api/document-templates
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "문서 양식 목록 조회", description = "테넌트의 모든 문서 양식 조회")
@@ -55,6 +57,7 @@ public class DocumentTemplateController {
      * 활성 문서 양식 목록 조회
      * GET /api/document-templates/active
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 문서 양식 목록", description = "활성 상태의 문서 양식만 조회")
@@ -71,6 +74,7 @@ public class DocumentTemplateController {
      * 문서 양식 상세 조회
      * GET /api/document-templates/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "문서 양식 상세 조회", description = "문서 양식 상세 정보 조회")
@@ -87,6 +91,7 @@ public class DocumentTemplateController {
      * 유형별 문서 양식 조회
      * GET /api/document-templates/type/{templateType}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{templateType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "유형별 문서 양식 조회", description = "특정 유형의 문서 양식 조회")
@@ -104,6 +109,7 @@ public class DocumentTemplateController {
      * 카테고리별 문서 양식 조회
      * GET /api/document-templates/category/{category}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/category/{category}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "카테고리별 문서 양식 조회", description = "특정 카테고리의 문서 양식 조회")
@@ -121,6 +127,7 @@ public class DocumentTemplateController {
      * 코드로 최신 버전 문서 양식 조회
      * GET /api/document-templates/by-code/{templateCode}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/by-code/{templateCode}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "코드로 최신 버전 조회", description = "템플릿 코드로 최신 버전 조회")
@@ -139,6 +146,7 @@ public class DocumentTemplateController {
      * 문서 양식 전체 버전 조회
      * GET /api/document-templates/versions/{templateCode}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/versions/{templateCode}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "문서 양식 전체 버전 조회", description = "특정 템플릿의 모든 버전 조회")

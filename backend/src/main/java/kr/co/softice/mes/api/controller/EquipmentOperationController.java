@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class EquipmentOperationController {
     /**
      * Get all operations
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 가동 이력 목록 조회", description = "모든 설비 가동 이력을 조회합니다.")
@@ -56,6 +58,7 @@ public class EquipmentOperationController {
     /**
      * Get operation by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{operationId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 가동 이력 상세 조회", description = "ID로 설비 가동 이력을 조회합니다.")
@@ -71,6 +74,7 @@ public class EquipmentOperationController {
     /**
      * Get operations by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 가동 이력 조회", description = "특정 설비의 가동 이력을 조회합니다.")
@@ -88,6 +92,7 @@ public class EquipmentOperationController {
     /**
      * Get operations by date range
      */
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 가동 이력 조회", description = "특정 기간의 가동 이력을 조회합니다.")
@@ -108,6 +113,7 @@ public class EquipmentOperationController {
     /**
      * Get operations by status
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{operationStatus}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 가동 이력 조회", description = "특정 상태의 가동 이력을 조회합니다.")

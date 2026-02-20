@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.WorkOrderEntity;
 import kr.co.softice.mes.domain.entity.WorkResultEntity;
 import kr.co.softice.mes.domain.repository.WorkOrderRepository;
@@ -91,7 +93,7 @@ public class WorkResultService {
         log.info("Updating work result: {}", workResult.getWorkResultId());
 
         if (!workResultRepository.existsById(workResult.getWorkResultId())) {
-            throw new IllegalArgumentException("작업 실적을 찾을 수 없습니다: " + workResult.getWorkResultId());
+            throw new BusinessException(ErrorCode.WORK_RESULT_NOT_FOUND);
         }
 
         WorkResultEntity updated = workResultRepository.save(workResult);
@@ -110,7 +112,7 @@ public class WorkResultService {
         log.info("Deleting work result: {}", workResultId);
 
         WorkResultEntity workResult = workResultRepository.findById(workResultId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 실적을 찾을 수 없습니다: " + workResultId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_RESULT_NOT_FOUND));
 
         Long workOrderId = workResult.getWorkOrder().getWorkOrderId();
 
@@ -127,7 +129,7 @@ public class WorkResultService {
     @Transactional
     public void updateWorkOrderQuantities(Long workOrderId) {
         WorkOrderEntity workOrder = workOrderRepository.findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND));
 
         List<WorkResultEntity> results = workResultRepository.findByWorkOrder_WorkOrderId(workOrderId);
 
@@ -158,7 +160,7 @@ public class WorkResultService {
      */
     public long countByWorkOrder(Long workOrderId) {
         WorkOrderEntity workOrder = workOrderRepository.findById(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("작업 지시를 찾을 수 없습니다: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND));
 
         return workResultRepository.countByWorkOrder(workOrder);
     }

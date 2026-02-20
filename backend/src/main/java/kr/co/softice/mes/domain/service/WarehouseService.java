@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.entity.WarehouseEntity;
 import kr.co.softice.mes.domain.repository.WarehouseRepository;
@@ -44,7 +46,7 @@ public class WarehouseService {
 
         if (warehouseRepository.existsByTenantAndWarehouseCode(
             warehouse.getTenant(), warehouse.getWarehouseCode())) {
-            throw new IllegalArgumentException("Warehouse code already exists: " + warehouse.getWarehouseCode());
+            throw new BusinessException(ErrorCode.WAREHOUSE_ALREADY_EXISTS);
         }
 
         WarehouseEntity saved = warehouseRepository.save(warehouse);
@@ -67,7 +69,7 @@ public class WarehouseService {
     @Transactional
     public WarehouseEntity toggleActive(Long warehouseId) {
         WarehouseEntity warehouse = warehouseRepository.findById(warehouseId)
-            .orElseThrow(() -> new IllegalArgumentException("Warehouse not found: " + warehouseId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WAREHOUSE_NOT_FOUND));
         warehouse.setIsActive(!warehouse.getIsActive());
         WarehouseEntity updated = warehouseRepository.save(warehouse);
         return warehouseRepository.findByIdWithAllRelations(updated.getWarehouseId()).orElse(updated);

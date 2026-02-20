@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class ReturnController {
 
     private final ReturnService returnService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "반품 목록 조회", description = "모든 반품을 조회합니다.")
@@ -39,6 +41,7 @@ public class ReturnController {
         return ResponseEntity.ok(returns);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{returnId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "반품 상세 조회", description = "ID로 반품을 조회합니다.")
@@ -48,6 +51,7 @@ public class ReturnController {
         return ResponseEntity.ok(returnEntity);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "상태별 반품 조회", description = "특정 상태의 반품을 조회합니다.")
@@ -58,6 +62,7 @@ public class ReturnController {
         return ResponseEntity.ok(returns);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{type}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "유형별 반품 조회", description = "특정 유형의 반품을 조회합니다.")
@@ -68,6 +73,7 @@ public class ReturnController {
         return ResponseEntity.ok(returns);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/requiring-inspection")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'QUALITY_MANAGER')")
     @Operation(summary = "검사 필요 반품 조회", description = "검사가 필요한 반품을 조회합니다.")

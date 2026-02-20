@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class ApprovalController {
 
     // ==================== Approval Lines ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/lines")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재라인 목록 조회", description = "모든 결재라인을 조회합니다.")
@@ -46,6 +48,7 @@ public class ApprovalController {
         return ResponseEntity.ok(lines);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/lines/{approvalLineId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재라인 상세 조회", description = "ID로 결재라인을 조회합니다.")
@@ -55,6 +58,7 @@ public class ApprovalController {
         return ResponseEntity.ok(line);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/lines/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 결재라인 조회", description = "활성 상태의 결재라인을 조회합니다.")
@@ -65,6 +69,7 @@ public class ApprovalController {
         return ResponseEntity.ok(lines);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/lines/document-type/{documentType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "문서유형별 결재라인 조회", description = "문서 유형별 결재라인을 조회합니다.")
@@ -115,6 +120,7 @@ public class ApprovalController {
 
     // ==================== Approval Templates ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/templates")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재 템플릿 목록 조회", description = "모든 결재 템플릿을 조회합니다.")
@@ -125,6 +131,7 @@ public class ApprovalController {
         return ResponseEntity.ok(templates);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/templates/{templateId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재 템플릿 상세 조회", description = "ID로 결재 템플릿을 조회합니다.")
@@ -167,6 +174,7 @@ public class ApprovalController {
 
     // ==================== Approval Instances ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/instances/pending")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "대기 중인 결재 조회", description = "현재 사용자의 대기 중인 결재를 조회합니다.")
@@ -177,6 +185,7 @@ public class ApprovalController {
         return ResponseEntity.ok(instances);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/instances/my-requests")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "내 결재 요청 조회", description = "현재 사용자가 요청한 결재를 조회합니다.")
@@ -226,6 +235,7 @@ public class ApprovalController {
 
     // ==================== Delegation ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/delegations")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재 위임 목록 조회", description = "현재 유효한 결재 위임을 조회합니다.")
@@ -236,6 +246,7 @@ public class ApprovalController {
         return ResponseEntity.ok(delegations);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/delegations/user/{delegatorId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "사용자별 위임 조회", description = "특정 사용자의 결재 위임을 조회합니다.")
@@ -266,6 +277,7 @@ public class ApprovalController {
 
     // ==================== Statistics ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/statistics")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "결재 통계 조회", description = "결재 통계를 조회합니다.")

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class EquipmentInspectionController {
     /**
      * Get all inspections
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 점검 목록 조회", description = "모든 설비 점검을 조회합니다.")
@@ -54,6 +56,7 @@ public class EquipmentInspectionController {
     /**
      * Get inspection by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{inspectionId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 점검 상세 조회", description = "ID로 설비 점검을 조회합니다.")
@@ -69,6 +72,7 @@ public class EquipmentInspectionController {
     /**
      * Get inspections by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 점검 이력 조회", description = "특정 설비의 점검 이력을 조회합니다.")
@@ -86,6 +90,7 @@ public class EquipmentInspectionController {
     /**
      * Get inspections by type
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{inspectionType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 유형별 조회", description = "특정 유형의 점검을 조회합니다.")
@@ -104,6 +109,7 @@ public class EquipmentInspectionController {
     /**
      * Get inspections by result
      */
+    @Transactional(readOnly = true)
     @GetMapping("/result/{inspectionResult}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 결과별 조회", description = "특정 결과의 점검을 조회합니다.")

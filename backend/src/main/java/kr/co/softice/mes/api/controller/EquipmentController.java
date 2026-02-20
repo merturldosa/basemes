@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class EquipmentController {
     /**
      * Get all equipments
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 목록 조회", description = "모든 설비를 조회합니다.")
@@ -54,6 +56,7 @@ public class EquipmentController {
     /**
      * Get active equipments
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 설비 목록 조회", description = "활성 상태의 설비를 조회합니다.")
@@ -72,6 +75,7 @@ public class EquipmentController {
     /**
      * Get equipment by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 상세 조회", description = "ID로 설비를 조회합니다.")
@@ -87,6 +91,7 @@ public class EquipmentController {
     /**
      * Get equipments by status
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 설비 조회", description = "특정 상태의 설비를 조회합니다.")
@@ -105,6 +110,7 @@ public class EquipmentController {
     /**
      * Get equipments by type
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{equipmentType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "유형별 설비 조회", description = "특정 유형의 설비를 조회합니다.")

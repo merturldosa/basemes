@@ -63,7 +63,6 @@ const MaterialsPage: React.FC = () => {
       const data = await materialService.getAll();
       setMaterials(data || []);
     } catch (error) {
-      console.error('Failed to load materials:', error);
       setSnackbar({ open: true, message: '자재 목록 조회 실패', severity: 'error' });
       setMaterials([]);
     } finally {
@@ -76,7 +75,6 @@ const MaterialsPage: React.FC = () => {
       const data = await supplierService.getActive();
       setSuppliers(data || []);
     } catch (error) {
-      console.error('Failed to load suppliers:', error);
       setSuppliers([]);
     }
   };
@@ -165,7 +163,6 @@ const MaterialsPage: React.FC = () => {
       handleCloseDialog();
       loadMaterials();
     } catch (error) {
-      console.error('Failed to save material:', error);
       setSnackbar({ open: true, message: '자재 저장 실패', severity: 'error' });
     }
   };
@@ -180,7 +177,6 @@ const MaterialsPage: React.FC = () => {
       setSelectedMaterial(null);
       loadMaterials();
     } catch (error) {
-      console.error('Failed to delete material:', error);
       setSnackbar({ open: true, message: '자재 삭제 실패', severity: 'error' });
     }
   };
@@ -195,7 +191,6 @@ const MaterialsPage: React.FC = () => {
       });
       loadMaterials();
     } catch (error) {
-      console.error('Failed to toggle material:', error);
       setSnackbar({ open: true, message: '자재 상태 변경 실패', severity: 'error' });
     }
   };

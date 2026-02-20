@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,6 +36,7 @@ public class MoldProductionHistoryController {
 
     private final MoldProductionHistoryService historyService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 생산 이력 목록 조회", description = "모든 금형 생산 이력을 조회합니다.")
@@ -50,6 +52,7 @@ public class MoldProductionHistoryController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{historyId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 생산 이력 상세 조회", description = "ID로 금형 생산 이력을 조회합니다.")
@@ -62,6 +65,7 @@ public class MoldProductionHistoryController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/mold/{moldId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형별 생산 이력 조회", description = "특정 금형의 생산 이력을 조회합니다.")
@@ -76,6 +80,7 @@ public class MoldProductionHistoryController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 생산 이력 조회", description = "특정 기간의 생산 이력을 조회합니다.")
@@ -93,6 +98,7 @@ public class MoldProductionHistoryController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/work-order/{workOrderId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업지시별 생산 이력 조회", description = "특정 작업지시의 생산 이력을 조회합니다.")

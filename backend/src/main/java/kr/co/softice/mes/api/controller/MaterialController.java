@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class MaterialController {
     /**
      * 모든 자재 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "모든 자재 조회", description = "테넌트의 모든 자재를 조회합니다")
@@ -56,6 +58,7 @@ public class MaterialController {
     /**
      * 활성 자재 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 자재 조회", description = "테넌트의 활성 자재를 조회합니다")
@@ -74,6 +77,7 @@ public class MaterialController {
     /**
      * 자재 유형별 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{materialType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "자재 유형별 조회", description = "특정 유형의 자재를 조회합니다")
@@ -92,6 +96,7 @@ public class MaterialController {
     /**
      * 공급업체별 자재 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/supplier/{supplierId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "공급업체별 자재 조회", description = "특정 공급업체의 자재를 조회합니다")
@@ -110,6 +115,7 @@ public class MaterialController {
     /**
      * 자재 ID로 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{materialId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "자재 조회", description = "자재 ID로 자재를 조회합니다")

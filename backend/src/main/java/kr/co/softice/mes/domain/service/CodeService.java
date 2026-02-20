@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.CodeEntity;
 import kr.co.softice.mes.domain.entity.CodeGroupEntity;
 import kr.co.softice.mes.domain.repository.CodeGroupRepository;
@@ -63,7 +65,7 @@ public class CodeService {
 
         // Check if group code already exists for tenant
         if (codeGroupRepository.existsByTenantAndGroupCode(codeGroup.getTenant(), codeGroup.getGroupCode())) {
-            throw new IllegalArgumentException("Group code already exists: " + codeGroup.getGroupCode());
+            throw new BusinessException(ErrorCode.CODE_GROUP_ALREADY_EXISTS);
         }
 
         return codeGroupRepository.save(codeGroup);
@@ -77,7 +79,7 @@ public class CodeService {
         log.info("Updating code group: {}", codeGroup.getGroupId());
 
         if (!codeGroupRepository.existsById(codeGroup.getGroupId())) {
-            throw new IllegalArgumentException("Code group not found: " + codeGroup.getGroupId());
+            throw new BusinessException(ErrorCode.CODE_GROUP_NOT_FOUND);
         }
 
         return codeGroupRepository.save(codeGroup);
@@ -109,7 +111,7 @@ public class CodeService {
         log.debug("Finding code by group: {} and code: {}", groupId, code);
 
         CodeGroupEntity codeGroup = codeGroupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Code group not found: " + groupId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CODE_GROUP_NOT_FOUND));
 
         return codeRepository.findByCodeGroupAndCode(codeGroup, code);
     }
@@ -121,7 +123,7 @@ public class CodeService {
         log.debug("Finding codes by group: {}", groupId);
 
         CodeGroupEntity codeGroup = codeGroupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Code group not found: " + groupId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CODE_GROUP_NOT_FOUND));
 
         return codeRepository.findByCodeGroupOrderByDisplayOrderAsc(codeGroup);
     }
@@ -133,7 +135,7 @@ public class CodeService {
         log.debug("Finding active codes by group: {}", groupId);
 
         CodeGroupEntity codeGroup = codeGroupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("Code group not found: " + groupId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.CODE_GROUP_NOT_FOUND));
 
         return codeRepository.findByCodeGroupAndStatusOrderByDisplayOrderAsc(codeGroup, "active");
     }
@@ -148,7 +150,7 @@ public class CodeService {
 
         // Check if code already exists for group
         if (codeRepository.existsByCodeGroupAndCode(code.getCodeGroup(), code.getCode())) {
-            throw new IllegalArgumentException("Code already exists: " + code.getCode());
+            throw new BusinessException(ErrorCode.CODE_ALREADY_EXISTS);
         }
 
         return codeRepository.save(code);
@@ -162,7 +164,7 @@ public class CodeService {
         log.info("Updating code: {}", code.getCodeId());
 
         if (!codeRepository.existsById(code.getCodeId())) {
-            throw new IllegalArgumentException("Code not found: " + code.getCodeId());
+            throw new BusinessException(ErrorCode.CODE_NOT_FOUND);
         }
 
         return codeRepository.save(code);

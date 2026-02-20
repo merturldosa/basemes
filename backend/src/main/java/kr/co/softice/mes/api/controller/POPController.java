@@ -9,6 +9,7 @@ import kr.co.softice.mes.domain.service.POPService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,6 +35,7 @@ public class POPController {
      * @param operatorId Optional operator ID filter
      * @return List of active work orders
      */
+    @Transactional(readOnly = true)
     @GetMapping("/work-orders/active")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<List<WorkOrderEntity>>> getActiveWorkOrders(
@@ -165,6 +167,7 @@ public class POPController {
      * @param id Work order ID
      * @return Work progress response
      */
+    @Transactional(readOnly = true)
     @GetMapping("/work-orders/{id}/progress")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<WorkProgressResponse>> getWorkProgress(@PathVariable Long id) {
@@ -182,6 +185,7 @@ public class POPController {
      * @param operatorId Optional operator ID filter
      * @return Production statistics
      */
+    @Transactional(readOnly = true)
     @GetMapping("/statistics/today")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ApiResponse<ProductionStatisticsResponse>> getTodayStatistics(

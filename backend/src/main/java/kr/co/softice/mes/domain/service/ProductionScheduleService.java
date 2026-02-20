@@ -1,6 +1,8 @@
 package kr.co.softice.mes.domain.service;
 
 import kr.co.softice.mes.common.dto.schedule.GanttChartData;
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ProductionScheduleEntity;
 import kr.co.softice.mes.domain.entity.ProcessRoutingStepEntity;
 import kr.co.softice.mes.domain.entity.WorkOrderEntity;
@@ -90,10 +92,10 @@ public class ProductionScheduleService {
         log.info("Generating schedules for WorkOrder: {}", workOrderId);
 
         WorkOrderEntity workOrder = workOrderRepository.findByIdWithAllRelations(workOrderId)
-            .orElseThrow(() -> new IllegalArgumentException("WorkOrder not found: " + workOrderId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.WORK_ORDER_NOT_FOUND));
 
         if (workOrder.getRouting() == null) {
-            throw new IllegalArgumentException("WorkOrder must have a routing to generate schedules");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
         // 기존 일정이 있으면 삭제
@@ -215,7 +217,7 @@ public class ProductionScheduleService {
     @Transactional
     public ProductionScheduleEntity updateStatus(Long scheduleId, String status) {
         ProductionScheduleEntity schedule = scheduleRepository.findById(scheduleId)
-            .orElseThrow(() -> new IllegalArgumentException("Schedule not found: " + scheduleId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
         log.info("Updating schedule {} status from {} to {}",
             scheduleId, schedule.getStatus(), status);
@@ -239,7 +241,7 @@ public class ProductionScheduleService {
      */
     public List<ProductionScheduleEntity> checkResourceConflicts(Long scheduleId) {
         ProductionScheduleEntity schedule = scheduleRepository.findById(scheduleId)
-            .orElseThrow(() -> new IllegalArgumentException("Schedule not found: " + scheduleId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
         if (schedule.getAssignedEquipment() == null) {
             return new ArrayList<>();

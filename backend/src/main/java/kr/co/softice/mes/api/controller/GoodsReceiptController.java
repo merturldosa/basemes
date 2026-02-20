@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -63,6 +64,7 @@ public class GoodsReceiptController {
      * 입하 목록 조회
      * GET /api/goods-receipts
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "입하 목록 조회", description = "테넌트의 모든 입하 조회")
@@ -98,6 +100,7 @@ public class GoodsReceiptController {
      * 입하 상세 조회 (항목 포함)
      * GET /api/goods-receipts/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "입하 상세 조회", description = "입하 ID로 상세 정보 조회 (항목 포함)")
@@ -114,6 +117,7 @@ public class GoodsReceiptController {
      * 날짜 범위별 입하 조회
      * GET /api/goods-receipts/date-range
      */
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "날짜 범위별 입하 조회", description = "시작일과 종료일 범위 내의 입하 조회")

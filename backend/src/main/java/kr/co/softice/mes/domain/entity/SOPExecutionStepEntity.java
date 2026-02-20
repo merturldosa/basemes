@@ -1,6 +1,9 @@
 package kr.co.softice.mes.domain.entity;
 
 import javax.persistence.*;
+
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -107,7 +110,8 @@ public class SOPExecutionStepEntity extends BaseEntity {
      */
     public void skip(String reason) {
         if (!sopStep.isSkippable()) {
-            throw new IllegalStateException("Cannot skip mandatory or critical step");
+            throw new BusinessException(ErrorCode.INVALID_OPERATION,
+                    "필수 또는 중요 단계는 건너뛸 수 없습니다");
         }
         this.stepStatus = "SKIPPED";
         this.completedAt = LocalDateTime.now();

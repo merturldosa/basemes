@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,6 +55,7 @@ public class ThemeController {
      * 테마 목록 조회
      * GET /api/themes
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "테마 목록 조회", description = "모든 테마 목록 조회")
@@ -71,6 +73,7 @@ public class ThemeController {
      * 활성 테마 목록 조회
      * GET /api/themes/active
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 테마 목록 조회", description = "활성 상태의 테마만 조회")
@@ -88,6 +91,7 @@ public class ThemeController {
      * 기본 테마 조회
      * GET /api/themes/default
      */
+    @Transactional(readOnly = true)
     @GetMapping("/default")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기본 테마 조회", description = "시스템 기본 테마 조회")
@@ -103,6 +107,7 @@ public class ThemeController {
      * 산업별 테마 목록 조회
      * GET /api/themes/industry/{industryType}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/industry/{industryType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "산업별 테마 조회", description = "특정 산업에 최적화된 테마 목록 조회")
@@ -122,6 +127,7 @@ public class ThemeController {
      * 테마 상세 조회 (by code)
      * GET /api/themes/code/{themeCode}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/code/{themeCode}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "테마 조회 (코드)", description = "테마 코드로 상세 정보 조회")
@@ -138,6 +144,7 @@ public class ThemeController {
      * 테마 상세 조회 (by ID)
      * GET /api/themes/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "테마 조회 (ID)", description = "테마 ID로 상세 정보 조회")

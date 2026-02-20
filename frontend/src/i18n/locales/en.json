@@ -164,6 +164,7 @@
       "holidays": "Holiday Management",
       "approvals": "Approval Management",
       "alarms": "Alarm Management",
+      "sops": "SOP Management",
       "themes": "Theme Settings",
       "profile": "Profile"
     },

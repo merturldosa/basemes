@@ -129,6 +129,7 @@ import CommonCodesPage from './pages/admin/CommonCodesPage';
 import HolidaysPage from './pages/common/HolidaysPage';
 import ApprovalPage from './pages/common/ApprovalPage';
 import AlarmPage from './pages/common/AlarmPage';
+import SOPsPage from './pages/common/SOPsPage';
 
 // POP (Point of Production) Pages
 import POPLayout from './components/pop/POPLayout';
@@ -238,6 +239,7 @@ function App() {
             <Route path="common/holidays" element={<HolidaysPage />} />
             <Route path="common/approvals" element={<ApprovalPage />} />
             <Route path="common/alarms" element={<AlarmPage />} />
+            <Route path="common/sops" element={<SOPsPage />} />
 
             {/* Warehouse Operations Routes */}
             <Route path="warehouse/receiving" element={<ReceivingPage />} />

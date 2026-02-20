@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -61,6 +62,7 @@ public class MaterialRequestController {
      * 불출 신청 목록 조회
      * GET /api/material-requests
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "불출 신청 목록 조회", description = "테넌트의 모든 불출 신청 조회")
@@ -107,6 +109,7 @@ public class MaterialRequestController {
      * 불출 신청 상세 조회 (항목 포함)
      * GET /api/material-requests/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "불출 신청 상세 조회", description = "불출 신청 ID로 상세 정보 조회 (항목 포함)")
@@ -123,6 +126,7 @@ public class MaterialRequestController {
      * 긴급 불출 신청 조회
      * GET /api/material-requests/urgent
      */
+    @Transactional(readOnly = true)
     @GetMapping("/urgent")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "긴급 불출 신청 조회", description = "긴급(URGENT) 우선순위의 대기 중인 불출 신청 조회")
@@ -142,6 +146,7 @@ public class MaterialRequestController {
      * 창고별 대기 불출 신청 조회
      * GET /api/material-requests/warehouse/{warehouseId}/pending
      */
+    @Transactional(readOnly = true)
     @GetMapping("/warehouse/{warehouseId}/pending")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "창고별 대기 불출 신청", description = "특정 창고의 대기/승인 상태 불출 신청 조회")

@@ -41,7 +41,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   } = useBarcodeScanner({
     onScan,
     continuous,
-    onError: (err) => console.error('Scanner error:', err),
+    onError: () => {},
   });
 
   const handleManualSubmit = () => {

@@ -215,7 +215,11 @@ public enum ErrorCode {
 
     // External Calibration Management (29xxx)
     EXTERNAL_CALIBRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "EC29000", "외부 검교정을 찾을 수 없습니다."),
-    EXTERNAL_CALIBRATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "EC29001", "이미 존재하는 외부 검교정입니다.");
+    EXTERNAL_CALIBRATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "EC29001", "이미 존재하는 외부 검교정입니다."),
+
+    // Alarm Management (30xxx)
+    ALARM_TEMPLATE_NOT_FOUND(HttpStatus.NOT_FOUND, "AM30000", "알람 템플릿을 찾을 수 없습니다."),
+    ALARM_NOT_FOUND(HttpStatus.NOT_FOUND, "AM30100", "알람을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

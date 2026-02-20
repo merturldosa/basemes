@@ -75,7 +75,6 @@ export default function AuditLogsPage() {
       setAuditLogs(response?.content || []);
       setTotalElements(response?.totalElements || 0);
     } catch (error: any) {
-      console.error('Failed to load audit logs:', error);
       setAuditLogs([]);
       setTotalElements(0);
     } finally {

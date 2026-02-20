@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ProductEntity;
 import kr.co.softice.mes.domain.entity.QualityStandardEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
@@ -78,8 +80,7 @@ public class QualityStandardService {
                 qualityStandard.getTenant(),
                 qualityStandard.getStandardCode(),
                 qualityStandard.getStandardVersion())) {
-            throw new IllegalArgumentException("Quality standard code already exists: " +
-                qualityStandard.getStandardCode() + " v" + qualityStandard.getStandardVersion());
+            throw new BusinessException(ErrorCode.QUALITY_STANDARD_ALREADY_EXISTS);
         }
 
         return qualityStandardRepository.save(qualityStandard);
@@ -93,8 +94,7 @@ public class QualityStandardService {
         log.info("Updating quality standard: {}", qualityStandard.getQualityStandardId());
 
         if (!qualityStandardRepository.existsById(qualityStandard.getQualityStandardId())) {
-            throw new IllegalArgumentException("Quality standard not found: " +
-                qualityStandard.getQualityStandardId());
+            throw new BusinessException(ErrorCode.QUALITY_STANDARD_NOT_FOUND);
         }
 
         return qualityStandardRepository.save(qualityStandard);
@@ -116,7 +116,7 @@ public class QualityStandardService {
     public QualityStandardEntity activateQualityStandard(Long qualityStandardId) {
         log.info("Activating quality standard: {}", qualityStandardId);
         QualityStandardEntity qualityStandard = qualityStandardRepository.findById(qualityStandardId)
-            .orElseThrow(() -> new IllegalArgumentException("Quality standard not found: " + qualityStandardId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.QUALITY_STANDARD_NOT_FOUND));
 
         qualityStandard.setIsActive(true);
         return qualityStandardRepository.save(qualityStandard);
@@ -129,7 +129,7 @@ public class QualityStandardService {
     public QualityStandardEntity deactivateQualityStandard(Long qualityStandardId) {
         log.info("Deactivating quality standard: {}", qualityStandardId);
         QualityStandardEntity qualityStandard = qualityStandardRepository.findById(qualityStandardId)
-            .orElseThrow(() -> new IllegalArgumentException("Quality standard not found: " + qualityStandardId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.QUALITY_STANDARD_NOT_FOUND));
 
         qualityStandard.setIsActive(false);
         return qualityStandardRepository.save(qualityStandard);
@@ -140,7 +140,7 @@ public class QualityStandardService {
      */
     public long countByTenant(String tenantId) {
         TenantEntity tenant = tenantRepository.findById(tenantId)
-            .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
         return qualityStandardRepository.countByTenant(tenant);
     }
 }

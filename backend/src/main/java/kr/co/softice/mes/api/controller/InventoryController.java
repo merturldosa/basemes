@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,10 +51,10 @@ public class InventoryController {
      * 재고 현황 조회
      * GET /api/inventory
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재고 현황 조회", description = "테넌트의 모든 재고 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventory() {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting inventory for tenant: {}", tenantId);
@@ -70,10 +71,10 @@ public class InventoryController {
      * 재고 상세 조회
      * GET /api/inventory/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재고 상세 조회", description = "재고 ID로 상세 정보 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<InventoryResponse>> getInventoryById(@PathVariable Long id) {
         log.info("Getting inventory: {}", id);
 
@@ -87,10 +88,10 @@ public class InventoryController {
      * 창고별 재고 조회
      * GET /api/inventory/warehouse/{warehouseId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/warehouse/{warehouseId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "창고별 재고 조회", description = "특정 창고의 재고 목록 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoryByWarehouse(
             @PathVariable Long warehouseId) {
 
@@ -109,10 +110,10 @@ public class InventoryController {
      * 제품별 재고 조회
      * GET /api/inventory/product/{productId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/product/{productId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "제품별 재고 조회", description = "특정 제품의 재고 목록 조회 (모든 창고)")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getInventoryByProduct(
             @PathVariable Long productId) {
 
@@ -134,10 +135,10 @@ public class InventoryController {
      * Query Parameters:
      * - threshold: 기준 수량 (기본값: 100)
      */
+    @Transactional(readOnly = true)
     @GetMapping("/low-stock")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "저재고 알림", description = "기준 수량 미만인 재고 목록 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryResponse>>> getLowStockInventory(
             @RequestParam(required = false, defaultValue = "100") BigDecimal threshold) {
 

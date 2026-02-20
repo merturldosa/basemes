@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ProcessRoutingEntity;
 import kr.co.softice.mes.domain.entity.ProcessRoutingStepEntity;
 import kr.co.softice.mes.domain.repository.ProcessRoutingRepository;
@@ -74,8 +76,7 @@ public class ProcessRoutingService {
         // 중복 체크
         if (routingRepository.existsByTenantAndRoutingCodeAndVersion(
             routing.getTenant(), routing.getRoutingCode(), routing.getVersion())) {
-            throw new IllegalArgumentException(
-                "Routing already exists: " + routing.getRoutingCode() + " version: " + routing.getVersion());
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE);
         }
 
         // Set sequence numbers for steps if not set
@@ -131,7 +132,7 @@ public class ProcessRoutingService {
     @Transactional
     public ProcessRoutingEntity toggleActive(Long routingId) {
         ProcessRoutingEntity routing = routingRepository.findById(routingId)
-            .orElseThrow(() -> new IllegalArgumentException("Routing not found: " + routingId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
         log.info("Toggling routing {} active status from {} to {}",
             routing.getRoutingCode(), routing.getIsActive(), !routing.getIsActive());
@@ -147,7 +148,7 @@ public class ProcessRoutingService {
     @Transactional
     public ProcessRoutingEntity copyRouting(Long sourceRoutingId, String newVersion) {
         ProcessRoutingEntity sourceRouting = routingRepository.findByIdWithAllRelations(sourceRoutingId)
-            .orElseThrow(() -> new IllegalArgumentException("Source routing not found: " + sourceRoutingId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.RESOURCE_NOT_FOUND));
 
         log.info("Copying routing {} from version {} to version {}",
             sourceRouting.getRoutingCode(), sourceRouting.getVersion(), newVersion);
@@ -155,9 +156,7 @@ public class ProcessRoutingService {
         // Check if target version already exists
         if (routingRepository.existsByTenantAndRoutingCodeAndVersion(
             sourceRouting.getTenant(), sourceRouting.getRoutingCode(), newVersion)) {
-            throw new IllegalArgumentException(
-                "Target routing version already exists: " + sourceRouting.getRoutingCode() +
-                " version: " + newVersion);
+            throw new BusinessException(ErrorCode.DUPLICATE_RESOURCE);
         }
 
         // Create new routing with new version

@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class MoldController {
 
     private final MoldService moldService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 목록 조회", description = "모든 금형을 조회합니다.")
@@ -48,6 +50,7 @@ public class MoldController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 금형 목록 조회", description = "활성 상태의 금형을 조회합니다.")
@@ -63,6 +66,7 @@ public class MoldController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{moldId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 상세 조회", description = "ID로 금형을 조회합니다.")
@@ -75,6 +79,7 @@ public class MoldController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 금형 조회", description = "특정 상태의 금형을 조회합니다.")
@@ -90,6 +95,7 @@ public class MoldController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/requiring-maintenance")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "보전 필요 금형 조회", description = "보전이 필요한 금형을 조회합니다.")

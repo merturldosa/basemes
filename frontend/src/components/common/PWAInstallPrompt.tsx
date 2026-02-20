@@ -84,7 +84,6 @@ export default function PWAInstallPrompt() {
     window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
       setShowPrompt(false);
-      console.log('PWA was installed');
     });
 
     return () => {
@@ -107,7 +106,6 @@ export default function PWAInstallPrompt() {
 
     // Wait for user response
     const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response: ${outcome}`);
 
     if (outcome === 'accepted') {
       setIsInstalled(true);

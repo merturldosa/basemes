@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class DisposalController {
 
     private final DisposalService disposalService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "폐기 목록 조회", description = "모든 폐기를 조회합니다.")
@@ -39,6 +41,7 @@ public class DisposalController {
         return ResponseEntity.ok(disposals);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{disposalId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "폐기 상세 조회", description = "ID로 폐기를 조회합니다.")
@@ -48,6 +51,7 @@ public class DisposalController {
         return ResponseEntity.ok(disposal);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "상태별 폐기 조회", description = "특정 상태의 폐기를 조회합니다.")
@@ -58,6 +62,7 @@ public class DisposalController {
         return ResponseEntity.ok(disposals);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{type}")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'INVENTORY_MANAGER', 'USER')")
     @Operation(summary = "유형별 폐기 조회", description = "특정 유형의 폐기를 조회합니다.")
@@ -68,6 +73,7 @@ public class DisposalController {
         return ResponseEntity.ok(disposals);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/approved")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER')")
     @Operation(summary = "승인된 폐기 조회", description = "처리 대기 중인 승인된 폐기를 조회합니다.")

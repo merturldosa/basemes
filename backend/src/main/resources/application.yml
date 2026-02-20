@@ -57,7 +57,7 @@ spring:
         order_inserts: true
         order_updates: true
     show-sql: false
-    open-in-view: true  # Temporary: Enable for lazy loading support (TODO: Add @Transactional to all controllers)
+    open-in-view: false
 
   # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # Redis
@@ -286,6 +286,11 @@ springdoc:
 # Application Custom Properties
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 app:
+  # OpenAPI Server URLs
+  openapi:
+    server-url: http://localhost:8080/api
+    server-description: Local Development Server
+
   # JWT Settings
   jwt:
     secret: SoIceMES-JWT-Secret-Key-For-Development-2026-Please-Change-In-Production

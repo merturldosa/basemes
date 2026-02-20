@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ProcessEntity;
 import kr.co.softice.mes.domain.repository.ProcessRepository;
 import kr.co.softice.mes.domain.repository.TenantRepository;
@@ -64,7 +66,7 @@ public class ProcessService {
 
         // Check duplicate
         if (processRepository.existsByTenantAndProcessCode(process.getTenant(), process.getProcessCode())) {
-            throw new IllegalArgumentException("Process code already exists: " + process.getProcessCode());
+            throw new BusinessException(ErrorCode.PROCESS_ALREADY_EXISTS);
         }
 
         return processRepository.save(process);
@@ -78,7 +80,7 @@ public class ProcessService {
         log.info("Updating process: {}", process.getProcessId());
 
         if (!processRepository.existsById(process.getProcessId())) {
-            throw new IllegalArgumentException("Process not found: " + process.getProcessId());
+            throw new BusinessException(ErrorCode.PROCESS_NOT_FOUND);
         }
 
         return processRepository.save(process);
@@ -99,7 +101,7 @@ public class ProcessService {
     @Transactional
     public ProcessEntity activateProcess(Long processId) {
         ProcessEntity process = processRepository.findById(processId)
-            .orElseThrow(() -> new IllegalArgumentException("Process not found: " + processId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.PROCESS_NOT_FOUND));
 
         process.setIsActive(true);
         return processRepository.save(process);
@@ -111,7 +113,7 @@ public class ProcessService {
     @Transactional
     public ProcessEntity deactivateProcess(Long processId) {
         ProcessEntity process = processRepository.findById(processId)
-            .orElseThrow(() -> new IllegalArgumentException("Process not found: " + processId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.PROCESS_NOT_FOUND));
 
         process.setIsActive(false);
         return processRepository.save(process);

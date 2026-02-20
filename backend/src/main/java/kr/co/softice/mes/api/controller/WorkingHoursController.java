@@ -38,6 +38,7 @@ public class WorkingHoursController {
     private final WorkingHoursRepository workingHoursRepository;
     private final TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "근무 시간 목록 조회", description = "모든 근무 시간 설정을 조회합니다.")
@@ -48,6 +49,7 @@ public class WorkingHoursController {
         return ResponseEntity.ok(schedules);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 근무 시간 조회", description = "활성 상태의 근무 시간 설정을 조회합니다.")
@@ -58,6 +60,7 @@ public class WorkingHoursController {
         return ResponseEntity.ok(schedules);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{workingHoursId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "근무 시간 상세 조회", description = "ID로 근무 시간 설정을 조회합니다.")
@@ -68,6 +71,7 @@ public class WorkingHoursController {
         return ResponseEntity.ok(schedule);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/default")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기본 근무 시간 조회", description = "기본 근무 시간 설정을 조회합니다.")
@@ -80,6 +84,7 @@ public class WorkingHoursController {
         return ResponseEntity.ok(schedule);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/effective")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "유효 근무 시간 조회", description = "특정 날짜에 유효한 근무 시간을 조회합니다.")

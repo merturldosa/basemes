@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class ExternalCalibrationController {
     /**
      * Get all external calibrations
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "외부 검교정 목록 조회", description = "모든 외부 검교정을 조회합니다.")
@@ -56,6 +58,7 @@ public class ExternalCalibrationController {
     /**
      * Get external calibration by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{calibrationId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "외부 검교정 상세 조회", description = "ID로 외부 검교정을 조회합니다.")
@@ -71,6 +74,7 @@ public class ExternalCalibrationController {
     /**
      * Get external calibrations by gauge
      */
+    @Transactional(readOnly = true)
     @GetMapping("/gauge/{gaugeId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "계측기별 외부 검교정 조회", description = "특정 계측기의 외부 검교정을 조회합니다.")
@@ -88,6 +92,7 @@ public class ExternalCalibrationController {
     /**
      * Get external calibrations by status
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 외부 검교정 조회", description = "특정 상태의 외부 검교정을 조회합니다.")

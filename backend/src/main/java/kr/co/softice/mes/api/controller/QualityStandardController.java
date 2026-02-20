@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class QualityStandardController {
      * 품질 기준 목록 조회
      * GET /api/quality-standards
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "품질 기준 목록 조회", description = "테넌트의 모든 품질 기준 조회")
@@ -64,6 +66,7 @@ public class QualityStandardController {
      * 활성 품질 기준 목록 조회
      * GET /api/quality-standards/active
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 품질 기준 목록 조회", description = "활성 상태의 품질 기준만 조회")
@@ -82,6 +85,7 @@ public class QualityStandardController {
      * 품질 기준 상세 조회
      * GET /api/quality-standards/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "품질 기준 상세 조회", description = "품질 기준 ID로 상세 정보 조회")
@@ -98,6 +102,7 @@ public class QualityStandardController {
      * 제품별 품질 기준 조회
      * GET /api/quality-standards/product/{productId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/product/{productId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "제품별 품질 기준 조회", description = "특정 제품의 품질 기준 목록 조회")

@@ -41,9 +41,9 @@ public class CommonCodeController {
 
     // ==================== Code Group ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "코드 그룹 목록 조회", description = "모든 공통 코드 그룹을 조회합니다.")
     public ResponseEntity<List<CommonCodeGroupEntity>> getAllCodeGroups() {
         String tenantId = TenantContext.getCurrentTenant();
@@ -52,9 +52,9 @@ public class CommonCodeController {
         return ResponseEntity.ok(groups);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups/active")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "활성 코드 그룹 목록 조회", description = "활성 상태의 코드 그룹을 조회합니다.")
     public ResponseEntity<List<CommonCodeGroupEntity>> getActiveCodeGroups() {
         String tenantId = TenantContext.getCurrentTenant();
@@ -63,9 +63,9 @@ public class CommonCodeController {
         return ResponseEntity.ok(groups);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups/{codeGroupId}")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "코드 그룹 상세 조회", description = "ID로 코드 그룹을 조회합니다.")
     public ResponseEntity<CommonCodeGroupEntity> getCodeGroupById(@PathVariable Long codeGroupId) {
         log.info("Getting code group by ID: {}", codeGroupId);
@@ -74,9 +74,9 @@ public class CommonCodeController {
         return ResponseEntity.ok(group);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups/by-code/{codeGroup}")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "코드 그룹명으로 조회", description = "코드 그룹명으로 그룹과 상세 코드를 조회합니다.")
     public ResponseEntity<CommonCodeGroupEntity> getCodeGroupByCode(@PathVariable String codeGroup) {
         String tenantId = TenantContext.getCurrentTenant();
@@ -147,9 +147,9 @@ public class CommonCodeController {
 
     // ==================== Code Detail ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups/{codeGroupId}/details")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "코드 상세 목록 조회", description = "코드 그룹의 상세 코드를 조회합니다.")
     public ResponseEntity<List<CommonCodeDetailEntity>> getCodeDetails(@PathVariable Long codeGroupId) {
         log.info("Getting code details for group ID: {}", codeGroupId);
@@ -158,9 +158,9 @@ public class CommonCodeController {
         return ResponseEntity.ok(details);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/groups/{codeGroupId}/details/active")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "활성 코드 상세 목록 조회", description = "코드 그룹의 활성 상세 코드를 조회합니다.")
     public ResponseEntity<List<CommonCodeDetailEntity>> getActiveCodeDetails(@PathVariable Long codeGroupId) {
         log.info("Getting active code details for group ID: {}", codeGroupId);
@@ -169,9 +169,9 @@ public class CommonCodeController {
         return ResponseEntity.ok(details);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/lookup/{codeGroup}")
     @PreAuthorize("isAuthenticated()")
-    @Transactional(readOnly = true)
     @Operation(summary = "코드 조회 (그룹명)", description = "그룹명으로 활성 상세 코드를 조회합니다.")
     public ResponseEntity<List<CommonCodeDetailEntity>> lookupCodes(@PathVariable String codeGroup) {
         String tenantId = TenantContext.getCurrentTenant();

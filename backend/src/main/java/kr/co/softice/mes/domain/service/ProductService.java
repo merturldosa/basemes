@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ProductEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.repository.ProductRepository;
@@ -65,7 +67,7 @@ public class ProductService {
 
         // Check duplicate
         if (productRepository.existsByTenantAndProductCode(product.getTenant(), product.getProductCode())) {
-            throw new IllegalArgumentException("Product code already exists: " + product.getProductCode());
+            throw new BusinessException(ErrorCode.PRODUCT_ALREADY_EXISTS);
         }
 
         return productRepository.save(product);
@@ -79,7 +81,7 @@ public class ProductService {
         log.info("Updating product: {}", product.getProductId());
 
         if (!productRepository.existsById(product.getProductId())) {
-            throw new IllegalArgumentException("Product not found: " + product.getProductId());
+            throw new BusinessException(ErrorCode.PRODUCT_NOT_FOUND);
         }
 
         return productRepository.save(product);
@@ -100,7 +102,7 @@ public class ProductService {
     @Transactional
     public ProductEntity activateProduct(Long productId) {
         ProductEntity product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.setIsActive(true);
         return productRepository.save(product);
@@ -112,7 +114,7 @@ public class ProductService {
     @Transactional
     public ProductEntity deactivateProduct(Long productId) {
         ProductEntity product = productRepository.findById(productId)
-            .orElseThrow(() -> new IllegalArgumentException("Product not found: " + productId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.PRODUCT_NOT_FOUND));
 
         product.setIsActive(false);
         return productRepository.save(product);

@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.MaterialEntity;
 import kr.co.softice.mes.domain.entity.SupplierEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
@@ -43,7 +45,7 @@ public class MaterialService {
     public MaterialEntity getMaterialById(Long materialId) {
         log.info("Fetching material by ID: {}", materialId);
         return materialRepository.findByIdWithAllRelations(materialId)
-                .orElseThrow(() -> new IllegalArgumentException("Material not found: " + materialId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
     }
 
     /**
@@ -79,19 +81,19 @@ public class MaterialService {
 
         // Check if material code already exists
         if (materialRepository.existsByTenant_TenantIdAndMaterialCode(tenantId, material.getMaterialCode())) {
-            throw new IllegalArgumentException("Material code already exists: " + material.getMaterialCode());
+            throw new BusinessException(ErrorCode.MATERIAL_ALREADY_EXISTS);
         }
 
         // Get tenant
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
 
         material.setTenant(tenant);
 
         // Set supplier if provided
         if (material.getSupplier() != null && material.getSupplier().getSupplierId() != null) {
             SupplierEntity supplier = supplierRepository.findById(material.getSupplier().getSupplierId())
-                    .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + material.getSupplier().getSupplierId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.SUPPLIER_NOT_FOUND));
             material.setSupplier(supplier);
         }
 
@@ -107,7 +109,7 @@ public class MaterialService {
         log.info("Material created successfully: {}", saved.getMaterialId());
 
         return materialRepository.findByIdWithAllRelations(saved.getMaterialId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve created material"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
     }
 
     /**
@@ -118,7 +120,7 @@ public class MaterialService {
         log.info("Updating material: {}", materialId);
 
         MaterialEntity existingMaterial = materialRepository.findById(materialId)
-                .orElseThrow(() -> new IllegalArgumentException("Material not found: " + materialId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
 
         // Update fields
         existingMaterial.setMaterialName(updatedMaterial.getMaterialName());
@@ -143,7 +145,7 @@ public class MaterialService {
         // Update supplier if provided
         if (updatedMaterial.getSupplier() != null && updatedMaterial.getSupplier().getSupplierId() != null) {
             SupplierEntity supplier = supplierRepository.findById(updatedMaterial.getSupplier().getSupplierId())
-                    .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + updatedMaterial.getSupplier().getSupplierId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.SUPPLIER_NOT_FOUND));
             existingMaterial.setSupplier(supplier);
         } else {
             existingMaterial.setSupplier(null);
@@ -153,7 +155,7 @@ public class MaterialService {
         log.info("Material updated successfully: {}", saved.getMaterialId());
 
         return materialRepository.findByIdWithAllRelations(saved.getMaterialId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve updated material"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
     }
 
     /**
@@ -164,7 +166,7 @@ public class MaterialService {
         log.info("Deleting material: {}", materialId);
 
         if (!materialRepository.existsById(materialId)) {
-            throw new IllegalArgumentException("Material not found: " + materialId);
+            throw new BusinessException(ErrorCode.MATERIAL_NOT_FOUND);
         }
 
         materialRepository.deleteById(materialId);
@@ -179,7 +181,7 @@ public class MaterialService {
         log.info("Toggling active status for material: {}", materialId);
 
         MaterialEntity material = materialRepository.findById(materialId)
-                .orElseThrow(() -> new IllegalArgumentException("Material not found: " + materialId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
 
         material.setIsActive(!material.getIsActive());
         MaterialEntity saved = materialRepository.save(material);
@@ -187,6 +189,6 @@ public class MaterialService {
         log.info("Material active status toggled: {} -> {}", materialId, saved.getIsActive());
 
         return materialRepository.findByIdWithAllRelations(saved.getMaterialId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve updated material"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
     }
 }

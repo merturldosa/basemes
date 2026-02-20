@@ -98,7 +98,6 @@ const MobileInventoryCheckPage: React.FC = () => {
       setShowScanner(false);
       setShowCountDialog(true);
     } catch (err: any) {
-      console.error('QR scan error:', err);
       setError('QR 스캔 실패: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
@@ -167,7 +166,6 @@ const MobileInventoryCheckPage: React.FC = () => {
       // 목록 초기화
       setScannedItems([]);
     } catch (err: any) {
-      console.error('Complete error:', err);
       setError('실사 완료 실패: ' + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);

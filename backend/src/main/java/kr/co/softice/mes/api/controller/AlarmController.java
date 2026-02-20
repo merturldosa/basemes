@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class AlarmController {
 
     // ==================== Templates ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/templates")
     @PreAuthorize("hasAnyRole('ADMIN', 'SYSTEM_MANAGER')")
     @Operation(summary = "알람 템플릿 목록 조회", description = "모든 알람 템플릿을 조회합니다.")
@@ -42,6 +44,7 @@ public class AlarmController {
         return ResponseEntity.ok(templates);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/templates/{eventType}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SYSTEM_MANAGER')")
     @Operation(summary = "이벤트 유형별 템플릿 조회", description = "이벤트 유형으로 알람 템플릿을 조회합니다.")
@@ -55,6 +58,7 @@ public class AlarmController {
 
     // ==================== Alarm History ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/user/{userId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "사용자 알람 목록 조회", description = "특정 사용자의 알람을 조회합니다.")
@@ -65,6 +69,7 @@ public class AlarmController {
         return ResponseEntity.ok(alarms);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/user/{userId}/unread")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "읽지 않은 알람 조회", description = "사용자의 읽지 않은 알람을 조회합니다.")
@@ -75,6 +80,7 @@ public class AlarmController {
         return ResponseEntity.ok(alarms);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/user/{userId}/recent")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "최근 알람 조회", description = "사용자의 최근 7일 알람을 조회합니다.")
@@ -85,6 +91,7 @@ public class AlarmController {
         return ResponseEntity.ok(alarms);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/user/{userId}/unread-count")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "읽지 않은 알람 수 조회", description = "사용자의 읽지 않은 알람 수를 조회합니다.")
@@ -142,6 +149,7 @@ public class AlarmController {
 
     // ==================== Statistics ====================
 
+    @Transactional(readOnly = true)
     @GetMapping("/statistics/{userId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "알람 통계 조회", description = "사용자의 알람 통계를 조회합니다.")

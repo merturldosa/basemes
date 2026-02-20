@@ -41,7 +41,6 @@ const EmployeesPage: React.FC = () => {
       const data = await employeeService.getAll();
       setEmployees(data || []);
     } catch (error) {
-      console.error('Failed to load employees:', error);
       setEmployees([]);
     } finally {
       setLoading(false);
@@ -89,8 +88,8 @@ const EmployeesPage: React.FC = () => {
       }
       handleCloseDialog();
       loadEmployees();
-    } catch (error) {
-      console.error('Failed to save employee:', error);
+    } catch {
+      // Failed to save employee
     }
   };
 
@@ -99,8 +98,8 @@ const EmployeesPage: React.FC = () => {
       try {
         await employeeService.delete(id);
         loadEmployees();
-      } catch (error) {
-        console.error('Failed to delete employee:', error);
+      } catch {
+        // Failed to delete employee
       }
     }
   };

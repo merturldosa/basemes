@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class PurchaseOrderController {
     /**
      * 모든 구매 주문 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "모든 구매 주문 조회", description = "테넌트의 모든 구매 주문을 조회합니다")
@@ -54,6 +56,7 @@ public class PurchaseOrderController {
     /**
      * 상태별 구매 주문 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 구매 주문 조회", description = "특정 상태의 구매 주문을 조회합니다")
@@ -72,6 +75,7 @@ public class PurchaseOrderController {
     /**
      * 공급업체별 구매 주문 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/supplier/{supplierId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "공급업체별 구매 주문 조회", description = "특정 공급업체의 구매 주문을 조회합니다")
@@ -90,6 +94,7 @@ public class PurchaseOrderController {
     /**
      * 구매 주문 ID로 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{purchaseOrderId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "구매 주문 조회", description = "구매 주문 ID로 구매 주문을 조회합니다")

@@ -151,7 +151,6 @@ export default function Dashboard() {
       setWorkOrders(workOrdersData);
       setProducts(productsData);
     } catch (err: any) {
-      console.error('Failed to load dashboard data:', err);
       setError(err.response?.data?.message || '대시보드 데이터 로드 실패');
     } finally {
       setLoading(false);

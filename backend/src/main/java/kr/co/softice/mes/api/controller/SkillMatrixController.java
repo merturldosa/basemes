@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class SkillMatrixController {
 
     private final SkillMatrixService skillMatrixService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "스킬 목록 조회", description = "모든 스킬을 조회합니다.")
@@ -48,6 +50,7 @@ public class SkillMatrixController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 스킬 목록 조회", description = "활성 상태의 스킬을 조회합니다.")
@@ -63,6 +66,7 @@ public class SkillMatrixController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{skillId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "스킬 상세 조회", description = "ID로 스킬을 조회합니다.")
@@ -75,6 +79,7 @@ public class SkillMatrixController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/category/{category}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "분류별 스킬 조회", description = "특정 분류의 스킬을 조회합니다.")
@@ -90,6 +95,7 @@ public class SkillMatrixController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/certification-required")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "자격증 필요 스킬 조회", description = "자격증이 필요한 스킬을 조회합니다.")

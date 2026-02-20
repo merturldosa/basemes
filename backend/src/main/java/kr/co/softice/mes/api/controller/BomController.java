@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class BomController {
     private final ProcessRepository processRepository;
     private final kr.co.softice.mes.domain.repository.TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getAllBoms() {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findByTenant(tenantId);
@@ -48,9 +49,9 @@ public class BomController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getActiveBoms() {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findActiveByTenant(tenantId);
@@ -59,9 +60,9 @@ public class BomController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<List<BomResponse>> getBomsByProduct(@PathVariable Long productId) {
         String tenantId = TenantContext.getCurrentTenant();
         List<BomEntity> boms = bomService.findByTenantAndProduct(tenantId, productId);
@@ -70,9 +71,9 @@ public class BomController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{bomId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<BomResponse> getBomById(@PathVariable Long bomId) {
         return bomService.findById(bomId)
             .map(bom -> ResponseEntity.ok(toResponse(bom)))

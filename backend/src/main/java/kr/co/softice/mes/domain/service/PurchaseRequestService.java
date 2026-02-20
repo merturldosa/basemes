@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.MaterialEntity;
 import kr.co.softice.mes.domain.entity.PurchaseRequestEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
@@ -47,7 +49,7 @@ public class PurchaseRequestService {
     public PurchaseRequestEntity getPurchaseRequestById(Long purchaseRequestId) {
         log.info("Fetching purchase request by ID: {}", purchaseRequestId);
         return purchaseRequestRepository.findByIdWithAllRelations(purchaseRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase request not found: " + purchaseRequestId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_REQUEST_NOT_FOUND, "Purchase request not found: " + purchaseRequestId));
     }
 
     /**
@@ -67,26 +69,26 @@ public class PurchaseRequestService {
 
         // Check if request number already exists
         if (purchaseRequestRepository.existsByTenant_TenantIdAndRequestNo(tenantId, purchaseRequest.getRequestNo())) {
-            throw new IllegalArgumentException("Purchase request number already exists: " + purchaseRequest.getRequestNo());
+            throw new BusinessException(ErrorCode.PURCHASE_REQUEST_ALREADY_EXISTS, "Purchase request number already exists: " + purchaseRequest.getRequestNo());
         }
 
         // Get tenant
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND, "Tenant not found: " + tenantId));
 
         purchaseRequest.setTenant(tenant);
 
         // Set requester
         if (purchaseRequest.getRequester() != null && purchaseRequest.getRequester().getUserId() != null) {
             UserEntity requester = userRepository.findById(purchaseRequest.getRequester().getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("Requester not found: " + purchaseRequest.getRequester().getUserId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Requester not found: " + purchaseRequest.getRequester().getUserId()));
             purchaseRequest.setRequester(requester);
         }
 
         // Set material
         if (purchaseRequest.getMaterial() != null && purchaseRequest.getMaterial().getMaterialId() != null) {
             MaterialEntity material = materialRepository.findById(purchaseRequest.getMaterial().getMaterialId())
-                    .orElseThrow(() -> new IllegalArgumentException("Material not found: " + purchaseRequest.getMaterial().getMaterialId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND, "Material not found: " + purchaseRequest.getMaterial().getMaterialId()));
             purchaseRequest.setMaterial(material);
         }
 
@@ -102,7 +104,7 @@ public class PurchaseRequestService {
         log.info("Purchase request created successfully: {}", saved.getPurchaseRequestId());
 
         return purchaseRequestRepository.findByIdWithAllRelations(saved.getPurchaseRequestId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve created purchase request"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to retrieve created purchase request"));
     }
 
     /**
@@ -113,15 +115,15 @@ public class PurchaseRequestService {
         log.info("Approving purchase request: {}", purchaseRequestId);
 
         PurchaseRequestEntity purchaseRequest = purchaseRequestRepository.findById(purchaseRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase request not found: " + purchaseRequestId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_REQUEST_NOT_FOUND, "Purchase request not found: " + purchaseRequestId));
 
         if (!"PENDING".equals(purchaseRequest.getStatus())) {
-            throw new IllegalArgumentException("Only pending purchase requests can be approved");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only pending purchase requests can be approved");
         }
 
         // Set approver
         UserEntity approver = userRepository.findById(approverUserId)
-                .orElseThrow(() -> new IllegalArgumentException("Approver not found: " + approverUserId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Approver not found: " + approverUserId));
 
         purchaseRequest.setStatus("APPROVED");
         purchaseRequest.setApprover(approver);
@@ -132,7 +134,7 @@ public class PurchaseRequestService {
         log.info("Purchase request approved successfully: {}", saved.getPurchaseRequestId());
 
         return purchaseRequestRepository.findByIdWithAllRelations(saved.getPurchaseRequestId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve approved purchase request"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to retrieve approved purchase request"));
     }
 
     /**
@@ -143,15 +145,15 @@ public class PurchaseRequestService {
         log.info("Rejecting purchase request: {}", purchaseRequestId);
 
         PurchaseRequestEntity purchaseRequest = purchaseRequestRepository.findById(purchaseRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase request not found: " + purchaseRequestId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_REQUEST_NOT_FOUND, "Purchase request not found: " + purchaseRequestId));
 
         if (!"PENDING".equals(purchaseRequest.getStatus())) {
-            throw new IllegalArgumentException("Only pending purchase requests can be rejected");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION, "Only pending purchase requests can be rejected");
         }
 
         // Set approver
         UserEntity approver = userRepository.findById(approverUserId)
-                .orElseThrow(() -> new IllegalArgumentException("Approver not found: " + approverUserId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "Approver not found: " + approverUserId));
 
         purchaseRequest.setStatus("REJECTED");
         purchaseRequest.setApprover(approver);
@@ -162,7 +164,7 @@ public class PurchaseRequestService {
         log.info("Purchase request rejected successfully: {}", saved.getPurchaseRequestId());
 
         return purchaseRequestRepository.findByIdWithAllRelations(saved.getPurchaseRequestId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve rejected purchase request"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to retrieve rejected purchase request"));
     }
 
     /**
@@ -173,10 +175,10 @@ public class PurchaseRequestService {
         log.info("Deleting purchase request: {}", purchaseRequestId);
 
         PurchaseRequestEntity purchaseRequest = purchaseRequestRepository.findById(purchaseRequestId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase request not found: " + purchaseRequestId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_REQUEST_NOT_FOUND, "Purchase request not found: " + purchaseRequestId));
 
         if ("ORDERED".equals(purchaseRequest.getStatus())) {
-            throw new IllegalArgumentException("Cannot delete purchase request that has been ordered");
+            throw new BusinessException(ErrorCode.INVALID_OPERATION, "Cannot delete purchase request that has been ordered");
         }
 
         purchaseRequestRepository.deleteById(purchaseRequestId);

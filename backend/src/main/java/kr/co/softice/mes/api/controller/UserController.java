@@ -26,6 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -49,6 +50,7 @@ public class UserController {
      * 사용자 목록 조회 (페이징)
      * GET /api/users?page=0&size=20&sort=createdAt,desc
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER_MANAGER')")
     @Operation(summary = "사용자 목록 조회", description = "페이징 처리된 사용자 목록 조회")
@@ -89,6 +91,7 @@ public class UserController {
      * 사용자 상세 조회
      * GET /api/users/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER_MANAGER') or #id == authentication.principal.userId")
     @Operation(summary = "사용자 상세 조회", description = "사용자 ID로 상세 정보 조회")

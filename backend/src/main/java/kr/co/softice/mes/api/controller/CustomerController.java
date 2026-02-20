@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class CustomerController {
     private final CustomerService customerService;
     private final TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SALES_MANAGER', 'USER')")
     public ResponseEntity<List<CustomerResponse>> getAllCustomers() {
@@ -46,6 +48,7 @@ public class CustomerController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'SALES_MANAGER', 'USER')")
     public ResponseEntity<List<CustomerResponse>> getActiveCustomers() {
@@ -56,6 +59,7 @@ public class CustomerController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{customerType}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SALES_MANAGER', 'USER')")
     public ResponseEntity<List<CustomerResponse>> getCustomersByType(@PathVariable String customerType) {
@@ -66,6 +70,7 @@ public class CustomerController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{customerId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SALES_MANAGER', 'USER')")
     public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long customerId) {

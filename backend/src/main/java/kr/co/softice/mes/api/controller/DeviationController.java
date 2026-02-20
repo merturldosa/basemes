@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class DeviationController {
     /**
      * Get all deviations
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "이탈 목록 조회", description = "모든 이탈을 조회합니다.")
@@ -54,6 +56,7 @@ public class DeviationController {
     /**
      * Get deviation by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{deviationId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "이탈 상세 조회", description = "ID로 이탈을 조회합니다.")
@@ -69,6 +72,7 @@ public class DeviationController {
     /**
      * Get deviations by status
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 이탈 조회", description = "특정 상태의 이탈을 조회합니다.")
@@ -87,6 +91,7 @@ public class DeviationController {
     /**
      * Get deviations by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 이탈 조회", description = "특정 설비의 이탈을 조회합니다.")

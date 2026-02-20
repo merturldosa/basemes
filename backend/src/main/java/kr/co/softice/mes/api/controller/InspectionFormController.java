@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class InspectionFormController {
     /**
      * Get all inspection forms
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 양식 목록 조회", description = "모든 점검 양식을 조회합니다.")
@@ -57,6 +59,7 @@ public class InspectionFormController {
     /**
      * Get active inspection forms
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 점검 양식 목록 조회", description = "활성 상태의 점검 양식을 조회합니다.")
@@ -75,6 +78,7 @@ public class InspectionFormController {
     /**
      * Get inspection form by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{formId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 양식 상세 조회", description = "ID로 점검 양식을 조회합니다.")

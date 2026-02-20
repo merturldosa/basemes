@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class MaterialHandoverController {
      * 인수인계 목록 조회
      * GET /api/material-handovers
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "인수인계 목록 조회", description = "테넌트의 모든 자재 인수인계 조회")
@@ -78,6 +80,7 @@ public class MaterialHandoverController {
      * 인수인계 상세 조회
      * GET /api/material-handovers/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "인수인계 상세 조회", description = "인수인계 ID로 상세 정보 조회")
@@ -94,6 +97,7 @@ public class MaterialHandoverController {
      * 내 대기 인수인계 조회 (로그인 사용자)
      * GET /api/material-handovers/my-pending
      */
+    @Transactional(readOnly = true)
     @GetMapping("/my-pending")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "내 대기 인수인계", description = "로그인 사용자가 인수해야 할 대기 중인 인수인계 조회")

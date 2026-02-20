@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.ApprovalLineEntity;
 import kr.co.softice.mes.domain.entity.DepartmentEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
@@ -43,7 +45,7 @@ public class ApprovalLineService {
     public ApprovalLineEntity getApprovalLineById(Long approvalLineId) {
         log.info("Getting approval line by ID: {}", approvalLineId);
         return approvalLineRepository.findByIdWithAllRelations(approvalLineId)
-                .orElseThrow(() -> new IllegalArgumentException("Approval line not found with ID: " + approvalLineId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPROVAL_LINE_NOT_FOUND));
     }
 
     /**
@@ -89,18 +91,18 @@ public class ApprovalLineService {
         // Check duplicate
         if (approvalLineRepository.existsByTenant_TenantIdAndLineCode(
                 approvalLine.getTenant().getTenantId(), approvalLine.getLineCode())) {
-            throw new IllegalArgumentException("Approval line already exists: " + approvalLine.getLineCode());
+            throw new BusinessException(ErrorCode.APPROVAL_LINE_ALREADY_EXISTS);
         }
 
         // Validate tenant
         TenantEntity tenant = tenantRepository.findById(approvalLine.getTenant().getTenantId())
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + approvalLine.getTenant().getTenantId()));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
         approvalLine.setTenant(tenant);
 
         // Validate department if provided
         if (approvalLine.getDepartment() != null && approvalLine.getDepartment().getDepartmentId() != null) {
             DepartmentEntity department = departmentRepository.findById(approvalLine.getDepartment().getDepartmentId())
-                    .orElseThrow(() -> new IllegalArgumentException("Department not found: " + approvalLine.getDepartment().getDepartmentId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND));
             approvalLine.setDepartment(department);
         }
 
@@ -139,7 +141,7 @@ public class ApprovalLineService {
         log.info("Updating approval line ID: {}", approvalLineId);
 
         ApprovalLineEntity existingApprovalLine = approvalLineRepository.findById(approvalLineId)
-                .orElseThrow(() -> new IllegalArgumentException("Approval line not found with ID: " + approvalLineId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPROVAL_LINE_NOT_FOUND));
 
         // Update fields
         existingApprovalLine.setLineName(updatedApprovalLine.getLineName());
@@ -152,7 +154,7 @@ public class ApprovalLineService {
         // Update department if provided
         if (updatedApprovalLine.getDepartment() != null && updatedApprovalLine.getDepartment().getDepartmentId() != null) {
             DepartmentEntity department = departmentRepository.findById(updatedApprovalLine.getDepartment().getDepartmentId())
-                    .orElseThrow(() -> new IllegalArgumentException("Department not found"));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.DEPARTMENT_NOT_FOUND));
             existingApprovalLine.setDepartment(department);
         }
 
@@ -186,7 +188,7 @@ public class ApprovalLineService {
         log.info("Deleting approval line ID: {}", approvalLineId);
 
         ApprovalLineEntity approvalLine = approvalLineRepository.findById(approvalLineId)
-                .orElseThrow(() -> new IllegalArgumentException("Approval line not found with ID: " + approvalLineId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPROVAL_LINE_NOT_FOUND));
 
         approvalLineRepository.delete(approvalLine);
         log.info("Approval line deleted successfully: {}", approvalLine.getLineCode());
@@ -200,7 +202,7 @@ public class ApprovalLineService {
         log.info("Toggling active status for approval line ID: {}", approvalLineId);
 
         ApprovalLineEntity approvalLine = approvalLineRepository.findById(approvalLineId)
-                .orElseThrow(() -> new IllegalArgumentException("Approval line not found with ID: " + approvalLineId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPROVAL_LINE_NOT_FOUND));
 
         approvalLine.setIsActive(!approvalLine.getIsActive());
         approvalLineRepository.save(approvalLine);

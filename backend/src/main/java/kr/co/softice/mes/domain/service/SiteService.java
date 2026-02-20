@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.SiteEntity;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.repository.SiteRepository;
@@ -40,7 +42,7 @@ public class SiteService {
     public SiteEntity getSiteById(Long siteId) {
         log.info("Getting site by ID: {}", siteId);
         return siteRepository.findByIdWithAllRelations(siteId)
-                .orElseThrow(() -> new IllegalArgumentException("Site not found with ID: " + siteId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SITE_NOT_FOUND));
     }
 
     /**
@@ -69,12 +71,12 @@ public class SiteService {
         // Check duplicate
         if (siteRepository.existsByTenant_TenantIdAndSiteCode(
                 site.getTenant().getTenantId(), site.getSiteCode())) {
-            throw new IllegalArgumentException("Site already exists: " + site.getSiteCode());
+            throw new BusinessException(ErrorCode.SITE_ALREADY_EXISTS);
         }
 
         // Validate tenant
         TenantEntity tenant = tenantRepository.findById(site.getTenant().getTenantId())
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + site.getTenant().getTenantId()));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
         site.setTenant(tenant);
 
         // Set default values
@@ -96,7 +98,7 @@ public class SiteService {
         log.info("Updating site ID: {}", siteId);
 
         SiteEntity existingSite = siteRepository.findById(siteId)
-                .orElseThrow(() -> new IllegalArgumentException("Site not found with ID: " + siteId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SITE_NOT_FOUND));
 
         // Update fields
         existingSite.setSiteName(updatedSite.getSiteName());
@@ -127,7 +129,7 @@ public class SiteService {
         log.info("Deleting site ID: {}", siteId);
 
         SiteEntity site = siteRepository.findById(siteId)
-                .orElseThrow(() -> new IllegalArgumentException("Site not found with ID: " + siteId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SITE_NOT_FOUND));
 
         siteRepository.delete(site);
         log.info("Site deleted successfully: {}", site.getSiteCode());
@@ -141,7 +143,7 @@ public class SiteService {
         log.info("Toggling active status for site ID: {}", siteId);
 
         SiteEntity site = siteRepository.findById(siteId)
-                .orElseThrow(() -> new IllegalArgumentException("Site not found with ID: " + siteId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.SITE_NOT_FOUND));
 
         site.setIsActive(!site.getIsActive());
         siteRepository.save(site);

@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -37,6 +38,7 @@ public class EmployeeSkillController {
 
     private final EmployeeSkillService employeeSkillService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "사원 스킬 목록 조회", description = "모든 사원 스킬을 조회합니다.")
@@ -52,6 +54,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{employeeSkillId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "사원 스킬 상세 조회", description = "ID로 사원 스킬을 조회합니다.")
@@ -64,6 +67,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/employee/{employeeId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "사원별 스킬 조회", description = "특정 사원의 스킬을 조회합니다.")
@@ -78,6 +82,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/skill/{skillId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "스킬별 사원 조회", description = "특정 스킬을 보유한 사원을 조회합니다.")
@@ -93,6 +98,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/skill/{skillId}/level/{minLevel}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "스킬 및 레벨별 사원 조회", description = "특정 스킬과 최소 레벨을 만족하는 사원을 조회합니다.")
@@ -110,6 +116,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/expiring-certifications")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "만료 예정 자격증 조회", description = "지정한 날짜까지 만료되는 자격증을 조회합니다.")
@@ -126,6 +133,7 @@ public class EmployeeSkillController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/pending-assessments")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "평가 예정 스킬 조회", description = "지정한 날짜까지 평가가 필요한 스킬을 조회합니다.")

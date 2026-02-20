@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.PermissionEntity;
 import kr.co.softice.mes.domain.entity.RoleEntity;
 import kr.co.softice.mes.domain.entity.RolePermissionEntity;
@@ -69,7 +71,7 @@ public class RoleService {
         log.debug("Finding permissions for role: {}", roleId);
 
         RoleEntity role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
 
         return rolePermissionRepository.findPermissionsByRole(role);
     }
@@ -83,7 +85,7 @@ public class RoleService {
 
         // Check if role code already exists for tenant
         if (roleRepository.existsByTenantAndRoleCode(role.getTenant(), role.getRoleCode())) {
-            throw new IllegalArgumentException("Role code already exists: " + role.getRoleCode());
+            throw new BusinessException(ErrorCode.ROLE_ALREADY_EXISTS);
         }
 
         return roleRepository.save(role);
@@ -97,7 +99,7 @@ public class RoleService {
         log.info("Updating role: {}", role.getRoleId());
 
         if (!roleRepository.existsById(role.getRoleId())) {
-            throw new IllegalArgumentException("Role not found: " + role.getRoleId());
+            throw new BusinessException(ErrorCode.ROLE_NOT_FOUND);
         }
 
         return roleRepository.save(role);
@@ -111,7 +113,7 @@ public class RoleService {
         log.info("Deleting role: {}", roleId);
 
         RoleEntity role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
 
         // Delete all role-permission mappings first
         rolePermissionRepository.deleteByRole(role);
@@ -128,14 +130,14 @@ public class RoleService {
         log.info("Assigning permission {} to role {}", permissionId, roleId);
 
         RoleEntity role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
 
         PermissionEntity permission = permissionRepository.findById(permissionId)
-                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERMISSION_NOT_FOUND));
 
         // Check if mapping already exists
         if (rolePermissionRepository.existsByRoleAndPermission(role, permission)) {
-            throw new IllegalArgumentException("Permission already assigned to role");
+            throw new BusinessException(ErrorCode.PERMISSION_ALREADY_ASSIGNED);
         }
 
         RolePermissionEntity rolePermission = RolePermissionEntity.builder()
@@ -154,10 +156,10 @@ public class RoleService {
         log.info("Removing permission {} from role {}", permissionId, roleId);
 
         RoleEntity role = roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ROLE_NOT_FOUND));
 
         PermissionEntity permission = permissionRepository.findById(permissionId)
-                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERMISSION_NOT_FOUND));
 
         List<RolePermissionEntity> rolePermissions = rolePermissionRepository.findByRole(role);
         rolePermissions.stream()

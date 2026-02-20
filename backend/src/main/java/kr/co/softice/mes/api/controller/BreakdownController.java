@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class BreakdownController {
     /**
      * Get all breakdowns
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "고장 목록 조회", description = "모든 고장 이력을 조회합니다.")
@@ -54,6 +56,7 @@ public class BreakdownController {
     /**
      * Get breakdown by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{breakdownId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "고장 상세 조회", description = "ID로 고장 이력을 조회합니다.")
@@ -69,6 +72,7 @@ public class BreakdownController {
     /**
      * Get breakdowns by status
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 고장 조회", description = "특정 상태의 고장 이력을 조회합니다.")
@@ -87,6 +91,7 @@ public class BreakdownController {
     /**
      * Get breakdowns by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 고장 조회", description = "특정 설비의 고장 이력을 조회합니다.")

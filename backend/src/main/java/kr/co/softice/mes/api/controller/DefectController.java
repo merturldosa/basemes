@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class DefectController {
 
     private final DefectService defectService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'QUALITY_USER')")
     @Operation(summary = "Get all defects", description = "모든 불량 조회")
@@ -46,6 +48,7 @@ public class DefectController {
         return ResponseEntity.ok(responses);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'QUALITY_USER')")
     @Operation(summary = "Get defect by ID", description = "ID로 불량 조회")
@@ -56,6 +59,7 @@ public class DefectController {
         return ResponseEntity.ok(toResponse(defect));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'QUALITY_USER')")
     @Operation(summary = "Get defects by status", description = "상태별 불량 조회")
@@ -71,6 +75,7 @@ public class DefectController {
         return ResponseEntity.ok(responses);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/source-type/{sourceType}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'QUALITY_USER')")
     @Operation(summary = "Get defects by source type", description = "발생 원천별 불량 조회")

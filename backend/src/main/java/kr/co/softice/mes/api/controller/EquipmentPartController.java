@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class EquipmentPartController {
     /**
      * Get all parts
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 부품 목록 조회", description = "모든 설비 부품을 조회합니다.")
@@ -56,6 +58,7 @@ public class EquipmentPartController {
     /**
      * Get part by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{partId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비 부품 상세 조회", description = "ID로 설비 부품을 조회합니다.")
@@ -71,6 +74,7 @@ public class EquipmentPartController {
     /**
      * Get parts by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 부품 조회", description = "특정 설비의 부품을 조회합니다.")
@@ -88,6 +92,7 @@ public class EquipmentPartController {
     /**
      * Get parts needing replacement
      */
+    @Transactional(readOnly = true)
     @GetMapping("/needs-replacement")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "교체 예정 부품 조회", description = "지정 일자까지 교체가 필요한 부품을 조회합니다.")

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,7 @@ public class QualityInspectionController {
      * 품질 검사 목록 조회
      * GET /api/quality-inspections
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "품질 검사 목록 조회", description = "테넌트의 모든 품질 검사 조회")
@@ -65,6 +67,7 @@ public class QualityInspectionController {
      * 품질 검사 상세 조회
      * GET /api/quality-inspections/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "품질 검사 상세 조회", description = "품질 검사 ID로 상세 정보 조회")
@@ -81,6 +84,7 @@ public class QualityInspectionController {
      * 작업 지시별 품질 검사 조회
      * GET /api/quality-inspections/work-order/{workOrderId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/work-order/{workOrderId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시별 품질 검사 조회", description = "특정 작업 지시의 품질 검사 목록 조회")
@@ -100,6 +104,7 @@ public class QualityInspectionController {
      * 검사 결과별 품질 검사 조회
      * GET /api/quality-inspections/result/{result}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/result/{result}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "검사 결과별 품질 검사 조회", description = "검사 결과별 품질 검사 목록 조회 (PASS, FAIL, CONDITIONAL)")
@@ -119,6 +124,7 @@ public class QualityInspectionController {
      * IQC 의뢰 리스트 조회
      * GET /api/quality-inspections/iqc-requests
      */
+    @Transactional(readOnly = true)
     @GetMapping("/iqc-requests")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "IQC 의뢰 리스트", description = "입고 품질 검사 의뢰 목록 조회")
@@ -137,6 +143,7 @@ public class QualityInspectionController {
      * OQC 의뢰 리스트 조회
      * GET /api/quality-inspections/oqc-requests
      */
+    @Transactional(readOnly = true)
     @GetMapping("/oqc-requests")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "OQC 의뢰 리스트", description = "출하 품질 검사 의뢰 목록 조회")
@@ -155,6 +162,7 @@ public class QualityInspectionController {
      * 재시험 필요 검사 조회
      * GET /api/quality-inspections/retest-required
      */
+    @Transactional(readOnly = true)
     @GetMapping("/retest-required")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재시험 필요 검사 조회", description = "실패한 검사 중 시정 조치가 정의되었으나 완료되지 않은 검사 목록")
@@ -173,6 +181,7 @@ public class QualityInspectionController {
      * 실패 항목 조회 (반품 처리용)
      * GET /api/quality-inspections/failed-items
      */
+    @Transactional(readOnly = true)
     @GetMapping("/failed-items")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "실패 항목 조회", description = "반품 처리를 위한 검사 실패 항목 목록")

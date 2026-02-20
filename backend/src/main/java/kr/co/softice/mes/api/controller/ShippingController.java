@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -61,6 +62,7 @@ public class ShippingController {
      * 출하 목록 조회
      * GET /api/shippings
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "출하 목록 조회", description = "테넌트의 모든 출하 조회")
@@ -96,6 +98,7 @@ public class ShippingController {
      * 출하 상세 조회 (항목 포함)
      * GET /api/shippings/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "출하 상세 조회", description = "출하 ID로 상세 정보 조회 (항목 포함)")
@@ -112,6 +115,7 @@ public class ShippingController {
      * 상태별 출하 조회
      * GET /api/shippings/status/{status}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 조회", description = "특정 상태의 출하 조회")
@@ -133,6 +137,7 @@ public class ShippingController {
      * 판매 주문별 출하 조회
      * GET /api/shippings/sales-order/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/sales-order/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "판매 주문별 조회", description = "특정 판매 주문의 출하 조회")

@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.SupplierEntity;
 import kr.co.softice.mes.domain.repository.SupplierRepository;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +57,7 @@ public class SupplierService {
 
         if (supplierRepository.existsByTenantAndSupplierCode(
             supplier.getTenant(), supplier.getSupplierCode())) {
-            throw new IllegalArgumentException("Supplier code already exists: " + supplier.getSupplierCode());
+            throw new BusinessException(ErrorCode.SUPPLIER_ALREADY_EXISTS);
         }
 
         SupplierEntity saved = supplierRepository.save(supplier);
@@ -78,7 +80,7 @@ public class SupplierService {
     @Transactional
     public SupplierEntity toggleActive(Long supplierId) {
         SupplierEntity supplier = supplierRepository.findById(supplierId)
-            .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + supplierId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.SUPPLIER_NOT_FOUND));
 
         log.info("Toggling supplier {} active status from {} to {}",
             supplier.getSupplierCode(), supplier.getIsActive(), !supplier.getIsActive());

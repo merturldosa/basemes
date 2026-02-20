@@ -190,7 +190,8 @@ public class EmployeeSkillService {
             case "MASTER":
                 return 5;
             default:
-                return null;
+                throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE,
+                        "잘못된 스킬 레벨입니다: " + skillLevel);
         }
     }
 }

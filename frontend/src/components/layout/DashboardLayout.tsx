@@ -82,6 +82,7 @@ import {
   CalendarMonth,
   Approval,
   NotificationsActive,
+  Description,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/stores/authStore';
 import LanguageSelector from '@/components/common/LanguageSelector';
@@ -143,7 +144,8 @@ const getAllMenuItems = (tenantId: string | undefined, t: (key: string) => strin
     { text: t('navigation.menu.commonCodes'), icon: <Code />, path: '/common/common-codes', divider: false },
     { text: t('navigation.menu.holidays'), icon: <CalendarMonth />, path: '/common/holidays', divider: false },
     { text: t('navigation.menu.approvals'), icon: <Approval />, path: '/common/approvals', divider: false },
-    { text: t('navigation.menu.alarms'), icon: <NotificationsActive />, path: '/common/alarms', divider: true },
+    { text: t('navigation.menu.alarms'), icon: <NotificationsActive />, path: '/common/alarms', divider: false },
+    { text: t('navigation.menu.sops'), icon: <Description />, path: '/common/sops', divider: true },
     { text: t('navigation.menu.users'), icon: <People />, path: '/users', divider: false },
     { text: t('navigation.menu.roles'), icon: <Security />, path: '/roles', divider: false },
     { text: t('navigation.menu.permissions'), icon: <VpnKey />, path: '/permissions', divider: false },

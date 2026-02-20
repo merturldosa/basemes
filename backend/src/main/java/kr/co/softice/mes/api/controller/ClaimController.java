@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ClaimController {
 
     private final ClaimService claimService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'CUSTOMER_SERVICE')")
     @Operation(summary = "Get all claims", description = "모든 클레임 조회")
@@ -46,6 +48,7 @@ public class ClaimController {
         return ResponseEntity.ok(responses);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'CUSTOMER_SERVICE')")
     @Operation(summary = "Get claim by ID", description = "ID로 클레임 조회")
@@ -56,6 +59,7 @@ public class ClaimController {
         return ResponseEntity.ok(toResponse(claim));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'CUSTOMER_SERVICE')")
     @Operation(summary = "Get claims by status", description = "상태별 클레임 조회")
@@ -71,6 +75,7 @@ public class ClaimController {
         return ResponseEntity.ok(responses);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{claimType}")
     @PreAuthorize("hasAnyRole('ADMIN', 'QUALITY_MANAGER', 'CUSTOMER_SERVICE')")
     @Operation(summary = "Get claims by claim type", description = "유형별 클레임 조회")

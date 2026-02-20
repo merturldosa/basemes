@@ -55,7 +55,6 @@ const SuppliersPage: React.FC = () => {
       const data = await supplierService.getAll();
       setSuppliers(data || []);
     } catch (error) {
-      console.error('Failed to load suppliers:', error);
       setSnackbar({ open: true, message: '공급업체 목록 조회 실패', severity: 'error' });
       setSuppliers([]);
     } finally {
@@ -151,7 +150,6 @@ const SuppliersPage: React.FC = () => {
       handleCloseDialog();
       loadSuppliers();
     } catch (error) {
-      console.error('Failed to save supplier:', error);
       setSnackbar({ open: true, message: '공급업체 저장 실패', severity: 'error' });
     }
   };
@@ -166,7 +164,6 @@ const SuppliersPage: React.FC = () => {
       setSelectedSupplier(null);
       loadSuppliers();
     } catch (error) {
-      console.error('Failed to delete supplier:', error);
       setSnackbar({ open: true, message: '공급업체 삭제 실패', severity: 'error' });
     }
   };
@@ -181,7 +178,6 @@ const SuppliersPage: React.FC = () => {
       });
       loadSuppliers();
     } catch (error) {
-      console.error('Failed to toggle supplier:', error);
       setSnackbar({ open: true, message: '공급업체 상태 변경 실패', severity: 'error' });
     }
   };

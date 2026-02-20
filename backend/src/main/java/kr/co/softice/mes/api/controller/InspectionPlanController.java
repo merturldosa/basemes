@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,6 +39,7 @@ public class InspectionPlanController {
     /**
      * Get all inspection plans
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 계획 목록 조회", description = "모든 점검 계획을 조회합니다.")
@@ -56,6 +58,7 @@ public class InspectionPlanController {
     /**
      * Get inspection plan by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{planId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "점검 계획 상세 조회", description = "ID로 점검 계획을 조회합니다.")
@@ -71,6 +74,7 @@ public class InspectionPlanController {
     /**
      * Get due inspection plans
      */
+    @Transactional(readOnly = true)
     @GetMapping("/due")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "만기 점검 계획 조회", description = "특정 날짜까지 만기인 점검 계획을 조회합니다.")

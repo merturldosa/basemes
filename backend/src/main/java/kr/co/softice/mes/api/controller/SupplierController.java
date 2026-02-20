@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class SupplierController {
     private final SupplierService supplierService;
     private final TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PURCHASE_MANAGER', 'USER')")
     public ResponseEntity<List<SupplierResponse>> getAllSuppliers() {
@@ -46,6 +48,7 @@ public class SupplierController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'PURCHASE_MANAGER', 'USER')")
     public ResponseEntity<List<SupplierResponse>> getActiveSuppliers() {
@@ -56,6 +59,7 @@ public class SupplierController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{supplierType}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PURCHASE_MANAGER', 'USER')")
     public ResponseEntity<List<SupplierResponse>> getSuppliersByType(@PathVariable String supplierType) {
@@ -66,6 +70,7 @@ public class SupplierController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/rating/{rating}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PURCHASE_MANAGER', 'USER')")
     public ResponseEntity<List<SupplierResponse>> getSuppliersByRating(@PathVariable String rating) {
@@ -76,6 +81,7 @@ public class SupplierController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{supplierId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PURCHASE_MANAGER', 'USER')")
     public ResponseEntity<SupplierResponse> getSupplierById(@PathVariable Long supplierId) {

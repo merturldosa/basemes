@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ProcessRoutingController {
     private final EquipmentRepository equipmentRepository;
     private final kr.co.softice.mes.domain.repository.TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
     public ResponseEntity<List<RoutingResponse>> getAllRoutings() {
@@ -49,6 +51,7 @@ public class ProcessRoutingController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
     public ResponseEntity<List<RoutingResponse>> getActiveRoutings() {
@@ -59,6 +62,7 @@ public class ProcessRoutingController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
     public ResponseEntity<List<RoutingResponse>> getRoutingsByProduct(@PathVariable Long productId) {
@@ -69,6 +73,7 @@ public class ProcessRoutingController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{routingId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
     public ResponseEntity<RoutingResponse> getRoutingById(@PathVariable Long routingId) {

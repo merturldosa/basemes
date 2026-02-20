@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,10 +49,10 @@ public class WorkOrderController {
      * 작업 지시 목록 조회
      * GET /api/work-orders
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시 목록 조회", description = "테넌트의 모든 작업 지시 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WorkOrderResponse>>> getWorkOrders() {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting work orders for tenant: {}", tenantId);
@@ -67,10 +68,10 @@ public class WorkOrderController {
      * 작업 지시 상세 조회
      * GET /api/work-orders/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "작업 지시 상세 조회", description = "작업 지시 ID로 상세 정보 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<WorkOrderResponse>> getWorkOrder(@PathVariable Long id) {
         log.info("Getting work order: {}", id);
 
@@ -84,10 +85,10 @@ public class WorkOrderController {
      * 상태별 작업 지시 조회
      * GET /api/work-orders/status/{status}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 작업 지시 조회", description = "특정 상태의 작업 지시 목록 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WorkOrderResponse>>> getWorkOrdersByStatus(
             @PathVariable String status) {
 
@@ -105,6 +106,7 @@ public class WorkOrderController {
      * 기간별 작업 지시 조회
      * GET /api/work-orders/date-range
      */
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 작업 지시 조회", description = "시작일과 종료일 사이의 작업 지시 조회")

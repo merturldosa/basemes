@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +41,7 @@ public class PermissionController {
      * 전체 권한 목록 조회
      * GET /api/permissions
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'ROLE_MANAGER')")
     @Operation(summary = "권한 목록 조회", description = "시스템의 모든 권한 조회")
@@ -57,6 +59,7 @@ public class PermissionController {
      * 활성 권한 목록 조회
      * GET /api/permissions/active
      */
+    @Transactional(readOnly = true)
     @GetMapping("/active")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "활성 권한 목록 조회", description = "활성 상태의 권한만 조회")
@@ -74,6 +77,7 @@ public class PermissionController {
      * 모듈별 권한 목록 조회
      * GET /api/permissions/module/{module}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/module/{module}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ROLE_MANAGER')")
     @Operation(summary = "모듈별 권한 조회", description = "특정 모듈의 권한 목록 조회")
@@ -93,6 +97,7 @@ public class PermissionController {
      * 권한 상세 조회
      * GET /api/permissions/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'ROLE_MANAGER')")
     @Operation(summary = "권한 상세 조회", description = "권한 ID로 상세 정보 조회")

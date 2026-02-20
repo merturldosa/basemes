@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.LotEntity;
 import kr.co.softice.mes.domain.repository.LotRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +53,7 @@ public class LotService {
             lot.getLotNo(), lot.getProduct().getProductCode(), lot.getQualityStatus());
 
         if (lotRepository.existsByTenantAndLotNo(lot.getTenant(), lot.getLotNo())) {
-            throw new IllegalArgumentException("Lot number already exists: " + lot.getLotNo());
+            throw new BusinessException(ErrorCode.LOT_ALREADY_EXISTS);
         }
 
         LotEntity saved = lotRepository.save(lot);
@@ -74,14 +76,14 @@ public class LotService {
     @Transactional
     public LotEntity splitLot(Long parentLotId, BigDecimal splitQuantity, String remarks) {
         LotEntity parentLot = lotRepository.findByIdWithAllRelations(parentLotId)
-            .orElseThrow(() -> new IllegalArgumentException("Lot not found: " + parentLotId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.LOT_NOT_FOUND));
 
         // Validate split quantity
         if (splitQuantity.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Split quantity must be positive");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
         if (splitQuantity.compareTo(parentLot.getCurrentQuantity()) >= 0) {
-            throw new IllegalArgumentException("Split quantity must be less than current quantity");
+            throw new BusinessException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
         // Generate child LOT number (lotNo-S01, lotNo-S02, ...)
@@ -129,7 +131,7 @@ public class LotService {
     @Transactional
     public LotEntity updateQualityStatus(Long lotId, String qualityStatus) {
         LotEntity lot = lotRepository.findById(lotId)
-            .orElseThrow(() -> new IllegalArgumentException("Lot not found: " + lotId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.LOT_NOT_FOUND));
 
         log.info("Updating lot {} quality status from {} to {}",
             lot.getLotNo(), lot.getQualityStatus(), qualityStatus);

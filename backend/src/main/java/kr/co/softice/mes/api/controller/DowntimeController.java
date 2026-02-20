@@ -15,6 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class DowntimeController {
     /**
      * Get all downtimes
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "비가동 목록 조회", description = "모든 비가동 이력을 조회합니다.")
@@ -56,6 +58,7 @@ public class DowntimeController {
     /**
      * Get downtime by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{downtimeId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "비가동 상세 조회", description = "ID로 비가동 이력을 조회합니다.")
@@ -71,6 +74,7 @@ public class DowntimeController {
     /**
      * Get downtimes by equipment
      */
+    @Transactional(readOnly = true)
     @GetMapping("/equipment/{equipmentId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "설비별 비가동 조회", description = "특정 설비의 비가동 이력을 조회합니다.")
@@ -88,6 +92,7 @@ public class DowntimeController {
     /**
      * Get downtimes by type
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{downtimeType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "유형별 비가동 조회", description = "특정 유형의 비가동 이력을 조회합니다.")
@@ -106,6 +111,7 @@ public class DowntimeController {
     /**
      * Get downtimes by date range
      */
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 비가동 조회", description = "특정 기간의 비가동 이력을 조회합니다.")
@@ -126,6 +132,7 @@ public class DowntimeController {
     /**
      * Get unresolved downtimes
      */
+    @Transactional(readOnly = true)
     @GetMapping("/unresolved")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "미해결 비가동 조회", description = "미해결 비가동 이력을 조회합니다.")
@@ -144,6 +151,7 @@ public class DowntimeController {
     /**
      * Get ongoing downtimes
      */
+    @Transactional(readOnly = true)
     @GetMapping("/ongoing")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "진행중 비가동 조회", description = "진행중인 비가동 이력을 조회합니다.")

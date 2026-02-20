@@ -132,7 +132,6 @@ const AlarmPage: React.FC = () => {
       setError(null);
     } catch (err: any) {
       setError(err.message || '데이터 로드 실패');
-      console.error('Failed to load alarm data:', err);
     } finally {
       setLoading(false);
     }

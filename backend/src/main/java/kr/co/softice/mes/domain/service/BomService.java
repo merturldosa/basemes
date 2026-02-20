@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.BomDetailEntity;
 import kr.co.softice.mes.domain.entity.BomEntity;
 import kr.co.softice.mes.domain.repository.BomRepository;
@@ -53,8 +55,7 @@ public class BomService {
 
         if (bomRepository.existsByTenantAndBomCodeAndVersion(
             bom.getTenant(), bom.getBomCode(), bom.getVersion())) {
-            throw new IllegalArgumentException(
-                "BOM already exists: " + bom.getBomCode() + " version: " + bom.getVersion());
+            throw new BusinessException(ErrorCode.BOM_ALREADY_EXISTS);
         }
 
         // Set sequence numbers for details if not set
@@ -101,7 +102,7 @@ public class BomService {
     @Transactional
     public BomEntity toggleActive(Long bomId) {
         BomEntity bom = bomRepository.findById(bomId)
-            .orElseThrow(() -> new IllegalArgumentException("BOM not found: " + bomId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.BOM_NOT_FOUND));
 
         log.info("Toggling BOM {} active status from {} to {}",
             bom.getBomCode(), bom.getIsActive(), !bom.getIsActive());
@@ -118,7 +119,7 @@ public class BomService {
     @Transactional
     public BomEntity copyBom(Long sourceBomId, String newVersion) {
         BomEntity sourceBom = bomRepository.findByIdWithAllRelations(sourceBomId)
-            .orElseThrow(() -> new IllegalArgumentException("Source BOM not found: " + sourceBomId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.BOM_NOT_FOUND));
 
         log.info("Copying BOM {} from version {} to version {}",
             sourceBom.getBomCode(), sourceBom.getVersion(), newVersion);
@@ -126,8 +127,7 @@ public class BomService {
         // Check if target version already exists
         if (bomRepository.existsByTenantAndBomCodeAndVersion(
             sourceBom.getTenant(), sourceBom.getBomCode(), newVersion)) {
-            throw new IllegalArgumentException(
-                "Target BOM version already exists: " + sourceBom.getBomCode() + " version: " + newVersion);
+            throw new BusinessException(ErrorCode.BOM_VERSION_ALREADY_EXISTS);
         }
 
         // Create new BOM with new version

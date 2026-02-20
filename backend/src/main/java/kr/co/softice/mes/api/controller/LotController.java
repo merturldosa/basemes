@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,7 +47,7 @@ public class LotController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<LotResponse>>> getAllLots() {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenant(tenantId);
@@ -58,7 +59,7 @@ public class LotController {
 
     @GetMapping("/product/{productId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<LotResponse>>> getLotsByProduct(@PathVariable Long productId) {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenantAndProduct(tenantId, productId);
@@ -70,7 +71,7 @@ public class LotController {
 
     @GetMapping("/quality-status/{qualityStatus}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<LotResponse>>> getLotsByQualityStatus(@PathVariable String qualityStatus) {
         String tenantId = TenantContext.getCurrentTenant();
         List<LotEntity> lots = lotService.findByTenantAndQualityStatus(tenantId, qualityStatus);
@@ -82,7 +83,7 @@ public class LotController {
 
     @GetMapping("/{lotId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'QUALITY_MANAGER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<LotResponse>> getLotById(@PathVariable Long lotId) {
         return lotService.findById(lotId)
             .map(lot -> ResponseEntity.ok(ApiResponse.success("LOT 조회 성공", toResponse(lot))))

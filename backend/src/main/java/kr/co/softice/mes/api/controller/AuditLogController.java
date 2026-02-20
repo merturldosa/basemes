@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,7 @@ public class AuditLogController {
      * 감사 로그 목록 조회 (페이징)
      * GET /api/audit-logs
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "감사 로그 목록 조회", description = "테넌트의 모든 감사 로그 조회 (페이징)")
@@ -72,6 +74,7 @@ public class AuditLogController {
      * 감사 로그 상세 조회
      * GET /api/audit-logs/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "감사 로그 상세 조회", description = "특정 감사 로그 상세 정보 조회")
@@ -126,6 +129,7 @@ public class AuditLogController {
      * 사용자별 감사 로그 조회
      * GET /api/audit-logs/user/{userId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/user/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "사용자별 감사 로그 조회", description = "특정 사용자의 모든 활동 로그 조회")
@@ -150,6 +154,7 @@ public class AuditLogController {
      * 작업 유형별 감사 로그 조회
      * GET /api/audit-logs/action/{action}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/action/{action}")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "작업 유형별 감사 로그", description = "특정 작업 유형의 모든 로그 조회")
@@ -175,6 +180,7 @@ public class AuditLogController {
      * 엔티티별 변경 이력 조회
      * GET /api/audit-logs/entity/{entityType}/{entityId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/entity/{entityType}/{entityId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "엔티티 변경 이력", description = "특정 엔티티의 모든 변경 이력 조회")
@@ -203,6 +209,7 @@ public class AuditLogController {
      * 실패한 작업 로그 조회
      * GET /api/audit-logs/failures
      */
+    @Transactional(readOnly = true)
     @GetMapping("/failures")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "실패한 작업 로그", description = "실패한 모든 작업 로그 조회")
@@ -227,6 +234,7 @@ public class AuditLogController {
      * IP 주소별 감사 로그 조회
      * GET /api/audit-logs/ip/{ipAddress}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/ip/{ipAddress}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "IP별 감사 로그", description = "특정 IP 주소의 모든 활동 로그 조회")
@@ -254,6 +262,7 @@ public class AuditLogController {
      * 감사 로그 통계
      * GET /api/audit-logs/statistics
      */
+    @Transactional(readOnly = true)
     @GetMapping("/statistics")
     @PreAuthorize("hasAnyRole('ADMIN', 'AUDIT_VIEWER')")
     @Operation(summary = "감사 로그 통계", description = "기간별 감사 로그 통계 정보 조회")

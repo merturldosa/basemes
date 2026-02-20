@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.repository.TenantRepository;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +75,7 @@ public class TenantService {
 
         // Check if tenant ID already exists
         if (tenantRepository.existsById(tenant.getTenantId())) {
-            throw new IllegalArgumentException("Tenant ID already exists: " + tenant.getTenantId());
+            throw new BusinessException(ErrorCode.TENANT_ALREADY_EXISTS);
         }
 
         return tenantRepository.save(tenant);
@@ -87,7 +89,7 @@ public class TenantService {
         log.info("Updating tenant: {}", tenant.getTenantId());
 
         if (!tenantRepository.existsById(tenant.getTenantId())) {
-            throw new IllegalArgumentException("Tenant not found: " + tenant.getTenantId());
+            throw new BusinessException(ErrorCode.TENANT_NOT_FOUND);
         }
 
         return tenantRepository.save(tenant);
@@ -110,7 +112,7 @@ public class TenantService {
         log.info("Activating tenant: {}", tenantId);
 
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
 
         tenant.setStatus("active");
         return tenantRepository.save(tenant);
@@ -124,7 +126,7 @@ public class TenantService {
         log.info("Deactivating tenant: {}", tenantId);
 
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
 
         tenant.setStatus("inactive");
         return tenantRepository.save(tenant);

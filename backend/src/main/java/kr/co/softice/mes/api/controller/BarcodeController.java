@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,7 @@ public class BarcodeController {
     /**
      * LOT QR 코드 생성 (LOT ID 기준)
      */
+    @Transactional(readOnly = true)
     @GetMapping("/lot/{lotId}/qrcode")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "LOT QR 코드 생성", description = "LOT ID로 QR 코드 이미지 생성 (Base64)")
@@ -60,6 +62,7 @@ public class BarcodeController {
     /**
      * LOT QR 코드 생성 (LOT 번호 기준)
      */
+    @Transactional(readOnly = true)
     @GetMapping("/lot/number/{lotNo}/qrcode")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "LOT 번호로 QR 코드 생성", description = "LOT 번호로 QR 코드 이미지 생성 (Base64)")

@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -57,10 +58,10 @@ public class WarehouseController {
      * 창고 목록 조회
      * GET /api/warehouses
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "창고 목록 조회", description = "테넌트의 모든 창고 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WarehouseResponse>>> getWarehouses(
             @RequestParam(required = false) Boolean activeOnly) {
 
@@ -85,10 +86,10 @@ public class WarehouseController {
      * 창고 상세 조회
      * GET /api/warehouses/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "창고 상세 조회", description = "창고 ID로 상세 정보 조회")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<WarehouseResponse>> getWarehouse(@PathVariable Long id) {
         log.info("Getting warehouse: {}", id);
 
@@ -109,10 +110,10 @@ public class WarehouseController {
      * - QUARANTINE: 격리 창고
      * - SCRAP: 스크랩 창고
      */
+    @Transactional(readOnly = true)
     @GetMapping("/type/{type}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "타입별 창고 조회", description = "창고 타입별 목록 조회 (RAW_MATERIAL, WIP, FINISHED_GOODS, QUARANTINE, SCRAP)")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<WarehouseResponse>>> getWarehousesByType(@PathVariable String type) {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("Getting warehouses by type: {} for tenant: {}", type, tenantId);

@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -40,9 +41,9 @@ public class ProductionScheduleController {
     private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getAllSchedules(
         @RequestParam(required = false) String status
     ) {
@@ -58,9 +59,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(ApiResponse.success("일정 목록 조회 성공", responses));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/period")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getSchedulesByPeriod(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
@@ -75,9 +76,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(ApiResponse.success("기간별 일정 조회 성공", responses));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/work-order/{workOrderId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getSchedulesByWorkOrder(@PathVariable Long workOrderId) {
         List<ProductionScheduleEntity> schedules = scheduleService.findByWorkOrder(workOrderId);
 
@@ -88,9 +89,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(ApiResponse.success("작업지시별 일정 조회 성공", responses));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/delayed")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> getDelayedSchedules() {
         String tenantId = TenantContext.getCurrentTenant();
         List<ProductionScheduleEntity> schedules = scheduleService.findDelayedSchedules(tenantId);
@@ -102,9 +103,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(ApiResponse.success("지연 일정 조회 성공", responses));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{scheduleId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<ScheduleResponse>> getScheduleById(@PathVariable Long scheduleId) {
         return scheduleService.findById(scheduleId)
             .map(schedule -> ResponseEntity.ok(ApiResponse.success("일정 조회 성공", toResponse(schedule))))
@@ -248,9 +249,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(toResponse(schedule));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/gantt")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<GanttChartData>> getGanttChart(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
@@ -260,9 +261,9 @@ public class ProductionScheduleController {
         return ResponseEntity.ok(ApiResponse.success("간트차트 데이터 조회 성공", ganttData));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{scheduleId}/conflicts")
     @PreAuthorize("hasAnyRole('ADMIN', 'PRODUCTION_MANAGER', 'ENGINEER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ScheduleResponse>>> checkConflicts(@PathVariable Long scheduleId) {
         List<ProductionScheduleEntity> conflicts = scheduleService.checkResourceConflicts(scheduleId);
         List<ScheduleResponse> responses = conflicts.stream()

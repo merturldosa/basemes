@@ -79,8 +79,8 @@ const NotificationToast: React.FC = () => {
         setNotifications(response.data.data);
         setUnreadCount(response.data.data.length);
       }
-    } catch (error) {
-      console.error('Failed to load notifications:', error);
+    } catch {
+      // Failed to load notifications
     }
   };
 
@@ -105,8 +105,8 @@ const NotificationToast: React.FC = () => {
         prev.map((n) => (n.notificationId === notificationId ? { ...n, isRead: true } : n))
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
-    } catch (error) {
-      console.error('Failed to mark notification as read:', error);
+    } catch {
+      // Failed to mark notification as read
     }
   };
 
@@ -121,8 +121,8 @@ const NotificationToast: React.FC = () => {
       // Update local state
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       setUnreadCount(0);
-    } catch (error) {
-      console.error('Failed to mark all as read:', error);
+    } catch {
+      // Failed to mark all as read
     }
   };
 

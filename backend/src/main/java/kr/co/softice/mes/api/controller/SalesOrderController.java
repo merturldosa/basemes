@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -59,6 +60,7 @@ public class SalesOrderController {
      * 판매 주문 목록 조회
      * GET /api/sales-orders
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "판매 주문 목록 조회", description = "테넌트의 모든 판매 주문 조회")
@@ -91,6 +93,7 @@ public class SalesOrderController {
      * 판매 주문 상세 조회 (항목 포함)
      * GET /api/sales-orders/{id}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{id}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "판매 주문 상세 조회", description = "판매 주문 ID로 상세 정보 조회 (항목 포함)")
@@ -107,6 +110,7 @@ public class SalesOrderController {
      * 상태별 판매 주문 조회
      * GET /api/sales-orders/status/{status}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/status/{status}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "상태별 조회", description = "특정 상태의 판매 주문 조회")
@@ -128,6 +132,7 @@ public class SalesOrderController {
      * 고객별 판매 주문 조회
      * GET /api/sales-orders/customer/{customerId}
      */
+    @Transactional(readOnly = true)
     @GetMapping("/customer/{customerId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "고객별 조회", description = "특정 고객의 판매 주문 조회")

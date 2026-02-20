@@ -54,7 +54,6 @@ const CustomersPage: React.FC = () => {
       const data = await customerService.getAll();
       setCustomers(data || []);
     } catch (error) {
-      console.error('Failed to load customers:', error);
       setSnackbar({ open: true, message: '고객 목록 조회 실패', severity: 'error' });
       setCustomers([]);
     } finally {
@@ -144,7 +143,6 @@ const CustomersPage: React.FC = () => {
       handleCloseDialog();
       loadCustomers();
     } catch (error) {
-      console.error('Failed to save customer:', error);
       setSnackbar({ open: true, message: '고객 저장 실패', severity: 'error' });
     }
   };
@@ -159,7 +157,6 @@ const CustomersPage: React.FC = () => {
       setSelectedCustomer(null);
       loadCustomers();
     } catch (error) {
-      console.error('Failed to delete customer:', error);
       setSnackbar({ open: true, message: '고객 삭제 실패', severity: 'error' });
     }
   };
@@ -174,7 +171,6 @@ const CustomersPage: React.FC = () => {
       });
       loadCustomers();
     } catch (error) {
-      console.error('Failed to toggle customer:', error);
       setSnackbar({ open: true, message: '고객 상태 변경 실패', severity: 'error' });
     }
   };

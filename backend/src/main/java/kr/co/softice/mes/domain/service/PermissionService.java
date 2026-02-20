@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.PermissionEntity;
 import kr.co.softice.mes.domain.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +75,7 @@ public class PermissionService {
 
         // Check if permission code already exists
         if (permissionRepository.existsByPermissionCode(permission.getPermissionCode())) {
-            throw new IllegalArgumentException("Permission code already exists: " + permission.getPermissionCode());
+            throw new BusinessException(ErrorCode.PERMISSION_ALREADY_EXISTS);
         }
 
         return permissionRepository.save(permission);
@@ -87,7 +89,7 @@ public class PermissionService {
         log.info("Updating permission: {}", permission.getPermissionId());
 
         if (!permissionRepository.existsById(permission.getPermissionId())) {
-            throw new IllegalArgumentException("Permission not found: " + permission.getPermissionId());
+            throw new BusinessException(ErrorCode.PERMISSION_NOT_FOUND);
         }
 
         return permissionRepository.save(permission);
@@ -110,7 +112,7 @@ public class PermissionService {
         log.info("Activating permission: {}", permissionId);
 
         PermissionEntity permission = permissionRepository.findById(permissionId)
-                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERMISSION_NOT_FOUND));
 
         permission.setStatus("active");
         return permissionRepository.save(permission);
@@ -124,7 +126,7 @@ public class PermissionService {
         log.info("Deactivating permission: {}", permissionId);
 
         PermissionEntity permission = permissionRepository.findById(permissionId)
-                .orElseThrow(() -> new IllegalArgumentException("Permission not found: " + permissionId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PERMISSION_NOT_FOUND));
 
         permission.setStatus("inactive");
         return permissionRepository.save(permission);

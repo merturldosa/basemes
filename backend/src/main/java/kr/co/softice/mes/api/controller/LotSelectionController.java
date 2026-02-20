@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -129,6 +130,7 @@ public class LotSelectionController {
     /**
      * 만료 예정 LOT 조회
      */
+    @Transactional(readOnly = true)
     @GetMapping("/expiring")
     @PreAuthorize("hasAnyRole('ADMIN', 'WAREHOUSE_MANAGER', 'QMS_MANAGER')")
     @Operation(summary = "만료 예정 LOT 조회", description = "지정된 일수 내에 만료되는 LOT 목록 반환")

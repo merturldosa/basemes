@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -80,8 +82,7 @@ public class QualityInspectionService {
         // Check duplicate inspection number
         if (qualityInspectionRepository.existsByTenantAndInspectionNo(
                 inspection.getTenant(), inspection.getInspectionNo())) {
-            throw new IllegalArgumentException(
-                "Inspection number already exists: " + inspection.getInspectionNo());
+            throw new BusinessException(ErrorCode.QUALITY_INSPECTION_ALREADY_EXISTS);
         }
 
         // Determine inspection result based on measured value and quality standard
@@ -106,8 +107,7 @@ public class QualityInspectionService {
         log.info("Updating quality inspection: {}", inspection.getQualityInspectionId());
 
         if (!qualityInspectionRepository.existsById(inspection.getQualityInspectionId())) {
-            throw new IllegalArgumentException(
-                "Quality inspection not found: " + inspection.getQualityInspectionId());
+            throw new BusinessException(ErrorCode.QUALITY_INSPECTION_NOT_FOUND);
         }
 
         // Re-determine inspection result based on measured value and quality standard
@@ -137,7 +137,7 @@ public class QualityInspectionService {
      */
     public long countByTenantAndResult(String tenantId, String result) {
         TenantEntity tenant = tenantRepository.findById(tenantId)
-            .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
         return qualityInspectionRepository.countByTenantAndInspectionResult(tenant, result);
     }
 
@@ -146,7 +146,7 @@ public class QualityInspectionService {
      */
     public long countByTenant(String tenantId) {
         TenantEntity tenant = tenantRepository.findById(tenantId)
-            .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+            .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
         return qualityInspectionRepository.countByTenant(tenant);
     }
 

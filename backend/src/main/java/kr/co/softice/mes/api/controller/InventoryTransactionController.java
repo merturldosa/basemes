@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -42,9 +43,9 @@ public class InventoryTransactionController {
     private final QualityInspectionRepository qualityInspectionRepository;
     private final kr.co.softice.mes.domain.repository.TenantRepository tenantRepository;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<InventoryTransactionResponse>>> getAllTransactions() {
         String tenantId = TenantContext.getCurrentTenant();
         List<InventoryTransactionEntity> transactions = inventoryTransactionService.findByTenant(tenantId);
@@ -54,6 +55,7 @@ public class InventoryTransactionController {
         return ResponseEntity.ok(ApiResponse.success("재고 이동 목록 조회 성공", responses));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{transactionId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
     public ResponseEntity<InventoryTransactionResponse> getTransactionById(@PathVariable Long transactionId) {
@@ -62,6 +64,7 @@ public class InventoryTransactionController {
             .orElse(ResponseEntity.notFound().build());
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
     public ResponseEntity<List<InventoryTransactionResponse>> getTransactionsByDateRange(
@@ -75,6 +78,7 @@ public class InventoryTransactionController {
             .collect(Collectors.toList()));
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/approval-status/{status}")
     @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER', 'WAREHOUSE_MANAGER', 'USER')")
     public ResponseEntity<List<InventoryTransactionResponse>> getTransactionsByApprovalStatus(

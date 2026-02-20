@@ -17,6 +17,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -37,6 +38,7 @@ public class MoldMaintenanceController {
 
     private final MoldMaintenanceService maintenanceService;
 
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 보전 목록 조회", description = "모든 금형 보전 이력을 조회합니다.")
@@ -52,6 +54,7 @@ public class MoldMaintenanceController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/{maintenanceId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형 보전 상세 조회", description = "ID로 금형 보전 이력을 조회합니다.")
@@ -64,6 +67,7 @@ public class MoldMaintenanceController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/mold/{moldId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "금형별 보전 이력 조회", description = "특정 금형의 보전 이력을 조회합니다.")
@@ -78,6 +82,7 @@ public class MoldMaintenanceController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/type/{maintenanceType}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "보전 유형별 조회", description = "특정 보전 유형의 이력을 조회합니다.")
@@ -93,6 +98,7 @@ public class MoldMaintenanceController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/date-range")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "기간별 보전 이력 조회", description = "특정 기간의 보전 이력을 조회합니다.")

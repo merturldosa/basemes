@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class AfterSalesController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'SERVICE_MANAGER', 'SERVICE_ENGINEER')")
     @Operation(summary = "Get all after sales", description = "모든 A/S 조회")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<AfterSalesResponse>> getAllAfterSales() {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("GET /api/after-sales - tenant: {}", tenantId);
@@ -49,6 +51,7 @@ public class AfterSalesController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SERVICE_MANAGER', 'SERVICE_ENGINEER')")
     @Operation(summary = "Get after sales by ID", description = "ID로 A/S 조회")
+    @Transactional(readOnly = true)
     public ResponseEntity<AfterSalesResponse> getAfterSalesById(@PathVariable Long id) {
         log.info("GET /api/after-sales/{}", id);
 
@@ -59,6 +62,7 @@ public class AfterSalesController {
     @GetMapping("/status/{serviceStatus}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SERVICE_MANAGER', 'SERVICE_ENGINEER')")
     @Operation(summary = "Get after sales by service status", description = "서비스 상태별 A/S 조회")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<AfterSalesResponse>> getAfterSalesByServiceStatus(@PathVariable String serviceStatus) {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("GET /api/after-sales/status/{} - tenant: {}", serviceStatus, tenantId);
@@ -74,6 +78,7 @@ public class AfterSalesController {
     @GetMapping("/priority/{priority}")
     @PreAuthorize("hasAnyRole('ADMIN', 'SERVICE_MANAGER', 'SERVICE_ENGINEER')")
     @Operation(summary = "Get after sales by priority", description = "우선순위별 A/S 조회")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<AfterSalesResponse>> getAfterSalesByPriority(@PathVariable String priority) {
         String tenantId = TenantContext.getCurrentTenant();
         log.info("GET /api/after-sales/priority/{} - tenant: {}", priority, tenantId);

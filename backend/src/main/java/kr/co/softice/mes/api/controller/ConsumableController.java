@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -37,6 +38,7 @@ public class ConsumableController {
     /**
      * Get all consumables
      */
+    @Transactional(readOnly = true)
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "소모품 목록 조회", description = "모든 소모품을 조회합니다.")
@@ -55,6 +57,7 @@ public class ConsumableController {
     /**
      * Get consumable by ID
      */
+    @Transactional(readOnly = true)
     @GetMapping("/{consumableId}")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "소모품 상세 조회", description = "ID로 소모품을 조회합니다.")
@@ -70,6 +73,7 @@ public class ConsumableController {
     /**
      * Get low stock consumables
      */
+    @Transactional(readOnly = true)
     @GetMapping("/low-stock")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "재고 부족 소모품 조회", description = "현재 재고가 최소 재고 이하인 소모품을 조회합니다.")

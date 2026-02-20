@@ -139,7 +139,6 @@ export default function HolidaysPage() {
       const data = await workingHoursService.getAllWorkingHours(tenantId);
       setWorkingHours(data || []);
     } catch (err: any) {
-      console.error('Failed to load working hours:', err);
       setWorkingHours([]);
     }
   };

@@ -1,5 +1,7 @@
 package kr.co.softice.mes.domain.service;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,7 @@ public class PurchaseOrderService {
     public PurchaseOrderEntity getPurchaseOrderById(Long purchaseOrderId) {
         log.info("Fetching purchase order by ID: {}", purchaseOrderId);
         return purchaseOrderRepository.findByIdWithAllRelations(purchaseOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found: " + purchaseOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
     }
 
     /**
@@ -72,26 +74,26 @@ public class PurchaseOrderService {
 
         // Check if order number already exists
         if (purchaseOrderRepository.existsByTenant_TenantIdAndOrderNo(tenantId, purchaseOrder.getOrderNo())) {
-            throw new IllegalArgumentException("Purchase order number already exists: " + purchaseOrder.getOrderNo());
+            throw new BusinessException(ErrorCode.PURCHASE_ORDER_ALREADY_EXISTS);
         }
 
         // Get tenant
         TenantEntity tenant = tenantRepository.findById(tenantId)
-                .orElseThrow(() -> new IllegalArgumentException("Tenant not found: " + tenantId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.TENANT_NOT_FOUND));
 
         purchaseOrder.setTenant(tenant);
 
         // Set buyer
         if (purchaseOrder.getBuyer() != null && purchaseOrder.getBuyer().getUserId() != null) {
             UserEntity buyer = userRepository.findById(purchaseOrder.getBuyer().getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("Buyer not found: " + purchaseOrder.getBuyer().getUserId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
             purchaseOrder.setBuyer(buyer);
         }
 
         // Set supplier
         if (purchaseOrder.getSupplier() != null && purchaseOrder.getSupplier().getSupplierId() != null) {
             SupplierEntity supplier = supplierRepository.findById(purchaseOrder.getSupplier().getSupplierId())
-                    .orElseThrow(() -> new IllegalArgumentException("Supplier not found: " + purchaseOrder.getSupplier().getSupplierId()));
+                    .orElseThrow(() -> new BusinessException(ErrorCode.SUPPLIER_NOT_FOUND));
             purchaseOrder.setSupplier(supplier);
         }
 
@@ -109,14 +111,14 @@ public class PurchaseOrderService {
                 // Set material
                 if (item.getMaterial() != null && item.getMaterial().getMaterialId() != null) {
                     MaterialEntity material = materialRepository.findById(item.getMaterial().getMaterialId())
-                            .orElseThrow(() -> new IllegalArgumentException("Material not found: " + item.getMaterial().getMaterialId()));
+                            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
                     item.setMaterial(material);
                 }
 
                 // Set purchase request if provided
                 if (item.getPurchaseRequest() != null && item.getPurchaseRequest().getPurchaseRequestId() != null) {
                     PurchaseRequestEntity purchaseRequest = purchaseRequestRepository.findById(item.getPurchaseRequest().getPurchaseRequestId())
-                            .orElseThrow(() -> new IllegalArgumentException("Purchase request not found: " + item.getPurchaseRequest().getPurchaseRequestId()));
+                            .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_REQUEST_NOT_FOUND));
                     item.setPurchaseRequest(purchaseRequest);
 
                     // Update purchase request status to ORDERED
@@ -147,7 +149,7 @@ public class PurchaseOrderService {
         log.info("Purchase order created successfully: {}", saved.getPurchaseOrderId());
 
         return purchaseOrderRepository.findByIdWithAllRelations(saved.getPurchaseOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve created purchase order"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
     }
 
     /**
@@ -158,11 +160,11 @@ public class PurchaseOrderService {
         log.info("Updating purchase order: {}", purchaseOrderId);
 
         PurchaseOrderEntity existingOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found: " + purchaseOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
 
         // Can only update DRAFT orders
         if (!"DRAFT".equals(existingOrder.getStatus())) {
-            throw new IllegalArgumentException("Only draft purchase orders can be updated");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
 
         // Update fields
@@ -180,7 +182,7 @@ public class PurchaseOrderService {
                 // Set material
                 if (item.getMaterial() != null && item.getMaterial().getMaterialId() != null) {
                     MaterialEntity material = materialRepository.findById(item.getMaterial().getMaterialId())
-                            .orElseThrow(() -> new IllegalArgumentException("Material not found: " + item.getMaterial().getMaterialId()));
+                            .orElseThrow(() -> new BusinessException(ErrorCode.MATERIAL_NOT_FOUND));
                     item.setMaterial(material);
                 }
 
@@ -204,7 +206,7 @@ public class PurchaseOrderService {
         log.info("Purchase order updated successfully: {}", saved.getPurchaseOrderId());
 
         return purchaseOrderRepository.findByIdWithAllRelations(saved.getPurchaseOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve updated purchase order"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
     }
 
     /**
@@ -215,10 +217,10 @@ public class PurchaseOrderService {
         log.info("Confirming purchase order: {}", purchaseOrderId);
 
         PurchaseOrderEntity purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found: " + purchaseOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
 
         if (!"DRAFT".equals(purchaseOrder.getStatus())) {
-            throw new IllegalArgumentException("Only draft purchase orders can be confirmed");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
 
         purchaseOrder.setStatus("CONFIRMED");
@@ -227,7 +229,7 @@ public class PurchaseOrderService {
         log.info("Purchase order confirmed successfully: {}", saved.getPurchaseOrderId());
 
         return purchaseOrderRepository.findByIdWithAllRelations(saved.getPurchaseOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve confirmed purchase order"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
     }
 
     /**
@@ -238,14 +240,14 @@ public class PurchaseOrderService {
         log.info("Cancelling purchase order: {}", purchaseOrderId);
 
         PurchaseOrderEntity purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found: " + purchaseOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
 
         if ("CANCELLED".equals(purchaseOrder.getStatus())) {
-            throw new IllegalArgumentException("Purchase order is already cancelled");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
 
         if ("RECEIVED".equals(purchaseOrder.getStatus())) {
-            throw new IllegalArgumentException("Cannot cancel fully received purchase order");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
 
         purchaseOrder.setStatus("CANCELLED");
@@ -254,7 +256,7 @@ public class PurchaseOrderService {
         log.info("Purchase order cancelled successfully: {}", saved.getPurchaseOrderId());
 
         return purchaseOrderRepository.findByIdWithAllRelations(saved.getPurchaseOrderId())
-                .orElseThrow(() -> new IllegalArgumentException("Failed to retrieve cancelled purchase order"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
     }
 
     /**
@@ -265,10 +267,10 @@ public class PurchaseOrderService {
         log.info("Deleting purchase order: {}", purchaseOrderId);
 
         PurchaseOrderEntity purchaseOrder = purchaseOrderRepository.findById(purchaseOrderId)
-                .orElseThrow(() -> new IllegalArgumentException("Purchase order not found: " + purchaseOrderId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PURCHASE_ORDER_NOT_FOUND));
 
         if (!"DRAFT".equals(purchaseOrder.getStatus()) && !"CANCELLED".equals(purchaseOrder.getStatus())) {
-            throw new IllegalArgumentException("Only draft or cancelled purchase orders can be deleted");
+            throw new BusinessException(ErrorCode.INVALID_STATUS_TRANSITION);
         }
 
         purchaseOrderRepository.deleteById(purchaseOrderId);

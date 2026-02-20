@@ -69,7 +69,6 @@ const BomsPage: React.FC = () => {
       const data = await bomService.getAll();
       setBoms(data || []);
     } catch (error) {
-      console.error('Failed to load BOMs:', error);
       setSnackbar({ open: true, message: 'BOM 목록 조회 실패', severity: 'error' });
       setBoms([]);
     } finally {
@@ -82,7 +81,6 @@ const BomsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -92,7 +90,6 @@ const BomsPage: React.FC = () => {
       const data = await processService.getProcesses();
       setProcesses(data || []);
     } catch (error) {
-      console.error('Failed to load processes:', error);
       setProcesses([]);
     }
   };
@@ -192,7 +189,6 @@ const BomsPage: React.FC = () => {
       handleCloseDialog();
       loadBoms();
     } catch (error) {
-      console.error('Failed to save BOM:', error);
       setSnackbar({ open: true, message: 'BOM 저장 실패', severity: 'error' });
     }
   };
@@ -207,7 +203,6 @@ const BomsPage: React.FC = () => {
       setSelectedBom(null);
       loadBoms();
     } catch (error) {
-      console.error('Failed to delete BOM:', error);
       setSnackbar({ open: true, message: 'BOM 삭제 실패', severity: 'error' });
     }
   };
@@ -222,7 +217,6 @@ const BomsPage: React.FC = () => {
       });
       loadBoms();
     } catch (error) {
-      console.error('Failed to toggle BOM:', error);
       setSnackbar({ open: true, message: 'BOM 상태 변경 실패', severity: 'error' });
     }
   };
@@ -238,7 +232,6 @@ const BomsPage: React.FC = () => {
       setCopyVersion('');
       loadBoms();
     } catch (error) {
-      console.error('Failed to copy BOM:', error);
       setSnackbar({ open: true, message: 'BOM 복사 실패', severity: 'error' });
     }
   };
