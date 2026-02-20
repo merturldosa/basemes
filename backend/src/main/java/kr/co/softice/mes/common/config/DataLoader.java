@@ -1,5 +1,7 @@
 package kr.co.softice.mes.common.config;
 
+import kr.co.softice.mes.common.exception.BusinessException;
+import kr.co.softice.mes.common.exception.ErrorCode;
 import kr.co.softice.mes.domain.entity.*;
 import kr.co.softice.mes.domain.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -106,7 +108,7 @@ public class DataLoader implements CommandLineRunner {
 
         } catch (Exception e) {
             log.error("Error loading initial data", e);
-            throw new RuntimeException("Failed to load initial data", e);
+            throw new BusinessException(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to load initial data");
         }
     }
 

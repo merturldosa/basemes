@@ -1,5 +1,6 @@
 package kr.co.softice.mes;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -17,14 +18,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * @version 0.1.0-SNAPSHOT
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  */
+@Slf4j
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableCaching
 public class SoIceMesApplication {
 
     public static void main(String[] args) {
-        // Banner
-        System.out.println("\n" +
+        SpringApplication.run(SoIceMesApplication.class, args);
+        log.info("\n" +
                 "========================================================\n" +
                 "                                                        \n" +
                 "  SOFTICE - Manufacturing Execution System             \n" +
@@ -33,8 +35,6 @@ public class SoIceMesApplication {
                 "  Developer: Moon Myung-seop (msmoon@softice.co.kr)   \n" +
                 "  Company: SoftIce Co., Ltd.                           \n" +
                 "                                                        \n" +
-                "========================================================\n");
-
-        SpringApplication.run(SoIceMesApplication.class, args);
+                "========================================================");
     }
 }

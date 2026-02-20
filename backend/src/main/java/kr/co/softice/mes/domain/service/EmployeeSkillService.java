@@ -177,7 +177,7 @@ public class EmployeeSkillService {
     }
 
     private Integer convertSkillLevelToNumeric(String skillLevel) {
-        if (skillLevel == null) return null;
+        if (skillLevel == null) return 0;
         switch (skillLevel) {
             case "BEGINNER":
                 return 1;
