@@ -78,13 +78,11 @@ class OfflineSyncService {
    */
   private initializeConnectionMonitoring() {
     window.addEventListener('online', () => {
-      console.log('Network connection restored');
       this.notifyOnlineStatus(true);
       this.syncQueue();
     });
 
     window.addEventListener('offline', () => {
-      console.log('Network connection lost');
       this.notifyOnlineStatus(false);
     });
 
@@ -149,7 +147,6 @@ class OfflineSyncService {
     };
 
     await workProgressQueue.setItem(item.id, item);
-    console.log('Queued work progress:', item);
     this.notifySyncStatus();
   }
 
@@ -165,7 +162,6 @@ class OfflineSyncService {
     };
 
     await defectQueue.setItem(item.id, item);
-    console.log('Queued defect:', item);
     this.notifySyncStatus();
   }
 
@@ -189,7 +185,6 @@ class OfflineSyncService {
     };
 
     await sopQueue.setItem(item.id, item);
-    console.log('Queued SOP step:', item);
     this.notifySyncStatus();
   }
 
@@ -243,12 +238,10 @@ class OfflineSyncService {
    */
   async syncQueue(): Promise<void> {
     if (!this.isOnline()) {
-      console.log('Cannot sync: offline');
       return;
     }
 
     if (this.syncInProgress) {
-      console.log('Sync already in progress');
       return;
     }
 
@@ -256,8 +249,6 @@ class OfflineSyncService {
     this.notifySyncStatus();
 
     try {
-      console.log('Starting queue synchronization...');
-
       // Sync work progress records
       await this.syncWorkProgressQueue();
 
@@ -268,9 +259,8 @@ class OfflineSyncService {
       await this.syncSOPQueue();
 
       localStorage.setItem('lastSyncTime', Date.now().toString());
-      console.log('Queue synchronization complete');
-    } catch (error) {
-      console.error('Sync error:', error);
+    } catch {
+      // Sync error occurred - will retry on next sync cycle
     } finally {
       this.syncInProgress = false;
       this.notifySyncStatus();
@@ -288,16 +278,15 @@ class OfflineSyncService {
       if (!item) continue;
 
       if (item.retryCount >= this.maxRetries) {
-        console.warn('Max retries reached for work progress:', item);
+        // Max retries reached - skip this item
         continue;
       }
 
       try {
         await popService.recordProgress(item.progressId, item.quantity);
         await workProgressQueue.removeItem(key);
-        console.log('Synced work progress:', item);
-      } catch (error) {
-        console.error('Failed to sync work progress:', error);
+      } catch {
+        // Failed to sync work progress - increment retry count
         item.retryCount++;
         await workProgressQueue.setItem(key, item);
       }
@@ -315,7 +304,7 @@ class OfflineSyncService {
       if (!item) continue;
 
       if (item.retryCount >= this.maxRetries) {
-        console.warn('Max retries reached for defect:', item);
+        // Max retries reached - skip this item
         continue;
       }
 
@@ -329,9 +318,8 @@ class OfflineSyncService {
           notes: item.notes,
         });
         await defectQueue.removeItem(key);
-        console.log('Synced defect:', item);
-      } catch (error) {
-        console.error('Failed to sync defect:', error);
+      } catch {
+        // Failed to sync defect - increment retry count
         item.retryCount++;
         await defectQueue.setItem(key, item);
       }
@@ -349,16 +337,15 @@ class OfflineSyncService {
       if (!item) continue;
 
       if (item.retryCount >= this.maxRetries) {
-        console.warn('Max retries reached for SOP step:', item);
+        // Max retries reached - skip this item
         continue;
       }
 
       try {
         await sopOperatorService.completeStep(item.executionId, item.stepId, item.passed, item.notes);
         await sopQueue.removeItem(key);
-        console.log('Synced SOP step:', item);
-      } catch (error) {
-        console.error('Failed to sync SOP step:', error);
+      } catch {
+        // Failed to sync SOP step - increment retry count
         item.retryCount++;
         await sopQueue.setItem(key, item);
       }
@@ -381,7 +368,6 @@ class OfflineSyncService {
         const item = await queue.getItem<any>(key);
         if (item && item.retryCount >= this.maxRetries) {
           await queue.removeItem(key);
-          console.log(`Cleared failed ${name} item:`, key);
         }
       }
     }
@@ -396,7 +382,6 @@ class OfflineSyncService {
     await workProgressQueue.clear();
     await defectQueue.clear();
     await sopQueue.clear();
-    console.log('All queues cleared');
     this.notifySyncStatus();
   }
 
@@ -405,7 +390,6 @@ class OfflineSyncService {
    */
   handleConflict<T>(localData: T, serverData: T): T {
     // Simple last-write-wins: prefer server data
-    console.warn('Conflict detected, using server data');
     return serverData;
   }
 }

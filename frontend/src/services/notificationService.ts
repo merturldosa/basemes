@@ -33,7 +33,6 @@ class NotificationService {
    */
   connect(userId: number, tenantId: string): void {
     if (this.connected) {
-      console.log('Already connected to notification service');
       return;
     }
 
@@ -46,11 +45,10 @@ class NotificationService {
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (str) => {
-        console.log('STOMP:', str);
+      debug: () => {
+        // No-op: STOMP debug output suppressed
       },
       onConnect: () => {
-        console.log('Connected to notification service');
         this.connected = true;
 
         // Subscribe to user-specific notifications
@@ -66,11 +64,10 @@ class NotificationService {
         });
       },
       onDisconnect: () => {
-        console.log('Disconnected from notification service');
         this.connected = false;
       },
-      onStompError: (frame) => {
-        console.error('STOMP error:', frame);
+      onStompError: () => {
+        // STOMP error occurred - handled silently
       },
     });
 
@@ -109,8 +106,8 @@ class NotificationService {
     this.callbacks.forEach((callback) => {
       try {
         callback(notification);
-      } catch (error) {
-        console.error('Error in notification callback:', error);
+      } catch {
+        // Notification callback error - handled silently
       }
     });
 
@@ -129,7 +126,7 @@ class NotificationService {
       // Different sounds for different priorities
       const audio = new Audio('/sounds/notification.mp3');
       audio.volume = priority === 'URGENT' ? 1.0 : 0.5;
-      audio.play().catch((e) => console.warn('Could not play sound:', e));
+      audio.play().catch(() => { /* Sound playback not available */ });
     } catch (error) {
       // Ignore sound errors
     }
