@@ -48,6 +48,7 @@ import {
   getRecurrenceRuleLabel,
   formatTime
 } from '../../services/holidayService';
+import { useAuthStore } from '@/stores/authStore';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,8 +66,9 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function HolidaysPage() {
+  const { user } = useAuthStore();
   const [currentTab, setCurrentTab] = useState(0);
-  const [tenantId] = useState('TENANT001'); // TODO: Get from auth context
+  const tenantId = user?.tenantId ?? '';
 
   // ==================== Holiday State ====================
   const [holidays, setHolidays] = useState<Holiday[]>([]);

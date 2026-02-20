@@ -189,7 +189,6 @@ public class LotController {
             .manufactureDate(lot.getManufacturingDate())
             .expiryDate(lot.getExpiryDate())
             .qualityStatus(lot.getQualityStatus())
-            // TODO: Fix supplier mapping - LotEntity has supplierName field, not supplier
             .supplier(lot.getSupplierName())
             .supplierLotNo(lot.getSupplierLotNo())
             .remarks(lot.getRemarks())

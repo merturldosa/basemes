@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { useAuthStore } from '@/stores/authStore';
 
 /**
  * 반품 관리 페이지
@@ -63,6 +64,7 @@ interface Return {
 }
 
 const ReturnsPage: React.FC = () => {
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [returns, setReturns] = useState<Return[]>([]);
   const [loading, setLoading] = useState(false);
@@ -172,8 +174,7 @@ const ReturnsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual approver user ID from authentication context
-      const approverUserId = 1; // Placeholder
+      const approverUserId = user?.userId ?? 0;
       await axios.post(`/api/returns/${returnEntity.returnId}/approve`, null, {
         params: { approverUserId }
       });
@@ -200,8 +201,7 @@ const ReturnsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual approver user ID from authentication context
-      const approverUserId = 1; // Placeholder
+      const approverUserId = user?.userId ?? 0;
       await axios.post(`/api/returns/${selectedReturn.returnId}/reject`, null, {
         params: {
           approverUserId,
@@ -224,8 +224,7 @@ const ReturnsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual receiver user ID from authentication context
-      const receiverUserId = 1; // Placeholder
+      const receiverUserId = user?.userId ?? 0;
       await axios.post(`/api/returns/${returnEntity.returnId}/receive`, null, {
         params: { receiverUserId }
       });

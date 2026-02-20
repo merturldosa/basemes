@@ -207,10 +207,90 @@ const StatisticalReportsPage: React.FC = () => {
     },
   ];
 
+  const getReportData = (reportType: string): { headers: string[]; rows: (string | number)[][] } => {
+    switch (reportType) {
+      case '생산':
+        return {
+          headers: ['날짜', '작업지시번호', '제품명', '목표수량', '실적수량', '효율(%)', '작업자', '불량수량', '다운타임(분)'],
+          rows: productionReportData.map((r) => [
+            r.date, r.workOrderNo, r.productName, r.targetQty, r.actualQty,
+            r.efficiency, r.operator, r.defectQty, r.downtime,
+          ]),
+        };
+      case '품질':
+        return {
+          headers: ['날짜', '검사번호', '검사유형', '제품명', 'LOT번호', '검사수량', '결과', '불량수', '검사자'],
+          rows: qualityReportData.map((r) => [
+            r.date, r.inspectionNo, r.type, r.productName, r.lotNo,
+            r.inspectedQty, r.result, r.defects, r.inspector,
+          ]),
+        };
+      case '재고':
+        return {
+          headers: ['제품명', '카테고리', '현재고', '안전재고', '입고수량', '출고수량', '회전율', '창고', '최종 업데이트'],
+          rows: inventoryReportData.map((r) => [
+            r.productName, r.category, r.currentStock, r.safetyStock, r.incomingQty,
+            r.outgoingQty, r.turnoverRate, r.warehouseName, r.lastUpdated,
+          ]),
+        };
+      case '설비':
+        return {
+          headers: ['설비번호', '설비명', '가동률(%)', '가동시간(분)', '다운타임(분)', '보전횟수', '불량수', 'OEE(%)', '상태'],
+          rows: equipmentReportData.map((r) => [
+            r.equipmentNo, r.equipmentName, r.utilizationRate, r.operatingTime,
+            r.downtimeTotal, r.maintenanceCount, r.defectCount, r.oee, r.status,
+          ]),
+        };
+      default:
+        return { headers: [], rows: [] };
+    }
+  };
+
+  const buildCsvString = (headers: string[], rows: (string | number)[][]): string => {
+    const escapeCsvCell = (cell: string | number): string => {
+      const str = String(cell);
+      if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+    const headerLine = headers.map(escapeCsvCell).join(',');
+    const dataLines = rows.map((row) => row.map(escapeCsvCell).join(','));
+    return [headerLine, ...dataLines].join('\n');
+  };
+
+  const downloadFile = (content: string, fileName: string, mimeType: string) => {
+    const BOM = '\uFEFF';
+    const blob = new Blob([BOM + content], { type: `${mimeType};charset=utf-8` });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const handleExport = (format: 'pdf' | 'excel' | 'csv', reportType: string) => {
-    console.log(`Exporting ${reportType} report as ${format}`);
-    // TODO: Implement actual export logic
-    alert(`${reportType} 리포트를 ${format.toUpperCase()} 형식으로 다운로드합니다.`);
+    const { headers, rows } = getReportData(reportType);
+    if (headers.length === 0) return;
+
+    const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const baseFileName = `${reportType}_리포트_${timestamp}`;
+    const csvContent = buildCsvString(headers, rows);
+
+    switch (format) {
+      case 'csv':
+        downloadFile(csvContent, `${baseFileName}.csv`, 'text/csv');
+        break;
+      case 'excel':
+        downloadFile(csvContent, `${baseFileName}.xls`, 'application/vnd.ms-excel');
+        break;
+      case 'pdf':
+        window.print();
+        break;
+    }
   };
 
   const getStatusColor = (status: string) => {

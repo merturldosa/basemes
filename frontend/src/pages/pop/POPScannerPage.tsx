@@ -18,6 +18,8 @@ import {
   ListItemText,
   ListItemIcon,
   Divider,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import {
   Assignment as WorkOrderIcon,
@@ -28,6 +30,7 @@ import {
 } from '@mui/icons-material';
 import BarcodeScanner from '@/components/pop/BarcodeScanner';
 import { BarcodeScanResult } from '@/hooks/useBarcodeScanner';
+import popService, { ScanBarcodeRequest } from '@/services/popService';
 
 interface ScanHistory {
   id: string;
@@ -41,6 +44,11 @@ interface ScanHistory {
 const POPScannerPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [scanHistory, setScanHistory] = useState<ScanHistory[]>([]);
+  const [snackbar, setSnackbar] = useState<{
+    open: boolean;
+    message: string;
+    severity: 'success' | 'error';
+  }>({ open: false, message: '', severity: 'success' });
 
   const scanTypes = [
     { label: '작업 지시', value: 'work-order', icon: <WorkOrderIcon /> },
@@ -49,29 +57,83 @@ const POPScannerPage: React.FC = () => {
     { label: '위치', value: 'location', icon: <LocationIcon /> },
   ];
 
+  const scanTypeToApiType: Record<string, ScanBarcodeRequest['type']> = {
+    'work-order': 'WORK_ORDER',
+    'lot': 'LOT',
+    'product': 'PRODUCT',
+    'location': 'PRODUCT',
+  };
+
   const currentScanType = scanTypes[activeTab];
 
-  const handleScan = (result: BarcodeScanResult) => {
+  const handleScan = async (result: BarcodeScanResult) => {
     console.log('Scanned:', result);
 
-    // Validate scan based on type
+    const scanId = `${Date.now()}-${Math.random()}`;
+    const apiType = scanTypeToApiType[currentScanType.value] || 'PRODUCT';
+
+    // Add initial scan entry to history (pending state shown as success until API responds)
     const newScan: ScanHistory = {
-      id: `${Date.now()}-${Math.random()}`,
+      id: scanId,
       type: currentScanType.value,
       data: result.data,
       timestamp: result.timestamp,
       status: 'success',
-      message: `${currentScanType.label} 스캔 완료`,
+      message: `${currentScanType.label} 스캔 처리 중...`,
     };
-
-    // Add to history
     setScanHistory((prev) => [newScan, ...prev.slice(0, 9)]);
 
-    // TODO: Process scan based on type
-    // - Work Order: Load work order details
-    // - LOT: Verify LOT and load details
-    // - Product: Load product info
-    // - Location: Verify location
+    try {
+      const apiResponse = await popService.scanBarcode({
+        barcode: result.data,
+        type: apiType,
+      });
+
+      // Update scan history entry with API response details
+      setScanHistory((prev) =>
+        prev.map((scan) =>
+          scan.id === scanId
+            ? {
+                ...scan,
+                status: 'success' as const,
+                message: apiResponse?.message
+                  || apiResponse?.name
+                  || apiResponse?.productName
+                  || apiResponse?.workOrderNo
+                  || `${currentScanType.label} 스캔 완료`,
+              }
+            : scan
+        )
+      );
+
+      setSnackbar({
+        open: true,
+        message: `${currentScanType.label} 바코드 스캔 성공: ${result.data}`,
+        severity: 'success',
+      });
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || error?.message || '스캔 처리 중 오류가 발생했습니다.';
+
+      // Mark the scan as failed with error message
+      setScanHistory((prev) =>
+        prev.map((scan) =>
+          scan.id === scanId
+            ? {
+                ...scan,
+                status: 'error' as const,
+                message: errorMessage,
+              }
+            : scan
+        )
+      );
+
+      setSnackbar({
+        open: true,
+        message: `스캔 실패: ${errorMessage}`,
+        severity: 'error',
+      });
+    }
   };
 
   const getScanTypeInstructions = (type: string) => {
@@ -158,12 +220,18 @@ const POPScannerPage: React.FC = () => {
                             color="primary"
                             variant="outlined"
                           />
+                          {scan.status === 'error' && (
+                            <Chip label="실패" size="small" color="error" />
+                          )}
                         </Box>
                       }
                       secondary={
                         <>
                           {scan.message && (
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography
+                              variant="body2"
+                              color={scan.status === 'error' ? 'error' : 'text.secondary'}
+                            >
                               {scan.message}
                             </Typography>
                           )}
@@ -180,6 +248,23 @@ const POPScannerPage: React.FC = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Snackbar for scan notifications */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={4000}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+          severity={snackbar.severity}
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

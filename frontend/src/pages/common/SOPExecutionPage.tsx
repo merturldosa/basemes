@@ -44,8 +44,10 @@ import sopService, {
   ExecutionStartRequest,
   StepCompleteRequest,
 } from '../../services/sopService';
+import { useAuthStore } from '@/stores/authStore';
 
 const SOPExecutionPage: React.FC = () => {
+  const { user } = useAuthStore();
   const [approvedSOPs, setApprovedSOPs] = useState<SOP[]>([]);
   const [selectedSOP, setSelectedSOP] = useState<SOP | null>(null);
   const [execution, setExecution] = useState<SOPExecution | null>(null);
@@ -60,7 +62,7 @@ const SOPExecutionPage: React.FC = () => {
 
   // Form data
   const [startForm, setStartForm] = useState<ExecutionStartRequest>({
-    executorId: 1, // TODO: Get from auth context
+    executorId: user?.userId ?? 0,
     referenceType: '',
     referenceId: undefined,
     referenceNo: '',
@@ -94,7 +96,7 @@ const SOPExecutionPage: React.FC = () => {
   const handleOpenStartDialog = (sop: SOP) => {
     setSelectedSOP(sop);
     setStartForm({
-      executorId: 1, // TODO: Get from auth context
+      executorId: user?.userId ?? 0,
       referenceType: '',
       referenceId: undefined,
       referenceNo: '',

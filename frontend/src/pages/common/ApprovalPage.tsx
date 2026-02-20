@@ -50,6 +50,7 @@ import {
   getDocumentTypeLabel,
   formatDateTime
 } from '../../services/approvalService';
+import { useAuthStore } from '@/stores/authStore';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -67,9 +68,10 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function ApprovalPage() {
+  const { user } = useAuthStore();
   const [currentTab, setCurrentTab] = useState(0);
-  const [tenantId] = useState('TENANT001'); // TODO: Get from auth context
-  const [userId] = useState(1); // TODO: Get from auth context
+  const tenantId = user?.tenantId ?? '';
+  const userId = user?.userId ?? 0;
 
   // ==================== State ====================
   const [pendingApprovals, setPendingApprovals] = useState<ApprovalInstance[]>([]);

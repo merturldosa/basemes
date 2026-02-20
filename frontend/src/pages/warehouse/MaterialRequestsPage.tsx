@@ -29,6 +29,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { useAuthStore } from '@/stores/authStore';
 
 /**
  * 불출 신청 리스트 페이지
@@ -64,6 +65,7 @@ interface MaterialRequest {
 }
 
 const MaterialRequestsPage: React.FC = () => {
+  const { user } = useAuthStore();
   const navigate = useNavigate();
   const [requests, setRequests] = useState<MaterialRequest[]>([]);
   const [loading, setLoading] = useState(false);
@@ -167,8 +169,7 @@ const MaterialRequestsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual approver user ID from authentication context
-      const approverUserId = 1; // Placeholder
+      const approverUserId = user?.userId ?? 0;
       await axios.post(`/api/material-requests/${request.materialRequestId}/approve`, null, {
         params: { approverUserId }
       });
@@ -195,8 +196,7 @@ const MaterialRequestsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual approver user ID from authentication context
-      const approverUserId = 1; // Placeholder
+      const approverUserId = user?.userId ?? 0;
       await axios.post(`/api/material-requests/${selectedRequest.materialRequestId}/reject`, null, {
         params: {
           approverUserId,
@@ -219,8 +219,7 @@ const MaterialRequestsPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual issuer user ID from authentication context
-      const issuerUserId = 1; // Placeholder
+      const issuerUserId = user?.userId ?? 0;
       await axios.post(`/api/material-requests/${request.materialRequestId}/issue`, null, {
         params: { issuerUserId }
       });

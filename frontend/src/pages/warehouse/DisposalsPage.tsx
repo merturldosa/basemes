@@ -39,6 +39,7 @@ import {
 } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import axios from 'axios';
+import { useAuthStore } from '@/stores/authStore';
 
 interface DisposalItem {
     disposalItemId?: number;
@@ -108,6 +109,7 @@ interface Statistics {
 }
 
 const DisposalsPage: React.FC = () => {
+    const { user } = useAuthStore();
     const [disposals, setDisposals] = useState<Disposal[]>([]);
     const [loading, setLoading] = useState(false);
     const [openCreate, setOpenCreate] = useState(false);
@@ -127,7 +129,7 @@ const DisposalsPage: React.FC = () => {
         disposalDate: new Date().toISOString().split('T')[0],
         disposalType: 'DEFECTIVE',
         workOrderId: '',
-        requesterUserId: 1,
+        requesterUserId: user?.userId ?? 0,
         warehouseId: 1,
         remarks: ''
     });
@@ -194,7 +196,7 @@ const DisposalsPage: React.FC = () => {
 
     const handleApprove = async (disposalId: number) => {
         try {
-            const approverId = 1; // TODO: Get from auth context
+            const approverId = user?.userId ?? 0;
             await axios.post(`/api/disposals/${disposalId}/approve?approverUserId=${approverId}`);
             fetchDisposals();
         } catch (error) {
@@ -208,7 +210,7 @@ const DisposalsPage: React.FC = () => {
         if (!reason) return;
 
         try {
-            const approverId = 1; // TODO: Get from auth context
+            const approverId = user?.userId ?? 0;
             await axios.post(`/api/disposals/${disposalId}/reject?approverUserId=${approverId}&reason=${encodeURIComponent(reason)}`);
             fetchDisposals();
         } catch (error) {
@@ -221,7 +223,7 @@ const DisposalsPage: React.FC = () => {
         if (!confirm('폐기를 처리하시겠습니까? 재고가 차감됩니다.')) return;
 
         try {
-            const processorId = 1; // TODO: Get from auth context
+            const processorId = user?.userId ?? 0;
             await axios.post(`/api/disposals/${disposalId}/process?processorUserId=${processorId}`);
             fetchDisposals();
         } catch (error) {
@@ -273,7 +275,7 @@ const DisposalsPage: React.FC = () => {
             disposalDate: new Date().toISOString().split('T')[0],
             disposalType: 'DEFECTIVE',
             workOrderId: '',
-            requesterUserId: 1,
+            requesterUserId: user?.userId ?? 0,
             warehouseId: 1,
             remarks: ''
         });

@@ -24,6 +24,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { useAuthStore } from '@/stores/authStore';
 
 /**
  * 자재 인수인계 리스트 페이지
@@ -57,6 +58,7 @@ interface MaterialHandover {
 }
 
 const MaterialHandoversPage: React.FC = () => {
+  const { user } = useAuthStore();
   const [handovers, setHandovers] = useState<MaterialHandover[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,8 +144,7 @@ const MaterialHandoversPage: React.FC = () => {
     if (!selectedHandover) return;
 
     try {
-      // TODO: Get actual receiver user ID from authentication context
-      const receiverId = 1; // Placeholder
+      const receiverId = user?.userId ?? 0;
       await axios.post(`/api/material-handovers/${selectedHandover.materialHandoverId}/confirm`, null, {
         params: {
           receiverId,
@@ -174,8 +175,7 @@ const MaterialHandoversPage: React.FC = () => {
     }
 
     try {
-      // TODO: Get actual receiver user ID from authentication context
-      const receiverId = 1; // Placeholder
+      const receiverId = user?.userId ?? 0;
       await axios.post(`/api/material-handovers/${selectedHandover.materialHandoverId}/reject`, null, {
         params: {
           receiverId,
