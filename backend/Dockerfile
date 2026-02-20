@@ -11,17 +11,12 @@ FROM maven:3.8.7-eclipse-temurin-11 AS builder
 # Set working directory
 WORKDIR /build
 
-# Copy pom.xml first for better layer caching
+# Copy pom.xml and source code
 COPY pom.xml .
-
-# Download dependencies (cached if pom.xml hasn't changed)
-RUN mvn dependency:go-offline -B
-
-# Copy source code
 COPY src ./src
 
 # Build the application (skip tests for faster builds - run tests in CI)
-RUN mvn clean package -DskipTests -B
+RUN mvn clean package -Dmaven.test.skip=true -B
 
 # ───────────────────────────────────────────────────────────────
 # Stage 2: Runtime

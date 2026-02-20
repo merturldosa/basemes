@@ -11,7 +11,6 @@ import {
   UserUpdateRequest,
   ChangePasswordRequest,
   PageResponse,
-  ApiResponse,
 } from '@/types';
 
 class UserService {

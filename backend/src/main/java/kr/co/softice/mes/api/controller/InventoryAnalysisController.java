@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Inventory Analysis Controller
@@ -215,10 +216,10 @@ public class InventoryAnalysisController {
 
         // 대시보드 구성
         InventoryDashboard dashboard = InventoryDashboard.builder()
-                .turnoverAnalysis(turnover.stream().limit(10).toList())
-                .obsoleteInventory(obsolete.stream().limit(10).toList())
-                .agingAnalysis(aging.stream().limit(10).toList())
-                .abcAnalysis(abc.stream().limit(10).toList())
+                .turnoverAnalysis(turnover.stream().limit(10).collect(Collectors.toList()))
+                .obsoleteInventory(obsolete.stream().limit(10).collect(Collectors.toList()))
+                .agingAnalysis(aging.stream().limit(10).collect(Collectors.toList()))
+                .abcAnalysis(abc.stream().limit(10).collect(Collectors.toList()))
                 .trendAnalysis(trend)
                 .summary(InventoryDashboard.Summary.builder()
                         .totalProducts(abc.size())

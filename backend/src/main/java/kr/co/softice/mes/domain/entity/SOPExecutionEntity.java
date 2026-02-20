@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * SOP Execution Record Entity
@@ -219,7 +220,7 @@ public class SOPExecutionEntity extends BaseEntity {
     public boolean areAllCriticalStepsCompleted() {
         List<SOPStepEntity> criticalSteps = sop.getSteps().stream()
                 .filter(SOPStepEntity::getIsCritical)
-                .toList();
+                .collect(Collectors.toList());
 
         if (criticalSteps.isEmpty()) {
             return true;

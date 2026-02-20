@@ -177,55 +177,53 @@ export interface StepCompleteRequest {
 
 class DocumentTemplateService {
   async getTemplates(): Promise<DocumentTemplate[]> {
-    const response = await api.get('/document-templates');
-    return response.data.data;
+    const response = await api.get<DocumentTemplate[]>('/document-templates');
+    return response.data;
   }
 
   async getActiveTemplates(): Promise<DocumentTemplate[]> {
-    const response = await api.get('/document-templates/active');
-    return response.data.data;
+    const response = await api.get<DocumentTemplate[]>('/document-templates/active');
+    return response.data;
   }
 
   async getTemplateById(id: number): Promise<DocumentTemplate> {
-    const response = await api.get(`/document-templates/${id}`);
-    return response.data.data;
+    const response = await api.get<DocumentTemplate>(`/document-templates/${id}`);
+    return response.data;
   }
 
   async getTemplatesByType(templateType: string): Promise<DocumentTemplate[]> {
-    const response = await api.get(`/document-templates/type/${templateType}`);
-    return response.data.data;
+    const response = await api.get<DocumentTemplate[]>(`/document-templates/type/${templateType}`);
+    return response.data;
   }
 
   async getTemplatesByCategory(category: string): Promise<DocumentTemplate[]> {
-    const response = await api.get(`/document-templates/category/${category}`);
-    return response.data.data;
+    const response = await api.get<DocumentTemplate[]>(`/document-templates/category/${category}`);
+    return response.data;
   }
 
   async getLatestTemplateByCode(templateCode: string): Promise<DocumentTemplate> {
-    const response = await api.get(`/document-templates/by-code/${templateCode}`);
-    return response.data.data;
+    const response = await api.get<DocumentTemplate>(`/document-templates/by-code/${templateCode}`);
+    return response.data;
   }
 
   async getAllVersions(templateCode: string): Promise<DocumentTemplate[]> {
-    const response = await api.get(`/document-templates/versions/${templateCode}`);
-    return response.data.data;
+    const response = await api.get<DocumentTemplate[]>(`/document-templates/versions/${templateCode}`);
+    return response.data;
   }
 
   async createTemplate(data: DocumentTemplateCreateRequest): Promise<DocumentTemplate> {
-    const response = await api.post('/document-templates', data);
-    return response.data.data;
+    const response = await api.post<DocumentTemplate>('/document-templates', data);
+    return response.data;
   }
 
   async updateTemplate(id: number, data: Partial<DocumentTemplateCreateRequest>): Promise<DocumentTemplate> {
-    const response = await api.put(`/document-templates/${id}`, data);
-    return response.data.data;
+    const response = await api.put<DocumentTemplate>(`/document-templates/${id}`, data);
+    return response.data;
   }
 
   async createNewVersion(templateCode: string, newVersion: string): Promise<DocumentTemplate> {
-    const response = await api.post(`/document-templates/${templateCode}/new-version`, null, {
-      params: { newVersion }
-    });
-    return response.data.data;
+    const response = await api.post<DocumentTemplate>(`/document-templates/${templateCode}/new-version?newVersion=${encodeURIComponent(newVersion)}`);
+    return response.data;
   }
 
   async deleteTemplate(id: number): Promise<void> {
@@ -233,13 +231,13 @@ class DocumentTemplateService {
   }
 
   async activateTemplate(id: number): Promise<DocumentTemplate> {
-    const response = await api.post(`/document-templates/${id}/activate`);
-    return response.data.data;
+    const response = await api.post<DocumentTemplate>(`/document-templates/${id}/activate`);
+    return response.data;
   }
 
   async deactivateTemplate(id: number): Promise<DocumentTemplate> {
-    const response = await api.post(`/document-templates/${id}/deactivate`);
-    return response.data.data;
+    const response = await api.post<DocumentTemplate>(`/document-templates/${id}/deactivate`);
+    return response.data;
   }
 }
 
@@ -248,58 +246,58 @@ class DocumentTemplateService {
 class SOPService {
   // SOP CRUD
   async getSOPs(): Promise<SOP[]> {
-    const response = await api.get('/sops');
-    return response.data.data;
+    const response = await api.get<SOP[]>('/sops');
+    return response.data;
   }
 
   async getActiveSOPs(): Promise<SOP[]> {
-    const response = await api.get('/sops/active');
-    return response.data.data;
+    const response = await api.get<SOP[]>('/sops/active');
+    return response.data;
   }
 
   async getApprovedSOPs(): Promise<SOP[]> {
-    const response = await api.get('/sops/approved');
-    return response.data.data;
+    const response = await api.get<SOP[]>('/sops/approved');
+    return response.data;
   }
 
   async getSOPById(id: number): Promise<SOP> {
-    const response = await api.get(`/sops/${id}`);
-    return response.data.data;
+    const response = await api.get<SOP>(`/sops/${id}`);
+    return response.data;
   }
 
   async getSOPsByType(sopType: string): Promise<SOP[]> {
-    const response = await api.get(`/sops/type/${sopType}`);
-    return response.data.data;
+    const response = await api.get<SOP[]>(`/sops/type/${sopType}`);
+    return response.data;
   }
 
   async getSOPsByCategory(category: string): Promise<SOP[]> {
-    const response = await api.get(`/sops/category/${category}`);
-    return response.data.data;
+    const response = await api.get<SOP[]>(`/sops/category/${category}`);
+    return response.data;
   }
 
   async getSOPsByProcess(targetProcess: string): Promise<SOP[]> {
-    const response = await api.get(`/sops/process/${targetProcess}`);
-    return response.data.data;
+    const response = await api.get<SOP[]>(`/sops/process/${targetProcess}`);
+    return response.data;
   }
 
   async getSOPsRequiringReview(): Promise<SOP[]> {
-    const response = await api.get('/sops/requiring-review');
-    return response.data.data;
+    const response = await api.get<SOP[]>('/sops/requiring-review');
+    return response.data;
   }
 
   async getSOPsPendingApproval(): Promise<SOP[]> {
-    const response = await api.get('/sops/pending-approval');
-    return response.data.data;
+    const response = await api.get<SOP[]>('/sops/pending-approval');
+    return response.data;
   }
 
   async createSOP(data: SOPCreateRequest): Promise<SOP> {
-    const response = await api.post('/sops', data);
-    return response.data.data;
+    const response = await api.post<SOP>('/sops', data);
+    return response.data;
   }
 
   async updateSOP(id: number, data: Partial<SOPCreateRequest>): Promise<SOP> {
-    const response = await api.put(`/sops/${id}`, data);
-    return response.data.data;
+    const response = await api.put<SOP>(`/sops/${id}`, data);
+    return response.data;
   }
 
   async deleteSOP(id: number): Promise<void> {
@@ -308,36 +306,34 @@ class SOPService {
 
   // SOP Approval Workflow
   async submitForApproval(sopId: number): Promise<SOP> {
-    const response = await api.post(`/sops/${sopId}/submit`);
-    return response.data.data;
+    const response = await api.post<SOP>(`/sops/${sopId}/submit`);
+    return response.data;
   }
 
   async approveSOP(sopId: number, approverId: number): Promise<SOP> {
-    const response = await api.post(`/sops/${sopId}/approve`, null, {
-      params: { approverId }
-    });
-    return response.data.data;
+    const response = await api.post<SOP>(`/sops/${sopId}/approve?approverId=${approverId}`);
+    return response.data;
   }
 
   async rejectSOP(sopId: number): Promise<SOP> {
-    const response = await api.post(`/sops/${sopId}/reject`);
-    return response.data.data;
+    const response = await api.post<SOP>(`/sops/${sopId}/reject`);
+    return response.data;
   }
 
   async markObsolete(sopId: number): Promise<SOP> {
-    const response = await api.post(`/sops/${sopId}/obsolete`);
-    return response.data.data;
+    const response = await api.post<SOP>(`/sops/${sopId}/obsolete`);
+    return response.data;
   }
 
   // SOP Steps
   async addStep(sopId: number, data: SOPStepCreateRequest): Promise<SOPStep> {
-    const response = await api.post(`/sops/${sopId}/steps`, data);
-    return response.data.data;
+    const response = await api.post<SOPStep>(`/sops/${sopId}/steps`, data);
+    return response.data;
   }
 
   async updateStep(stepId: number, data: Partial<SOPStepCreateRequest>): Promise<SOPStep> {
-    const response = await api.put(`/sops/steps/${stepId}`, data);
-    return response.data.data;
+    const response = await api.put<SOPStep>(`/sops/steps/${stepId}`, data);
+    return response.data;
   }
 
   async deleteStep(stepId: number): Promise<void> {
@@ -346,30 +342,28 @@ class SOPService {
 
   // SOP Execution
   async startExecution(sopId: number, data: ExecutionStartRequest): Promise<SOPExecution> {
-    const response = await api.post(`/sops/${sopId}/executions`, data);
-    return response.data.data;
+    const response = await api.post<SOPExecution>(`/sops/${sopId}/executions`, data);
+    return response.data;
   }
 
   async startExecutionStep(executionId: number, stepId: number): Promise<SOPExecutionStep> {
-    const response = await api.post(`/sops/executions/${executionId}/steps/${stepId}/start`);
-    return response.data.data;
+    const response = await api.post<SOPExecutionStep>(`/sops/executions/${executionId}/steps/${stepId}/start`);
+    return response.data;
   }
 
   async completeExecutionStep(executionStepId: number, data: StepCompleteRequest): Promise<SOPExecutionStep> {
-    const response = await api.post(`/sops/executions/steps/${executionStepId}/complete`, data);
-    return response.data.data;
+    const response = await api.post<SOPExecutionStep>(`/sops/executions/steps/${executionStepId}/complete`, data);
+    return response.data;
   }
 
   async completeExecution(executionId: number): Promise<SOPExecution> {
-    const response = await api.post(`/sops/executions/${executionId}/complete`);
-    return response.data.data;
+    const response = await api.post<SOPExecution>(`/sops/executions/${executionId}/complete`);
+    return response.data;
   }
 
   async cancelExecution(executionId: number, reason: string): Promise<SOPExecution> {
-    const response = await api.post(`/sops/executions/${executionId}/cancel`, null, {
-      params: { reason }
-    });
-    return response.data.data;
+    const response = await api.post<SOPExecution>(`/sops/executions/${executionId}/cancel?reason=${encodeURIComponent(reason)}`);
+    return response.data;
   }
 
   // Helper methods

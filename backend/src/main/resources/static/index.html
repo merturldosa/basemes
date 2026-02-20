@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#1976d2" />
+
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <!-- Apple Mobile Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="SoIce WMS" />
+
+    <!-- SEO -->
+    <meta name="description" content="SoIce MES - 제조 실행 시스템, 창고 관리 시스템" />
+    <meta name="keywords" content="MES, WMS, 창고관리, 재고관리, 실사, QR코드" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="SoIce MES" />
+    <meta property="og:description" content="제조 실행 시스템 - 창고 관리" />
+    <meta property="og:type" content="website" />
+
+    <title>SoIce MES - Manufacturing Execution System</title>
+    <script type="module" crossorigin src="/assets/index-D-jynqjX.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registered:', registration);
+
+              // Check for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New update available
+                    if (confirm('새로운 버전이 있습니다. 업데이트하시겠습니까?')) {
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                      window.location.reload();
+                    }
+                  }
+                });
+              });
+            })
+            .catch(error => {
+              console.error('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
