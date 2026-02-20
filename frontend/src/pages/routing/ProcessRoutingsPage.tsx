@@ -23,7 +23,6 @@ import {
   TableRow,
   Paper,
   Checkbox,
-  FormControlLabel,
 } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {

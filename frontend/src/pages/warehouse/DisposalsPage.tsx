@@ -145,6 +145,7 @@ const DisposalsPage: React.FC = () => {
 
     useEffect(() => {
         fetchDisposals();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const fetchDisposals = async () => {

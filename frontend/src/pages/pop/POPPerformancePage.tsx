@@ -286,7 +286,7 @@ const POPPerformancePage: React.FC = () => {
       {/* Work History Tab */}
       {activeTab === 2 && (
         <Box>
-          {workHistory.map((work, index) => (
+          {workHistory.map((work) => (
             <Card key={work.workOrderNo} sx={{ mb: 2 }}>
               <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', mb: 2 }}>

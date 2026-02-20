@@ -116,6 +116,7 @@ export default function HolidaysPage() {
   useEffect(() => {
     loadHolidays();
     loadWorkingHours();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedYear]);
 
   // ==================== Data Loading ====================

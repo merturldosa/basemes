@@ -115,7 +115,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
       codeReader.decodeFromVideoDevice(
         deviceId,
         videoRef.current,
-        (result, error) => {
+        (result) => {
           if (result) {
             const scannedData = result.getText();
 

@@ -35,7 +35,7 @@ import {
   Close as CloseIcon,
   RemoveCircleOutline as RemoveIcon,
 } from '@mui/icons-material';
-import salesOrderService, { SalesOrder, SalesOrderCreateRequest, SalesOrderUpdateRequest, SalesOrderItem } from '../../services/salesOrderService';
+import salesOrderService, { SalesOrder, SalesOrderCreateRequest, SalesOrderUpdateRequest } from '../../services/salesOrderService';
 import customerService, { Customer } from '../../services/customerService';
 
 const SalesOrdersPage: React.FC = () => {

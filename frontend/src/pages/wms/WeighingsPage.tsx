@@ -160,10 +160,6 @@ const WeighingsPage: React.FC = () => {
       field === 'tareWeight' ||
       field === 'grossWeight'
     ) {
-      const tare = parseFloat(newFormData.tareWeight as any) || 0;
-      const gross = parseFloat(newFormData.grossWeight as any) || 0;
-      const net = gross - tare;
-
       // Calculate variance if expected weight is provided
     }
 

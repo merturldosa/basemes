@@ -29,7 +29,6 @@ import {
   Divider,
 } from '@mui/material';
 import {
-  Download as DownloadIcon,
   PictureAsPdf as PdfIcon,
   TableChart as ExcelIcon,
   Description as CsvIcon,
@@ -60,8 +59,7 @@ const StatisticalReportsPage: React.FC = () => {
   });
   const [selectedProduct, setSelectedProduct] = useState('all');
   const [selectedOperator, setSelectedOperator] = useState('all');
-  const [selectedWarehouse, setSelectedWarehouse] = useState('all');
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [, setRefreshKey] = useState(0);
 
   /**
    * Refresh report data.

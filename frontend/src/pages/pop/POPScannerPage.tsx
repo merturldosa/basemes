@@ -165,7 +165,7 @@ const POPScannerPage: React.FC = () => {
             borderColor: 'divider',
           }}
         >
-          {scanTypes.map((type, index) => (
+          {scanTypes.map((type) => (
             <Tab
               key={type.value}
               icon={type.icon}

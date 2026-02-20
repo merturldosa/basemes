@@ -7,10 +7,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Snackbar,
   Alert,
   Chip,
@@ -29,7 +25,6 @@ import {
   CheckCircle as CompleteIcon,
   Warning as WarningIcon,
   Refresh as RefreshIcon,
-  Timeline as TimelineIcon,
 } from '@mui/icons-material';
 import { format } from 'date-fns';
 import productionScheduleService, { ProductionSchedule } from '../../services/productionScheduleService';
@@ -56,6 +51,7 @@ const ProductionSchedulePage: React.FC = () => {
   useEffect(() => {
     loadSchedules();
     loadWorkOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
   const loadSchedules = async () => {

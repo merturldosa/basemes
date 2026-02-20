@@ -10,7 +10,6 @@ import {
   RoleCreateRequest,
   RoleUpdateRequest,
   Permission,
-  PageResponse,
 } from '@/types';
 
 class RoleService {

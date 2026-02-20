@@ -362,7 +362,7 @@ class OfflineSyncService {
       { queue: sopQueue, name: 'SOP' },
     ];
 
-    for (const { queue, name } of queues) {
+    for (const { queue } of queues) {
       const keys = await queue.keys();
       for (const key of keys) {
         const item = await queue.getItem<any>(key);

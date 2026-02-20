@@ -41,7 +41,6 @@ import purchaseOrderService, {
   PurchaseOrder,
   PurchaseOrderCreateRequest,
   PurchaseOrderUpdateRequest,
-  PurchaseOrderItem,
 } from '../../services/purchaseOrderService';
 import supplierService, { Supplier } from '../../services/supplierService';
 import materialService, { Material } from '../../services/materialService';

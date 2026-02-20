@@ -47,7 +47,6 @@ export default function RolesPage() {
   // State
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(false);
-  const [totalElements, setTotalElements] = useState(0);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 10,
@@ -94,7 +93,6 @@ export default function RolesPage() {
           );
 
       setRoles(filteredRoles);
-      setTotalElements(filteredRoles.length);
     } catch (error: any) {
       showSnackbar(error.response?.data?.message || '역할 목록 조회 실패', 'error');
     } finally {

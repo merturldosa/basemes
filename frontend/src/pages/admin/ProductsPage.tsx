@@ -9,7 +9,6 @@ import {
   TextField,
   Paper,
   Typography,
-  IconButton,
   Chip,
   Alert,
   Snackbar,
@@ -52,6 +51,7 @@ const ProductsPage: React.FC = () => {
 
   useEffect(() => {
     loadProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProducts = async () => {

@@ -21,12 +21,6 @@ import {
   Chip,
   IconButton,
   Badge,
-  FormControl,
-  FormLabel,
-  FormGroup,
-  FormControlLabel,
-  Switch,
-  TextField,
   Alert,
   Divider,
   List,
@@ -41,13 +35,10 @@ import {
   GridToolbar,
 } from '@mui/x-data-grid';
 import {
-  Add as AddIcon,
-  Edit as EditIcon,
   Notifications as NotificationsIcon,
   NotificationsActive as NotificationsActiveIcon,
   MarkEmailRead as MarkReadIcon,
   DoneAll as MarkAllReadIcon,
-  Settings as SettingsIcon,
   Info as InfoIcon,
 } from '@mui/icons-material';
 import {
@@ -111,6 +102,7 @@ const AlarmPage: React.FC = () => {
     // Auto-refresh every 30 seconds
     const interval = setInterval(loadData, 30000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadData = async () => {

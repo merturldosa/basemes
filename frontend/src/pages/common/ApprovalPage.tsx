@@ -21,12 +21,6 @@ import {
   DialogContent,
   DialogActions,
   TextField,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   IconButton,
   Stepper,
   Step,
@@ -36,7 +30,6 @@ import {
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import PendingIcon from '@mui/icons-material/Pending';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ApprovalIcon from '@mui/icons-material/Approval';
 import {
@@ -92,6 +85,7 @@ export default function ApprovalPage() {
 
   useEffect(() => {
     loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTab]);
 
   // ==================== Data Loading ====================

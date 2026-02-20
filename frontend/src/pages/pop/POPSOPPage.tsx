@@ -27,8 +27,6 @@ import {
   LinearProgress,
   List,
   ListItem,
-  ListItemIcon,
-  ListItemText,
 } from '@mui/material';
 import {
   CheckCircle as CheckIcon,
@@ -68,7 +66,7 @@ const POPSOPPage: React.FC = () => {
   const [checkpointStatus, setCheckpointStatus] = useState<{ [key: string]: boolean }>({});
   const [openSignatureDialog, setOpenSignatureDialog] = useState(false);
   const [signature, setSignature] = useState('');
-  const [timer, setTimer] = useState<number | null>(null);
+  const [, setTimer] = useState<number | null>(null);
 
   // Mock SOP data
   const sopTemplates: SOPTemplate[] = [
