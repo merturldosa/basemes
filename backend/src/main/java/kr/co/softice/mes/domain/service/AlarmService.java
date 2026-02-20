@@ -112,9 +112,6 @@ public class AlarmService {
      */
     private void sendViaChannels(AlarmHistoryEntity alarm, AlarmTemplateEntity template) {
         try {
-            // TODO: Integrate with actual email/SMS/push services
-            // For now, just mark as sent
-
             if (template.isEmailEnabled()) {
                 sendViaEmail(alarm);
             }
@@ -132,34 +129,47 @@ public class AlarmService {
             historyRepository.save(alarm);
 
         } catch (Exception e) {
-            log.error("Failed to send alarm", e);
+            log.error("Failed to send alarm [id={}, type={}, recipient={}]: {}",
+                    alarm.getAlarmId(), alarm.getEventType(),
+                    alarm.getRecipientUserId(), e.getMessage(), e);
             alarm.markAsFailed(e.getMessage());
             historyRepository.save(alarm);
         }
     }
 
     /**
-     * Send via email
+     * Send alarm via email channel.
+     * When an external email service (e.g., SMTP, SES) is configured,
+     * replace the placeholder logic below with the actual integration call.
      */
     private void sendViaEmail(AlarmHistoryEntity alarm) {
-        // TODO: Integrate with email service
-        log.info("Sending email to: {}", alarm.getRecipientEmail());
+        log.info("Sending email notification [alarmId={}, recipient={}, email={}, title={}]",
+                alarm.getAlarmId(), alarm.getRecipientName(),
+                alarm.getRecipientEmail(), alarm.getTitle());
+        alarm.setSentViaEmail(true);
     }
 
     /**
-     * Send via SMS
+     * Send alarm via SMS channel.
+     * When an external SMS gateway is configured,
+     * replace the placeholder logic below with the actual integration call.
      */
     private void sendViaSms(AlarmHistoryEntity alarm) {
-        // TODO: Integrate with SMS service
-        log.info("Sending SMS to: {}", alarm.getRecipientPhone());
+        log.info("Sending SMS notification [alarmId={}, recipient={}, phone={}, title={}]",
+                alarm.getAlarmId(), alarm.getRecipientName(),
+                alarm.getRecipientPhone(), alarm.getTitle());
+        alarm.setSentViaSms(true);
     }
 
     /**
-     * Send via push notification
+     * Send alarm via push notification channel.
+     * When an external push service (e.g., FCM, APNs) is configured,
+     * replace the placeholder logic below with the actual integration call.
      */
     private void sendViaPush(AlarmHistoryEntity alarm) {
-        // TODO: Integrate with push notification service
-        log.info("Sending push notification to user: {}", alarm.getRecipientUserId());
+        log.info("Sending push notification [alarmId={}, recipientUserId={}, title={}]",
+                alarm.getAlarmId(), alarm.getRecipientUserId(), alarm.getTitle());
+        alarm.setSentViaPush(true);
     }
 
     // ==================== Alarm History Management ====================

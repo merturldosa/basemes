@@ -2,6 +2,8 @@ package kr.co.softice.mes.domain.repository;
 
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.entity.UserEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -48,6 +50,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
      * Find by tenant ID
      */
     List<UserEntity> findByTenant_TenantId(String tenantId);
+
+    /**
+     * Find by tenant ID with pagination
+     */
+    Page<UserEntity> findByTenant_TenantId(String tenantId, Pageable pageable);
 
     /**
      * Find by tenant and status

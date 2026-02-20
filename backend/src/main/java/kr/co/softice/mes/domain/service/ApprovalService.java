@@ -30,6 +30,7 @@ public class ApprovalService {
     private final ApprovalLineTemplateRepository templateRepository;
     private final ApprovalInstanceRepository instanceRepository;
     private final ApprovalDelegationRepository delegationRepository;
+    private final UserRepository userRepository;
 
     // ==================== Template Management ====================
 
@@ -217,7 +218,9 @@ public class ApprovalService {
                 .stepName(templateStep.getStepName())
                 .stepType(templateStep.getStepType())
                 .approverId(approverId)
-                .approverName("Approver " + approverId)  // TODO: Get from User entity
+                .approverName(userRepository.findById(approverId)
+                        .map(user -> user.getFullName())
+                        .orElse("Approver " + approverId))
                 .stepStatus("PENDING")
                 .assignedDate(LocalDateTime.now())
                 .build();

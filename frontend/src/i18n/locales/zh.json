@@ -155,12 +155,33 @@
       "suppliers": "供应商管理",
       "sites": "工厂管理",
       "departments": "部门管理",
+      "employees": "员工管理",
+      "commonCodes": "公共代码",
+      "holidays": "假日管理",
+      "approvals": "审批管理",
+      "alarms": "告警管理",
       "users": "用户管理",
       "roles": "角色管理",
       "permissions": "权限管理",
       "auditLogs": "审计日志",
       "themes": "主题设置",
       "profile": "个人资料"
+    },
+    "pop": {
+      "home": "POP首页",
+      "workOrders": "工作指令",
+      "scanner": "条码扫描",
+      "sop": "SOP检查表",
+      "performance": "生产实绩",
+      "workProgress": "工作进度",
+      "title": "POP现场系统",
+      "online": "在线",
+      "offline": "离线",
+      "logout": "退出登录"
+    },
+    "mobile": {
+      "inventoryList": "库存查询",
+      "inventoryCheck": "库存盘点"
     }
   },
   "dashboard": {

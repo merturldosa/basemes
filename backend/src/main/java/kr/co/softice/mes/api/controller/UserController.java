@@ -13,7 +13,10 @@ import kr.co.softice.mes.common.security.TenantContext;
 import kr.co.softice.mes.domain.entity.TenantEntity;
 import kr.co.softice.mes.domain.entity.UserEntity;
 import kr.co.softice.mes.domain.repository.TenantRepository;
+import kr.co.softice.mes.domain.repository.UserRepository;
 import kr.co.softice.mes.domain.service.UserService;
+
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,6 +42,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
     private final TenantRepository tenantRepository;
 
     /**
@@ -61,23 +65,21 @@ public class UserController {
                 ? Sort.Direction.DESC : Sort.Direction.ASC;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort[0]));
 
-        // TODO: Repository에 페이징 메서드 추가 필요
-        // Page<UserEntity> userPage = userRepository.findByTenant_TenantId(tenantId, pageable);
+        Page<UserEntity> userPage = userRepository.findByTenant_TenantId(tenantId, pageable);
 
-        // 임시로 전체 조회 후 수동 페이징
-        var users = userService.findByTenant(tenantId).stream()
+        List<UserResponse> users = userPage.getContent().stream()
                 .map(this::toUserResponse)
                 .collect(java.util.stream.Collectors.toList());
 
         PageResponse<UserResponse> pageResponse = PageResponse.<UserResponse>builder()
                 .content(users)
-                .pageNumber(page)
-                .pageSize(size)
-                .totalElements(users.size())
-                .totalPages((int) Math.ceil((double) users.size() / size))
-                .first(page == 0)
-                .last(true)
-                .empty(users.isEmpty())
+                .pageNumber(userPage.getNumber())
+                .pageSize(userPage.getSize())
+                .totalElements(userPage.getTotalElements())
+                .totalPages(userPage.getTotalPages())
+                .first(userPage.isFirst())
+                .last(userPage.isLast())
+                .empty(userPage.isEmpty())
                 .build();
 
         return ResponseEntity.ok(ApiResponse.success("사용자 목록 조회 성공", pageResponse));

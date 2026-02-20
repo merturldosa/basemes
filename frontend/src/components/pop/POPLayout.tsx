@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   AppBar,
@@ -44,6 +45,7 @@ interface POPLayoutProps {
 }
 
 const POPLayout: React.FC<POPLayoutProps> = () => {
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
@@ -67,11 +69,11 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
   });
 
   const menuItems = [
-    { text: 'POP 홈', icon: <HomeIcon />, path: '/pop' },
-    { text: '작업 지시', icon: <WorkOrderIcon />, path: '/pop/work-orders' },
-    { text: '바코드 스캔', icon: <ScannerIcon />, path: '/pop/scanner' },
-    { text: 'SOP 체크리스트', icon: <CheckIcon />, path: '/pop/sop' },
-    { text: '생산 실적', icon: <StatsIcon />, path: '/pop/performance' },
+    { text: t('navigation.pop.home'), icon: <HomeIcon />, path: '/pop' },
+    { text: t('navigation.pop.workOrders'), icon: <WorkOrderIcon />, path: '/pop/work-orders' },
+    { text: t('navigation.pop.scanner'), icon: <ScannerIcon />, path: '/pop/scanner' },
+    { text: t('navigation.pop.sop'), icon: <CheckIcon />, path: '/pop/sop' },
+    { text: t('navigation.pop.performance'), icon: <StatsIcon />, path: '/pop/performance' },
   ];
 
   const handleDrawerToggle = () => {
@@ -99,7 +101,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
           <Box>
             <Typography variant="h6">{user?.fullName || user?.username}</Typography>
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
-              {user?.departmentName || '생산부'}
+              {user?.departmentName || ''}
             </Typography>
           </Box>
         </Box>
@@ -107,7 +109,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
         {/* Current Work Order */}
         {currentWorkOrder && (
           <Chip
-            label={`작업 중: ${currentWorkOrder}`}
+            label={`${currentWorkOrder}`}
             color="secondary"
             size="small"
             sx={{ fontWeight: 'bold' }}
@@ -163,7 +165,7 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
               <LogoutIcon />
             </ListItemIcon>
             <ListItemText
-              primary="로그아웃"
+              primary={t('navigation.pop.logout')}
               primaryTypographyProps={{
                 fontSize: '1rem',
                 fontWeight: 500,
@@ -196,12 +198,12 @@ const POPLayout: React.FC<POPLayoutProps> = () => {
           </IconButton>
 
           <Typography variant="h5" component="div" sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            POP 현장 시스템
+            {t('navigation.pop.title')}
           </Typography>
 
           {/* Online/Offline Status */}
           <Badge
-            badgeContent={isOnline ? '온라인' : '오프라인'}
+            badgeContent={isOnline ? t('navigation.pop.online') : t('navigation.pop.offline')}
             color={isOnline ? 'success' : 'error'}
             sx={{ mr: 2 }}
           >

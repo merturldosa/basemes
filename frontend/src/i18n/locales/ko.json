@@ -166,6 +166,22 @@
       "alarms": "알람 관리",
       "themes": "테마 설정",
       "profile": "프로필"
+    },
+    "pop": {
+      "home": "POP 홈",
+      "workOrders": "작업 지시",
+      "scanner": "바코드 스캔",
+      "sop": "SOP 체크리스트",
+      "performance": "생산 실적",
+      "workProgress": "작업 진행 현황",
+      "title": "POP 현장 시스템",
+      "online": "온라인",
+      "offline": "오프라인",
+      "logout": "로그아웃"
+    },
+    "mobile": {
+      "inventoryList": "재고 조회",
+      "inventoryCheck": "재고 실사"
     }
   },
   "dashboard": {

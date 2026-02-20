@@ -51,6 +51,7 @@ public class ShippingController {
     private final ShippingService shippingService;
     private final TenantRepository tenantRepository;
     private final SalesOrderRepository salesOrderRepository;
+    private final SalesOrderItemRepository salesOrderItemRepository;
     private final CustomerRepository customerRepository;
     private final WarehouseRepository warehouseRepository;
     private final ProductRepository productRepository;
@@ -213,7 +214,8 @@ public class ShippingController {
 
                 SalesOrderItemEntity salesOrderItem = null;
                 if (itemReq.getSalesOrderItemId() != null) {
-                    // TODO: Resolve sales order item if needed
+                    salesOrderItem = salesOrderItemRepository.findById(itemReq.getSalesOrderItemId())
+                            .orElse(null);
                 }
 
                 ShippingItemEntity item = ShippingItemEntity.builder()

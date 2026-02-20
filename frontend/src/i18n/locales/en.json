@@ -166,6 +166,22 @@
       "alarms": "Alarm Management",
       "themes": "Theme Settings",
       "profile": "Profile"
+    },
+    "pop": {
+      "home": "POP Home",
+      "workOrders": "Work Orders",
+      "scanner": "Barcode Scan",
+      "sop": "SOP Checklist",
+      "performance": "Production Performance",
+      "workProgress": "Work Progress",
+      "title": "POP Field System",
+      "online": "Online",
+      "offline": "Offline",
+      "logout": "Logout"
+    },
+    "mobile": {
+      "inventoryList": "Inventory List",
+      "inventoryCheck": "Inventory Check"
     }
   },
   "dashboard": {

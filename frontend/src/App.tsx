@@ -130,6 +130,19 @@ import HolidaysPage from './pages/common/HolidaysPage';
 import ApprovalPage from './pages/common/ApprovalPage';
 import AlarmPage from './pages/common/AlarmPage';
 
+// POP (Point of Production) Pages
+import POPLayout from './components/pop/POPLayout';
+import POPHomePage from './pages/pop/POPHomePage';
+import POPWorkOrderPage from './pages/pop/POPWorkOrderPage';
+import POPScannerPage from './pages/pop/POPScannerPage';
+import POPSOPPage from './pages/pop/POPSOPPage';
+import POPPerformancePage from './pages/pop/POPPerformancePage';
+import POPWorkProgressPage from './pages/pop/POPWorkProgressPage';
+
+// Mobile Pages
+import MobileInventoryListPage from './pages/mobile/MobileInventoryListPage';
+import MobileInventoryCheckPage from './pages/mobile/MobileInventoryCheckPage';
+
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -272,6 +285,41 @@ function App() {
             <Route path="analytics/dashboard" element={<AnalyticsDashboardPage />} />
             <Route path="analytics/reports" element={<StatisticalReportsPage />} />
           </Route>
+
+          {/* POP (Point of Production) Routes - Separate layout for field workers */}
+          <Route
+            path="/pop"
+            element={
+              <ProtectedRoute>
+                <POPLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<POPHomePage />} />
+            <Route path="work-orders" element={<POPWorkOrderPage />} />
+            <Route path="scanner" element={<POPScannerPage />} />
+            <Route path="sop" element={<POPSOPPage />} />
+            <Route path="performance" element={<POPPerformancePage />} />
+            <Route path="work-progress" element={<POPWorkProgressPage />} />
+          </Route>
+
+          {/* Mobile Routes */}
+          <Route
+            path="/mobile"
+            element={
+              <ProtectedRoute>
+                <MobileInventoryListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/mobile/inventory-check"
+            element={
+              <ProtectedRoute>
+                <MobileInventoryCheckPage />
+              </ProtectedRoute>
+            }
+          />
 
           {/* Catch all - redirect to home */}
           <Route path="*" element={<Navigate to="/" replace />} />

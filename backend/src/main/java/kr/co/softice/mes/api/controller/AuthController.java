@@ -8,11 +8,18 @@ import kr.co.softice.mes.common.dto.auth.LoginRequest;
 import kr.co.softice.mes.common.dto.auth.LoginResponse;
 import kr.co.softice.mes.common.dto.auth.TokenRefreshRequest;
 import kr.co.softice.mes.common.dto.auth.TokenRefreshResponse;
+import kr.co.softice.mes.common.security.UserPrincipal;
 import kr.co.softice.mes.domain.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Authentication Controller
@@ -89,7 +96,25 @@ public class AuthController {
     @GetMapping("/me")
     @Operation(summary = "현재 사용자 정보", description = "인증된 사용자의 정보 조회")
     public ResponseEntity<ApiResponse<Object>> getCurrentUser() {
-        // TODO: SecurityContext에서 현재 사용자 정보 추출하여 반환
-        return ResponseEntity.ok(ApiResponse.success("User info retrieved", null));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof UserPrincipal)) {
+            return ResponseEntity.status(401)
+                    .body(ApiResponse.error("Not authenticated"));
+        }
+
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("userId", principal.getUserId());
+        userInfo.put("tenantId", principal.getTenantId());
+        userInfo.put("username", principal.getUsername());
+        userInfo.put("email", principal.getEmail());
+        userInfo.put("authorities", principal.getAuthorities().stream()
+                .map(auth -> auth.getAuthority())
+                .collect(Collectors.toList()));
+        userInfo.put("enabled", principal.isEnabled());
+
+        return ResponseEntity.ok(ApiResponse.success("User info retrieved", userInfo));
     }
 }
