@@ -5,7 +5,7 @@
  * @author Moon Myung-seop
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import {
   Box,
   Card,
@@ -31,7 +31,6 @@ import {
   Refresh as RefreshIcon,
   Timer as TimerIcon,
 } from '@mui/icons-material';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
 interface WorkProgress {
@@ -60,53 +59,64 @@ interface ProductionStatistics {
 const POPWorkProgressPage: React.FC = () => {
   const [workProgressList, setWorkProgressList] = useState<WorkProgress[]>([]);
   const [statistics, setStatistics] = useState<ProductionStatistics | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Fetch active work orders (real-time updates every 5 seconds)
-  const { data: workOrdersData, isLoading, refetch } = useQuery({
-    queryKey: ['popActiveWorkOrders'],
-    queryFn: async () => {
+  const fetchWorkOrders = useCallback(async () => {
+    try {
       const response = await axios.get('/api/pop/work-orders/active');
-      return response.data;
-    },
-    refetchInterval: 5000, // Real-time update every 5 seconds
-  });
+      const workOrdersData = response.data;
+      if (workOrdersData?.data) {
+        const progressList: WorkProgress[] = workOrdersData.data.map((wo: any) => ({
+          workOrderId: wo.workOrderId,
+          workOrderNo: wo.workOrderNo,
+          productName: wo.productName || 'Unknown Product',
+          productCode: wo.productCode || '',
+          operatorName: wo.operatorName || '작업자',
+          targetQuantity: wo.targetQuantity || 0,
+          producedQuantity: wo.producedQuantity || 0,
+          defectQuantity: wo.defectQuantity || 0,
+          progress: wo.targetQuantity > 0 ? (wo.producedQuantity / wo.targetQuantity) * 100 : 0,
+          status: wo.status || 'UNKNOWN',
+          startTime: wo.actualStartDate || wo.plannedStartDate || '',
+          elapsedTime: calculateElapsedTime(wo.actualStartDate),
+        }));
+        setWorkProgressList(progressList);
+      }
+    } catch {
+      // API may not exist yet - show empty state
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-  // Fetch today's statistics
-  const { data: statsData } = useQuery({
-    queryKey: ['popTodayStatistics'],
-    queryFn: async () => {
+  const fetchStatistics = useCallback(async () => {
+    try {
       const response = await axios.get('/api/pop/statistics/today');
-      return response.data;
-    },
-    refetchInterval: 10000, // Update every 10 seconds
-  });
+      if (response.data?.data) {
+        setStatistics(response.data.data);
+      }
+    } catch {
+      // API may not exist yet
+    }
+  }, []);
+
+  const refetch = useCallback(() => {
+    fetchWorkOrders();
+    fetchStatistics();
+  }, [fetchWorkOrders, fetchStatistics]);
 
   useEffect(() => {
-    if (workOrdersData?.data) {
-      // Convert work orders to progress format
-      const progressList: WorkProgress[] = workOrdersData.data.map((wo: any) => ({
-        workOrderId: wo.workOrderId,
-        workOrderNo: wo.workOrderNo,
-        productName: wo.productName || 'Unknown Product',
-        productCode: wo.productCode || '',
-        operatorName: wo.operatorName || '작업자',
-        targetQuantity: wo.targetQuantity || 0,
-        producedQuantity: wo.producedQuantity || 0,
-        defectQuantity: wo.defectQuantity || 0,
-        progress: wo.targetQuantity > 0 ? (wo.producedQuantity / wo.targetQuantity) * 100 : 0,
-        status: wo.status || 'UNKNOWN',
-        startTime: wo.actualStartDate || wo.plannedStartDate || '',
-        elapsedTime: calculateElapsedTime(wo.actualStartDate),
-      }));
-      setWorkProgressList(progressList);
-    }
-  }, [workOrdersData]);
-
-  useEffect(() => {
-    if (statsData?.data) {
-      setStatistics(statsData.data);
-    }
-  }, [statsData]);
+    fetchWorkOrders();
+    fetchStatistics();
+    intervalRef.current = setInterval(() => {
+      fetchWorkOrders();
+      fetchStatistics();
+    }, 5000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fetchWorkOrders, fetchStatistics]);
 
   const calculateElapsedTime = (startTime: string | null): string => {
     if (!startTime) return '00:00:00';
