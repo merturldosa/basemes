@@ -8,19 +8,19 @@ import java.time.LocalDateTime;
 
 /**
  * Work Result Entity - 작업 실적
- * Maps to: mes.SI_Work_Results
+ * Maps to: mes.SD_Work_Results
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_work_results",
+    name = "sd_work_results",
     schema = "mes",
     indexes = {
-        @Index(name = "idx_si_work_results_work_order", columnList = "work_order_id"),
-        @Index(name = "idx_si_work_results_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_si_work_results_date", columnList = "result_date"),
-        @Index(name = "idx_si_work_results_worker", columnList = "worker_user_id")
+        @Index(name = "idx_sd_work_results_work_order", columnList = "work_order_id"),
+        @Index(name = "idx_sd_work_results_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_work_results_date", columnList = "result_date"),
+        @Index(name = "idx_sd_work_results_worker", columnList = "worker_user_id")
     }
 )
 @Getter
@@ -36,11 +36,11 @@ public class WorkResultEntity extends BaseEntity {
     private Long workResultId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_results_work_order"))
+    @JoinColumn(name = "work_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_results_work_order"))
     private WorkOrderEntity workOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_results_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_results_tenant"))
     private TenantEntity tenant;
 
     // 실적 정보
@@ -71,7 +71,7 @@ public class WorkResultEntity extends BaseEntity {
 
     // 작업자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "worker_user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_results_worker"))
+    @JoinColumn(name = "worker_user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_results_worker"))
     private UserEntity worker;
 
     @Column(name = "worker_name", length = 100)

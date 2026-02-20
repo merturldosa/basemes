@@ -6,10 +6,10 @@
 -- ============================================================================
 
 -- ============================================================================
--- Table: core.si_sites
+-- Table: core.sd_sites
 -- Description: 사업장 관리 (Multi-Site Support)
 -- ============================================================================
-CREATE TABLE core.si_sites (
+CREATE TABLE core.sd_sites (
     site_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     site_code VARCHAR(50) NOT NULL,
@@ -44,17 +44,17 @@ CREATE TABLE core.si_sites (
 
     -- Foreign Keys
     CONSTRAINT fk_site_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
 
     -- Unique Constraints
     CONSTRAINT uk_site_code UNIQUE (tenant_id, site_code)
 );
 
 -- ============================================================================
--- Table: core.si_departments
+-- Table: core.sd_departments
 -- Description: 부서 관리 (Hierarchical Organization Structure)
 -- ============================================================================
-CREATE TABLE core.si_departments (
+CREATE TABLE core.sd_departments (
     department_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     site_id BIGINT,
@@ -84,23 +84,23 @@ CREATE TABLE core.si_departments (
 
     -- Foreign Keys
     CONSTRAINT fk_department_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_department_site FOREIGN KEY (site_id)
-        REFERENCES core.si_sites(site_id) ON DELETE SET NULL,
+        REFERENCES core.sd_sites(site_id) ON DELETE SET NULL,
     CONSTRAINT fk_department_parent FOREIGN KEY (parent_department_id)
-        REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
+        REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
     CONSTRAINT fk_department_manager FOREIGN KEY (manager_user_id)
-        REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+        REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique Constraints
     CONSTRAINT uk_department_code UNIQUE (tenant_id, department_code)
 );
 
 -- ============================================================================
--- Table: core.si_employees
+-- Table: core.sd_employees
 -- Description: 사원 관리 (HR Information separate from User)
 -- ============================================================================
-CREATE TABLE core.si_employees (
+CREATE TABLE core.sd_employees (
     employee_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     employee_no VARCHAR(50) NOT NULL,
@@ -146,13 +146,13 @@ CREATE TABLE core.si_employees (
 
     -- Foreign Keys
     CONSTRAINT fk_employee_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_employee_user FOREIGN KEY (user_id)
-        REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+        REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
     CONSTRAINT fk_employee_site FOREIGN KEY (site_id)
-        REFERENCES core.si_sites(site_id) ON DELETE SET NULL,
+        REFERENCES core.sd_sites(site_id) ON DELETE SET NULL,
     CONSTRAINT fk_employee_department FOREIGN KEY (department_id)
-        REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
+        REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
 
     -- Unique Constraints
     CONSTRAINT uk_employee_no UNIQUE (tenant_id, employee_no),
@@ -160,10 +160,10 @@ CREATE TABLE core.si_employees (
 );
 
 -- ============================================================================
--- Table: core.si_holidays
+-- Table: core.sd_holidays
 -- Description: 휴일 관리 (Holiday Calendar for Production Planning)
 -- ============================================================================
-CREATE TABLE core.si_holidays (
+CREATE TABLE core.sd_holidays (
     holiday_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     site_id BIGINT,
@@ -187,19 +187,19 @@ CREATE TABLE core.si_holidays (
 
     -- Foreign Keys
     CONSTRAINT fk_holiday_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_holiday_site FOREIGN KEY (site_id)
-        REFERENCES core.si_sites(site_id) ON DELETE CASCADE,
+        REFERENCES core.sd_sites(site_id) ON DELETE CASCADE,
 
     -- Unique Constraints
     CONSTRAINT uk_holiday UNIQUE (tenant_id, site_id, holiday_date)
 );
 
 -- ============================================================================
--- Table: core.si_approval_lines
+-- Table: core.sd_approval_lines
 -- Description: 결재라인 관리 (Approval Workflow)
 -- ============================================================================
-CREATE TABLE core.si_approval_lines (
+CREATE TABLE core.sd_approval_lines (
     approval_line_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
 
@@ -234,9 +234,9 @@ CREATE TABLE core.si_approval_lines (
 
     -- Foreign Keys
     CONSTRAINT fk_approval_line_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_approval_line_department FOREIGN KEY (department_id)
-        REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
+        REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
 
     -- Unique Constraints
     CONSTRAINT uk_approval_line_code UNIQUE (tenant_id, line_code)
@@ -246,34 +246,34 @@ CREATE TABLE core.si_approval_lines (
 -- Indexes
 -- ============================================================================
 -- Sites
-CREATE INDEX idx_site_tenant ON core.si_sites(tenant_id);
-CREATE INDEX idx_site_active ON core.si_sites(is_active);
-CREATE INDEX idx_site_type ON core.si_sites(site_type);
+CREATE INDEX idx_site_tenant ON core.sd_sites(tenant_id);
+CREATE INDEX idx_site_active ON core.sd_sites(is_active);
+CREATE INDEX idx_site_type ON core.sd_sites(site_type);
 
 -- Departments
-CREATE INDEX idx_department_tenant ON core.si_departments(tenant_id);
-CREATE INDEX idx_department_site ON core.si_departments(site_id);
-CREATE INDEX idx_department_parent ON core.si_departments(parent_department_id);
-CREATE INDEX idx_department_manager ON core.si_departments(manager_user_id);
-CREATE INDEX idx_department_active ON core.si_departments(is_active);
+CREATE INDEX idx_department_tenant ON core.sd_departments(tenant_id);
+CREATE INDEX idx_department_site ON core.sd_departments(site_id);
+CREATE INDEX idx_department_parent ON core.sd_departments(parent_department_id);
+CREATE INDEX idx_department_manager ON core.sd_departments(manager_user_id);
+CREATE INDEX idx_department_active ON core.sd_departments(is_active);
 
 -- Employees
-CREATE INDEX idx_employee_tenant ON core.si_employees(tenant_id);
-CREATE INDEX idx_employee_user ON core.si_employees(user_id);
-CREATE INDEX idx_employee_site ON core.si_employees(site_id);
-CREATE INDEX idx_employee_department ON core.si_employees(department_id);
-CREATE INDEX idx_employee_status ON core.si_employees(employment_status);
+CREATE INDEX idx_employee_tenant ON core.sd_employees(tenant_id);
+CREATE INDEX idx_employee_user ON core.sd_employees(user_id);
+CREATE INDEX idx_employee_site ON core.sd_employees(site_id);
+CREATE INDEX idx_employee_department ON core.sd_employees(department_id);
+CREATE INDEX idx_employee_status ON core.sd_employees(employment_status);
 
 -- Holidays
-CREATE INDEX idx_holiday_tenant ON core.si_holidays(tenant_id);
-CREATE INDEX idx_holiday_site ON core.si_holidays(site_id);
-CREATE INDEX idx_holiday_date ON core.si_holidays(holiday_date);
+CREATE INDEX idx_holiday_tenant ON core.sd_holidays(tenant_id);
+CREATE INDEX idx_holiday_site ON core.sd_holidays(site_id);
+CREATE INDEX idx_holiday_date ON core.sd_holidays(holiday_date);
 
 -- Approval Lines
-CREATE INDEX idx_approval_line_tenant ON core.si_approval_lines(tenant_id);
-CREATE INDEX idx_approval_line_document_type ON core.si_approval_lines(document_type);
-CREATE INDEX idx_approval_line_department ON core.si_approval_lines(department_id);
-CREATE INDEX idx_approval_line_active ON core.si_approval_lines(is_active);
+CREATE INDEX idx_approval_line_tenant ON core.sd_approval_lines(tenant_id);
+CREATE INDEX idx_approval_line_document_type ON core.sd_approval_lines(document_type);
+CREATE INDEX idx_approval_line_department ON core.sd_approval_lines(department_id);
+CREATE INDEX idx_approval_line_active ON core.sd_approval_lines(is_active);
 
 -- ============================================================================
 -- Triggers for updated_at
@@ -287,7 +287,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_site_timestamp
-    BEFORE UPDATE ON core.si_sites
+    BEFORE UPDATE ON core.sd_sites
     FOR EACH ROW
     EXECUTE FUNCTION core.update_site_timestamp();
 
@@ -300,7 +300,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_department_timestamp
-    BEFORE UPDATE ON core.si_departments
+    BEFORE UPDATE ON core.sd_departments
     FOR EACH ROW
     EXECUTE FUNCTION core.update_department_timestamp();
 
@@ -313,7 +313,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_employee_timestamp
-    BEFORE UPDATE ON core.si_employees
+    BEFORE UPDATE ON core.sd_employees
     FOR EACH ROW
     EXECUTE FUNCTION core.update_employee_timestamp();
 
@@ -326,7 +326,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_holiday_timestamp
-    BEFORE UPDATE ON core.si_holidays
+    BEFORE UPDATE ON core.sd_holidays
     FOR EACH ROW
     EXECUTE FUNCTION core.update_holiday_timestamp();
 
@@ -339,7 +339,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_approval_line_timestamp
-    BEFORE UPDATE ON core.si_approval_lines
+    BEFORE UPDATE ON core.sd_approval_lines
     FOR EACH ROW
     EXECUTE FUNCTION core.update_approval_line_timestamp();
 
@@ -347,28 +347,28 @@ CREATE TRIGGER trigger_update_approval_line_timestamp
 -- Comments
 -- ============================================================================
 -- Sites
-COMMENT ON TABLE core.si_sites IS '사업장 테이블';
-COMMENT ON COLUMN core.si_sites.site_id IS '사업장 ID (PK)';
-COMMENT ON COLUMN core.si_sites.site_type IS '사업장 유형 (FACTORY, WAREHOUSE, OFFICE, RD_CENTER)';
+COMMENT ON TABLE core.sd_sites IS '사업장 테이블';
+COMMENT ON COLUMN core.sd_sites.site_id IS '사업장 ID (PK)';
+COMMENT ON COLUMN core.sd_sites.site_type IS '사업장 유형 (FACTORY, WAREHOUSE, OFFICE, RD_CENTER)';
 
 -- Departments
-COMMENT ON TABLE core.si_departments IS '부서 테이블';
-COMMENT ON COLUMN core.si_departments.department_id IS '부서 ID (PK)';
-COMMENT ON COLUMN core.si_departments.parent_department_id IS '상위 부서 ID';
-COMMENT ON COLUMN core.si_departments.depth_level IS '부서 계층 레벨';
+COMMENT ON TABLE core.sd_departments IS '부서 테이블';
+COMMENT ON COLUMN core.sd_departments.department_id IS '부서 ID (PK)';
+COMMENT ON COLUMN core.sd_departments.parent_department_id IS '상위 부서 ID';
+COMMENT ON COLUMN core.sd_departments.depth_level IS '부서 계층 레벨';
 
 -- Employees
-COMMENT ON TABLE core.si_employees IS '사원 테이블';
-COMMENT ON COLUMN core.si_employees.employee_id IS '사원 ID (PK)';
-COMMENT ON COLUMN core.si_employees.employment_status IS '재직 상태 (ACTIVE, ON_LEAVE, RESIGNED, RETIRED)';
+COMMENT ON TABLE core.sd_employees IS '사원 테이블';
+COMMENT ON COLUMN core.sd_employees.employee_id IS '사원 ID (PK)';
+COMMENT ON COLUMN core.sd_employees.employment_status IS '재직 상태 (ACTIVE, ON_LEAVE, RESIGNED, RETIRED)';
 
 -- Holidays
-COMMENT ON TABLE core.si_holidays IS '휴일 테이블';
-COMMENT ON COLUMN core.si_holidays.holiday_id IS '휴일 ID (PK)';
-COMMENT ON COLUMN core.si_holidays.holiday_type IS '휴일 유형 (NATIONAL, COMPANY, SITE_SPECIFIC)';
+COMMENT ON TABLE core.sd_holidays IS '휴일 테이블';
+COMMENT ON COLUMN core.sd_holidays.holiday_id IS '휴일 ID (PK)';
+COMMENT ON COLUMN core.sd_holidays.holiday_type IS '휴일 유형 (NATIONAL, COMPANY, SITE_SPECIFIC)';
 
 -- Approval Lines
-COMMENT ON TABLE core.si_approval_lines IS '결재라인 테이블';
-COMMENT ON COLUMN core.si_approval_lines.approval_line_id IS '결재라인 ID (PK)';
-COMMENT ON COLUMN core.si_approval_lines.approval_steps IS '결재 단계 (JSON 배열)';
-COMMENT ON COLUMN core.si_approval_lines.conditions IS '적용 조건 (JSON)';
+COMMENT ON TABLE core.sd_approval_lines IS '결재라인 테이블';
+COMMENT ON COLUMN core.sd_approval_lines.approval_line_id IS '결재라인 ID (PK)';
+COMMENT ON COLUMN core.sd_approval_lines.approval_steps IS '결재 단계 (JSON 배열)';
+COMMENT ON COLUMN core.sd_approval_lines.conditions IS '적용 조건 (JSON)';

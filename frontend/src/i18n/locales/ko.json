@@ -1,7 +1,7 @@
 {
   "common": {
-    "appName": "SoIce MES",
-    "appFullName": "소프트아이스 제조실행시스템",
+    "appName": "SDS MES",
+    "appFullName": "스마트도킹스테이션 제조실행시스템",
     "buttons": {
       "save": "저장",
       "cancel": "취소",
@@ -67,7 +67,7 @@
   "auth": {
     "login": {
       "title": "로그인",
-      "welcomeMessage": "소프트아이스 MES 플랫폼에 오신 것을 환영합니다",
+      "welcomeMessage": "스마트도킹스테이션 MES 플랫폼에 오신 것을 환영합니다",
       "tenantId": "테넌트 ID",
       "username": "사용자명",
       "password": "비밀번호",

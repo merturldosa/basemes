@@ -170,7 +170,7 @@ export default function LoginPage() {
           {/* Footer */}
           <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Typography variant="caption" color="text.secondary">
-              © 2024 SoftIce Co., Ltd. All rights reserved.
+              © 2024 SmartDockingStation Co., Ltd. All rights reserved.
             </Typography>
           </Box>
         </Paper>

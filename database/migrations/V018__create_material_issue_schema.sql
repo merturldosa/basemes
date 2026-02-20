@@ -12,7 +12,7 @@ CREATE SCHEMA IF NOT EXISTS wms;
 -- 1. MATERIAL REQUESTS (불출 신청)
 -- ============================================================
 
-CREATE TABLE wms.si_material_requests (
+CREATE TABLE wms.sd_material_requests (
     material_request_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
 
@@ -62,15 +62,15 @@ CREATE TABLE wms.si_material_requests (
 
     -- Foreign Keys
     CONSTRAINT fk_material_request_tenant
-        FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id) ON DELETE CASCADE,
+        FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_material_request_work_order
-        FOREIGN KEY (work_order_id) REFERENCES mes.si_work_orders(work_order_id) ON DELETE SET NULL,
+        FOREIGN KEY (work_order_id) REFERENCES mes.sd_work_orders(work_order_id) ON DELETE SET NULL,
     CONSTRAINT fk_material_request_requester
-        FOREIGN KEY (requester_user_id) REFERENCES common.si_users(user_id) ON DELETE RESTRICT,
+        FOREIGN KEY (requester_user_id) REFERENCES common.sd_users(user_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_request_approver
-        FOREIGN KEY (approver_user_id) REFERENCES common.si_users(user_id) ON DELETE SET NULL,
+        FOREIGN KEY (approver_user_id) REFERENCES common.sd_users(user_id) ON DELETE SET NULL,
     CONSTRAINT fk_material_request_warehouse
-        FOREIGN KEY (warehouse_id) REFERENCES inventory.si_warehouses(warehouse_id) ON DELETE RESTRICT,
+        FOREIGN KEY (warehouse_id) REFERENCES inventory.sd_warehouses(warehouse_id) ON DELETE RESTRICT,
 
     -- Unique Constraint
     CONSTRAINT uk_material_request_no UNIQUE (tenant_id, request_no),
@@ -85,26 +85,26 @@ CREATE TABLE wms.si_material_requests (
 );
 
 -- Indexes
-CREATE INDEX idx_material_request_tenant ON wms.si_material_requests(tenant_id);
-CREATE INDEX idx_material_request_date ON wms.si_material_requests(request_date);
-CREATE INDEX idx_material_request_status ON wms.si_material_requests(request_status);
-CREATE INDEX idx_material_request_work_order ON wms.si_material_requests(work_order_id);
-CREATE INDEX idx_material_request_requester ON wms.si_material_requests(requester_user_id);
-CREATE INDEX idx_material_request_warehouse ON wms.si_material_requests(warehouse_id);
-CREATE INDEX idx_material_request_required_date ON wms.si_material_requests(required_date);
-CREATE INDEX idx_material_request_priority ON wms.si_material_requests(priority);
+CREATE INDEX idx_material_request_tenant ON wms.sd_material_requests(tenant_id);
+CREATE INDEX idx_material_request_date ON wms.sd_material_requests(request_date);
+CREATE INDEX idx_material_request_status ON wms.sd_material_requests(request_status);
+CREATE INDEX idx_material_request_work_order ON wms.sd_material_requests(work_order_id);
+CREATE INDEX idx_material_request_requester ON wms.sd_material_requests(requester_user_id);
+CREATE INDEX idx_material_request_warehouse ON wms.sd_material_requests(warehouse_id);
+CREATE INDEX idx_material_request_required_date ON wms.sd_material_requests(required_date);
+CREATE INDEX idx_material_request_priority ON wms.sd_material_requests(priority);
 
 -- Comments
-COMMENT ON TABLE wms.si_material_requests IS '불출 신청 헤더';
-COMMENT ON COLUMN wms.si_material_requests.request_status IS '신청 상태: PENDING(대기), APPROVED(승인), REJECTED(거부), ISSUED(불출), COMPLETED(완료), CANCELLED(취소)';
-COMMENT ON COLUMN wms.si_material_requests.priority IS '우선순위: URGENT(긴급), HIGH(높음), NORMAL(보통), LOW(낮음)';
-COMMENT ON COLUMN wms.si_material_requests.purpose IS '용도: PRODUCTION(생산), MAINTENANCE(보전), SAMPLE(샘플), OTHER(기타)';
+COMMENT ON TABLE wms.sd_material_requests IS '불출 신청 헤더';
+COMMENT ON COLUMN wms.sd_material_requests.request_status IS '신청 상태: PENDING(대기), APPROVED(승인), REJECTED(거부), ISSUED(불출), COMPLETED(완료), CANCELLED(취소)';
+COMMENT ON COLUMN wms.sd_material_requests.priority IS '우선순위: URGENT(긴급), HIGH(높음), NORMAL(보통), LOW(낮음)';
+COMMENT ON COLUMN wms.sd_material_requests.purpose IS '용도: PRODUCTION(생산), MAINTENANCE(보전), SAMPLE(샘플), OTHER(기타)';
 
 -- ============================================================
 -- 2. MATERIAL REQUEST ITEMS (불출 신청 상세)
 -- ============================================================
 
-CREATE TABLE wms.si_material_request_items (
+CREATE TABLE wms.sd_material_request_items (
     material_request_item_id BIGSERIAL PRIMARY KEY,
     material_request_id BIGINT NOT NULL,
 
@@ -137,11 +137,11 @@ CREATE TABLE wms.si_material_request_items (
 
     -- Foreign Keys
     CONSTRAINT fk_material_request_item_header
-        FOREIGN KEY (material_request_id) REFERENCES wms.si_material_requests(material_request_id) ON DELETE CASCADE,
+        FOREIGN KEY (material_request_id) REFERENCES wms.sd_material_requests(material_request_id) ON DELETE CASCADE,
     CONSTRAINT fk_material_request_item_product
-        FOREIGN KEY (product_id) REFERENCES mes.si_products(product_id) ON DELETE RESTRICT,
+        FOREIGN KEY (product_id) REFERENCES mes.sd_products(product_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_request_item_transaction
-        FOREIGN KEY (inventory_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id) ON DELETE SET NULL,
+        FOREIGN KEY (inventory_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id) ON DELETE SET NULL,
 
     -- Check Constraints
     CONSTRAINT chk_material_request_item_quantities
@@ -151,22 +151,22 @@ CREATE TABLE wms.si_material_request_items (
 );
 
 -- Indexes
-CREATE INDEX idx_material_request_item_header ON wms.si_material_request_items(material_request_id);
-CREATE INDEX idx_material_request_item_product ON wms.si_material_request_items(product_id);
-CREATE INDEX idx_material_request_item_lot ON wms.si_material_request_items(requested_lot_no);
-CREATE INDEX idx_material_request_item_transaction ON wms.si_material_request_items(inventory_transaction_id);
-CREATE INDEX idx_material_request_item_status ON wms.si_material_request_items(issue_status);
+CREATE INDEX idx_material_request_item_header ON wms.sd_material_request_items(material_request_id);
+CREATE INDEX idx_material_request_item_product ON wms.sd_material_request_items(product_id);
+CREATE INDEX idx_material_request_item_lot ON wms.sd_material_request_items(requested_lot_no);
+CREATE INDEX idx_material_request_item_transaction ON wms.sd_material_request_items(inventory_transaction_id);
+CREATE INDEX idx_material_request_item_status ON wms.sd_material_request_items(issue_status);
 
 -- Comments
-COMMENT ON TABLE wms.si_material_request_items IS '불출 신청 상세';
-COMMENT ON COLUMN wms.si_material_request_items.issue_status IS '불출 상태: PENDING(대기), PARTIAL(부분), COMPLETED(완료), CANCELLED(취소)';
-COMMENT ON COLUMN wms.si_material_request_items.requested_lot_no IS '요청 LOT 번호 (특정 LOT 지정 시)';
+COMMENT ON TABLE wms.sd_material_request_items IS '불출 신청 상세';
+COMMENT ON COLUMN wms.sd_material_request_items.issue_status IS '불출 상태: PENDING(대기), PARTIAL(부분), COMPLETED(완료), CANCELLED(취소)';
+COMMENT ON COLUMN wms.sd_material_request_items.requested_lot_no IS '요청 LOT 번호 (특정 LOT 지정 시)';
 
 -- ============================================================
 -- 3. MATERIAL HANDOVERS (인수인계)
 -- ============================================================
 
-CREATE TABLE wms.si_material_handovers (
+CREATE TABLE wms.sd_material_handovers (
     material_handover_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
 
@@ -212,21 +212,21 @@ CREATE TABLE wms.si_material_handovers (
 
     -- Foreign Keys
     CONSTRAINT fk_material_handover_tenant
-        FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id) ON DELETE CASCADE,
+        FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_material_handover_request
-        FOREIGN KEY (material_request_id) REFERENCES wms.si_material_requests(material_request_id) ON DELETE RESTRICT,
+        FOREIGN KEY (material_request_id) REFERENCES wms.sd_material_requests(material_request_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_handover_request_item
-        FOREIGN KEY (material_request_item_id) REFERENCES wms.si_material_request_items(material_request_item_id) ON DELETE RESTRICT,
+        FOREIGN KEY (material_request_item_id) REFERENCES wms.sd_material_request_items(material_request_item_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_handover_transaction
-        FOREIGN KEY (inventory_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id) ON DELETE RESTRICT,
+        FOREIGN KEY (inventory_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_handover_product
-        FOREIGN KEY (product_id) REFERENCES mes.si_products(product_id) ON DELETE RESTRICT,
+        FOREIGN KEY (product_id) REFERENCES mes.sd_products(product_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_handover_lot
-        FOREIGN KEY (lot_id) REFERENCES inventory.si_lots(lot_id) ON DELETE SET NULL,
+        FOREIGN KEY (lot_id) REFERENCES inventory.sd_lots(lot_id) ON DELETE SET NULL,
     CONSTRAINT fk_material_handover_issuer
-        FOREIGN KEY (issuer_user_id) REFERENCES common.si_users(user_id) ON DELETE RESTRICT,
+        FOREIGN KEY (issuer_user_id) REFERENCES common.sd_users(user_id) ON DELETE RESTRICT,
     CONSTRAINT fk_material_handover_receiver
-        FOREIGN KEY (receiver_user_id) REFERENCES common.si_users(user_id) ON DELETE RESTRICT,
+        FOREIGN KEY (receiver_user_id) REFERENCES common.sd_users(user_id) ON DELETE RESTRICT,
 
     -- Unique Constraint
     CONSTRAINT uk_material_handover_no UNIQUE (tenant_id, handover_no),
@@ -239,38 +239,38 @@ CREATE TABLE wms.si_material_handovers (
 );
 
 -- Indexes
-CREATE INDEX idx_material_handover_tenant ON wms.si_material_handovers(tenant_id);
-CREATE INDEX idx_material_handover_date ON wms.si_material_handovers(handover_date);
-CREATE INDEX idx_material_handover_request ON wms.si_material_handovers(material_request_id);
-CREATE INDEX idx_material_handover_transaction ON wms.si_material_handovers(inventory_transaction_id);
-CREATE INDEX idx_material_handover_product ON wms.si_material_handovers(product_id);
-CREATE INDEX idx_material_handover_lot ON wms.si_material_handovers(lot_id);
-CREATE INDEX idx_material_handover_issuer ON wms.si_material_handovers(issuer_user_id);
-CREATE INDEX idx_material_handover_receiver ON wms.si_material_handovers(receiver_user_id);
-CREATE INDEX idx_material_handover_status ON wms.si_material_handovers(handover_status);
+CREATE INDEX idx_material_handover_tenant ON wms.sd_material_handovers(tenant_id);
+CREATE INDEX idx_material_handover_date ON wms.sd_material_handovers(handover_date);
+CREATE INDEX idx_material_handover_request ON wms.sd_material_handovers(material_request_id);
+CREATE INDEX idx_material_handover_transaction ON wms.sd_material_handovers(inventory_transaction_id);
+CREATE INDEX idx_material_handover_product ON wms.sd_material_handovers(product_id);
+CREATE INDEX idx_material_handover_lot ON wms.sd_material_handovers(lot_id);
+CREATE INDEX idx_material_handover_issuer ON wms.sd_material_handovers(issuer_user_id);
+CREATE INDEX idx_material_handover_receiver ON wms.sd_material_handovers(receiver_user_id);
+CREATE INDEX idx_material_handover_status ON wms.sd_material_handovers(handover_status);
 
 -- Comments
-COMMENT ON TABLE wms.si_material_handovers IS '자재 인수인계 기록';
-COMMENT ON COLUMN wms.si_material_handovers.handover_status IS '인수 상태: PENDING(대기), CONFIRMED(확인), REJECTED(거부)';
-COMMENT ON COLUMN wms.si_material_handovers.issuer_user_id IS '출고자 (창고 담당자)';
-COMMENT ON COLUMN wms.si_material_handovers.receiver_user_id IS '인수자 (생산 담당자)';
+COMMENT ON TABLE wms.sd_material_handovers IS '자재 인수인계 기록';
+COMMENT ON COLUMN wms.sd_material_handovers.handover_status IS '인수 상태: PENDING(대기), CONFIRMED(확인), REJECTED(거부)';
+COMMENT ON COLUMN wms.sd_material_handovers.issuer_user_id IS '출고자 (창고 담당자)';
+COMMENT ON COLUMN wms.sd_material_handovers.receiver_user_id IS '인수자 (생산 담당자)';
 
 -- ============================================================
 -- Trigger for updating updated_at
 -- ============================================================
 
 CREATE TRIGGER trg_material_request_updated_at
-    BEFORE UPDATE ON wms.si_material_requests
+    BEFORE UPDATE ON wms.sd_material_requests
     FOR EACH ROW
     EXECUTE FUNCTION common.update_modified_timestamp();
 
 CREATE TRIGGER trg_material_request_item_updated_at
-    BEFORE UPDATE ON wms.si_material_request_items
+    BEFORE UPDATE ON wms.sd_material_request_items
     FOR EACH ROW
     EXECUTE FUNCTION common.update_modified_timestamp();
 
 CREATE TRIGGER trg_material_handover_updated_at
-    BEFORE UPDATE ON wms.si_material_handovers
+    BEFORE UPDATE ON wms.sd_material_handovers
     FOR EACH ROW
     EXECUTE FUNCTION common.update_modified_timestamp();
 

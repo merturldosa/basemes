@@ -5,22 +5,22 @@ import lombok.*;
 
 /**
  * Code Group Entity - 코드 그룹
- * Maps to: common.SI_CodeGroups
+ * Maps to: common.SD_CodeGroups
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_code_groups",
+    name = "sd_code_groups",
     schema = "common",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_code_groups_tenant_code",
+            name = "uk_sd_code_groups_tenant_code",
             columnNames = {"tenant_id", "group_code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_code_groups_tenant_id", columnList = "tenant_id")
+        @Index(name = "idx_sd_code_groups_tenant_id", columnList = "tenant_id")
     }
 )
 @Getter
@@ -36,7 +36,7 @@ public class CodeGroupEntity extends BaseEntity {
     private Long groupId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_code_groups_tenant_id"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_code_groups_tenant_id"))
     private TenantEntity tenant;
 
     @Column(name = "group_code", nullable = false, length = 50)

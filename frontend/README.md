@@ -1,4 +1,4 @@
-# SoIce MES Frontend
+# SDS MES Frontend
 
 React + TypeScript + Vite 기반의 모던 프론트엔드 애플리케이션
 
@@ -247,4 +247,4 @@ server: {
 
 ## 라이선스
 
-Proprietary - (주)소프트아이스
+Proprietary - (주)스마트도킹스테이션

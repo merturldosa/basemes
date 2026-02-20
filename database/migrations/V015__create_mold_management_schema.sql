@@ -9,7 +9,7 @@
 -- CREATE SCHEMA IF NOT EXISTS mold;
 
 -- Create Molds table (금형 마스터)
-CREATE TABLE equipment.si_molds (
+CREATE TABLE equipment.sd_molds (
     mold_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     mold_code VARCHAR(50) NOT NULL,
@@ -57,16 +57,16 @@ CREATE TABLE equipment.si_molds (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Foreign keys
-    CONSTRAINT fk_mold_tenant FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id) ON DELETE CASCADE,
-    CONSTRAINT fk_mold_site FOREIGN KEY (site_id) REFERENCES common.si_sites(site_id) ON DELETE SET NULL,
-    CONSTRAINT fk_mold_department FOREIGN KEY (department_id) REFERENCES common.si_departments(department_id) ON DELETE SET NULL,
+    CONSTRAINT fk_mold_tenant FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id) ON DELETE CASCADE,
+    CONSTRAINT fk_mold_site FOREIGN KEY (site_id) REFERENCES common.sd_sites(site_id) ON DELETE SET NULL,
+    CONSTRAINT fk_mold_department FOREIGN KEY (department_id) REFERENCES common.sd_departments(department_id) ON DELETE SET NULL,
 
     -- Unique constraint
     CONSTRAINT uk_mold_code UNIQUE (tenant_id, mold_code)
 );
 
 -- Create Mold Maintenances table (금형 보전 이력)
-CREATE TABLE equipment.si_mold_maintenances (
+CREATE TABLE equipment.sd_mold_maintenances (
     maintenance_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     mold_id BIGINT NOT NULL,
@@ -108,16 +108,16 @@ CREATE TABLE equipment.si_mold_maintenances (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Foreign keys
-    CONSTRAINT fk_mold_maintenance_tenant FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id) ON DELETE CASCADE,
-    CONSTRAINT fk_mold_maintenance_mold FOREIGN KEY (mold_id) REFERENCES equipment.si_molds(mold_id) ON DELETE CASCADE,
-    CONSTRAINT fk_mold_maintenance_technician FOREIGN KEY (technician_user_id) REFERENCES common.si_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_mold_maintenance_tenant FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id) ON DELETE CASCADE,
+    CONSTRAINT fk_mold_maintenance_mold FOREIGN KEY (mold_id) REFERENCES equipment.sd_molds(mold_id) ON DELETE CASCADE,
+    CONSTRAINT fk_mold_maintenance_technician FOREIGN KEY (technician_user_id) REFERENCES common.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique constraint
     CONSTRAINT uk_mold_maintenance_no UNIQUE (tenant_id, maintenance_no)
 );
 
 -- Create Mold Production History table (금형 생산 이력)
-CREATE TABLE equipment.si_mold_production_history (
+CREATE TABLE equipment.sd_mold_production_history (
     history_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     mold_id BIGINT NOT NULL,
@@ -146,45 +146,45 @@ CREATE TABLE equipment.si_mold_production_history (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Foreign keys
-    CONSTRAINT fk_mold_history_tenant FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id) ON DELETE CASCADE,
-    CONSTRAINT fk_mold_history_mold FOREIGN KEY (mold_id) REFERENCES equipment.si_molds(mold_id) ON DELETE CASCADE,
-    CONSTRAINT fk_mold_history_work_order FOREIGN KEY (work_order_id) REFERENCES production.si_work_orders(work_order_id) ON DELETE SET NULL,
-    CONSTRAINT fk_mold_history_work_result FOREIGN KEY (work_result_id) REFERENCES production.si_work_results(work_result_id) ON DELETE SET NULL,
-    CONSTRAINT fk_mold_history_operator FOREIGN KEY (operator_user_id) REFERENCES common.si_users(user_id) ON DELETE SET NULL
+    CONSTRAINT fk_mold_history_tenant FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id) ON DELETE CASCADE,
+    CONSTRAINT fk_mold_history_mold FOREIGN KEY (mold_id) REFERENCES equipment.sd_molds(mold_id) ON DELETE CASCADE,
+    CONSTRAINT fk_mold_history_work_order FOREIGN KEY (work_order_id) REFERENCES production.sd_work_orders(work_order_id) ON DELETE SET NULL,
+    CONSTRAINT fk_mold_history_work_result FOREIGN KEY (work_result_id) REFERENCES production.sd_work_results(work_result_id) ON DELETE SET NULL,
+    CONSTRAINT fk_mold_history_operator FOREIGN KEY (operator_user_id) REFERENCES common.sd_users(user_id) ON DELETE SET NULL
 );
 
 -- Create indexes for performance
-CREATE INDEX idx_mold_tenant ON equipment.si_molds(tenant_id);
-CREATE INDEX idx_mold_type ON equipment.si_molds(mold_type);
-CREATE INDEX idx_mold_status ON equipment.si_molds(status);
-CREATE INDEX idx_mold_site ON equipment.si_molds(site_id);
-CREATE INDEX idx_mold_department ON equipment.si_molds(department_id);
+CREATE INDEX idx_mold_tenant ON equipment.sd_molds(tenant_id);
+CREATE INDEX idx_mold_type ON equipment.sd_molds(mold_type);
+CREATE INDEX idx_mold_status ON equipment.sd_molds(status);
+CREATE INDEX idx_mold_site ON equipment.sd_molds(site_id);
+CREATE INDEX idx_mold_department ON equipment.sd_molds(department_id);
 
-CREATE INDEX idx_mold_maintenance_tenant ON equipment.si_mold_maintenances(tenant_id);
-CREATE INDEX idx_mold_maintenance_mold ON equipment.si_mold_maintenances(mold_id);
-CREATE INDEX idx_mold_maintenance_type ON equipment.si_mold_maintenances(maintenance_type);
-CREATE INDEX idx_mold_maintenance_date ON equipment.si_mold_maintenances(maintenance_date);
+CREATE INDEX idx_mold_maintenance_tenant ON equipment.sd_mold_maintenances(tenant_id);
+CREATE INDEX idx_mold_maintenance_mold ON equipment.sd_mold_maintenances(mold_id);
+CREATE INDEX idx_mold_maintenance_type ON equipment.sd_mold_maintenances(maintenance_type);
+CREATE INDEX idx_mold_maintenance_date ON equipment.sd_mold_maintenances(maintenance_date);
 
-CREATE INDEX idx_mold_history_tenant ON equipment.si_mold_production_history(tenant_id);
-CREATE INDEX idx_mold_history_mold ON equipment.si_mold_production_history(mold_id);
-CREATE INDEX idx_mold_history_date ON equipment.si_mold_production_history(production_date);
-CREATE INDEX idx_mold_history_work_order ON equipment.si_mold_production_history(work_order_id);
+CREATE INDEX idx_mold_history_tenant ON equipment.sd_mold_production_history(tenant_id);
+CREATE INDEX idx_mold_history_mold ON equipment.sd_mold_production_history(mold_id);
+CREATE INDEX idx_mold_history_date ON equipment.sd_mold_production_history(production_date);
+CREATE INDEX idx_mold_history_work_order ON equipment.sd_mold_production_history(work_order_id);
 
 -- Add comments
-COMMENT ON TABLE equipment.si_molds IS '금형 마스터 테이블';
-COMMENT ON COLUMN equipment.si_molds.mold_id IS '금형 ID (PK)';
-COMMENT ON COLUMN equipment.si_molds.mold_code IS '금형 코드 (테넌트별 unique)';
-COMMENT ON COLUMN equipment.si_molds.cavity_count IS '캐비티 수';
-COMMENT ON COLUMN equipment.si_molds.current_shot_count IS '현재 Shot 수';
-COMMENT ON COLUMN equipment.si_molds.max_shot_count IS '최대 Shot 수';
-COMMENT ON COLUMN equipment.si_molds.maintenance_shot_interval IS '보전 주기 (Shot)';
+COMMENT ON TABLE equipment.sd_molds IS '금형 마스터 테이블';
+COMMENT ON COLUMN equipment.sd_molds.mold_id IS '금형 ID (PK)';
+COMMENT ON COLUMN equipment.sd_molds.mold_code IS '금형 코드 (테넌트별 unique)';
+COMMENT ON COLUMN equipment.sd_molds.cavity_count IS '캐비티 수';
+COMMENT ON COLUMN equipment.sd_molds.current_shot_count IS '현재 Shot 수';
+COMMENT ON COLUMN equipment.sd_molds.max_shot_count IS '최대 Shot 수';
+COMMENT ON COLUMN equipment.sd_molds.maintenance_shot_interval IS '보전 주기 (Shot)';
 
-COMMENT ON TABLE equipment.si_mold_maintenances IS '금형 보전 이력 테이블';
-COMMENT ON COLUMN equipment.si_mold_maintenances.shot_count_reset IS 'Shot 수 초기화 여부';
+COMMENT ON TABLE equipment.sd_mold_maintenances IS '금형 보전 이력 테이블';
+COMMENT ON COLUMN equipment.sd_mold_maintenances.shot_count_reset IS 'Shot 수 초기화 여부';
 
-COMMENT ON TABLE equipment.si_mold_production_history IS '금형 생산 이력 테이블';
-COMMENT ON COLUMN equipment.si_mold_production_history.shot_count IS '이번 생산의 Shot 수';
-COMMENT ON COLUMN equipment.si_mold_production_history.cumulative_shot_count IS '누적 Shot 수';
+COMMENT ON TABLE equipment.sd_mold_production_history IS '금형 생산 이력 테이블';
+COMMENT ON COLUMN equipment.sd_mold_production_history.shot_count IS '이번 생산의 Shot 수';
+COMMENT ON COLUMN equipment.sd_mold_production_history.cumulative_shot_count IS '누적 Shot 수';
 
 -- ============================================================================
 -- Triggers for automatic calculations
@@ -201,7 +201,7 @@ $$ LANGUAGE plpgsql;
 
 -- Trigger for auto-calculating maintenance cost
 CREATE TRIGGER trg_calculate_mold_maintenance_cost
-    BEFORE INSERT OR UPDATE ON equipment.si_mold_maintenances
+    BEFORE INSERT OR UPDATE ON equipment.sd_mold_maintenances
     FOR EACH ROW
     EXECUTE FUNCTION equipment.calculate_mold_maintenance_cost();
 
@@ -212,12 +212,12 @@ BEGIN
     -- Update cumulative shot count in history record
     NEW.cumulative_shot_count := (
         SELECT COALESCE(current_shot_count, 0) + NEW.shot_count
-        FROM equipment.si_molds
+        FROM equipment.sd_molds
         WHERE mold_id = NEW.mold_id
     );
 
     -- Update mold's current shot count
-    UPDATE equipment.si_molds
+    UPDATE equipment.sd_molds
     SET current_shot_count = current_shot_count + NEW.shot_count,
         updated_at = CURRENT_TIMESTAMP
     WHERE mold_id = NEW.mold_id;
@@ -228,23 +228,23 @@ $$ LANGUAGE plpgsql;
 
 -- Trigger for auto-updating shot count
 CREATE TRIGGER trg_update_mold_shot_count
-    BEFORE INSERT ON equipment.si_mold_production_history
+    BEFORE INSERT ON equipment.sd_mold_production_history
     FOR EACH ROW
     EXECUTE FUNCTION equipment.update_mold_shot_count();
 
 -- Trigger for updating updated_at timestamp
 CREATE TRIGGER trg_update_mold_timestamp
-    BEFORE UPDATE ON equipment.si_molds
+    BEFORE UPDATE ON equipment.sd_molds
     FOR EACH ROW
     EXECUTE FUNCTION common.update_timestamp();
 
 CREATE TRIGGER trg_update_mold_maintenance_timestamp
-    BEFORE UPDATE ON equipment.si_mold_maintenances
+    BEFORE UPDATE ON equipment.sd_mold_maintenances
     FOR EACH ROW
     EXECUTE FUNCTION common.update_timestamp();
 
 CREATE TRIGGER trg_update_mold_history_timestamp
-    BEFORE UPDATE ON equipment.si_mold_production_history
+    BEFORE UPDATE ON equipment.sd_mold_production_history
     FOR EACH ROW
     EXECUTE FUNCTION common.update_timestamp();
 

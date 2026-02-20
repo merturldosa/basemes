@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(
     schema = "mes",
-    name = "si_process_routings",
+    name = "sd_process_routings",
     indexes = {
         @Index(name = "idx_routing_tenant", columnList = "tenant_id"),
         @Index(name = "idx_routing_product", columnList = "product_id"),

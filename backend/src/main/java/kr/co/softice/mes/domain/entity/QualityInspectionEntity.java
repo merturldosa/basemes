@@ -9,13 +9,13 @@ import java.time.LocalDateTime;
 
 /**
  * Quality Inspection Entity - 품질 검사 기록
- * Maps to: qms.si_quality_inspections
+ * Maps to: qms.sd_quality_inspections
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_quality_inspections",
+    name = "sd_quality_inspections",
     schema = "qms",
     uniqueConstraints = {
         @UniqueConstraint(

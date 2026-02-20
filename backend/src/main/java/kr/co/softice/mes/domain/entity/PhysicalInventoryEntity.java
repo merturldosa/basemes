@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(
-    name = "si_physical_inventories",
+    name = "sd_physical_inventories",
     schema = "inventory",
     uniqueConstraints = {
         @UniqueConstraint(name = "uk_physical_inventory_no", columnNames = {"tenant_id", "inventory_no"})

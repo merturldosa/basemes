@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "si_physical_inventory_items",
+    name = "sd_physical_inventory_items",
     schema = "inventory",
     indexes = {
         @Index(name = "idx_physical_inventory_items_header", columnList = "physical_inventory_id"),

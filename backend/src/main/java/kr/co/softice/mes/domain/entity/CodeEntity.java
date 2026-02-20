@@ -5,22 +5,22 @@ import lombok.*;
 
 /**
  * Code Entity - 공통 코드
- * Maps to: common.SI_Codes
+ * Maps to: common.SD_Codes
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_codes",
+    name = "sd_codes",
     schema = "common",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_codes_group_code",
+            name = "uk_sd_codes_group_code",
             columnNames = {"group_id", "code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_codes_group_id", columnList = "group_id")
+        @Index(name = "idx_sd_codes_group_id", columnList = "group_id")
     }
 )
 @Getter
@@ -36,7 +36,7 @@ public class CodeEntity extends BaseEntity {
     private Long codeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_codes_group_id"))
+    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_codes_group_id"))
     private CodeGroupEntity codeGroup;
 
     @Column(name = "code", nullable = false, length = 50)

@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**SoIce MES (Manufacturing Execution System)** - A modular, base MES platform designed for customization across various manufacturing industries (chemical, electrical, electronic factories, etc.).
+**SDS MES (Manufacturing Execution System)** - A modular, base MES platform designed for customization across various manufacturing industries (chemical, electrical, electronic factories, etc.).
 
 **Developer**: 문명섭 (Moon Myeong-seop)
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
-**Contact**: msmoon@softice.co.kr | 010-4882-2035
-**Project Root**: D:\prj\softice\prj\claude\SoIceMES
+**Company**: (주)스마트도킹스테이션 (SmartDockingStation Co., Ltd.)
+**Contact**: msmoon.asi@gmail.com | 010-4882-2035
+**Project Root**: D:\prj\smartdocking\prj\claude\SDMES
 
 ## Critical Development Principles
 

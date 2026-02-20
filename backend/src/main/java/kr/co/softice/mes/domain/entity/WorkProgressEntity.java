@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 /**
  * Work Progress Entity - 실시간 작업 진행 기록
- * Maps to: mes.SI_Work_Progress
+ * Maps to: mes.SD_Work_Progress
  *
  * 분/시간 단위로 작업 진행 상황을 추적합니다.
  * 각 작업 세션(시작~완료/일시정지)마다 하나의 레코드가 생성됩니다.
@@ -18,14 +18,14 @@ import java.time.LocalTime;
  */
 @Entity
 @Table(
-    name = "si_work_progress",
+    name = "sd_work_progress",
     schema = "mes",
     indexes = {
-        @Index(name = "idx_si_work_progress_work_order", columnList = "work_order_id"),
-        @Index(name = "idx_si_work_progress_operator", columnList = "operator_user_id"),
-        @Index(name = "idx_si_work_progress_active", columnList = "work_order_id, is_active"),
-        @Index(name = "idx_si_work_progress_operator_date", columnList = "operator_user_id, record_date"),
-        @Index(name = "idx_si_work_progress_tenant", columnList = "tenant_id")
+        @Index(name = "idx_sd_work_progress_work_order", columnList = "work_order_id"),
+        @Index(name = "idx_sd_work_progress_operator", columnList = "operator_user_id"),
+        @Index(name = "idx_sd_work_progress_active", columnList = "work_order_id, is_active"),
+        @Index(name = "idx_sd_work_progress_operator_date", columnList = "operator_user_id, record_date"),
+        @Index(name = "idx_sd_work_progress_tenant", columnList = "tenant_id")
     }
 )
 @Getter
@@ -41,15 +41,15 @@ public class WorkProgressEntity extends BaseEntity {
     private Long progressId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_progress_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_progress_tenant"))
     private TenantEntity tenant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_progress_work_order"))
+    @JoinColumn(name = "work_order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_progress_work_order"))
     private WorkOrderEntity workOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "operator_user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_progress_operator"))
+    @JoinColumn(name = "operator_user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_progress_operator"))
     private UserEntity operator;
 
     // 작업 일자 및 시간
@@ -100,6 +100,6 @@ public class WorkProgressEntity extends BaseEntity {
 
     // 설비 정보 (선택)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "equipment_id", foreignKey = @ForeignKey(name = "fk_si_work_progress_equipment"))
+    @JoinColumn(name = "equipment_id", foreignKey = @ForeignKey(name = "fk_sd_work_progress_equipment"))
     private EquipmentEntity equipment;
 }

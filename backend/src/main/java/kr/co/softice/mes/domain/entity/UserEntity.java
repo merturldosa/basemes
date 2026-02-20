@@ -5,24 +5,24 @@ import lombok.*;
 
 /**
  * User Entity - 사용자
- * Maps to: common.SI_Users
+ * Maps to: common.SD_Users
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_users",
+    name = "sd_users",
     schema = "common",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_users_tenant_username",
+            name = "uk_sd_users_tenant_username",
             columnNames = {"tenant_id", "username"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_users_tenant_id", columnList = "tenant_id"),
-        @Index(name = "idx_si_users_email", columnList = "email"),
-        @Index(name = "idx_si_users_status", columnList = "status")
+        @Index(name = "idx_sd_users_tenant_id", columnList = "tenant_id"),
+        @Index(name = "idx_sd_users_email", columnList = "email"),
+        @Index(name = "idx_sd_users_status", columnList = "status")
     }
 )
 @Getter
@@ -38,7 +38,7 @@ public class UserEntity extends BaseEntity {
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_users_tenant_id"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_users_tenant_id"))
     private TenantEntity tenant;
 
     @Column(name = "username", nullable = false, length = 100)

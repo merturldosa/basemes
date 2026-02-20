@@ -10,17 +10,17 @@ import sopOperatorService from './sopOperatorService';
 
 // Configure localforage instances
 const workProgressQueue = localforage.createInstance({
-  name: 'SoIceMES',
+  name: 'SDSMES',
   storeName: 'work_progress_queue',
 });
 
 const defectQueue = localforage.createInstance({
-  name: 'SoIceMES',
+  name: 'SDSMES',
   storeName: 'defect_queue',
 });
 
 const sopQueue = localforage.createInstance({
-  name: 'SoIceMES',
+  name: 'SDSMES',
   storeName: 'sop_queue',
 });
 

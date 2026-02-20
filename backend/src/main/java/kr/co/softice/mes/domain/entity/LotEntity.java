@@ -8,13 +8,13 @@ import java.time.LocalDate;
 
 /**
  * Lot Entity - LOT/배치 관리
- * Maps to: inventory.si_lots
+ * Maps to: inventory.sd_lots
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_lots",
+    name = "sd_lots",
     schema = "inventory",
     uniqueConstraints = {
         @UniqueConstraint(

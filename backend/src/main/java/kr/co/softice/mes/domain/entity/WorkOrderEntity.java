@@ -8,26 +8,26 @@ import java.time.LocalDateTime;
 
 /**
  * Work Order Entity - 작업 지시서
- * Maps to: mes.SI_Work_Orders
+ * Maps to: mes.SD_Work_Orders
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_work_orders",
+    name = "sd_work_orders",
     schema = "mes",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_work_orders_tenant_no",
+            name = "uk_sd_work_orders_tenant_no",
             columnNames = {"tenant_id", "work_order_no"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_work_orders_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_si_work_orders_no", columnList = "work_order_no"),
-        @Index(name = "idx_si_work_orders_status", columnList = "status"),
-        @Index(name = "idx_si_work_orders_product", columnList = "product_id"),
-        @Index(name = "idx_si_work_orders_process", columnList = "process_id")
+        @Index(name = "idx_sd_work_orders_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_work_orders_no", columnList = "work_order_no"),
+        @Index(name = "idx_sd_work_orders_status", columnList = "status"),
+        @Index(name = "idx_sd_work_orders_product", columnList = "product_id"),
+        @Index(name = "idx_sd_work_orders_process", columnList = "process_id")
     }
 )
 @Getter
@@ -43,18 +43,18 @@ public class WorkOrderEntity extends BaseEntity {
     private Long workOrderId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_orders_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_orders_tenant"))
     private TenantEntity tenant;
 
     @Column(name = "work_order_no", nullable = false, length = 50)
     private String workOrderNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_orders_product"))
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_orders_product"))
     private ProductEntity product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "process_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_work_orders_process"))
+    @JoinColumn(name = "process_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_work_orders_process"))
     private ProcessEntity process;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -102,7 +102,7 @@ public class WorkOrderEntity extends BaseEntity {
 
     // 담당자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_user_id", foreignKey = @ForeignKey(name = "fk_si_work_orders_assigned_user"))
+    @JoinColumn(name = "assigned_user_id", foreignKey = @ForeignKey(name = "fk_sd_work_orders_assigned_user"))
     private UserEntity assignedUser;
 
     @Column(name = "remarks", columnDefinition = "TEXT")

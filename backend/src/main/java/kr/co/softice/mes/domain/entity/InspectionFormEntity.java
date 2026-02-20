@@ -11,7 +11,7 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "equipment", name = "si_inspection_forms",
+@Table(schema = "equipment", name = "sd_inspection_forms",
     uniqueConstraints = {
         @UniqueConstraint(name = "uk_inspection_form_code", columnNames = {"tenant_id", "form_code"})
     },

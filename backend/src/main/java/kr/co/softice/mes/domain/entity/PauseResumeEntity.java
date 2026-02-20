@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * Pause/Resume Entity - 작업 일시정지/재개 이력
- * Maps to: mes.SI_Pause_Resume_History
+ * Maps to: mes.SD_Pause_Resume_History
  *
  * 작업 중 일시정지와 재개 이벤트를 추적합니다.
  * 휴식, 설비 점검, 자재 대기 등 다양한 일시정지 사유를 기록합니다.
@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "si_pause_resume_history",
+    name = "sd_pause_resume_history",
     schema = "mes",
     indexes = {
-        @Index(name = "idx_si_pause_resume_progress", columnList = "progress_id"),
-        @Index(name = "idx_si_pause_resume_active", columnList = "progress_id, resume_time"),
-        @Index(name = "idx_si_pause_resume_tenant", columnList = "tenant_id")
+        @Index(name = "idx_sd_pause_resume_progress", columnList = "progress_id"),
+        @Index(name = "idx_sd_pause_resume_active", columnList = "progress_id, resume_time"),
+        @Index(name = "idx_sd_pause_resume_tenant", columnList = "tenant_id")
     }
 )
 @Getter
@@ -37,11 +37,11 @@ public class PauseResumeEntity extends BaseEntity {
     private Long pauseResumeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_pause_resume_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_pause_resume_tenant"))
     private TenantEntity tenant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "progress_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_pause_resume_progress"))
+    @JoinColumn(name = "progress_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_pause_resume_progress"))
     private WorkProgressEntity workProgress;
 
     // 일시정지 시간

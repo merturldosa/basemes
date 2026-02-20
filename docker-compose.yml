@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Docker Compose for SoIce MES Platform - Local Development
+# Docker Compose for SDS MES Platform - Local Development
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -9,10 +9,10 @@ services:
   # ─────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    container_name: soice-mes-postgres
+    container_name: sds-mes-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: soice_mes_dev
+      POSTGRES_DB: sds_mes_dev
       POSTGRES_USER: mes_admin
       POSTGRES_PASSWORD: mes_password_dev_2026
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --locale=C"
@@ -21,12 +21,13 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/create_schemas.sql:/docker-entrypoint-initdb.d/00_create_schemas.sql:ro
       - ./database/migrations:/docker-entrypoint-initdb.d/migrations:ro
       - ./database/seeds:/docker-entrypoint-initdb.d/seeds:ro
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mes_admin -d soice_mes_dev"]
+      test: ["CMD-SHELL", "pg_isready -U mes_admin -d sds_mes_dev"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -36,15 +37,15 @@ services:
   # ─────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
-    container_name: soice-mes-redis
+    container_name: sds-mes-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --requirepass soice_redis_2024
+    command: redis-server --appendonly yes --requirepass sds_redis_2024
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
       test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s
@@ -58,28 +59,28 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: soice-mes-backend
+    container_name: sds-mes-backend
     restart: unless-stopped
     environment:
       # Spring Profile
       SPRING_PROFILES_ACTIVE: dev
 
       # Database
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/soice_mes_dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sds_mes_dev
       SPRING_DATASOURCE_USERNAME: mes_admin
       SPRING_DATASOURCE_PASSWORD: mes_password_dev_2026
 
       # Redis
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: soice_redis_2024
+      SPRING_REDIS_PASSWORD: sds_redis_2024
 
       # JPA
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: "false"
 
       # JWT
-      JWT_SECRET: soice-mes-jwt-secret-key-change-in-production-2024
+      JWT_SECRET: sds-mes-jwt-secret-key-change-in-production-2024
       JWT_EXPIRATION: 86400000
 
       # Server
@@ -98,7 +99,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
@@ -113,7 +114,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: soice-mes-frontend
+    container_name: sds-mes-frontend
     restart: unless-stopped
     environment:
       VITE_API_BASE_URL: /api
@@ -124,7 +125,7 @@ services:
       backend:
         condition: service_healthy
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -136,15 +137,15 @@ services:
 # Networks
 # ═══════════════════════════════════════════════════════════════
 networks:
-  soice-mes-network:
+  sds-mes-network:
     driver: bridge
-    name: soice-mes-network
+    name: sds-mes-network
 
 # ═══════════════════════════════════════════════════════════════
 # Volumes
 # ═══════════════════════════════════════════════════════════════
 volumes:
   postgres_data:
-    name: soice-mes-postgres-data
+    name: sds-mes-postgres-data
   redis_data:
-    name: soice-mes-redis-data
+    name: sds-mes-redis-data

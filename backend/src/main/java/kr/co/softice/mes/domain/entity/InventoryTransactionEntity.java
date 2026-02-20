@@ -8,13 +8,13 @@ import java.time.LocalDateTime;
 
 /**
  * Inventory Transaction Entity - 재고 이동 내역
- * Maps to: inventory.si_inventory_transactions
+ * Maps to: inventory.sd_inventory_transactions
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_inventory_transactions",
+    name = "sd_inventory_transactions",
     schema = "inventory",
     uniqueConstraints = {
         @UniqueConstraint(

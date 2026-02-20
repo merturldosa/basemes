@@ -13,7 +13,7 @@ import lombok.*;
 @Entity
 @Table(
     schema = "mes",
-    name = "si_process_routing_steps",
+    name = "sd_process_routing_steps",
     indexes = {
         @Index(name = "idx_step_routing", columnList = "routing_id"),
         @Index(name = "idx_step_process", columnList = "process_id"),

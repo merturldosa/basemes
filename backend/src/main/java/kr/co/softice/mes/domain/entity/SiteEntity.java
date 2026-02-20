@@ -12,7 +12,7 @@ import lombok.*;
 @Entity
 @Table(
     schema = "core",
-    name = "si_sites",
+    name = "sd_sites",
     indexes = {
         @Index(name = "idx_site_tenant", columnList = "tenant_id"),
         @Index(name = "idx_site_active", columnList = "is_active"),

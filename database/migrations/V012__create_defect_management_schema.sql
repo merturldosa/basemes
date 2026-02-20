@@ -12,7 +12,7 @@ CREATE SCHEMA IF NOT EXISTS qms;
 -- 1. DEFECTS (불량)
 -- ============================================================
 
-CREATE TABLE qms.si_defects (
+CREATE TABLE qms.sd_defects (
     defect_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     defect_no VARCHAR(50) NOT NULL,
@@ -69,39 +69,39 @@ CREATE TABLE qms.si_defects (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_defect_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_defect_work_order FOREIGN KEY (work_order_id) REFERENCES production.si_work_orders(work_order_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_work_result FOREIGN KEY (work_result_id) REFERENCES production.si_work_results(work_result_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_goods_receipt FOREIGN KEY (goods_receipt_id) REFERENCES wms.si_goods_receipts(goods_receipt_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_shipping FOREIGN KEY (shipping_id) REFERENCES wms.si_shippings(shipping_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_quality_inspection FOREIGN KEY (quality_inspection_id) REFERENCES qms.si_quality_inspections(quality_inspection_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_product FOREIGN KEY (product_id) REFERENCES production.si_products(product_id),
-    CONSTRAINT fk_defect_department FOREIGN KEY (responsible_department_id) REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_responsible_user FOREIGN KEY (responsible_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
-    CONSTRAINT fk_defect_reporter FOREIGN KEY (reporter_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_defect_work_order FOREIGN KEY (work_order_id) REFERENCES production.sd_work_orders(work_order_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_work_result FOREIGN KEY (work_result_id) REFERENCES production.sd_work_results(work_result_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_goods_receipt FOREIGN KEY (goods_receipt_id) REFERENCES wms.sd_goods_receipts(goods_receipt_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_shipping FOREIGN KEY (shipping_id) REFERENCES wms.sd_shippings(shipping_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_quality_inspection FOREIGN KEY (quality_inspection_id) REFERENCES qms.sd_quality_inspections(quality_inspection_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_product FOREIGN KEY (product_id) REFERENCES production.sd_products(product_id),
+    CONSTRAINT fk_defect_department FOREIGN KEY (responsible_department_id) REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_responsible_user FOREIGN KEY (responsible_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_defect_reporter FOREIGN KEY (reporter_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique Constraint
     CONSTRAINT uk_defect_no UNIQUE (tenant_id, defect_no)
 );
 
 -- Indexes
-CREATE INDEX idx_defect_tenant ON qms.si_defects(tenant_id);
-CREATE INDEX idx_defect_date ON qms.si_defects(defect_date);
-CREATE INDEX idx_defect_status ON qms.si_defects(status);
-CREATE INDEX idx_defect_product ON qms.si_defects(product_id);
-CREATE INDEX idx_defect_lot ON qms.si_defects(lot_no);
-CREATE INDEX idx_defect_type ON qms.si_defects(defect_type);
+CREATE INDEX idx_defect_tenant ON qms.sd_defects(tenant_id);
+CREATE INDEX idx_defect_date ON qms.sd_defects(defect_date);
+CREATE INDEX idx_defect_status ON qms.sd_defects(status);
+CREATE INDEX idx_defect_product ON qms.sd_defects(product_id);
+CREATE INDEX idx_defect_lot ON qms.sd_defects(lot_no);
+CREATE INDEX idx_defect_type ON qms.sd_defects(defect_type);
 
 -- Comments
-COMMENT ON TABLE qms.si_defects IS '불량 관리';
-COMMENT ON COLUMN qms.si_defects.source_type IS '발생 원천: PRODUCTION(생산), RECEIVING(입하), SHIPPING(출하), INSPECTION(검사), CUSTOMER(고객)';
-COMMENT ON COLUMN qms.si_defects.status IS '상태: REPORTED(보고), IN_REVIEW(검토중), REWORK(재작업), SCRAP(폐기), CLOSED(완료)';
+COMMENT ON TABLE qms.sd_defects IS '불량 관리';
+COMMENT ON COLUMN qms.sd_defects.source_type IS '발생 원천: PRODUCTION(생산), RECEIVING(입하), SHIPPING(출하), INSPECTION(검사), CUSTOMER(고객)';
+COMMENT ON COLUMN qms.sd_defects.status IS '상태: REPORTED(보고), IN_REVIEW(검토중), REWORK(재작업), SCRAP(폐기), CLOSED(완료)';
 
 -- ============================================================
 -- 2. AFTER SALES (A/S)
 -- ============================================================
 
-CREATE TABLE qms.si_after_sales (
+CREATE TABLE qms.sd_after_sales (
     after_sales_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     as_no VARCHAR(50) NOT NULL,
@@ -170,35 +170,35 @@ CREATE TABLE qms.si_after_sales (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_after_sales_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_after_sales_customer FOREIGN KEY (customer_id) REFERENCES business.si_customers(customer_id),
-    CONSTRAINT fk_after_sales_product FOREIGN KEY (product_id) REFERENCES production.si_products(product_id),
-    CONSTRAINT fk_after_sales_sales_order FOREIGN KEY (sales_order_id) REFERENCES sales.si_sales_orders(sales_order_id) ON DELETE SET NULL,
-    CONSTRAINT fk_after_sales_shipping FOREIGN KEY (shipping_id) REFERENCES wms.si_shippings(shipping_id) ON DELETE SET NULL,
-    CONSTRAINT fk_after_sales_engineer FOREIGN KEY (assigned_engineer_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_after_sales_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_after_sales_customer FOREIGN KEY (customer_id) REFERENCES business.sd_customers(customer_id),
+    CONSTRAINT fk_after_sales_product FOREIGN KEY (product_id) REFERENCES production.sd_products(product_id),
+    CONSTRAINT fk_after_sales_sales_order FOREIGN KEY (sales_order_id) REFERENCES sales.sd_sales_orders(sales_order_id) ON DELETE SET NULL,
+    CONSTRAINT fk_after_sales_shipping FOREIGN KEY (shipping_id) REFERENCES wms.sd_shippings(shipping_id) ON DELETE SET NULL,
+    CONSTRAINT fk_after_sales_engineer FOREIGN KEY (assigned_engineer_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique Constraint
     CONSTRAINT uk_after_sales_no UNIQUE (tenant_id, as_no)
 );
 
 -- Indexes
-CREATE INDEX idx_after_sales_tenant ON qms.si_after_sales(tenant_id);
-CREATE INDEX idx_after_sales_date ON qms.si_after_sales(receipt_date);
-CREATE INDEX idx_after_sales_status ON qms.si_after_sales(service_status);
-CREATE INDEX idx_after_sales_customer ON qms.si_after_sales(customer_id);
-CREATE INDEX idx_after_sales_product ON qms.si_after_sales(product_id);
-CREATE INDEX idx_after_sales_priority ON qms.si_after_sales(priority);
+CREATE INDEX idx_after_sales_tenant ON qms.sd_after_sales(tenant_id);
+CREATE INDEX idx_after_sales_date ON qms.sd_after_sales(receipt_date);
+CREATE INDEX idx_after_sales_status ON qms.sd_after_sales(service_status);
+CREATE INDEX idx_after_sales_customer ON qms.sd_after_sales(customer_id);
+CREATE INDEX idx_after_sales_product ON qms.sd_after_sales(product_id);
+CREATE INDEX idx_after_sales_priority ON qms.sd_after_sales(priority);
 
 -- Comments
-COMMENT ON TABLE qms.si_after_sales IS 'A/S 관리';
-COMMENT ON COLUMN qms.si_after_sales.service_status IS '서비스 상태: RECEIVED(접수), IN_PROGRESS(진행중), COMPLETED(완료), CLOSED(종료), CANCELLED(취소)';
-COMMENT ON COLUMN qms.si_after_sales.warranty_status IS '보증 상태: IN_WARRANTY(보증기간내), OUT_OF_WARRANTY(보증기간외), EXTENDED(연장보증)';
+COMMENT ON TABLE qms.sd_after_sales IS 'A/S 관리';
+COMMENT ON COLUMN qms.sd_after_sales.service_status IS '서비스 상태: RECEIVED(접수), IN_PROGRESS(진행중), COMPLETED(완료), CLOSED(종료), CANCELLED(취소)';
+COMMENT ON COLUMN qms.sd_after_sales.warranty_status IS '보증 상태: IN_WARRANTY(보증기간내), OUT_OF_WARRANTY(보증기간외), EXTENDED(연장보증)';
 
 -- ============================================================
 -- 3. CLAIMS (클레임)
 -- ============================================================
 
-CREATE TABLE qms.si_claims (
+CREATE TABLE qms.sd_claims (
     claim_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     claim_no VARCHAR(50) NOT NULL,
@@ -274,31 +274,31 @@ CREATE TABLE qms.si_claims (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_claim_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_claim_customer FOREIGN KEY (customer_id) REFERENCES business.si_customers(customer_id),
-    CONSTRAINT fk_claim_product FOREIGN KEY (product_id) REFERENCES production.si_products(product_id) ON DELETE SET NULL,
-    CONSTRAINT fk_claim_sales_order FOREIGN KEY (sales_order_id) REFERENCES sales.si_sales_orders(sales_order_id) ON DELETE SET NULL,
-    CONSTRAINT fk_claim_shipping FOREIGN KEY (shipping_id) REFERENCES wms.si_shippings(shipping_id) ON DELETE SET NULL,
-    CONSTRAINT fk_claim_department FOREIGN KEY (responsible_department_id) REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
-    CONSTRAINT fk_claim_responsible_user FOREIGN KEY (responsible_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_claim_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_claim_customer FOREIGN KEY (customer_id) REFERENCES business.sd_customers(customer_id),
+    CONSTRAINT fk_claim_product FOREIGN KEY (product_id) REFERENCES production.sd_products(product_id) ON DELETE SET NULL,
+    CONSTRAINT fk_claim_sales_order FOREIGN KEY (sales_order_id) REFERENCES sales.sd_sales_orders(sales_order_id) ON DELETE SET NULL,
+    CONSTRAINT fk_claim_shipping FOREIGN KEY (shipping_id) REFERENCES wms.sd_shippings(shipping_id) ON DELETE SET NULL,
+    CONSTRAINT fk_claim_department FOREIGN KEY (responsible_department_id) REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
+    CONSTRAINT fk_claim_responsible_user FOREIGN KEY (responsible_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique Constraint
     CONSTRAINT uk_claim_no UNIQUE (tenant_id, claim_no)
 );
 
 -- Indexes
-CREATE INDEX idx_claim_tenant ON qms.si_claims(tenant_id);
-CREATE INDEX idx_claim_date ON qms.si_claims(claim_date);
-CREATE INDEX idx_claim_status ON qms.si_claims(status);
-CREATE INDEX idx_claim_customer ON qms.si_claims(customer_id);
-CREATE INDEX idx_claim_product ON qms.si_claims(product_id);
-CREATE INDEX idx_claim_type ON qms.si_claims(claim_type);
-CREATE INDEX idx_claim_priority ON qms.si_claims(priority);
+CREATE INDEX idx_claim_tenant ON qms.sd_claims(tenant_id);
+CREATE INDEX idx_claim_date ON qms.sd_claims(claim_date);
+CREATE INDEX idx_claim_status ON qms.sd_claims(status);
+CREATE INDEX idx_claim_customer ON qms.sd_claims(customer_id);
+CREATE INDEX idx_claim_product ON qms.sd_claims(product_id);
+CREATE INDEX idx_claim_type ON qms.sd_claims(claim_type);
+CREATE INDEX idx_claim_priority ON qms.sd_claims(priority);
 
 -- Comments
-COMMENT ON TABLE qms.si_claims IS '클레임 관리';
-COMMENT ON COLUMN qms.si_claims.claim_type IS '클레임 유형: QUALITY(품질), DELIVERY(납기), QUANTITY(수량), PACKAGING(포장), DOCUMENTATION(문서), SERVICE(서비스), PRICE(가격), OTHER(기타)';
-COMMENT ON COLUMN qms.si_claims.status IS '상태: RECEIVED(접수), INVESTIGATING(조사중), IN_PROGRESS(처리중), RESOLVED(해결), CLOSED(종료), REJECTED(거부)';
+COMMENT ON TABLE qms.sd_claims IS '클레임 관리';
+COMMENT ON COLUMN qms.sd_claims.claim_type IS '클레임 유형: QUALITY(품질), DELIVERY(납기), QUANTITY(수량), PACKAGING(포장), DOCUMENTATION(문서), SERVICE(서비스), PRICE(가격), OTHER(기타)';
+COMMENT ON COLUMN qms.sd_claims.status IS '상태: RECEIVED(접수), INVESTIGATING(조사중), IN_PROGRESS(처리중), RESOLVED(해결), CLOSED(종료), REJECTED(거부)';
 
 -- ============================================================
 -- 4. TRIGGERS - Auto update timestamp
@@ -314,7 +314,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_defect_updated_at
-    BEFORE UPDATE ON qms.si_defects
+    BEFORE UPDATE ON qms.sd_defects
     FOR EACH ROW
     EXECUTE FUNCTION qms.update_defect_updated_at();
 
@@ -328,7 +328,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_after_sales_updated_at
-    BEFORE UPDATE ON qms.si_after_sales
+    BEFORE UPDATE ON qms.sd_after_sales
     FOR EACH ROW
     EXECUTE FUNCTION qms.update_after_sales_updated_at();
 
@@ -342,7 +342,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_claim_updated_at
-    BEFORE UPDATE ON qms.si_claims
+    BEFORE UPDATE ON qms.sd_claims
     FOR EACH ROW
     EXECUTE FUNCTION qms.update_claim_updated_at();
 

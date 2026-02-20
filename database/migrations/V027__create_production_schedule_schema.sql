@@ -5,10 +5,10 @@
 --              WorkOrder와 ProcessRouting을 연동하여 상세 일정 관리
 --
 -- Tables:
---   - mes.si_production_schedules: 생산 일정 테이블
+--   - mes.sd_production_schedules: 생산 일정 테이블
 --
 -- Changes:
---   - mes.si_work_orders: routing_id 컬럼 추가
+--   - mes.sd_work_orders: routing_id 컬럼 추가
 --
 -- Features:
 --   - WorkOrder-ProcessRouting 연동
@@ -26,27 +26,27 @@
 -- ============================================================================
 
 -- routing_id 컬럼 추가
-ALTER TABLE mes.si_work_orders
+ALTER TABLE mes.sd_work_orders
 ADD COLUMN routing_id BIGINT;
 
 -- Foreign Key 추가
-ALTER TABLE mes.si_work_orders
+ALTER TABLE mes.sd_work_orders
 ADD CONSTRAINT fk_work_order_routing
     FOREIGN KEY (routing_id)
-    REFERENCES mes.si_process_routings(routing_id)
+    REFERENCES mes.sd_process_routings(routing_id)
     ON DELETE SET NULL;
 
 -- Index 추가
-CREATE INDEX idx_work_order_routing ON mes.si_work_orders(routing_id);
+CREATE INDEX idx_work_order_routing ON mes.sd_work_orders(routing_id);
 
 -- Comment 추가
-COMMENT ON COLUMN mes.si_work_orders.routing_id IS '공정 라우팅 ID (FK) - 복합 공정 제품용';
+COMMENT ON COLUMN mes.sd_work_orders.routing_id IS '공정 라우팅 ID (FK) - 복합 공정 제품용';
 
 -- ============================================================================
 -- 2. 생산 일정 테이블
 -- ============================================================================
 
-CREATE TABLE mes.si_production_schedules (
+CREATE TABLE mes.sd_production_schedules (
     -- Primary Key
     schedule_id BIGSERIAL PRIMARY KEY,
 
@@ -96,27 +96,27 @@ CREATE TABLE mes.si_production_schedules (
     -- Foreign Keys
     CONSTRAINT fk_schedule_tenant
         FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id)
+        REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_schedule_work_order
         FOREIGN KEY (work_order_id)
-        REFERENCES mes.si_work_orders(work_order_id)
+        REFERENCES mes.sd_work_orders(work_order_id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_schedule_routing_step
         FOREIGN KEY (routing_step_id)
-        REFERENCES mes.si_process_routing_steps(routing_step_id)
+        REFERENCES mes.sd_process_routing_steps(routing_step_id)
         ON DELETE RESTRICT,
 
     CONSTRAINT fk_schedule_equipment
         FOREIGN KEY (assigned_equipment_id)
-        REFERENCES equipment.si_equipments(equipment_id)
+        REFERENCES equipment.sd_equipments(equipment_id)
         ON DELETE SET NULL,
 
     CONSTRAINT fk_schedule_user
         FOREIGN KEY (assigned_user_id)
-        REFERENCES core.si_users(user_id)
+        REFERENCES core.sd_users(user_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -144,38 +144,38 @@ CREATE TABLE mes.si_production_schedules (
 );
 
 -- Indexes
-CREATE INDEX idx_schedule_tenant ON mes.si_production_schedules(tenant_id);
-CREATE INDEX idx_schedule_work_order ON mes.si_production_schedules(work_order_id);
-CREATE INDEX idx_schedule_routing_step ON mes.si_production_schedules(routing_step_id);
-CREATE INDEX idx_schedule_status ON mes.si_production_schedules(status);
-CREATE INDEX idx_schedule_planned_time ON mes.si_production_schedules(planned_start_time, planned_end_time);
-CREATE INDEX idx_schedule_equipment ON mes.si_production_schedules(assigned_equipment_id);
-CREATE INDEX idx_schedule_sequence ON mes.si_production_schedules(work_order_id, sequence_order);
-CREATE INDEX idx_schedule_delayed ON mes.si_production_schedules(is_delayed);
-CREATE INDEX idx_schedule_user ON mes.si_production_schedules(assigned_user_id);
+CREATE INDEX idx_schedule_tenant ON mes.sd_production_schedules(tenant_id);
+CREATE INDEX idx_schedule_work_order ON mes.sd_production_schedules(work_order_id);
+CREATE INDEX idx_schedule_routing_step ON mes.sd_production_schedules(routing_step_id);
+CREATE INDEX idx_schedule_status ON mes.sd_production_schedules(status);
+CREATE INDEX idx_schedule_planned_time ON mes.sd_production_schedules(planned_start_time, planned_end_time);
+CREATE INDEX idx_schedule_equipment ON mes.sd_production_schedules(assigned_equipment_id);
+CREATE INDEX idx_schedule_sequence ON mes.sd_production_schedules(work_order_id, sequence_order);
+CREATE INDEX idx_schedule_delayed ON mes.sd_production_schedules(is_delayed);
+CREATE INDEX idx_schedule_user ON mes.sd_production_schedules(assigned_user_id);
 
 -- Comments
-COMMENT ON TABLE mes.si_production_schedules IS '생산 일정 테이블 - 작업 지시의 공정별 상세 일정';
-COMMENT ON COLUMN mes.si_production_schedules.schedule_id IS '일정 ID (PK)';
-COMMENT ON COLUMN mes.si_production_schedules.tenant_id IS '테넌트 ID';
-COMMENT ON COLUMN mes.si_production_schedules.work_order_id IS '작업 지시 ID (FK)';
-COMMENT ON COLUMN mes.si_production_schedules.routing_step_id IS '공정 라우팅 단계 ID (FK)';
-COMMENT ON COLUMN mes.si_production_schedules.sequence_order IS '공정 순서';
-COMMENT ON COLUMN mes.si_production_schedules.planned_start_time IS '계획 시작 시간';
-COMMENT ON COLUMN mes.si_production_schedules.planned_end_time IS '계획 종료 시간';
-COMMENT ON COLUMN mes.si_production_schedules.planned_duration IS '계획 소요 시간 (분)';
-COMMENT ON COLUMN mes.si_production_schedules.actual_start_time IS '실제 시작 시간';
-COMMENT ON COLUMN mes.si_production_schedules.actual_end_time IS '실제 종료 시간';
-COMMENT ON COLUMN mes.si_production_schedules.actual_duration IS '실제 소요 시간 (분) - 자동 계산';
-COMMENT ON COLUMN mes.si_production_schedules.assigned_equipment_id IS '할당된 설비 ID (FK)';
-COMMENT ON COLUMN mes.si_production_schedules.assigned_workers IS '할당된 작업자 수';
-COMMENT ON COLUMN mes.si_production_schedules.assigned_user_id IS '담당자 ID (FK)';
-COMMENT ON COLUMN mes.si_production_schedules.status IS '일정 상태 (SCHEDULED, READY, IN_PROGRESS, COMPLETED, DELAYED, CANCELLED)';
-COMMENT ON COLUMN mes.si_production_schedules.progress_rate IS '진행률 (%)';
-COMMENT ON COLUMN mes.si_production_schedules.is_delayed IS '지연 여부';
-COMMENT ON COLUMN mes.si_production_schedules.delay_minutes IS '지연 시간 (분)';
-COMMENT ON COLUMN mes.si_production_schedules.delay_reason IS '지연 사유';
-COMMENT ON COLUMN mes.si_production_schedules.remarks IS '비고';
+COMMENT ON TABLE mes.sd_production_schedules IS '생산 일정 테이블 - 작업 지시의 공정별 상세 일정';
+COMMENT ON COLUMN mes.sd_production_schedules.schedule_id IS '일정 ID (PK)';
+COMMENT ON COLUMN mes.sd_production_schedules.tenant_id IS '테넌트 ID';
+COMMENT ON COLUMN mes.sd_production_schedules.work_order_id IS '작업 지시 ID (FK)';
+COMMENT ON COLUMN mes.sd_production_schedules.routing_step_id IS '공정 라우팅 단계 ID (FK)';
+COMMENT ON COLUMN mes.sd_production_schedules.sequence_order IS '공정 순서';
+COMMENT ON COLUMN mes.sd_production_schedules.planned_start_time IS '계획 시작 시간';
+COMMENT ON COLUMN mes.sd_production_schedules.planned_end_time IS '계획 종료 시간';
+COMMENT ON COLUMN mes.sd_production_schedules.planned_duration IS '계획 소요 시간 (분)';
+COMMENT ON COLUMN mes.sd_production_schedules.actual_start_time IS '실제 시작 시간';
+COMMENT ON COLUMN mes.sd_production_schedules.actual_end_time IS '실제 종료 시간';
+COMMENT ON COLUMN mes.sd_production_schedules.actual_duration IS '실제 소요 시간 (분) - 자동 계산';
+COMMENT ON COLUMN mes.sd_production_schedules.assigned_equipment_id IS '할당된 설비 ID (FK)';
+COMMENT ON COLUMN mes.sd_production_schedules.assigned_workers IS '할당된 작업자 수';
+COMMENT ON COLUMN mes.sd_production_schedules.assigned_user_id IS '담당자 ID (FK)';
+COMMENT ON COLUMN mes.sd_production_schedules.status IS '일정 상태 (SCHEDULED, READY, IN_PROGRESS, COMPLETED, DELAYED, CANCELLED)';
+COMMENT ON COLUMN mes.sd_production_schedules.progress_rate IS '진행률 (%)';
+COMMENT ON COLUMN mes.sd_production_schedules.is_delayed IS '지연 여부';
+COMMENT ON COLUMN mes.sd_production_schedules.delay_minutes IS '지연 시간 (분)';
+COMMENT ON COLUMN mes.sd_production_schedules.delay_reason IS '지연 사유';
+COMMENT ON COLUMN mes.sd_production_schedules.remarks IS '비고';
 
 -- ============================================================================
 -- 3. 트리거 함수 및 트리거
@@ -192,7 +192,7 @@ $$ LANGUAGE plpgsql;
 
 -- 3.2 updated_at 트리거
 CREATE TRIGGER trigger_schedule_updated_at
-    BEFORE UPDATE ON mes.si_production_schedules
+    BEFORE UPDATE ON mes.sd_production_schedules
     FOR EACH ROW
     EXECUTE FUNCTION mes.update_schedule_updated_at();
 
@@ -210,7 +210,7 @@ $$ LANGUAGE plpgsql;
 
 -- 3.4 actual_duration 계산 트리거
 CREATE TRIGGER trigger_calculate_actual_duration
-    BEFORE INSERT OR UPDATE ON mes.si_production_schedules
+    BEFORE INSERT OR UPDATE ON mes.sd_production_schedules
     FOR EACH ROW
     EXECUTE FUNCTION mes.calculate_actual_duration();
 
@@ -234,7 +234,7 @@ $$ LANGUAGE plpgsql;
 
 -- 3.6 지연 감지 트리거
 CREATE TRIGGER trigger_check_delay
-    BEFORE INSERT OR UPDATE ON mes.si_production_schedules
+    BEFORE INSERT OR UPDATE ON mes.sd_production_schedules
     FOR EACH ROW
     EXECUTE FUNCTION mes.check_schedule_delay();
 
@@ -243,11 +243,11 @@ CREATE TRIGGER trigger_check_delay
 -- ============================================================================
 
 -- 테이블 권한
-GRANT SELECT, INSERT, UPDATE, DELETE ON mes.si_production_schedules TO mes_admin;
-GRANT SELECT ON mes.si_production_schedules TO mes_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON mes.sd_production_schedules TO mes_admin;
+GRANT SELECT ON mes.sd_production_schedules TO mes_user;
 
 -- 시퀀스 권한
-GRANT USAGE, SELECT ON SEQUENCE mes.si_production_schedules_schedule_id_seq TO mes_admin;
+GRANT USAGE, SELECT ON SEQUENCE mes.sd_production_schedules_schedule_id_seq TO mes_admin;
 
 -- ============================================================================
 -- 5. 뷰 생성 (선택사항)
@@ -281,13 +281,13 @@ SELECT
     s.delay_reason,
     s.created_at,
     s.updated_at
-FROM mes.si_production_schedules s
-INNER JOIN mes.si_work_orders wo ON s.work_order_id = wo.work_order_id
-INNER JOIN mes.si_products p ON wo.product_id = p.product_id
-INNER JOIN mes.si_process_routing_steps rs ON s.routing_step_id = rs.routing_step_id
-INNER JOIN mes.si_processes proc ON rs.process_id = proc.process_id
-LEFT JOIN equipment.si_equipments e ON s.assigned_equipment_id = e.equipment_id
-LEFT JOIN core.si_users u ON s.assigned_user_id = u.user_id;
+FROM mes.sd_production_schedules s
+INNER JOIN mes.sd_work_orders wo ON s.work_order_id = wo.work_order_id
+INNER JOIN mes.sd_products p ON wo.product_id = p.product_id
+INNER JOIN mes.sd_process_routing_steps rs ON s.routing_step_id = rs.routing_step_id
+INNER JOIN mes.sd_processes proc ON rs.process_id = proc.process_id
+LEFT JOIN equipment.sd_equipments e ON s.assigned_equipment_id = e.equipment_id
+LEFT JOIN core.sd_users u ON s.assigned_user_id = u.user_id;
 
 COMMENT ON VIEW mes.v_schedule_summary IS '생산 일정 요약 뷰 - Gantt Chart 및 대시보드용';
 

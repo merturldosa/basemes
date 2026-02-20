@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * 화면설계서 MES-TD4-007 부서 관리
  */
 @Entity
-@Table(name = "SI_Departments", uniqueConstraints = {
+@Table(name = "SD_Departments", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"tenant_id", "department_code"})
 })
 @Data

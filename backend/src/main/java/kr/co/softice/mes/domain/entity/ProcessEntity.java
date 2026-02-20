@@ -5,24 +5,24 @@ import lombok.*;
 
 /**
  * Process Entity - 공정 마스터
- * Maps to: mes.SI_Processes
+ * Maps to: mes.SD_Processes
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_processes",
+    name = "sd_processes",
     schema = "mes",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_processes_tenant_code",
+            name = "uk_sd_processes_tenant_code",
             columnNames = {"tenant_id", "process_code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_processes_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_si_processes_code", columnList = "process_code"),
-        @Index(name = "idx_si_processes_sequence", columnList = "sequence_order")
+        @Index(name = "idx_sd_processes_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_processes_code", columnList = "process_code"),
+        @Index(name = "idx_sd_processes_sequence", columnList = "sequence_order")
     }
 )
 @Getter
@@ -38,7 +38,7 @@ public class ProcessEntity extends BaseEntity {
     private Long processId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_processes_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_processes_tenant"))
     private TenantEntity tenant;
 
     @Column(name = "process_code", nullable = false, length = 50)

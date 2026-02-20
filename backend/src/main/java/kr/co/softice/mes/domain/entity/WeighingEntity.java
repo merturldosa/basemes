@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "si_weighings",
+    name = "sd_weighings",
     schema = "wms",
     uniqueConstraints = {
         @UniqueConstraint(

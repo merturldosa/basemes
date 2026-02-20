@@ -72,9 +72,9 @@ public class DataLoader implements CommandLineRunner {
             log.info("✓ Permissions assigned to roles");
 
             // 5. Create Users
-            UserEntity adminUser = createUser(tenant, "admin", "관리자", "admin@softice.co.kr", "admin123");
-            UserEntity managerUser = createUser(tenant, "manager", "김생산", "manager@softice.co.kr", "manager123");
-            UserEntity operatorUser = createUser(tenant, "operator", "이작업", "operator@softice.co.kr", "operator123");
+            UserEntity adminUser = createUser(tenant, "admin", "관리자", "admin@smartdocking.co.kr", "admin123");
+            UserEntity managerUser = createUser(tenant, "manager", "김생산", "manager@smartdocking.co.kr", "manager123");
+            UserEntity operatorUser = createUser(tenant, "operator", "이작업", "operator@smartdocking.co.kr", "operator123");
             log.info("✓ Users created: 3 users");
 
             // 6. Assign Roles to Users
@@ -121,7 +121,7 @@ public class DataLoader implements CommandLineRunner {
                 .tenantId("DEMO001")
                 .tenantName("데모 회사")
                 .tenantCode("DEMO001")
-                .companyName("(주)소프트아이스 데모")
+                .companyName("(주)스마트도킹스테이션 데모")
                 .industryType("electronics")
                 .description("테스트용 데모 회사")
                 .config(config)

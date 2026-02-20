@@ -1,5 +1,5 @@
 -- ============================================================================
--- SoIce MES - Create All Required Schemas
+-- SDS MES - Create All Required Schemas
 -- This script creates all schemas required by the application
 -- Author: Moon Myung-seop
 -- Date: 2026-01-28
@@ -40,7 +40,7 @@ GRANT ALL PRIVILEGES ON SCHEMA wms TO mes_admin;
 GRANT ALL PRIVILEGES ON SCHEMA equipment TO mes_admin;
 
 -- Set default search path
-ALTER DATABASE soice_mes_dev SET search_path TO common, core, mes, business, inventory, bom, material, purchase, sales, qms, wms, equipment, public;
+ALTER DATABASE sds_mes_dev SET search_path TO common, core, mes, business, inventory, bom, material, purchase, sales, qms, wms, equipment, public;
 
 -- ============================================================================
 -- End of schema creation

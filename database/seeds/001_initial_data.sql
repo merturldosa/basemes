@@ -14,7 +14,7 @@
 -- 1. Tenants (테넌트)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_Tenants (
+INSERT INTO common.SD_Tenants (
     tenant_id, tenant_name, tenant_code,
     company_name, business_number, representative_name,
     industry_type, industry_sub_type,
@@ -49,7 +49,7 @@ ON CONFLICT DO NOTHING;
 -- 2. Users (사용자)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_Users (
+INSERT INTO common.SD_Users (
     tenant_id, username, email, password_hash,
     full_name, employee_number, department, position,
     phone, mobile, status, is_email_verified, preferred_language
@@ -89,7 +89,7 @@ ON CONFLICT DO NOTHING;
 -- 3. Permissions (권한)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_Permissions (
+INSERT INTO common.SD_Permissions (
     permission_code, permission_name, description, module, category
 ) VALUES
 -- COMMON Module
@@ -135,7 +135,7 @@ ON CONFLICT DO NOTHING;
 -- 4. Roles (역할)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_Roles (tenant_id, role_code, role_name, description, role_type) VALUES
+INSERT INTO common.SD_Roles (tenant_id, role_code, role_name, description, role_type) VALUES
 -- SoftIce Roles
 ('softice', 'SUPER_ADMIN', '슈퍼 관리자', '모든 권한을 가진 최고 관리자', 'system'),
 ('softice', 'DEVELOPER', '개발자', '개발 및 시스템 관리', 'system'),
@@ -157,7 +157,7 @@ ON CONFLICT DO NOTHING;
 -- 5. Code Groups (코드 그룹)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_CodeGroups (tenant_id, code_group_code, code_group_name, description, scope) VALUES
+INSERT INTO common.SD_CodeGroups (tenant_id, code_group_code, code_group_name, description, scope) VALUES
 (NULL, 'COMMON_STATUS', '공통 상태', '시스템 공통 상태 코드', 'system'),
 (NULL, 'COMMON_YES_NO', '예/아니오', '예/아니오 선택 코드', 'system'),
 ('isens', 'PRODUCT_TYPE', '제품 유형', '제품 분류 코드', 'tenant'),
@@ -171,19 +171,19 @@ ON CONFLICT DO NOTHING;
 -- 6. Codes (코드 상세)
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-INSERT INTO common.SI_Codes (code_group_id, code, code_name, code_name_en, display_order) VALUES
+INSERT INTO common.SD_Codes (code_group_id, code, code_name, code_name_en, display_order) VALUES
 -- COMMON_STATUS
-((SELECT code_group_id FROM common.SI_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
+((SELECT code_group_id FROM common.SD_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
  'ACTIVE', '활성', 'Active', 1),
-((SELECT code_group_id FROM common.SI_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
+((SELECT code_group_id FROM common.SD_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
  'INACTIVE', '비활성', 'Inactive', 2),
-((SELECT code_group_id FROM common.SI_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
+((SELECT code_group_id FROM common.SD_CodeGroups WHERE code_group_code = 'COMMON_STATUS' AND tenant_id IS NULL),
  'DELETED', '삭제', 'Deleted', 3),
 
 -- COMMON_YES_NO
-((SELECT code_group_id FROM common.SI_CodeGroups WHERE code_group_code = 'COMMON_YES_NO' AND tenant_id IS NULL),
+((SELECT code_group_id FROM common.SD_CodeGroups WHERE code_group_code = 'COMMON_YES_NO' AND tenant_id IS NULL),
  'Y', '예', 'Yes', 1),
-((SELECT code_group_id FROM common.SI_CodeGroups WHERE code_group_code = 'COMMON_YES_NO' AND tenant_id IS NULL),
+((SELECT code_group_id FROM common.SD_CodeGroups WHERE code_group_code = 'COMMON_YES_NO' AND tenant_id IS NULL),
  'N', '아니오', 'No', 2)
 ON CONFLICT DO NOTHING;
 

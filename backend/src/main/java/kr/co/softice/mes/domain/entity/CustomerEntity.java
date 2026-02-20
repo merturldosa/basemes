@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(
     schema = "business",
-    name = "si_customers",
+    name = "sd_customers",
     indexes = {
         @Index(name = "idx_customer_tenant", columnList = "tenant_id"),
         @Index(name = "idx_customer_type", columnList = "customer_type"),

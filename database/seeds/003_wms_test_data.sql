@@ -11,7 +11,7 @@
 -- ============================================================
 
 -- 원자재 창고
-INSERT INTO inventory.si_warehouses (
+INSERT INTO inventory.sd_warehouses (
     tenant_id, warehouse_code, warehouse_name, warehouse_type,
     location, manager_name, capacity, is_active
 ) VALUES
@@ -20,7 +20,7 @@ INSERT INTO inventory.si_warehouses (
 ON CONFLICT (tenant_id, warehouse_code) DO NOTHING;
 
 -- 재공품 창고
-INSERT INTO inventory.si_warehouses (
+INSERT INTO inventory.sd_warehouses (
     tenant_id, warehouse_code, warehouse_name, warehouse_type,
     location, manager_name, capacity, is_active
 ) VALUES
@@ -29,7 +29,7 @@ INSERT INTO inventory.si_warehouses (
 ON CONFLICT (tenant_id, warehouse_code) DO NOTHING;
 
 -- 완제품 창고
-INSERT INTO inventory.si_warehouses (
+INSERT INTO inventory.sd_warehouses (
     tenant_id, warehouse_code, warehouse_name, warehouse_type,
     location, manager_name, capacity, is_active
 ) VALUES
@@ -38,7 +38,7 @@ INSERT INTO inventory.si_warehouses (
 ON CONFLICT (tenant_id, warehouse_code) DO NOTHING;
 
 -- 격리 창고
-INSERT INTO inventory.si_warehouses (
+INSERT INTO inventory.sd_warehouses (
     tenant_id, warehouse_code, warehouse_name, warehouse_type,
     location, manager_name, capacity, is_active
 ) VALUES
@@ -47,7 +47,7 @@ INSERT INTO inventory.si_warehouses (
 ON CONFLICT (tenant_id, warehouse_code) DO NOTHING;
 
 -- 스크랩 창고
-INSERT INTO inventory.si_warehouses (
+INSERT INTO inventory.sd_warehouses (
     tenant_id, warehouse_code, warehouse_name, warehouse_type,
     location, manager_name, capacity, is_active
 ) VALUES
@@ -59,7 +59,7 @@ ON CONFLICT (tenant_id, warehouse_code) DO NOTHING;
 -- 2. 공급업체 생성 (Suppliers)
 -- ============================================================
 
-INSERT INTO business.si_suppliers (
+INSERT INTO business.sd_suppliers (
     tenant_id, supplier_code, supplier_name, business_number,
     representative_name, contact_person, contact_phone, contact_email,
     address, supplier_type, payment_terms, is_active
@@ -69,7 +69,7 @@ INSERT INTO business.si_suppliers (
  '서울시 금천구 가산디지털1로 123', 'RAW_MATERIAL', 'NET30', TRUE)
 ON CONFLICT (tenant_id, supplier_code) DO NOTHING;
 
-INSERT INTO business.si_suppliers (
+INSERT INTO business.sd_suppliers (
     tenant_id, supplier_code, supplier_name, business_number,
     representative_name, contact_person, contact_phone, contact_email,
     address, supplier_type, payment_terms, is_active
@@ -83,7 +83,7 @@ ON CONFLICT (tenant_id, supplier_code) DO NOTHING;
 -- 3. 고객 생성 (Customers)
 -- ============================================================
 
-INSERT INTO business.si_customers (
+INSERT INTO business.sd_customers (
     tenant_id, customer_code, customer_name, business_number,
     representative_name, contact_person, contact_phone, contact_email,
     address, customer_type, payment_terms, is_active
@@ -93,7 +93,7 @@ INSERT INTO business.si_customers (
  '서울시 강남구 테헤란로 789', 'MANUFACTURER', 'NET30', TRUE)
 ON CONFLICT (tenant_id, customer_code) DO NOTHING;
 
-INSERT INTO business.si_customers (
+INSERT INTO business.sd_customers (
     tenant_id, customer_code, customer_name, business_number,
     representative_name, contact_person, contact_phone, contact_email,
     address, customer_type, payment_terms, is_active
@@ -108,7 +108,7 @@ ON CONFLICT (tenant_id, customer_code) DO NOTHING;
 -- ============================================================
 
 -- IQC (입고 품질 검사) 기준 - PCB
-INSERT INTO qms.si_quality_standards (
+INSERT INTO qms.sd_quality_standards (
     tenant_id, product_id, standard_code, standard_name, standard_version,
     inspection_type, min_value, max_value, target_value, tolerance_value,
     unit, measurement_item, measurement_equipment, sampling_method,
@@ -116,7 +116,7 @@ INSERT INTO qms.si_quality_standards (
 ) VALUES
 (
     'DEMO001',
-    (SELECT product_id FROM mes.si_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-PCB-001' LIMIT 1),
+    (SELECT product_id FROM mes.sd_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-PCB-001' LIMIT 1),
     'QS-PCB-IQC-001', 'PCB 입고 검사 기준', '1.0',
     'INCOMING', 0.95, 1.00, 0.99, 0.02,
     '%', '양품율', '육안 검사', '전수 검사',
@@ -125,7 +125,7 @@ INSERT INTO qms.si_quality_standards (
 ON CONFLICT (tenant_id, standard_code) DO NOTHING;
 
 -- OQC (출하 품질 검사) 기준 - LCD 패널
-INSERT INTO qms.si_quality_standards (
+INSERT INTO qms.sd_quality_standards (
     tenant_id, product_id, standard_code, standard_name, standard_version,
     inspection_type, min_value, max_value, target_value, tolerance_value,
     unit, measurement_item, measurement_equipment, sampling_method,
@@ -133,7 +133,7 @@ INSERT INTO qms.si_quality_standards (
 ) VALUES
 (
     'DEMO001',
-    (SELECT product_id FROM mes.si_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-LCD-001' LIMIT 1),
+    (SELECT product_id FROM mes.sd_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-LCD-001' LIMIT 1),
     'QS-LCD-OQC-001', 'LCD 출하 검사 기준', '1.0',
     'OUTGOING', 0.98, 1.00, 0.99, 0.01,
     '%', '외관 양품율', '육안 검사 + 화질 테스트', '샘플링 (10%)',
@@ -148,28 +148,28 @@ ON CONFLICT (tenant_id, standard_code) DO NOTHING;
 -- P-LCD-001 (32인치 LCD 패널) BOM
 -- 1개 생산에 필요한 부품: PCB 2개
 
-INSERT INTO bom.si_boms (
+INSERT INTO bom.sd_boms (
     tenant_id, product_id, bom_code, bom_name, bom_version,
     bom_type, effective_date, is_active
 ) VALUES
 (
     'DEMO001',
-    (SELECT product_id FROM mes.si_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-LCD-001' LIMIT 1),
+    (SELECT product_id FROM mes.sd_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-LCD-001' LIMIT 1),
     'BOM-LCD-001', '32인치 LCD 패널 BOM', '1.0',
     'PRODUCTION', CURRENT_DATE, TRUE
 )
 ON CONFLICT (tenant_id, bom_code) DO NOTHING;
 
 -- BOM 항목: PCB 2개 필요
-INSERT INTO bom.si_bom_items (
+INSERT INTO bom.sd_bom_items (
     tenant_id, bom_id, item_seq, component_id, required_quantity,
     unit, scrap_rate, remarks
 ) VALUES
 (
     'DEMO001',
-    (SELECT bom_id FROM bom.si_boms WHERE tenant_id = 'DEMO001' AND bom_code = 'BOM-LCD-001' LIMIT 1),
+    (SELECT bom_id FROM bom.sd_boms WHERE tenant_id = 'DEMO001' AND bom_code = 'BOM-LCD-001' LIMIT 1),
     1,
-    (SELECT product_id FROM mes.si_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-PCB-001' LIMIT 1),
+    (SELECT product_id FROM mes.sd_products WHERE tenant_id = 'DEMO001' AND product_code = 'P-PCB-001' LIMIT 1),
     2.00, 'EA', 0.00, 'LCD 구동용 PCB 2개 필요'
 )
 ON CONFLICT (tenant_id, bom_id, item_seq) DO NOTHING;
@@ -179,7 +179,7 @@ ON CONFLICT (tenant_id, bom_id, item_seq) DO NOTHING;
 -- ============================================================
 
 -- 저재고 알림
-INSERT INTO common.si_alarm_templates (
+INSERT INTO common.sd_alarm_templates (
     tenant_id, template_code, template_name, alarm_type, event_type,
     title_template, message_template,
     enable_email, enable_sms, enable_push, enable_system,
@@ -192,7 +192,7 @@ INSERT INTO common.si_alarm_templates (
 ON CONFLICT (tenant_id, template_code) DO NOTHING;
 
 -- 유효기간 임박 알림
-INSERT INTO common.si_alarm_templates (
+INSERT INTO common.sd_alarm_templates (
     tenant_id, template_code, template_name, alarm_type, event_type,
     title_template, message_template,
     enable_email, enable_sms, enable_push, enable_system,
@@ -210,34 +210,34 @@ ON CONFLICT (tenant_id, template_code) DO NOTHING;
 
 -- 창고 목록 확인
 -- SELECT warehouse_code, warehouse_name, warehouse_type, is_active
--- FROM inventory.si_warehouses
+-- FROM inventory.sd_warehouses
 -- WHERE tenant_id = 'DEMO001'
 -- ORDER BY warehouse_code;
 
 -- 공급업체 확인
 -- SELECT supplier_code, supplier_name, contact_person, is_active
--- FROM business.si_suppliers
+-- FROM business.sd_suppliers
 -- WHERE tenant_id = 'DEMO001'
 -- ORDER BY supplier_code;
 
 -- 고객 확인
 -- SELECT customer_code, customer_name, contact_person, is_active
--- FROM business.si_customers
+-- FROM business.sd_customers
 -- WHERE tenant_id = 'DEMO001'
 -- ORDER BY customer_code;
 
 -- 품질 기준 확인
 -- SELECT qs.standard_code, qs.standard_name, qs.inspection_type,
 --        p.product_code, p.product_name
--- FROM qms.si_quality_standards qs
--- JOIN mes.si_products p ON qs.product_id = p.product_id
+-- FROM qms.sd_quality_standards qs
+-- JOIN mes.sd_products p ON qs.product_id = p.product_id
 -- WHERE qs.tenant_id = 'DEMO001'
 -- ORDER BY qs.standard_code;
 
 -- BOM 확인
 -- SELECT b.bom_code, b.bom_name, p.product_code, p.product_name
--- FROM bom.si_boms b
--- JOIN mes.si_products p ON b.product_id = p.product_id
+-- FROM bom.sd_boms b
+-- JOIN mes.sd_products p ON b.product_id = p.product_id
 -- WHERE b.tenant_id = 'DEMO001'
 -- ORDER BY b.bom_code;
 

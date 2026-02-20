@@ -3,8 +3,8 @@
  * 폐기 관리 스키마 생성
  *
  * 테이블:
- * - wms.si_disposals: 폐기 헤더
- * - wms.si_disposal_items: 폐기 항목
+ * - wms.sd_disposals: 폐기 헤더
+ * - wms.sd_disposal_items: 폐기 항목
  *
  * 워크플로우:
  * 1. 폐기 의뢰 (PENDING)
@@ -24,9 +24,9 @@
  */
 
 -- =====================================================
--- 1. si_disposals (폐기 헤더)
+-- 1. sd_disposals (폐기 헤더)
 -- =====================================================
-CREATE TABLE wms.si_disposals (
+CREATE TABLE wms.sd_disposals (
     disposal_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
 
@@ -85,36 +85,36 @@ CREATE TABLE wms.si_disposals (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_disposal_tenant FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id),
-    CONSTRAINT fk_disposal_work_order FOREIGN KEY (work_order_id) REFERENCES production.si_work_orders(work_order_id),
-    CONSTRAINT fk_disposal_requester FOREIGN KEY (requester_user_id) REFERENCES common.si_users(user_id),
-    CONSTRAINT fk_disposal_warehouse FOREIGN KEY (warehouse_id) REFERENCES inventory.si_warehouses(warehouse_id),
-    CONSTRAINT fk_disposal_approver FOREIGN KEY (approver_user_id) REFERENCES common.si_users(user_id),
-    CONSTRAINT fk_disposal_processor FOREIGN KEY (processor_user_id) REFERENCES common.si_users(user_id),
+    CONSTRAINT fk_disposal_tenant FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id),
+    CONSTRAINT fk_disposal_work_order FOREIGN KEY (work_order_id) REFERENCES production.sd_work_orders(work_order_id),
+    CONSTRAINT fk_disposal_requester FOREIGN KEY (requester_user_id) REFERENCES common.sd_users(user_id),
+    CONSTRAINT fk_disposal_warehouse FOREIGN KEY (warehouse_id) REFERENCES inventory.sd_warehouses(warehouse_id),
+    CONSTRAINT fk_disposal_approver FOREIGN KEY (approver_user_id) REFERENCES common.sd_users(user_id),
+    CONSTRAINT fk_disposal_processor FOREIGN KEY (processor_user_id) REFERENCES common.sd_users(user_id),
 
     -- Unique Constraints
     CONSTRAINT uk_disposal_no UNIQUE (tenant_id, disposal_no)
 );
 
 -- Indexes
-CREATE INDEX idx_disposal_tenant ON wms.si_disposals(tenant_id);
-CREATE INDEX idx_disposal_date ON wms.si_disposals(disposal_date);
-CREATE INDEX idx_disposal_work_order ON wms.si_disposals(work_order_id);
-CREATE INDEX idx_disposal_requester ON wms.si_disposals(requester_user_id);
-CREATE INDEX idx_disposal_warehouse ON wms.si_disposals(warehouse_id);
-CREATE INDEX idx_disposal_status ON wms.si_disposals(disposal_status);
-CREATE INDEX idx_disposal_type ON wms.si_disposals(disposal_type);
+CREATE INDEX idx_disposal_tenant ON wms.sd_disposals(tenant_id);
+CREATE INDEX idx_disposal_date ON wms.sd_disposals(disposal_date);
+CREATE INDEX idx_disposal_work_order ON wms.sd_disposals(work_order_id);
+CREATE INDEX idx_disposal_requester ON wms.sd_disposals(requester_user_id);
+CREATE INDEX idx_disposal_warehouse ON wms.sd_disposals(warehouse_id);
+CREATE INDEX idx_disposal_status ON wms.sd_disposals(disposal_status);
+CREATE INDEX idx_disposal_type ON wms.sd_disposals(disposal_type);
 
 -- Comments
-COMMENT ON TABLE wms.si_disposals IS '폐기 헤더 - 불량품/만료품 폐기 처리';
-COMMENT ON COLUMN wms.si_disposals.disposal_type IS 'DEFECTIVE(불량품), EXPIRED(만료품), DAMAGED(파손품), OBSOLETE(노후품), OTHER(기타)';
-COMMENT ON COLUMN wms.si_disposals.disposal_status IS 'PENDING → APPROVED → PROCESSED → COMPLETED';
-COMMENT ON COLUMN wms.si_disposals.disposal_method IS '폐기 방법: 소각, 매립, 위탁 처리, 재활용 등';
+COMMENT ON TABLE wms.sd_disposals IS '폐기 헤더 - 불량품/만료품 폐기 처리';
+COMMENT ON COLUMN wms.sd_disposals.disposal_type IS 'DEFECTIVE(불량품), EXPIRED(만료품), DAMAGED(파손품), OBSOLETE(노후품), OTHER(기타)';
+COMMENT ON COLUMN wms.sd_disposals.disposal_status IS 'PENDING → APPROVED → PROCESSED → COMPLETED';
+COMMENT ON COLUMN wms.sd_disposals.disposal_method IS '폐기 방법: 소각, 매립, 위탁 처리, 재활용 등';
 
 -- =====================================================
--- 2. si_disposal_items (폐기 항목)
+-- 2. sd_disposal_items (폐기 항목)
 -- =====================================================
-CREATE TABLE wms.si_disposal_items (
+CREATE TABLE wms.sd_disposal_items (
     disposal_item_id BIGSERIAL PRIMARY KEY,
     disposal_id BIGINT NOT NULL,
 
@@ -153,33 +153,33 @@ CREATE TABLE wms.si_disposal_items (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Foreign Keys
-    CONSTRAINT fk_disposal_item_disposal FOREIGN KEY (disposal_id) REFERENCES wms.si_disposals(disposal_id),
-    CONSTRAINT fk_disposal_item_product FOREIGN KEY (product_id) REFERENCES production.si_products(product_id),
-    CONSTRAINT fk_disposal_item_lot FOREIGN KEY (lot_id) REFERENCES inventory.si_lots(lot_id),
-    CONSTRAINT fk_disposal_item_transaction FOREIGN KEY (disposal_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id)
+    CONSTRAINT fk_disposal_item_disposal FOREIGN KEY (disposal_id) REFERENCES wms.sd_disposals(disposal_id),
+    CONSTRAINT fk_disposal_item_product FOREIGN KEY (product_id) REFERENCES production.sd_products(product_id),
+    CONSTRAINT fk_disposal_item_lot FOREIGN KEY (lot_id) REFERENCES inventory.sd_lots(lot_id),
+    CONSTRAINT fk_disposal_item_transaction FOREIGN KEY (disposal_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id)
 );
 
 -- Indexes
-CREATE INDEX idx_disposal_item_disposal ON wms.si_disposal_items(disposal_id);
-CREATE INDEX idx_disposal_item_product ON wms.si_disposal_items(product_id);
-CREATE INDEX idx_disposal_item_lot ON wms.si_disposal_items(lot_id);
-CREATE INDEX idx_disposal_item_lot_no ON wms.si_disposal_items(lot_no);
-CREATE INDEX idx_disposal_item_defect_type ON wms.si_disposal_items(defect_type);
+CREATE INDEX idx_disposal_item_disposal ON wms.sd_disposal_items(disposal_id);
+CREATE INDEX idx_disposal_item_product ON wms.sd_disposal_items(product_id);
+CREATE INDEX idx_disposal_item_lot ON wms.sd_disposal_items(lot_id);
+CREATE INDEX idx_disposal_item_lot_no ON wms.sd_disposal_items(lot_no);
+CREATE INDEX idx_disposal_item_defect_type ON wms.sd_disposal_items(defect_type);
 
 -- Comments
-COMMENT ON TABLE wms.si_disposal_items IS '폐기 항목 - 폐기별 제품/수량 상세';
-COMMENT ON COLUMN wms.si_disposal_items.defect_type IS '불량 유형: 외관 불량, 기능 불량, 규격 미달 등';
-COMMENT ON COLUMN wms.si_disposal_items.expiry_date IS '유효기간 (만료품인 경우)';
+COMMENT ON TABLE wms.sd_disposal_items IS '폐기 항목 - 폐기별 제품/수량 상세';
+COMMENT ON COLUMN wms.sd_disposal_items.defect_type IS '불량 유형: 외관 불량, 기능 불량, 규격 미달 등';
+COMMENT ON COLUMN wms.sd_disposal_items.expiry_date IS '유효기간 (만료품인 경우)';
 
 -- =====================================================
 -- Triggers for updated_at
 -- =====================================================
-CREATE TRIGGER update_si_disposals_updated_at
-    BEFORE UPDATE ON wms.si_disposals
+CREATE TRIGGER update_sd_disposals_updated_at
+    BEFORE UPDATE ON wms.sd_disposals
     FOR EACH ROW
     EXECUTE FUNCTION common.update_updated_at_column();
 
-CREATE TRIGGER update_si_disposal_items_updated_at
-    BEFORE UPDATE ON wms.si_disposal_items
+CREATE TRIGGER update_sd_disposal_items_updated_at
+    BEFORE UPDATE ON wms.sd_disposal_items
     FOR EACH ROW
     EXECUTE FUNCTION common.update_updated_at_column();

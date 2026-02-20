@@ -22,7 +22,7 @@ describe('i18n Configuration', () => {
   });
 
   it('loads Korean translations correctly', () => {
-    expect(i18n.t('common.appName')).toBe('SoIce MES');
+    expect(i18n.t('common.appName')).toBe('SDS MES');
     expect(i18n.t('common.buttons.save')).toBe('저장');
     expect(i18n.t('auth.login.title')).toBe('로그인');
     expect(i18n.t('navigation.dashboard')).toBe('대시보드');

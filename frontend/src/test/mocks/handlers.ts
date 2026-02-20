@@ -20,7 +20,7 @@ export const handlers = [
           user: {
             id: 1,
             username: 'admin',
-            email: 'admin@soice.co.kr',
+            email: 'admin@sds.co.kr',
             name: '관리자',
             status: 'ACTIVE',
             roles: ['ADMIN'],
@@ -55,7 +55,7 @@ export const handlers = [
         data: {
           id: 1,
           username: 'admin',
-          email: 'admin@soice.co.kr',
+          email: 'admin@sds.co.kr',
           name: '관리자',
           status: 'ACTIVE',
           roles: ['ADMIN'],
@@ -81,7 +81,7 @@ export const handlers = [
           {
             id: 1,
             username: 'admin',
-            email: 'admin@soice.co.kr',
+            email: 'admin@sds.co.kr',
             name: '관리자',
             status: 'ACTIVE',
             roles: ['ADMIN'],
@@ -90,7 +90,7 @@ export const handlers = [
           {
             id: 2,
             username: 'user',
-            email: 'user@soice.co.kr',
+            email: 'user@sds.co.kr',
             name: '사용자',
             status: 'ACTIVE',
             roles: ['USER'],
@@ -113,7 +113,7 @@ export const handlers = [
       data: {
         id: Number(id),
         username: 'testuser',
-        email: 'test@soice.co.kr',
+        email: 'test@sds.co.kr',
         name: '테스트 사용자',
         status: 'ACTIVE',
         roles: ['USER'],

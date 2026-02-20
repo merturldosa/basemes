@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "equipment", name = "si_inspection_form_fields",
+@Table(schema = "equipment", name = "sd_inspection_form_fields",
     indexes = {
         @Index(name = "idx_inspection_form_field_form", columnList = "form_id"),
         @Index(name = "idx_inspection_form_field_order", columnList = "field_order")

@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * SoIce MES - Main Application Class
+ * SDS MES - Main Application Class
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * Base MES Platform - Manufacturing Execution System
  *
- * @author Moon Myung-seop (msmoon@softice.co.kr)
- * @company SoftIce Co., Ltd.
+ * @author Moon Myung-seop (msmoon.asi@gmail.com)
+ * @company SmartDockingStation Co., Ltd.
  * @since 2026-01-17
  * @version 0.1.0-SNAPSHOT
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -29,11 +29,11 @@ public class SoIceMesApplication {
         log.info("\n" +
                 "========================================================\n" +
                 "                                                        \n" +
-                "  SOFTICE - Manufacturing Execution System             \n" +
-                "           Base MES Platform v0.1.0                    \n" +
+                "  SDS - Manufacturing Execution System                 \n" +
+                "        Base MES Platform v0.1.0                       \n" +
                 "                                                        \n" +
-                "  Developer: Moon Myung-seop (msmoon@softice.co.kr)   \n" +
-                "  Company: SoftIce Co., Ltd.                           \n" +
+                "  Developer: Moon Myung-seop (msmoon.asi@gmail.com)    \n" +
+                "  Company: SmartDockingStation Co., Ltd.               \n" +
                 "                                                        \n" +
                 "========================================================");
     }

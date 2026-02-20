@@ -1,7 +1,7 @@
 {
   "common": {
-    "appName": "SoIce MES",
-    "appFullName": "SoftIce Manufacturing Execution System",
+    "appName": "SDS MES",
+    "appFullName": "SmartDockingStation Manufacturing Execution System",
     "buttons": {
       "save": "Save",
       "cancel": "Cancel",
@@ -67,7 +67,7 @@
   "auth": {
     "login": {
       "title": "Login",
-      "welcomeMessage": "Welcome to SoftIce MES Platform",
+      "welcomeMessage": "Welcome to SmartDockingStation MES Platform",
       "tenantId": "Tenant ID",
       "username": "Username",
       "password": "Password",

@@ -10,13 +10,13 @@ import java.util.Map;
 
 /**
  * Tenant Entity - 테넌트 (회사/사업장)
- * Maps to: common.SI_Tenants
+ * Maps to: common.SD_Tenants
  *
  * @author Moon Myung-seop
  */
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Entity
-@Table(name = "si_tenants", schema = "common")
+@Table(name = "sd_tenants", schema = "common")
 @Getter
 @Setter
 @NoArgsConstructor

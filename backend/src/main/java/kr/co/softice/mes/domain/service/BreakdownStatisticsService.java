@@ -37,8 +37,8 @@ public class BreakdownStatisticsService {
 
         // Total breakdowns
         Query totalQuery = entityManager.createNativeQuery(
-                "SELECT COUNT(*) FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "SELECT COUNT(*) FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at BETWEEN :startDate AND :endDate");
         totalQuery.setParameter("tenantId", tenantId);
         totalQuery.setParameter("startDate", startDate.atStartOfDay());
@@ -47,8 +47,8 @@ public class BreakdownStatisticsService {
 
         // By status
         Query statusQuery = entityManager.createNativeQuery(
-                "SELECT status, COUNT(*) FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "SELECT status, COUNT(*) FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at BETWEEN :startDate AND :endDate " +
                 "GROUP BY status");
         statusQuery.setParameter("tenantId", tenantId);
@@ -62,8 +62,8 @@ public class BreakdownStatisticsService {
 
         // By failure type
         Query failureTypeQuery = entityManager.createNativeQuery(
-                "SELECT COALESCE(failure_type, 'UNKNOWN'), COUNT(*) FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "SELECT COALESCE(failure_type, 'UNKNOWN'), COUNT(*) FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at BETWEEN :startDate AND :endDate " +
                 "GROUP BY failure_type");
         failureTypeQuery.setParameter("tenantId", tenantId);
@@ -77,8 +77,8 @@ public class BreakdownStatisticsService {
 
         // By severity
         Query severityQuery = entityManager.createNativeQuery(
-                "SELECT COALESCE(severity, 'UNKNOWN'), COUNT(*) FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "SELECT COALESCE(severity, 'UNKNOWN'), COUNT(*) FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at BETWEEN :startDate AND :endDate " +
                 "GROUP BY severity");
         severityQuery.setParameter("tenantId", tenantId);
@@ -101,8 +101,8 @@ public class BreakdownStatisticsService {
 
         // MTTR (Mean Time To Repair): avg of repair_duration_minutes
         Query mttrQuery = entityManager.createNativeQuery(
-                "SELECT COALESCE(AVG(repair_duration_minutes), 0) FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "SELECT COALESCE(AVG(repair_duration_minutes), 0) FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at BETWEEN :startDate AND :endDate " +
                 "AND repair_duration_minutes IS NOT NULL");
         mttrQuery.setParameter("tenantId", tenantId);
@@ -122,9 +122,9 @@ public class BreakdownStatisticsService {
         // Top 5 equipment by breakdown count
         Query topEquipmentQuery = entityManager.createNativeQuery(
                 "SELECT b.equipment_id, e.equipment_code, e.equipment_name, COUNT(*) as cnt " +
-                "FROM equipment.si_breakdowns b " +
-                "JOIN equipment.si_equipments e ON b.equipment_id = e.equipment_id " +
-                "WHERE b.tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "FROM equipment.sd_breakdowns b " +
+                "JOIN equipment.sd_equipments e ON b.equipment_id = e.equipment_id " +
+                "WHERE b.tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND b.reported_at BETWEEN :startDate AND :endDate " +
                 "GROUP BY b.equipment_id, e.equipment_code, e.equipment_name " +
                 "ORDER BY cnt DESC " +
@@ -166,8 +166,8 @@ public class BreakdownStatisticsService {
                 "SELECT TO_CHAR(reported_at, 'YYYY-MM') as month, " +
                 "COUNT(*) as breakdown_count, " +
                 "COALESCE(AVG(repair_duration_minutes), 0) as avg_repair_minutes " +
-                "FROM equipment.si_breakdowns " +
-                "WHERE tenant_id = (SELECT tenant_id FROM common.si_tenants WHERE tenant_id = :tenantId) " +
+                "FROM equipment.sd_breakdowns " +
+                "WHERE tenant_id = (SELECT tenant_id FROM common.sd_tenants WHERE tenant_id = :tenantId) " +
                 "AND reported_at >= (CURRENT_DATE - INTERVAL '" + months + " months') " +
                 "GROUP BY TO_CHAR(reported_at, 'YYYY-MM') " +
                 "ORDER BY month");

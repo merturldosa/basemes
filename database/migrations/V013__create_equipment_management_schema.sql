@@ -12,7 +12,7 @@ CREATE SCHEMA IF NOT EXISTS equipment;
 -- 1. EQUIPMENTS (설비 마스터)
 -- ============================================================
 
-CREATE TABLE equipment.si_equipments (
+CREATE TABLE equipment.sd_equipments (
     equipment_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     equipment_code VARCHAR(50) NOT NULL,
@@ -70,31 +70,31 @@ CREATE TABLE equipment.si_equipments (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_equipment_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_equipment_site FOREIGN KEY (site_id) REFERENCES common.si_sites(site_id) ON DELETE SET NULL,
-    CONSTRAINT fk_equipment_department FOREIGN KEY (department_id) REFERENCES core.si_departments(department_id) ON DELETE SET NULL,
+    CONSTRAINT fk_equipment_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_equipment_site FOREIGN KEY (site_id) REFERENCES common.sd_sites(site_id) ON DELETE SET NULL,
+    CONSTRAINT fk_equipment_department FOREIGN KEY (department_id) REFERENCES core.sd_departments(department_id) ON DELETE SET NULL,
 
     -- Unique Constraint
     CONSTRAINT uk_equipment_code UNIQUE (tenant_id, equipment_code)
 );
 
 -- Indexes
-CREATE INDEX idx_equipment_tenant ON equipment.si_equipments(tenant_id);
-CREATE INDEX idx_equipment_status ON equipment.si_equipments(status);
-CREATE INDEX idx_equipment_type ON equipment.si_equipments(equipment_type);
-CREATE INDEX idx_equipment_site ON equipment.si_equipments(site_id);
-CREATE INDEX idx_equipment_department ON equipment.si_equipments(department_id);
+CREATE INDEX idx_equipment_tenant ON equipment.sd_equipments(tenant_id);
+CREATE INDEX idx_equipment_status ON equipment.sd_equipments(status);
+CREATE INDEX idx_equipment_type ON equipment.sd_equipments(equipment_type);
+CREATE INDEX idx_equipment_site ON equipment.sd_equipments(site_id);
+CREATE INDEX idx_equipment_department ON equipment.sd_equipments(department_id);
 
 -- Comments
-COMMENT ON TABLE equipment.si_equipments IS '설비 마스터';
-COMMENT ON COLUMN equipment.si_equipments.equipment_type IS '설비유형: MACHINE(기계), MOLD(금형), TOOL(공구), FACILITY(시설), VEHICLE(운반구), OTHER(기타)';
-COMMENT ON COLUMN equipment.si_equipments.status IS '상태: OPERATIONAL(가동), STOPPED(정지), MAINTENANCE(점검중), BREAKDOWN(고장), RETIRED(폐기)';
+COMMENT ON TABLE equipment.sd_equipments IS '설비 마스터';
+COMMENT ON COLUMN equipment.sd_equipments.equipment_type IS '설비유형: MACHINE(기계), MOLD(금형), TOOL(공구), FACILITY(시설), VEHICLE(운반구), OTHER(기타)';
+COMMENT ON COLUMN equipment.sd_equipments.status IS '상태: OPERATIONAL(가동), STOPPED(정지), MAINTENANCE(점검중), BREAKDOWN(고장), RETIRED(폐기)';
 
 -- ============================================================
 -- 2. EQUIPMENT OPERATIONS (설비 가동 이력)
 -- ============================================================
 
-CREATE TABLE equipment.si_equipment_operations (
+CREATE TABLE equipment.sd_equipment_operations (
     operation_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     equipment_id BIGINT NOT NULL,
@@ -140,30 +140,30 @@ CREATE TABLE equipment.si_equipment_operations (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_operation_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_operation_equipment FOREIGN KEY (equipment_id) REFERENCES equipment.si_equipments(equipment_id),
-    CONSTRAINT fk_operation_work_order FOREIGN KEY (work_order_id) REFERENCES production.si_work_orders(work_order_id) ON DELETE SET NULL,
-    CONSTRAINT fk_operation_work_result FOREIGN KEY (work_result_id) REFERENCES production.si_work_results(work_result_id) ON DELETE SET NULL,
-    CONSTRAINT fk_operation_operator FOREIGN KEY (operator_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL
+    CONSTRAINT fk_operation_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_operation_equipment FOREIGN KEY (equipment_id) REFERENCES equipment.sd_equipments(equipment_id),
+    CONSTRAINT fk_operation_work_order FOREIGN KEY (work_order_id) REFERENCES production.sd_work_orders(work_order_id) ON DELETE SET NULL,
+    CONSTRAINT fk_operation_work_result FOREIGN KEY (work_result_id) REFERENCES production.sd_work_results(work_result_id) ON DELETE SET NULL,
+    CONSTRAINT fk_operation_operator FOREIGN KEY (operator_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL
 );
 
 -- Indexes
-CREATE INDEX idx_operation_tenant ON equipment.si_equipment_operations(tenant_id);
-CREATE INDEX idx_operation_equipment ON equipment.si_equipment_operations(equipment_id);
-CREATE INDEX idx_operation_date ON equipment.si_equipment_operations(operation_date);
-CREATE INDEX idx_operation_status ON equipment.si_equipment_operations(operation_status);
-CREATE INDEX idx_operation_work_order ON equipment.si_equipment_operations(work_order_id);
+CREATE INDEX idx_operation_tenant ON equipment.sd_equipment_operations(tenant_id);
+CREATE INDEX idx_operation_equipment ON equipment.sd_equipment_operations(equipment_id);
+CREATE INDEX idx_operation_date ON equipment.sd_equipment_operations(operation_date);
+CREATE INDEX idx_operation_status ON equipment.sd_equipment_operations(operation_status);
+CREATE INDEX idx_operation_work_order ON equipment.sd_equipment_operations(work_order_id);
 
 -- Comments
-COMMENT ON TABLE equipment.si_equipment_operations IS '설비 가동 이력';
-COMMENT ON COLUMN equipment.si_equipment_operations.operation_status IS '가동상태: RUNNING(가동중), COMPLETED(완료), STOPPED(정지), ABORTED(중단)';
-COMMENT ON COLUMN equipment.si_equipment_operations.oee IS 'Overall Equipment Effectiveness: 가동률 x 성능률 x 품질률';
+COMMENT ON TABLE equipment.sd_equipment_operations IS '설비 가동 이력';
+COMMENT ON COLUMN equipment.sd_equipment_operations.operation_status IS '가동상태: RUNNING(가동중), COMPLETED(완료), STOPPED(정지), ABORTED(중단)';
+COMMENT ON COLUMN equipment.sd_equipment_operations.oee IS 'Overall Equipment Effectiveness: 가동률 x 성능률 x 품질률';
 
 -- ============================================================
 -- 3. EQUIPMENT INSPECTIONS (설비 점검)
 -- ============================================================
 
-CREATE TABLE equipment.si_equipment_inspections (
+CREATE TABLE equipment.sd_equipment_inspections (
     inspection_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     equipment_id BIGINT NOT NULL,
@@ -213,26 +213,26 @@ CREATE TABLE equipment.si_equipment_inspections (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_inspection_tenant FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id),
-    CONSTRAINT fk_inspection_equipment FOREIGN KEY (equipment_id) REFERENCES equipment.si_equipments(equipment_id),
-    CONSTRAINT fk_inspection_inspector FOREIGN KEY (inspector_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
-    CONSTRAINT fk_inspection_responsible FOREIGN KEY (responsible_user_id) REFERENCES core.si_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_inspection_tenant FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id),
+    CONSTRAINT fk_inspection_equipment FOREIGN KEY (equipment_id) REFERENCES equipment.sd_equipments(equipment_id),
+    CONSTRAINT fk_inspection_inspector FOREIGN KEY (inspector_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
+    CONSTRAINT fk_inspection_responsible FOREIGN KEY (responsible_user_id) REFERENCES core.sd_users(user_id) ON DELETE SET NULL,
 
     -- Unique Constraint
     CONSTRAINT uk_inspection_no UNIQUE (tenant_id, inspection_no)
 );
 
 -- Indexes
-CREATE INDEX idx_inspection_tenant ON equipment.si_equipment_inspections(tenant_id);
-CREATE INDEX idx_inspection_equipment ON equipment.si_equipment_inspections(equipment_id);
-CREATE INDEX idx_inspection_date ON equipment.si_equipment_inspections(inspection_date);
-CREATE INDEX idx_inspection_type ON equipment.si_equipment_inspections(inspection_type);
-CREATE INDEX idx_inspection_result ON equipment.si_equipment_inspections(inspection_result);
+CREATE INDEX idx_inspection_tenant ON equipment.sd_equipment_inspections(tenant_id);
+CREATE INDEX idx_inspection_equipment ON equipment.sd_equipment_inspections(equipment_id);
+CREATE INDEX idx_inspection_date ON equipment.sd_equipment_inspections(inspection_date);
+CREATE INDEX idx_inspection_type ON equipment.sd_equipment_inspections(inspection_type);
+CREATE INDEX idx_inspection_result ON equipment.sd_equipment_inspections(inspection_result);
 
 -- Comments
-COMMENT ON TABLE equipment.si_equipment_inspections IS '설비 점검';
-COMMENT ON COLUMN equipment.si_equipment_inspections.inspection_type IS '점검유형: DAILY(일상), PERIODIC(정기), PREVENTIVE(예방), CORRECTIVE(교정), BREAKDOWN(고장)';
-COMMENT ON COLUMN equipment.si_equipment_inspections.inspection_result IS '점검결과: PASS(정상), FAIL(불량), CONDITIONAL(조건부)';
+COMMENT ON TABLE equipment.sd_equipment_inspections IS '설비 점검';
+COMMENT ON COLUMN equipment.sd_equipment_inspections.inspection_type IS '점검유형: DAILY(일상), PERIODIC(정기), PREVENTIVE(예방), CORRECTIVE(교정), BREAKDOWN(고장)';
+COMMENT ON COLUMN equipment.sd_equipment_inspections.inspection_result IS '점검결과: PASS(정상), FAIL(불량), CONDITIONAL(조건부)';
 
 -- ============================================================
 -- 4. TRIGGERS - Auto update timestamp
@@ -248,7 +248,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_equipment_updated_at
-    BEFORE UPDATE ON equipment.si_equipments
+    BEFORE UPDATE ON equipment.sd_equipments
     FOR EACH ROW
     EXECUTE FUNCTION equipment.update_equipment_updated_at();
 
@@ -262,7 +262,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_operation_updated_at
-    BEFORE UPDATE ON equipment.si_equipment_operations
+    BEFORE UPDATE ON equipment.sd_equipment_operations
     FOR EACH ROW
     EXECUTE FUNCTION equipment.update_operation_updated_at();
 
@@ -276,7 +276,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_inspection_updated_at
-    BEFORE UPDATE ON equipment.si_equipment_inspections
+    BEFORE UPDATE ON equipment.sd_equipment_inspections
     FOR EACH ROW
     EXECUTE FUNCTION equipment.update_inspection_updated_at();
 
@@ -295,7 +295,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trg_calculate_operation_hours
-    BEFORE INSERT OR UPDATE ON equipment.si_equipment_operations
+    BEFORE INSERT OR UPDATE ON equipment.sd_equipment_operations
     FOR EACH ROW
     EXECUTE FUNCTION equipment.calculate_operation_hours();
 

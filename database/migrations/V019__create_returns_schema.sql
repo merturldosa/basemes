@@ -3,8 +3,8 @@
  * 반품 관리 스키마 생성
  *
  * 테이블:
- * - wms.si_returns: 반품 헤더
- * - wms.si_return_items: 반품 항목
+ * - wms.sd_returns: 반품 헤더
+ * - wms.sd_return_items: 반품 항목
  *
  * 워크플로우:
  * 1. 반품 신청 (PENDING)
@@ -20,9 +20,9 @@
  */
 
 -- =====================================================
--- 1. si_returns (반품 헤더)
+-- 1. sd_returns (반품 헤더)
 -- =====================================================
-CREATE TABLE wms.si_returns (
+CREATE TABLE wms.sd_returns (
     return_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
 
@@ -80,36 +80,36 @@ CREATE TABLE wms.si_returns (
     updated_by VARCHAR(100),
 
     -- Foreign Keys
-    CONSTRAINT fk_return_tenant FOREIGN KEY (tenant_id) REFERENCES common.si_tenants(tenant_id),
-    CONSTRAINT fk_return_material_request FOREIGN KEY (material_request_id) REFERENCES wms.si_material_requests(material_request_id),
-    CONSTRAINT fk_return_work_order FOREIGN KEY (work_order_id) REFERENCES production.si_work_orders(work_order_id),
-    CONSTRAINT fk_return_requester FOREIGN KEY (requester_user_id) REFERENCES common.si_users(user_id),
-    CONSTRAINT fk_return_warehouse FOREIGN KEY (warehouse_id) REFERENCES inventory.si_warehouses(warehouse_id),
-    CONSTRAINT fk_return_approver FOREIGN KEY (approver_user_id) REFERENCES common.si_users(user_id),
+    CONSTRAINT fk_return_tenant FOREIGN KEY (tenant_id) REFERENCES common.sd_tenants(tenant_id),
+    CONSTRAINT fk_return_material_request FOREIGN KEY (material_request_id) REFERENCES wms.sd_material_requests(material_request_id),
+    CONSTRAINT fk_return_work_order FOREIGN KEY (work_order_id) REFERENCES production.sd_work_orders(work_order_id),
+    CONSTRAINT fk_return_requester FOREIGN KEY (requester_user_id) REFERENCES common.sd_users(user_id),
+    CONSTRAINT fk_return_warehouse FOREIGN KEY (warehouse_id) REFERENCES inventory.sd_warehouses(warehouse_id),
+    CONSTRAINT fk_return_approver FOREIGN KEY (approver_user_id) REFERENCES common.sd_users(user_id),
 
     -- Unique Constraints
     CONSTRAINT uk_return_no UNIQUE (tenant_id, return_no)
 );
 
 -- Indexes
-CREATE INDEX idx_return_tenant ON wms.si_returns(tenant_id);
-CREATE INDEX idx_return_date ON wms.si_returns(return_date);
-CREATE INDEX idx_return_material_request ON wms.si_returns(material_request_id);
-CREATE INDEX idx_return_work_order ON wms.si_returns(work_order_id);
-CREATE INDEX idx_return_requester ON wms.si_returns(requester_user_id);
-CREATE INDEX idx_return_warehouse ON wms.si_returns(warehouse_id);
-CREATE INDEX idx_return_status ON wms.si_returns(return_status);
-CREATE INDEX idx_return_type ON wms.si_returns(return_type);
+CREATE INDEX idx_return_tenant ON wms.sd_returns(tenant_id);
+CREATE INDEX idx_return_date ON wms.sd_returns(return_date);
+CREATE INDEX idx_return_material_request ON wms.sd_returns(material_request_id);
+CREATE INDEX idx_return_work_order ON wms.sd_returns(work_order_id);
+CREATE INDEX idx_return_requester ON wms.sd_returns(requester_user_id);
+CREATE INDEX idx_return_warehouse ON wms.sd_returns(warehouse_id);
+CREATE INDEX idx_return_status ON wms.sd_returns(return_status);
+CREATE INDEX idx_return_type ON wms.sd_returns(return_type);
 
 -- Comments
-COMMENT ON TABLE wms.si_returns IS '반품 헤더 - 생산/창고에서 반품 처리';
-COMMENT ON COLUMN wms.si_returns.return_type IS 'DEFECTIVE(불량품), EXCESS(과잉), WRONG_DELIVERY(오배송), OTHER(기타)';
-COMMENT ON COLUMN wms.si_returns.return_status IS 'PENDING → APPROVED → RECEIVED → INSPECTING → COMPLETED';
+COMMENT ON TABLE wms.sd_returns IS '반품 헤더 - 생산/창고에서 반품 처리';
+COMMENT ON COLUMN wms.sd_returns.return_type IS 'DEFECTIVE(불량품), EXCESS(과잉), WRONG_DELIVERY(오배송), OTHER(기타)';
+COMMENT ON COLUMN wms.sd_returns.return_status IS 'PENDING → APPROVED → RECEIVED → INSPECTING → COMPLETED';
 
 -- =====================================================
--- 2. si_return_items (반품 항목)
+-- 2. sd_return_items (반품 항목)
 -- =====================================================
-CREATE TABLE wms.si_return_items (
+CREATE TABLE wms.sd_return_items (
     return_item_id BIGSERIAL PRIMARY KEY,
     return_id BIGINT NOT NULL,
 
@@ -150,36 +150,36 @@ CREATE TABLE wms.si_return_items (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Foreign Keys
-    CONSTRAINT fk_return_item_return FOREIGN KEY (return_id) REFERENCES wms.si_returns(return_id),
-    CONSTRAINT fk_return_item_product FOREIGN KEY (product_id) REFERENCES production.si_products(product_id),
-    CONSTRAINT fk_return_item_quality_inspection FOREIGN KEY (quality_inspection_id) REFERENCES qms.si_quality_inspections(quality_inspection_id),
-    CONSTRAINT fk_return_item_receive_transaction FOREIGN KEY (receive_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id),
-    CONSTRAINT fk_return_item_pass_transaction FOREIGN KEY (pass_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id),
-    CONSTRAINT fk_return_item_fail_transaction FOREIGN KEY (fail_transaction_id) REFERENCES inventory.si_inventory_transactions(inventory_transaction_id)
+    CONSTRAINT fk_return_item_return FOREIGN KEY (return_id) REFERENCES wms.sd_returns(return_id),
+    CONSTRAINT fk_return_item_product FOREIGN KEY (product_id) REFERENCES production.sd_products(product_id),
+    CONSTRAINT fk_return_item_quality_inspection FOREIGN KEY (quality_inspection_id) REFERENCES qms.sd_quality_inspections(quality_inspection_id),
+    CONSTRAINT fk_return_item_receive_transaction FOREIGN KEY (receive_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id),
+    CONSTRAINT fk_return_item_pass_transaction FOREIGN KEY (pass_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id),
+    CONSTRAINT fk_return_item_fail_transaction FOREIGN KEY (fail_transaction_id) REFERENCES inventory.sd_inventory_transactions(inventory_transaction_id)
 );
 
 -- Indexes
-CREATE INDEX idx_return_item_return ON wms.si_return_items(return_id);
-CREATE INDEX idx_return_item_product ON wms.si_return_items(product_id);
-CREATE INDEX idx_return_item_inspection_status ON wms.si_return_items(inspection_status);
-CREATE INDEX idx_return_item_quality_inspection ON wms.si_return_items(quality_inspection_id);
-CREATE INDEX idx_return_item_original_lot ON wms.si_return_items(original_lot_no);
+CREATE INDEX idx_return_item_return ON wms.sd_return_items(return_id);
+CREATE INDEX idx_return_item_product ON wms.sd_return_items(product_id);
+CREATE INDEX idx_return_item_inspection_status ON wms.sd_return_items(inspection_status);
+CREATE INDEX idx_return_item_quality_inspection ON wms.sd_return_items(quality_inspection_id);
+CREATE INDEX idx_return_item_original_lot ON wms.sd_return_items(original_lot_no);
 
 -- Comments
-COMMENT ON TABLE wms.si_return_items IS '반품 항목 - 반품별 제품/수량 상세';
-COMMENT ON COLUMN wms.si_return_items.original_lot_no IS '원래 불출된 LOT 번호';
-COMMENT ON COLUMN wms.si_return_items.new_lot_no IS '재입고 시 생성된 새 LOT 번호';
-COMMENT ON COLUMN wms.si_return_items.return_reason IS '반품 사유 (불량 유형, 과잉 사유 등)';
+COMMENT ON TABLE wms.sd_return_items IS '반품 항목 - 반품별 제품/수량 상세';
+COMMENT ON COLUMN wms.sd_return_items.original_lot_no IS '원래 불출된 LOT 번호';
+COMMENT ON COLUMN wms.sd_return_items.new_lot_no IS '재입고 시 생성된 새 LOT 번호';
+COMMENT ON COLUMN wms.sd_return_items.return_reason IS '반품 사유 (불량 유형, 과잉 사유 등)';
 
 -- =====================================================
 -- Triggers for updated_at
 -- =====================================================
-CREATE TRIGGER update_si_returns_updated_at
-    BEFORE UPDATE ON wms.si_returns
+CREATE TRIGGER update_sd_returns_updated_at
+    BEFORE UPDATE ON wms.sd_returns
     FOR EACH ROW
     EXECUTE FUNCTION common.update_updated_at_column();
 
-CREATE TRIGGER update_si_return_items_updated_at
-    BEFORE UPDATE ON wms.si_return_items
+CREATE TRIGGER update_sd_return_items_updated_at
+    BEFORE UPDATE ON wms.sd_return_items
     FOR EACH ROW
     EXECUTE FUNCTION common.update_updated_at_column();

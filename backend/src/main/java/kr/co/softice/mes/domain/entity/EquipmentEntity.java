@@ -11,7 +11,7 @@ import java.time.LocalDate;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "equipment", name = "si_equipments",
+@Table(schema = "equipment", name = "sd_equipments",
     uniqueConstraints = {
         @UniqueConstraint(name = "uk_equipment_code", columnNames = {"tenant_id", "equipment_code"})
     },

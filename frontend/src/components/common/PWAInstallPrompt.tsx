@@ -149,7 +149,7 @@ export default function PWAInstallPrompt() {
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography variant="body1">
-              SoIce MES를 앱으로 설치하시겠습니까?
+              SDS MES를 앱으로 설치하시겠습니까?
             </Typography>
 
             <Alert severity="info" icon={<PhoneIphone />}>
@@ -230,7 +230,7 @@ export default function PWAInstallPrompt() {
                 <strong>"추가"</strong>를 탭하세요
               </li>
               <li>
-                홈 화면에서 <strong>SoIce MES</strong> 아이콘을 찾으세요
+                홈 화면에서 <strong>SDS MES</strong> 아이콘을 찾으세요
               </li>
             </ol>
 

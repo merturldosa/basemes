@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Entity
 @Table(
-    name = "si_disposals",
+    name = "sd_disposals",
     schema = "wms",
     uniqueConstraints = {
         @UniqueConstraint(

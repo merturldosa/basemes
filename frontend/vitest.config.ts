@@ -1,5 +1,5 @@
 /**
- * Vitest Configuration for SoIce MES Frontend
+ * Vitest Configuration for SDS MES Frontend
  * @author Moon Myung-seop
  */
 

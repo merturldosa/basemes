@@ -10,7 +10,7 @@ import lombok.*;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "core", name = "si_skill_matrix",
+@Table(schema = "core", name = "sd_skill_matrix",
         indexes = {
                 @Index(name = "idx_skill_matrix_tenant", columnList = "tenant_id"),
                 @Index(name = "idx_skill_matrix_category", columnList = "skill_category"),

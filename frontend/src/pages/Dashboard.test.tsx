@@ -15,7 +15,7 @@ beforeEach(() => {
     user: {
       id: 1,
       username: 'admin',
-      email: 'admin@soice.co.kr',
+      email: 'admin@sds.co.kr',
       name: '관리자',
       status: 'ACTIVE',
       roles: ['ADMIN'],

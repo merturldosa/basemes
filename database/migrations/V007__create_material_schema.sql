@@ -9,10 +9,10 @@
 CREATE SCHEMA IF NOT EXISTS material;
 
 -- ============================================================================
--- Table: material.si_materials
+-- Table: material.sd_materials
 -- Description: 자재 마스터 (Material Master)
 -- ============================================================================
-CREATE TABLE material.si_materials (
+CREATE TABLE material.sd_materials (
     material_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     material_code VARCHAR(50) NOT NULL,
@@ -56,9 +56,9 @@ CREATE TABLE material.si_materials (
 
     -- Foreign Keys
     CONSTRAINT fk_material_tenant FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES core.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_material_supplier FOREIGN KEY (supplier_id)
-        REFERENCES business.si_suppliers(supplier_id) ON DELETE SET NULL,
+        REFERENCES business.sd_suppliers(supplier_id) ON DELETE SET NULL,
 
     -- Unique Constraints
     CONSTRAINT uk_material_code UNIQUE (tenant_id, material_code)
@@ -67,11 +67,11 @@ CREATE TABLE material.si_materials (
 -- ============================================================================
 -- Indexes
 -- ============================================================================
-CREATE INDEX idx_material_tenant ON material.si_materials(tenant_id);
-CREATE INDEX idx_material_type ON material.si_materials(material_type);
-CREATE INDEX idx_material_supplier ON material.si_materials(supplier_id);
-CREATE INDEX idx_material_active ON material.si_materials(is_active);
-CREATE INDEX idx_material_name ON material.si_materials(material_name);
+CREATE INDEX idx_material_tenant ON material.sd_materials(tenant_id);
+CREATE INDEX idx_material_type ON material.sd_materials(material_type);
+CREATE INDEX idx_material_supplier ON material.sd_materials(supplier_id);
+CREATE INDEX idx_material_active ON material.sd_materials(is_active);
+CREATE INDEX idx_material_name ON material.sd_materials(material_name);
 
 -- ============================================================================
 -- Triggers for updated_at
@@ -85,7 +85,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER trigger_update_material_timestamp
-    BEFORE UPDATE ON material.si_materials
+    BEFORE UPDATE ON material.sd_materials
     FOR EACH ROW
     EXECUTE FUNCTION material.update_material_timestamp();
 
@@ -93,26 +93,26 @@ CREATE TRIGGER trigger_update_material_timestamp
 -- Comments
 -- ============================================================================
 COMMENT ON SCHEMA material IS '자재 관리 스키마';
-COMMENT ON TABLE material.si_materials IS '자재 마스터 테이블';
-COMMENT ON COLUMN material.si_materials.material_id IS '자재 ID (PK)';
-COMMENT ON COLUMN material.si_materials.tenant_id IS '테넌트 ID';
-COMMENT ON COLUMN material.si_materials.material_code IS '자재 코드';
-COMMENT ON COLUMN material.si_materials.material_name IS '자재명';
-COMMENT ON COLUMN material.si_materials.material_type IS '자재 유형 (RAW_MATERIAL, SUB_MATERIAL, SEMI_FINISHED, FINISHED_PRODUCT)';
-COMMENT ON COLUMN material.si_materials.specification IS '규격';
-COMMENT ON COLUMN material.si_materials.model IS '모델';
-COMMENT ON COLUMN material.si_materials.unit IS '단위';
-COMMENT ON COLUMN material.si_materials.standard_price IS '표준 단가';
-COMMENT ON COLUMN material.si_materials.current_price IS '현재 단가';
-COMMENT ON COLUMN material.si_materials.currency IS '통화';
-COMMENT ON COLUMN material.si_materials.supplier_id IS '공급업체 ID';
-COMMENT ON COLUMN material.si_materials.lead_time_days IS '리드타임 (일)';
-COMMENT ON COLUMN material.si_materials.min_stock_quantity IS '최소 재고량';
-COMMENT ON COLUMN material.si_materials.max_stock_quantity IS '최대 재고량';
-COMMENT ON COLUMN material.si_materials.safety_stock_quantity IS '안전 재고량';
-COMMENT ON COLUMN material.si_materials.reorder_point IS '재주문점';
-COMMENT ON COLUMN material.si_materials.storage_location IS '보관 위치';
-COMMENT ON COLUMN material.si_materials.lot_managed IS 'LOT 관리 여부';
-COMMENT ON COLUMN material.si_materials.shelf_life_days IS '유통기한 (일)';
-COMMENT ON COLUMN material.si_materials.is_active IS '활성화 여부';
-COMMENT ON COLUMN material.si_materials.remarks IS '비고';
+COMMENT ON TABLE material.sd_materials IS '자재 마스터 테이블';
+COMMENT ON COLUMN material.sd_materials.material_id IS '자재 ID (PK)';
+COMMENT ON COLUMN material.sd_materials.tenant_id IS '테넌트 ID';
+COMMENT ON COLUMN material.sd_materials.material_code IS '자재 코드';
+COMMENT ON COLUMN material.sd_materials.material_name IS '자재명';
+COMMENT ON COLUMN material.sd_materials.material_type IS '자재 유형 (RAW_MATERIAL, SUB_MATERIAL, SEMI_FINISHED, FINISHED_PRODUCT)';
+COMMENT ON COLUMN material.sd_materials.specification IS '규격';
+COMMENT ON COLUMN material.sd_materials.model IS '모델';
+COMMENT ON COLUMN material.sd_materials.unit IS '단위';
+COMMENT ON COLUMN material.sd_materials.standard_price IS '표준 단가';
+COMMENT ON COLUMN material.sd_materials.current_price IS '현재 단가';
+COMMENT ON COLUMN material.sd_materials.currency IS '통화';
+COMMENT ON COLUMN material.sd_materials.supplier_id IS '공급업체 ID';
+COMMENT ON COLUMN material.sd_materials.lead_time_days IS '리드타임 (일)';
+COMMENT ON COLUMN material.sd_materials.min_stock_quantity IS '최소 재고량';
+COMMENT ON COLUMN material.sd_materials.max_stock_quantity IS '최대 재고량';
+COMMENT ON COLUMN material.sd_materials.safety_stock_quantity IS '안전 재고량';
+COMMENT ON COLUMN material.sd_materials.reorder_point IS '재주문점';
+COMMENT ON COLUMN material.sd_materials.storage_location IS '보관 위치';
+COMMENT ON COLUMN material.sd_materials.lot_managed IS 'LOT 관리 여부';
+COMMENT ON COLUMN material.sd_materials.shelf_life_days IS '유통기한 (일)';
+COMMENT ON COLUMN material.sd_materials.is_active IS '활성화 여부';
+COMMENT ON COLUMN material.sd_materials.remarks IS '비고';

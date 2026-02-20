@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Multi-stage Dockerfile for SoIce MES Frontend (React + Vite)
+# Multi-stage Dockerfile for SDS MES Frontend (React + Vite)
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 

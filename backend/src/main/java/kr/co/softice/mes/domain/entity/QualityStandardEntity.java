@@ -8,13 +8,13 @@ import java.time.LocalDate;
 
 /**
  * Quality Standard Entity - 품질 기준 마스터
- * Maps to: qms.si_quality_standards
+ * Maps to: qms.sd_quality_standards
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_quality_standards",
+    name = "sd_quality_standards",
     schema = "qms",
     uniqueConstraints = {
         @UniqueConstraint(

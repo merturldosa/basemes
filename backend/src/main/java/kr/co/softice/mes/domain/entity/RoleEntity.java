@@ -10,23 +10,23 @@ import java.util.Map;
 
 /**
  * Role Entity - 역할
- * Maps to: common.SI_Roles
+ * Maps to: common.SD_Roles
  *
  * @author Moon Myung-seop
  */
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Entity
 @Table(
-    name = "si_roles",
+    name = "sd_roles",
     schema = "common",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_roles_tenant_code",
+            name = "uk_sd_roles_tenant_code",
             columnNames = {"tenant_id", "role_code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_roles_tenant_id", columnList = "tenant_id")
+        @Index(name = "idx_sd_roles_tenant_id", columnList = "tenant_id")
     }
 )
 @Getter
@@ -42,7 +42,7 @@ public class RoleEntity extends BaseEntity {
     private Long roleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_roles_tenant_id"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_roles_tenant_id"))
     private TenantEntity tenant;
 
     @Column(name = "role_code", nullable = false, length = 50)

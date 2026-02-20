@@ -11,10 +11,10 @@
 CREATE SCHEMA IF NOT EXISTS inventory;
 
 -- =============================================================================
--- Table: inventory.si_warehouses
+-- Table: inventory.sd_warehouses
 -- Description: Warehouse master data
 -- =============================================================================
-CREATE TABLE inventory.si_warehouses (
+CREATE TABLE inventory.sd_warehouses (
     warehouse_id BIGSERIAL PRIMARY KEY,
     tenant_id BIGINT NOT NULL,
 
@@ -48,11 +48,11 @@ CREATE TABLE inventory.si_warehouses (
     -- Foreign Keys
     CONSTRAINT fk_warehouse_tenant
         FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id)
+        REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_warehouse_manager
         FOREIGN KEY (manager_user_id)
-        REFERENCES core.si_users(user_id)
+        REFERENCES core.sd_users(user_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -64,23 +64,23 @@ CREATE TABLE inventory.si_warehouses (
         CHECK (warehouse_type IN ('RAW_MATERIAL', 'WORK_IN_PROCESS', 'FINISHED_GOODS', 'QUARANTINE', 'SCRAP'))
 );
 
--- Indexes for si_warehouses
-CREATE INDEX idx_warehouse_tenant ON inventory.si_warehouses(tenant_id);
-CREATE INDEX idx_warehouse_code ON inventory.si_warehouses(warehouse_code);
-CREATE INDEX idx_warehouse_type ON inventory.si_warehouses(warehouse_type);
-CREATE INDEX idx_warehouse_active ON inventory.si_warehouses(is_active);
+-- Indexes for sd_warehouses
+CREATE INDEX idx_warehouse_tenant ON inventory.sd_warehouses(tenant_id);
+CREATE INDEX idx_warehouse_code ON inventory.sd_warehouses(warehouse_code);
+CREATE INDEX idx_warehouse_type ON inventory.sd_warehouses(warehouse_type);
+CREATE INDEX idx_warehouse_active ON inventory.sd_warehouses(is_active);
 
--- Trigger for updating updated_at on si_warehouses
+-- Trigger for updating updated_at on sd_warehouses
 CREATE TRIGGER trg_warehouse_updated_at
-    BEFORE UPDATE ON inventory.si_warehouses
+    BEFORE UPDATE ON inventory.sd_warehouses
     FOR EACH ROW
     EXECUTE FUNCTION core.update_updated_at_column();
 
 -- =============================================================================
--- Table: inventory.si_lots
+-- Table: inventory.sd_lots
 -- Description: LOT/Batch tracking
 -- =============================================================================
-CREATE TABLE inventory.si_lots (
+CREATE TABLE inventory.sd_lots (
     lot_id BIGSERIAL PRIMARY KEY,
     tenant_id BIGINT NOT NULL,
     product_id BIGINT NOT NULL,
@@ -122,15 +122,15 @@ CREATE TABLE inventory.si_lots (
     -- Foreign Keys
     CONSTRAINT fk_lot_tenant
         FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id)
+        REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_lot_product
         FOREIGN KEY (product_id)
-        REFERENCES production.si_products(product_id)
+        REFERENCES production.sd_products(product_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_lot_work_order
         FOREIGN KEY (work_order_id)
-        REFERENCES production.si_work_orders(work_order_id)
+        REFERENCES production.sd_work_orders(work_order_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -146,25 +146,25 @@ CREATE TABLE inventory.si_lots (
         CHECK (current_quantity <= initial_quantity)
 );
 
--- Indexes for si_lots
-CREATE INDEX idx_lot_tenant ON inventory.si_lots(tenant_id);
-CREATE INDEX idx_lot_product ON inventory.si_lots(product_id);
-CREATE INDEX idx_lot_no ON inventory.si_lots(lot_no);
-CREATE INDEX idx_lot_quality_status ON inventory.si_lots(quality_status);
-CREATE INDEX idx_lot_active ON inventory.si_lots(is_active);
-CREATE INDEX idx_lot_expiry_date ON inventory.si_lots(expiry_date);
+-- Indexes for sd_lots
+CREATE INDEX idx_lot_tenant ON inventory.sd_lots(tenant_id);
+CREATE INDEX idx_lot_product ON inventory.sd_lots(product_id);
+CREATE INDEX idx_lot_no ON inventory.sd_lots(lot_no);
+CREATE INDEX idx_lot_quality_status ON inventory.sd_lots(quality_status);
+CREATE INDEX idx_lot_active ON inventory.sd_lots(is_active);
+CREATE INDEX idx_lot_expiry_date ON inventory.sd_lots(expiry_date);
 
--- Trigger for updating updated_at on si_lots
+-- Trigger for updating updated_at on sd_lots
 CREATE TRIGGER trg_lot_updated_at
-    BEFORE UPDATE ON inventory.si_lots
+    BEFORE UPDATE ON inventory.sd_lots
     FOR EACH ROW
     EXECUTE FUNCTION core.update_updated_at_column();
 
 -- =============================================================================
--- Table: inventory.si_inventory
+-- Table: inventory.sd_inventory
 -- Description: Current inventory status (Product x Warehouse x LOT)
 -- =============================================================================
-CREATE TABLE inventory.si_inventory (
+CREATE TABLE inventory.sd_inventory (
     inventory_id BIGSERIAL PRIMARY KEY,
     tenant_id BIGINT NOT NULL,
     warehouse_id BIGINT NOT NULL,
@@ -196,19 +196,19 @@ CREATE TABLE inventory.si_inventory (
     -- Foreign Keys
     CONSTRAINT fk_inventory_tenant
         FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id)
+        REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_inventory_warehouse
         FOREIGN KEY (warehouse_id)
-        REFERENCES inventory.si_warehouses(warehouse_id)
+        REFERENCES inventory.sd_warehouses(warehouse_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_inventory_product
         FOREIGN KEY (product_id)
-        REFERENCES production.si_products(product_id)
+        REFERENCES production.sd_products(product_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_inventory_lot
         FOREIGN KEY (lot_id)
-        REFERENCES inventory.si_lots(lot_id)
+        REFERENCES inventory.sd_lots(lot_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -220,23 +220,23 @@ CREATE TABLE inventory.si_inventory (
         CHECK (available_quantity >= 0 AND reserved_quantity >= 0)
 );
 
--- Indexes for si_inventory
-CREATE INDEX idx_inventory_tenant ON inventory.si_inventory(tenant_id);
-CREATE INDEX idx_inventory_warehouse ON inventory.si_inventory(warehouse_id);
-CREATE INDEX idx_inventory_product ON inventory.si_inventory(product_id);
-CREATE INDEX idx_inventory_lot ON inventory.si_inventory(lot_id);
+-- Indexes for sd_inventory
+CREATE INDEX idx_inventory_tenant ON inventory.sd_inventory(tenant_id);
+CREATE INDEX idx_inventory_warehouse ON inventory.sd_inventory(warehouse_id);
+CREATE INDEX idx_inventory_product ON inventory.sd_inventory(product_id);
+CREATE INDEX idx_inventory_lot ON inventory.sd_inventory(lot_id);
 
--- Trigger for updating updated_at on si_inventory
+-- Trigger for updating updated_at on sd_inventory
 CREATE TRIGGER trg_inventory_updated_at
-    BEFORE UPDATE ON inventory.si_inventory
+    BEFORE UPDATE ON inventory.sd_inventory
     FOR EACH ROW
     EXECUTE FUNCTION core.update_updated_at_column();
 
 -- =============================================================================
--- Table: inventory.si_inventory_transactions
+-- Table: inventory.sd_inventory_transactions
 -- Description: Inventory movement history
 -- =============================================================================
-CREATE TABLE inventory.si_inventory_transactions (
+CREATE TABLE inventory.sd_inventory_transactions (
     transaction_id BIGSERIAL PRIMARY KEY,
     tenant_id BIGINT NOT NULL,
 
@@ -281,43 +281,43 @@ CREATE TABLE inventory.si_inventory_transactions (
     -- Foreign Keys
     CONSTRAINT fk_inv_trans_tenant
         FOREIGN KEY (tenant_id)
-        REFERENCES core.si_tenants(tenant_id)
+        REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
     CONSTRAINT fk_inv_trans_warehouse
         FOREIGN KEY (warehouse_id)
-        REFERENCES inventory.si_warehouses(warehouse_id)
+        REFERENCES inventory.sd_warehouses(warehouse_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_inv_trans_from_warehouse
         FOREIGN KEY (from_warehouse_id)
-        REFERENCES inventory.si_warehouses(warehouse_id)
+        REFERENCES inventory.sd_warehouses(warehouse_id)
         ON DELETE SET NULL,
     CONSTRAINT fk_inv_trans_to_warehouse
         FOREIGN KEY (to_warehouse_id)
-        REFERENCES inventory.si_warehouses(warehouse_id)
+        REFERENCES inventory.sd_warehouses(warehouse_id)
         ON DELETE SET NULL,
     CONSTRAINT fk_inv_trans_product
         FOREIGN KEY (product_id)
-        REFERENCES production.si_products(product_id)
+        REFERENCES production.sd_products(product_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_inv_trans_lot
         FOREIGN KEY (lot_id)
-        REFERENCES inventory.si_lots(lot_id)
+        REFERENCES inventory.sd_lots(lot_id)
         ON DELETE SET NULL,
     CONSTRAINT fk_inv_trans_work_order
         FOREIGN KEY (work_order_id)
-        REFERENCES production.si_work_orders(work_order_id)
+        REFERENCES production.sd_work_orders(work_order_id)
         ON DELETE SET NULL,
     CONSTRAINT fk_inv_trans_quality_inspection
         FOREIGN KEY (quality_inspection_id)
-        REFERENCES qms.si_quality_inspections(quality_inspection_id)
+        REFERENCES qms.sd_quality_inspections(quality_inspection_id)
         ON DELETE SET NULL,
     CONSTRAINT fk_inv_trans_user
         FOREIGN KEY (transaction_user_id)
-        REFERENCES core.si_users(user_id)
+        REFERENCES core.sd_users(user_id)
         ON DELETE RESTRICT,
     CONSTRAINT fk_inv_trans_approved_by
         FOREIGN KEY (approved_by_user_id)
-        REFERENCES core.si_users(user_id)
+        REFERENCES core.sd_users(user_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -333,19 +333,19 @@ CREATE TABLE inventory.si_inventory_transactions (
         CHECK (quantity > 0)
 );
 
--- Indexes for si_inventory_transactions
-CREATE INDEX idx_inv_trans_tenant ON inventory.si_inventory_transactions(tenant_id);
-CREATE INDEX idx_inv_trans_no ON inventory.si_inventory_transactions(transaction_no);
-CREATE INDEX idx_inv_trans_date ON inventory.si_inventory_transactions(transaction_date);
-CREATE INDEX idx_inv_trans_type ON inventory.si_inventory_transactions(transaction_type);
-CREATE INDEX idx_inv_trans_warehouse ON inventory.si_inventory_transactions(warehouse_id);
-CREATE INDEX idx_inv_trans_product ON inventory.si_inventory_transactions(product_id);
-CREATE INDEX idx_inv_trans_lot ON inventory.si_inventory_transactions(lot_id);
-CREATE INDEX idx_inv_trans_approval ON inventory.si_inventory_transactions(approval_status);
+-- Indexes for sd_inventory_transactions
+CREATE INDEX idx_inv_trans_tenant ON inventory.sd_inventory_transactions(tenant_id);
+CREATE INDEX idx_inv_trans_no ON inventory.sd_inventory_transactions(transaction_no);
+CREATE INDEX idx_inv_trans_date ON inventory.sd_inventory_transactions(transaction_date);
+CREATE INDEX idx_inv_trans_type ON inventory.sd_inventory_transactions(transaction_type);
+CREATE INDEX idx_inv_trans_warehouse ON inventory.sd_inventory_transactions(warehouse_id);
+CREATE INDEX idx_inv_trans_product ON inventory.sd_inventory_transactions(product_id);
+CREATE INDEX idx_inv_trans_lot ON inventory.sd_inventory_transactions(lot_id);
+CREATE INDEX idx_inv_trans_approval ON inventory.sd_inventory_transactions(approval_status);
 
--- Trigger for updating updated_at on si_inventory_transactions
+-- Trigger for updating updated_at on sd_inventory_transactions
 CREATE TRIGGER trg_inv_trans_updated_at
-    BEFORE UPDATE ON inventory.si_inventory_transactions
+    BEFORE UPDATE ON inventory.sd_inventory_transactions
     FOR EACH ROW
     EXECUTE FUNCTION core.update_updated_at_column();
 
@@ -354,18 +354,18 @@ CREATE TRIGGER trg_inv_trans_updated_at
 -- =============================================================================
 COMMENT ON SCHEMA inventory IS 'Inventory Management System schema';
 
-COMMENT ON TABLE inventory.si_warehouses IS 'Warehouse master data';
-COMMENT ON COLUMN inventory.si_warehouses.warehouse_type IS 'RAW_MATERIAL: 원자재, WORK_IN_PROCESS: 재공품, FINISHED_GOODS: 완제품, QUARANTINE: 검역, SCRAP: 폐기';
+COMMENT ON TABLE inventory.sd_warehouses IS 'Warehouse master data';
+COMMENT ON COLUMN inventory.sd_warehouses.warehouse_type IS 'RAW_MATERIAL: 원자재, WORK_IN_PROCESS: 재공품, FINISHED_GOODS: 완제품, QUARANTINE: 검역, SCRAP: 폐기';
 
-COMMENT ON TABLE inventory.si_lots IS 'LOT/Batch tracking for traceability';
-COMMENT ON COLUMN inventory.si_lots.quality_status IS 'PENDING: 검사대기, PASSED: 합격, FAILED: 불합격, QUARANTINE: 격리';
+COMMENT ON TABLE inventory.sd_lots IS 'LOT/Batch tracking for traceability';
+COMMENT ON COLUMN inventory.sd_lots.quality_status IS 'PENDING: 검사대기, PASSED: 합격, FAILED: 불합격, QUARANTINE: 격리';
 
-COMMENT ON TABLE inventory.si_inventory IS 'Current inventory status aggregated by Product, Warehouse, and LOT';
-COMMENT ON COLUMN inventory.si_inventory.available_quantity IS 'Available quantity for use';
-COMMENT ON COLUMN inventory.si_inventory.reserved_quantity IS 'Reserved quantity for work orders';
+COMMENT ON TABLE inventory.sd_inventory IS 'Current inventory status aggregated by Product, Warehouse, and LOT';
+COMMENT ON COLUMN inventory.sd_inventory.available_quantity IS 'Available quantity for use';
+COMMENT ON COLUMN inventory.sd_inventory.reserved_quantity IS 'Reserved quantity for work orders';
 
-COMMENT ON TABLE inventory.si_inventory_transactions IS 'All inventory movements history';
-COMMENT ON COLUMN inventory.si_inventory_transactions.transaction_type IS 'IN_RECEIVE: 입고, IN_PRODUCTION: 생산입고, IN_RETURN: 반품입고, OUT_ISSUE: 불출, OUT_SCRAP: 폐기, MOVE: 이동, ADJUST: 조정';
+COMMENT ON TABLE inventory.sd_inventory_transactions IS 'All inventory movements history';
+COMMENT ON COLUMN inventory.sd_inventory_transactions.transaction_type IS 'IN_RECEIVE: 입고, IN_PRODUCTION: 생산입고, IN_RETURN: 반품입고, OUT_ISSUE: 불출, OUT_SCRAP: 폐기, MOVE: 이동, ADJUST: 조정';
 
 -- =============================================================================
 -- Grant Permissions

@@ -37,7 +37,7 @@ const themes = [
     code: 'DEFAULT',
     name: { ko: '기본', en: 'Default', zh: '默认' },
     icon: <BusinessCenter />,
-    description: { ko: 'SoIce 기본 테마', en: 'SoIce default theme', zh: 'SoIce默认主题' },
+    description: { ko: 'SDS 기본 테마', en: 'SDS default theme', zh: 'SDS默认主题' },
   },
   {
     code: 'CHEMICAL',

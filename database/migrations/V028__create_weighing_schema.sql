@@ -6,12 +6,12 @@
 -- ====================================================================
 
 -- ====================================================================
--- Table: wms.si_weighings
+-- Table: wms.sd_weighings
 -- Description: Weighing records for incoming/outgoing/production materials
 --              Supports GMP compliance with dual verification
 -- ====================================================================
 
-CREATE TABLE wms.si_weighings (
+CREATE TABLE wms.sd_weighings (
     -- Primary Key
     weighing_id BIGSERIAL PRIMARY KEY,
 
@@ -84,60 +84,60 @@ CREATE TABLE wms.si_weighings (
 -- ====================================================================
 
 -- Multi-tenancy index
-CREATE INDEX idx_weighings_tenant ON wms.si_weighings(tenant_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_tenant ON wms.sd_weighings(tenant_id) WHERE deleted_at IS NULL;
 
 -- Date range queries
-CREATE INDEX idx_weighings_date ON wms.si_weighings(weighing_date DESC) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_date ON wms.sd_weighings(weighing_date DESC) WHERE deleted_at IS NULL;
 
 -- Reference lookup
-CREATE INDEX idx_weighings_reference ON wms.si_weighings(reference_type, reference_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_reference ON wms.sd_weighings(reference_type, reference_id) WHERE deleted_at IS NULL;
 
 -- Product lookup
-CREATE INDEX idx_weighings_product ON wms.si_weighings(product_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_product ON wms.sd_weighings(product_id) WHERE deleted_at IS NULL;
 
 -- Lot tracking
-CREATE INDEX idx_weighings_lot ON wms.si_weighings(lot_id) WHERE deleted_at IS NULL AND lot_id IS NOT NULL;
+CREATE INDEX idx_weighings_lot ON wms.sd_weighings(lot_id) WHERE deleted_at IS NULL AND lot_id IS NOT NULL;
 
 -- Verification workflow
-CREATE INDEX idx_weighings_verification ON wms.si_weighings(verification_status) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_verification ON wms.sd_weighings(verification_status) WHERE deleted_at IS NULL;
 
 -- Tolerance exception management
-CREATE INDEX idx_weighings_tolerance ON wms.si_weighings(tolerance_exceeded) WHERE deleted_at IS NULL AND tolerance_exceeded = true;
+CREATE INDEX idx_weighings_tolerance ON wms.sd_weighings(tolerance_exceeded) WHERE deleted_at IS NULL AND tolerance_exceeded = true;
 
 -- Personnel tracking
-CREATE INDEX idx_weighings_operator ON wms.si_weighings(operator_user_id) WHERE deleted_at IS NULL;
-CREATE INDEX idx_weighings_verifier ON wms.si_weighings(verifier_user_id) WHERE deleted_at IS NULL AND verifier_user_id IS NOT NULL;
+CREATE INDEX idx_weighings_operator ON wms.sd_weighings(operator_user_id) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_verifier ON wms.sd_weighings(verifier_user_id) WHERE deleted_at IS NULL AND verifier_user_id IS NOT NULL;
 
 -- Composite index for common queries
-CREATE INDEX idx_weighings_tenant_date_type ON wms.si_weighings(tenant_id, weighing_date DESC, weighing_type) WHERE deleted_at IS NULL;
+CREATE INDEX idx_weighings_tenant_date_type ON wms.sd_weighings(tenant_id, weighing_date DESC, weighing_type) WHERE deleted_at IS NULL;
 
 -- ====================================================================
 -- Comments
 -- ====================================================================
 
-COMMENT ON TABLE wms.si_weighings IS 'Weighing records for GMP compliance and material tracking';
-COMMENT ON COLUMN wms.si_weighings.weighing_no IS 'Auto-generated unique weighing number (WG-YYYYMMDD-0001)';
-COMMENT ON COLUMN wms.si_weighings.weighing_type IS 'Type of weighing: INCOMING, OUTGOING, PRODUCTION, SAMPLING';
-COMMENT ON COLUMN wms.si_weighings.reference_type IS 'Polymorphic reference to source document';
-COMMENT ON COLUMN wms.si_weighings.reference_id IS 'ID of source document';
-COMMENT ON COLUMN wms.si_weighings.tare_weight IS 'Weight of empty container (kg)';
-COMMENT ON COLUMN wms.si_weighings.gross_weight IS 'Total weight including container (kg)';
-COMMENT ON COLUMN wms.si_weighings.net_weight IS 'Net material weight (gross - tare)';
-COMMENT ON COLUMN wms.si_weighings.expected_weight IS 'Expected weight from source document';
-COMMENT ON COLUMN wms.si_weighings.variance IS 'Difference between net and expected weight';
-COMMENT ON COLUMN wms.si_weighings.variance_percentage IS 'Variance as percentage of expected weight';
-COMMENT ON COLUMN wms.si_weighings.operator_user_id IS 'User who performed weighing';
-COMMENT ON COLUMN wms.si_weighings.verifier_user_id IS 'User who verified weighing (GMP dual verification)';
-COMMENT ON COLUMN wms.si_weighings.verification_status IS 'Verification status: PENDING, VERIFIED, REJECTED';
-COMMENT ON COLUMN wms.si_weighings.tolerance_exceeded IS 'Flag indicating if variance exceeds tolerance';
-COMMENT ON COLUMN wms.si_weighings.tolerance_percentage IS 'Acceptable variance percentage (default 2%)';
+COMMENT ON TABLE wms.sd_weighings IS 'Weighing records for GMP compliance and material tracking';
+COMMENT ON COLUMN wms.sd_weighings.weighing_no IS 'Auto-generated unique weighing number (WG-YYYYMMDD-0001)';
+COMMENT ON COLUMN wms.sd_weighings.weighing_type IS 'Type of weighing: INCOMING, OUTGOING, PRODUCTION, SAMPLING';
+COMMENT ON COLUMN wms.sd_weighings.reference_type IS 'Polymorphic reference to source document';
+COMMENT ON COLUMN wms.sd_weighings.reference_id IS 'ID of source document';
+COMMENT ON COLUMN wms.sd_weighings.tare_weight IS 'Weight of empty container (kg)';
+COMMENT ON COLUMN wms.sd_weighings.gross_weight IS 'Total weight including container (kg)';
+COMMENT ON COLUMN wms.sd_weighings.net_weight IS 'Net material weight (gross - tare)';
+COMMENT ON COLUMN wms.sd_weighings.expected_weight IS 'Expected weight from source document';
+COMMENT ON COLUMN wms.sd_weighings.variance IS 'Difference between net and expected weight';
+COMMENT ON COLUMN wms.sd_weighings.variance_percentage IS 'Variance as percentage of expected weight';
+COMMENT ON COLUMN wms.sd_weighings.operator_user_id IS 'User who performed weighing';
+COMMENT ON COLUMN wms.sd_weighings.verifier_user_id IS 'User who verified weighing (GMP dual verification)';
+COMMENT ON COLUMN wms.sd_weighings.verification_status IS 'Verification status: PENDING, VERIFIED, REJECTED';
+COMMENT ON COLUMN wms.sd_weighings.tolerance_exceeded IS 'Flag indicating if variance exceeds tolerance';
+COMMENT ON COLUMN wms.sd_weighings.tolerance_percentage IS 'Acceptable variance percentage (default 2%)';
 
 -- ====================================================================
 -- Sample Data for Testing
 -- ====================================================================
 
 -- Insert sample weighing records for tenant1
-INSERT INTO wms.si_weighings (
+INSERT INTO wms.sd_weighings (
     tenant_id, weighing_no, weighing_date, weighing_type,
     reference_type, reference_id,
     product_id, lot_id,

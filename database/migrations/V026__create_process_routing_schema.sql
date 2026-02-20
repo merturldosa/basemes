@@ -5,8 +5,8 @@
 --              제품별 공정 순서 및 작업 표준을 정의하는 Process Routing 시스템
 --
 -- Tables:
---   - mes.si_process_routings: 공정 라우팅 마스터 테이블
---   - mes.si_process_routing_steps: 공정 라우팅 상세(단계) 테이블
+--   - mes.sd_process_routings: 공정 라우팅 마스터 테이블
+--   - mes.sd_process_routing_steps: 공정 라우팅 상세(단계) 테이블
 --
 -- Features:
 --   - Product별 공정 순서 정의
@@ -25,7 +25,7 @@
 -- 1. 공정 라우팅 마스터 테이블
 -- ============================================================================
 
-CREATE TABLE mes.si_process_routings (
+CREATE TABLE mes.sd_process_routings (
     -- Primary Key
     routing_id BIGSERIAL PRIMARY KEY,
 
@@ -59,11 +59,11 @@ CREATE TABLE mes.si_process_routings (
 
     -- Foreign Keys
     CONSTRAINT fk_routing_tenant
-        FOREIGN KEY (tenant_id) REFERENCES core.si_tenants(tenant_id)
+        FOREIGN KEY (tenant_id) REFERENCES core.sd_tenants(tenant_id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_routing_product
-        FOREIGN KEY (product_id) REFERENCES mes.si_products(product_id)
+        FOREIGN KEY (product_id) REFERENCES mes.sd_products(product_id)
         ON DELETE RESTRICT,
 
     -- Unique Constraints
@@ -79,32 +79,32 @@ CREATE TABLE mes.si_process_routings (
 );
 
 -- Indexes
-CREATE INDEX idx_routing_tenant ON mes.si_process_routings(tenant_id);
-CREATE INDEX idx_routing_product ON mes.si_process_routings(product_id);
-CREATE INDEX idx_routing_code ON mes.si_process_routings(routing_code);
-CREATE INDEX idx_routing_effective_date ON mes.si_process_routings(effective_date);
-CREATE INDEX idx_routing_active ON mes.si_process_routings(is_active);
-CREATE INDEX idx_routing_version ON mes.si_process_routings(version);
+CREATE INDEX idx_routing_tenant ON mes.sd_process_routings(tenant_id);
+CREATE INDEX idx_routing_product ON mes.sd_process_routings(product_id);
+CREATE INDEX idx_routing_code ON mes.sd_process_routings(routing_code);
+CREATE INDEX idx_routing_effective_date ON mes.sd_process_routings(effective_date);
+CREATE INDEX idx_routing_active ON mes.sd_process_routings(is_active);
+CREATE INDEX idx_routing_version ON mes.sd_process_routings(version);
 
 -- Comments
-COMMENT ON TABLE mes.si_process_routings IS '공정 라우팅 마스터 테이블';
-COMMENT ON COLUMN mes.si_process_routings.routing_id IS '라우팅 ID (PK)';
-COMMENT ON COLUMN mes.si_process_routings.tenant_id IS '테넌트 ID';
-COMMENT ON COLUMN mes.si_process_routings.product_id IS '제품 ID';
-COMMENT ON COLUMN mes.si_process_routings.routing_code IS '라우팅 코드';
-COMMENT ON COLUMN mes.si_process_routings.routing_name IS '라우팅 명칭';
-COMMENT ON COLUMN mes.si_process_routings.version IS '버전';
-COMMENT ON COLUMN mes.si_process_routings.effective_date IS '유효 시작일';
-COMMENT ON COLUMN mes.si_process_routings.expiry_date IS '유효 종료일';
-COMMENT ON COLUMN mes.si_process_routings.is_active IS '활성화 여부';
-COMMENT ON COLUMN mes.si_process_routings.total_standard_time IS '총 표준 시간 (분) - 자동 계산';
-COMMENT ON COLUMN mes.si_process_routings.remarks IS '비고';
+COMMENT ON TABLE mes.sd_process_routings IS '공정 라우팅 마스터 테이블';
+COMMENT ON COLUMN mes.sd_process_routings.routing_id IS '라우팅 ID (PK)';
+COMMENT ON COLUMN mes.sd_process_routings.tenant_id IS '테넌트 ID';
+COMMENT ON COLUMN mes.sd_process_routings.product_id IS '제품 ID';
+COMMENT ON COLUMN mes.sd_process_routings.routing_code IS '라우팅 코드';
+COMMENT ON COLUMN mes.sd_process_routings.routing_name IS '라우팅 명칭';
+COMMENT ON COLUMN mes.sd_process_routings.version IS '버전';
+COMMENT ON COLUMN mes.sd_process_routings.effective_date IS '유효 시작일';
+COMMENT ON COLUMN mes.sd_process_routings.expiry_date IS '유효 종료일';
+COMMENT ON COLUMN mes.sd_process_routings.is_active IS '활성화 여부';
+COMMENT ON COLUMN mes.sd_process_routings.total_standard_time IS '총 표준 시간 (분) - 자동 계산';
+COMMENT ON COLUMN mes.sd_process_routings.remarks IS '비고';
 
 -- ============================================================================
 -- 2. 공정 라우팅 상세(단계) 테이블
 -- ============================================================================
 
-CREATE TABLE mes.si_process_routing_steps (
+CREATE TABLE mes.sd_process_routing_steps (
     -- Primary Key
     routing_step_id BIGSERIAL PRIMARY KEY,
 
@@ -147,19 +147,19 @@ CREATE TABLE mes.si_process_routing_steps (
 
     -- Foreign Keys
     CONSTRAINT fk_step_routing
-        FOREIGN KEY (routing_id) REFERENCES mes.si_process_routings(routing_id)
+        FOREIGN KEY (routing_id) REFERENCES mes.sd_process_routings(routing_id)
         ON DELETE CASCADE,
 
     CONSTRAINT fk_step_process
-        FOREIGN KEY (process_id) REFERENCES mes.si_processes(process_id)
+        FOREIGN KEY (process_id) REFERENCES mes.sd_processes(process_id)
         ON DELETE RESTRICT,
 
     CONSTRAINT fk_step_equipment
-        FOREIGN KEY (equipment_id) REFERENCES equipment.si_equipments(equipment_id)
+        FOREIGN KEY (equipment_id) REFERENCES equipment.sd_equipments(equipment_id)
         ON DELETE SET NULL,
 
     CONSTRAINT fk_step_alternate_process
-        FOREIGN KEY (alternate_process_id) REFERENCES mes.si_processes(process_id)
+        FOREIGN KEY (alternate_process_id) REFERENCES mes.sd_processes(process_id)
         ON DELETE SET NULL,
 
     -- Unique Constraints
@@ -181,30 +181,30 @@ CREATE TABLE mes.si_process_routing_steps (
 );
 
 -- Indexes
-CREATE INDEX idx_step_routing ON mes.si_process_routing_steps(routing_id);
-CREATE INDEX idx_step_process ON mes.si_process_routing_steps(process_id);
-CREATE INDEX idx_step_equipment ON mes.si_process_routing_steps(equipment_id);
-CREATE INDEX idx_step_sequence ON mes.si_process_routing_steps(routing_id, sequence_order);
-CREATE INDEX idx_step_parallel ON mes.si_process_routing_steps(is_parallel, parallel_group);
+CREATE INDEX idx_step_routing ON mes.sd_process_routing_steps(routing_id);
+CREATE INDEX idx_step_process ON mes.sd_process_routing_steps(process_id);
+CREATE INDEX idx_step_equipment ON mes.sd_process_routing_steps(equipment_id);
+CREATE INDEX idx_step_sequence ON mes.sd_process_routing_steps(routing_id, sequence_order);
+CREATE INDEX idx_step_parallel ON mes.sd_process_routing_steps(is_parallel, parallel_group);
 
 -- Comments
-COMMENT ON TABLE mes.si_process_routing_steps IS '공정 라우팅 상세(단계) 테이블';
-COMMENT ON COLUMN mes.si_process_routing_steps.routing_step_id IS '라우팅 단계 ID (PK)';
-COMMENT ON COLUMN mes.si_process_routing_steps.routing_id IS '라우팅 ID (FK)';
-COMMENT ON COLUMN mes.si_process_routing_steps.sequence_order IS '공정 순서';
-COMMENT ON COLUMN mes.si_process_routing_steps.process_id IS '공정 ID (FK)';
-COMMENT ON COLUMN mes.si_process_routing_steps.standard_time IS '표준 작업 시간 (분)';
-COMMENT ON COLUMN mes.si_process_routing_steps.setup_time IS '준비 시간 (분)';
-COMMENT ON COLUMN mes.si_process_routing_steps.wait_time IS '대기 시간 (분)';
-COMMENT ON COLUMN mes.si_process_routing_steps.required_workers IS '필요 작업 인원';
-COMMENT ON COLUMN mes.si_process_routing_steps.equipment_id IS '필요 설비 ID (FK)';
-COMMENT ON COLUMN mes.si_process_routing_steps.is_parallel IS '병렬 공정 여부';
-COMMENT ON COLUMN mes.si_process_routing_steps.parallel_group IS '병렬 그룹 번호';
-COMMENT ON COLUMN mes.si_process_routing_steps.is_optional IS '선택 공정 여부';
-COMMENT ON COLUMN mes.si_process_routing_steps.alternate_process_id IS '대체 공정 ID (FK)';
-COMMENT ON COLUMN mes.si_process_routing_steps.quality_check_required IS '품질 검사 필요 여부';
-COMMENT ON COLUMN mes.si_process_routing_steps.quality_standard IS '품질 기준';
-COMMENT ON COLUMN mes.si_process_routing_steps.remarks IS '비고';
+COMMENT ON TABLE mes.sd_process_routing_steps IS '공정 라우팅 상세(단계) 테이블';
+COMMENT ON COLUMN mes.sd_process_routing_steps.routing_step_id IS '라우팅 단계 ID (PK)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.routing_id IS '라우팅 ID (FK)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.sequence_order IS '공정 순서';
+COMMENT ON COLUMN mes.sd_process_routing_steps.process_id IS '공정 ID (FK)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.standard_time IS '표준 작업 시간 (분)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.setup_time IS '준비 시간 (분)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.wait_time IS '대기 시간 (분)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.required_workers IS '필요 작업 인원';
+COMMENT ON COLUMN mes.sd_process_routing_steps.equipment_id IS '필요 설비 ID (FK)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.is_parallel IS '병렬 공정 여부';
+COMMENT ON COLUMN mes.sd_process_routing_steps.parallel_group IS '병렬 그룹 번호';
+COMMENT ON COLUMN mes.sd_process_routing_steps.is_optional IS '선택 공정 여부';
+COMMENT ON COLUMN mes.sd_process_routing_steps.alternate_process_id IS '대체 공정 ID (FK)';
+COMMENT ON COLUMN mes.sd_process_routing_steps.quality_check_required IS '품질 검사 필요 여부';
+COMMENT ON COLUMN mes.sd_process_routing_steps.quality_standard IS '품질 기준';
+COMMENT ON COLUMN mes.sd_process_routing_steps.remarks IS '비고';
 
 -- ============================================================================
 -- 3. 트리거 함수 및 트리거
@@ -221,13 +221,13 @@ $$ LANGUAGE plpgsql;
 
 -- 3.2 라우팅 마스터 updated_at 트리거
 CREATE TRIGGER trigger_routing_updated_at
-    BEFORE UPDATE ON mes.si_process_routings
+    BEFORE UPDATE ON mes.sd_process_routings
     FOR EACH ROW
     EXECUTE FUNCTION mes.update_routing_updated_at();
 
 -- 3.3 라우팅 단계 updated_at 트리거
 CREATE TRIGGER trigger_routing_step_updated_at
-    BEFORE UPDATE ON mes.si_process_routing_steps
+    BEFORE UPDATE ON mes.sd_process_routing_steps
     FOR EACH ROW
     EXECUTE FUNCTION mes.update_routing_updated_at();
 
@@ -252,7 +252,7 @@ BEGIN
             END as group_id,
             is_parallel,
             MAX(standard_time + COALESCE(setup_time, 0) + COALESCE(wait_time, 0)) as group_time
-        FROM mes.si_process_routing_steps
+        FROM mes.sd_process_routing_steps
         WHERE routing_id = v_routing_id
         GROUP BY
             CASE
@@ -266,7 +266,7 @@ BEGIN
     FROM step_times;
 
     -- 마스터 테이블 업데이트
-    UPDATE mes.si_process_routings
+    UPDATE mes.sd_process_routings
     SET total_standard_time = v_total_time
     WHERE routing_id = v_routing_id;
 
@@ -276,7 +276,7 @@ $$ LANGUAGE plpgsql;
 
 -- 3.5 총 표준 시간 계산 트리거
 CREATE TRIGGER trigger_calc_total_time
-    AFTER INSERT OR UPDATE OR DELETE ON mes.si_process_routing_steps
+    AFTER INSERT OR UPDATE OR DELETE ON mes.sd_process_routing_steps
     FOR EACH ROW
     EXECUTE FUNCTION mes.update_routing_total_time();
 
@@ -285,15 +285,15 @@ CREATE TRIGGER trigger_calc_total_time
 -- ============================================================================
 
 -- 테이블 권한
-GRANT SELECT, INSERT, UPDATE, DELETE ON mes.si_process_routings TO mes_admin;
-GRANT SELECT, INSERT, UPDATE, DELETE ON mes.si_process_routing_steps TO mes_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON mes.sd_process_routings TO mes_admin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON mes.sd_process_routing_steps TO mes_admin;
 
-GRANT SELECT ON mes.si_process_routings TO mes_user;
-GRANT SELECT ON mes.si_process_routing_steps TO mes_user;
+GRANT SELECT ON mes.sd_process_routings TO mes_user;
+GRANT SELECT ON mes.sd_process_routing_steps TO mes_user;
 
 -- 시퀀스 권한
-GRANT USAGE, SELECT ON SEQUENCE mes.si_process_routings_routing_id_seq TO mes_admin;
-GRANT USAGE, SELECT ON SEQUENCE mes.si_process_routing_steps_routing_step_id_seq TO mes_admin;
+GRANT USAGE, SELECT ON SEQUENCE mes.sd_process_routings_routing_id_seq TO mes_admin;
+GRANT USAGE, SELECT ON SEQUENCE mes.sd_process_routing_steps_routing_step_id_seq TO mes_admin;
 
 -- ============================================================================
 -- 5. 초기 데이터 (선택사항)

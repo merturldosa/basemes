@@ -5,22 +5,22 @@ import lombok.*;
 
 /**
  * Permission Entity - 권한
- * Maps to: common.SI_Permissions
+ * Maps to: common.SD_Permissions
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_permissions",
+    name = "sd_permissions",
     schema = "common",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_permissions_code",
+            name = "uk_sd_permissions_code",
             columnNames = {"permission_code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_permissions_module", columnList = "module")
+        @Index(name = "idx_sd_permissions_module", columnList = "module")
     }
 )
 @Getter

@@ -34,7 +34,7 @@ describe('LoginPage', () => {
   it('should render login form', () => {
     renderWithProviders(<LoginPage />);
 
-    expect(screen.getByText('SoIce MES')).toBeInTheDocument();
+    expect(screen.getByText('SDS MES')).toBeInTheDocument();
     expect(screen.getByText('Manufacturing Execution System')).toBeInTheDocument();
     expect(screen.getByLabelText(/테넌트 ID/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/사용자명/i)).toBeInTheDocument();

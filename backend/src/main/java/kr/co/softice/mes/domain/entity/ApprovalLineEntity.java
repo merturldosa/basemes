@@ -16,7 +16,7 @@ import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 @Entity
 @Table(
     schema = "core",
-    name = "si_approval_lines",
+    name = "sd_approval_lines",
     indexes = {
         @Index(name = "idx_approval_line_tenant", columnList = "tenant_id"),
         @Index(name = "idx_approval_line_document_type", columnList = "document_type"),

@@ -8,7 +8,7 @@
 -- 1. Products (제품 마스터)
 -- ============================================================================
 
-INSERT INTO mes.si_products (tenant_id, product_code, product_name, product_type, specification, unit, standard_cycle_time, description, created_by, updated_by) VALUES
+INSERT INTO mes.sd_products (tenant_id, product_code, product_name, product_type, specification, unit, standard_cycle_time, description, created_by, updated_by) VALUES
 ('softice', 'PROD-001', 'LCD 패널 A형', '완제품', '10.1인치 1920x1080 IPS', 'EA', 300, '10.1인치 LCD 패널', 'admin', 'admin'),
 ('softice', 'PROD-002', 'LCD 패널 B형', '완제품', '15.6인치 1920x1080 IPS', 'EA', 420, '15.6인치 LCD 패널', 'admin', 'admin'),
 ('softice', 'PROD-003', 'PCB 메인보드 A', '반제품', '4층 PCB 150x100mm', 'EA', 180, 'LCD 제어용 PCB', 'admin', 'admin'),
@@ -24,7 +24,7 @@ INSERT INTO mes.si_products (tenant_id, product_code, product_name, product_type
 -- 2. Processes (공정 마스터)
 -- ============================================================================
 
-INSERT INTO mes.si_processes (tenant_id, process_code, process_name, process_type, sequence_order, description, created_by, updated_by) VALUES
+INSERT INTO mes.sd_processes (tenant_id, process_code, process_name, process_type, sequence_order, description, created_by, updated_by) VALUES
 ('softice', 'PROC-001', 'PCB 제작', '제조', 1, 'PCB 기판 제작 공정', 'admin', 'admin'),
 ('softice', 'PROC-002', 'SMT 실장', '조립', 2, 'Surface Mount Technology - 부품 실장', 'admin', 'admin'),
 ('softice', 'PROC-003', 'DIP 실장', '조립', 3, 'Dual In-line Package - 부품 실장', 'admin', 'admin'),
@@ -40,7 +40,7 @@ INSERT INTO mes.si_processes (tenant_id, process_code, process_name, process_typ
 -- 3. Work Orders (작업 지시)
 -- ============================================================================
 
-INSERT INTO mes.si_work_orders (
+INSERT INTO mes.sd_work_orders (
     tenant_id, work_order_no, product_id, process_id,
     planned_quantity, planned_start_date, planned_end_date,
     status, priority, assigned_user_id,
@@ -64,7 +64,7 @@ INSERT INTO mes.si_work_orders (
 ('softice', 'WO-2026-009', 2, 5, 100.000, '2026-01-18 09:00:00', '2026-01-18 18:00:00', 'COMPLETED', 2, 1, 'admin', 'admin');
 
 -- 완료된 작업지시의 실적 업데이트
-UPDATE mes.si_work_orders
+UPDATE mes.sd_work_orders
 SET
     actual_quantity = 150.000,
     good_quantity = 145.000,
@@ -73,7 +73,7 @@ SET
     actual_end_date = '2026-01-18 16:45:00'
 WHERE work_order_no = 'WO-2026-008';
 
-UPDATE mes.si_work_orders
+UPDATE mes.sd_work_orders
 SET
     actual_quantity = 100.000,
     good_quantity = 98.000,
@@ -83,7 +83,7 @@ SET
 WHERE work_order_no = 'WO-2026-009';
 
 -- 진행 중인 작업지시의 부분 실적
-UPDATE mes.si_work_orders
+UPDATE mes.sd_work_orders
 SET
     actual_quantity = 45.000,
     good_quantity = 44.000,
@@ -91,7 +91,7 @@ SET
     actual_start_date = '2026-01-19 08:20:00'
 WHERE work_order_no = 'WO-2026-001';
 
-UPDATE mes.si_work_orders
+UPDATE mes.sd_work_orders
 SET
     actual_quantity = 20.000,
     good_quantity = 20.000,
@@ -103,7 +103,7 @@ WHERE work_order_no = 'WO-2026-002';
 -- 4. Work Results (작업 실적)
 -- ============================================================================
 
-INSERT INTO mes.si_work_results (
+INSERT INTO mes.sd_work_results (
     work_order_id, tenant_id, result_date,
     quantity, good_quantity, defect_quantity,
     work_start_time, work_end_time, work_duration,

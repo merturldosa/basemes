@@ -163,8 +163,8 @@ const getAllMenuItems = (tenantId: string | undefined, t: (key: string) => strin
     { text: t('navigation.menu.auditLogs'), icon: <History />, path: '/audit-logs', divider: false },
   ];
 
-  // 테마 설정은 개발회사(softice)에서만 접근 가능
-  if (tenantId === 'softice') {
+  // 테마 설정은 개발회사(smartdocking)에서만 접근 가능
+  if (tenantId === 'smartdocking') {
     baseMenuItems.push({ text: t('navigation.menu.themes'), icon: <Palette />, path: '/themes', divider: false });
   }
 

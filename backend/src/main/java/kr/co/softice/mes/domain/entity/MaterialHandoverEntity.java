@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "si_material_handovers",
+    name = "sd_material_handovers",
     schema = "wms",
     uniqueConstraints = {
         @UniqueConstraint(

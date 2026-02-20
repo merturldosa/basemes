@@ -5,24 +5,24 @@ import lombok.*;
 
 /**
  * Product Entity - 제품 마스터
- * Maps to: mes.SI_Products
+ * Maps to: mes.SD_Products
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_products",
+    name = "sd_products",
     schema = "mes",
     uniqueConstraints = {
         @UniqueConstraint(
-            name = "uk_si_products_tenant_code",
+            name = "uk_sd_products_tenant_code",
             columnNames = {"tenant_id", "product_code"}
         )
     },
     indexes = {
-        @Index(name = "idx_si_products_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_si_products_code", columnList = "product_code"),
-        @Index(name = "idx_si_products_name", columnList = "product_name")
+        @Index(name = "idx_sd_products_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_products_code", columnList = "product_code"),
+        @Index(name = "idx_sd_products_name", columnList = "product_name")
     }
 )
 @Getter
@@ -38,7 +38,7 @@ public class ProductEntity extends BaseEntity {
     private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_si_products_tenant"))
+    @JoinColumn(name = "tenant_id", nullable = false, foreignKey = @ForeignKey(name = "fk_sd_products_tenant"))
     private TenantEntity tenant;
 
     @Column(name = "product_code", nullable = false, length = 50)

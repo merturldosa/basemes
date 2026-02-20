@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "equipment", name = "si_downtimes",
+@Table(schema = "equipment", name = "sd_downtimes",
         indexes = {
                 @Index(name = "idx_downtime_tenant", columnList = "tenant_id"),
                 @Index(name = "idx_downtime_equipment", columnList = "equipment_id"),

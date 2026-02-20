@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "equipment", name = "si_equipment_inspections",
+@Table(schema = "equipment", name = "sd_equipment_inspections",
     uniqueConstraints = {
         @UniqueConstraint(name = "uk_inspection_no", columnNames = {"tenant_id", "inspection_no"})
     },

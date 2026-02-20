@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(name = "si_notifications", schema = "common")
+@Table(name = "sd_notifications", schema = "common")
 @Getter
 @Setter
 @Builder

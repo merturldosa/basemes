@@ -1,7 +1,7 @@
 {
-  "name": "SoIce MES - Manufacturing Execution System",
-  "short_name": "SoIce MES",
-  "description": "소프트아이스 제조실행시스템 - 생산관리, 품질관리, 재고관리를 하나의 플랫폼에서",
+  "name": "SDS MES - Manufacturing Execution System",
+  "short_name": "SDS MES",
+  "description": "스마트도킹스테이션 제조실행시스템 - 생산관리, 품질관리, 재고관리를 하나의 플랫폼에서",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

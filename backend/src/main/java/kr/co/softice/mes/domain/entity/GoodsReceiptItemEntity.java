@@ -13,7 +13,7 @@ import java.time.LocalDate;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "wms", name = "si_goods_receipt_items",
+@Table(schema = "wms", name = "sd_goods_receipt_items",
         indexes = {
                 @Index(name = "idx_goods_receipt_item_header", columnList = "goods_receipt_id"),
                 @Index(name = "idx_goods_receipt_item_product", columnList = "product_id"),

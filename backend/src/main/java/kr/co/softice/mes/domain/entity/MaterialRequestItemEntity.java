@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(
-    name = "si_material_request_items",
+    name = "sd_material_request_items",
     schema = "wms",
     indexes = {
         @Index(name = "idx_material_request_item_header", columnList = "material_request_id"),

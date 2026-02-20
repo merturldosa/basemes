@@ -15,7 +15,7 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "wms", name = "si_goods_receipts",
+@Table(schema = "wms", name = "sd_goods_receipts",
         indexes = {
                 @Index(name = "idx_goods_receipt_tenant", columnList = "tenant_id"),
                 @Index(name = "idx_goods_receipt_date", columnList = "receipt_date"),

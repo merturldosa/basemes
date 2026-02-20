@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(
-    name = "si_return_items",
+    name = "sd_return_items",
     schema = "wms",
     indexes = {
         @Index(name = "idx_return_item_return", columnList = "return_id"),

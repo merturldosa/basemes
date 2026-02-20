@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 
 /**
  * Warehouse Entity - 창고 마스터
- * Maps to: inventory.si_warehouses
+ * Maps to: inventory.sd_warehouses
  *
  * @author Moon Myung-seop
  */
 @Entity
 @Table(
-    name = "si_warehouses",
+    name = "sd_warehouses",
     schema = "inventory",
     uniqueConstraints = {
         @UniqueConstraint(

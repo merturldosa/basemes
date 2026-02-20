@@ -6,9 +6,9 @@
 -- ============================================================
 
 -- ============================================================
--- Alter existing si_employees table to add HR fields
+-- Alter existing sd_employees table to add HR fields
 -- ============================================================
-ALTER TABLE core.si_employees
+ALTER TABLE core.sd_employees
 ADD COLUMN IF NOT EXISTS position VARCHAR(30),
 ADD COLUMN IF NOT EXISTS blood_type VARCHAR(5),
 ADD COLUMN IF NOT EXISTS education_level VARCHAR(30),
@@ -20,17 +20,17 @@ ADD COLUMN IF NOT EXISTS is_active BOOLEAN DEFAULT TRUE;
 
 -- Update employment_status column name if needed (already exists as employment_status)
 -- Add comments
-COMMENT ON COLUMN core.si_employees.position IS '직책/직위 (OPERATOR, TECHNICIAN, SUPERVISOR, ENGINEER, MANAGER, FOREMAN)';
-COMMENT ON COLUMN core.si_employees.employment_status IS '재직상태 (ACTIVE, ON_LEAVE, RESIGNED, RETIRED, SUSPENDED)';
+COMMENT ON COLUMN core.sd_employees.position IS '직책/직위 (OPERATOR, TECHNICIAN, SUPERVISOR, ENGINEER, MANAGER, FOREMAN)';
+COMMENT ON COLUMN core.sd_employees.employment_status IS '재직상태 (ACTIVE, ON_LEAVE, RESIGNED, RETIRED, SUSPENDED)';
 
 -- Create index on position if not exists
-CREATE INDEX IF NOT EXISTS idx_employee_position ON core.si_employees(position);
+CREATE INDEX IF NOT EXISTS idx_employee_position ON core.sd_employees(position);
 
 -- ============================================================
--- Table: si_skill_matrix (스킬 매트릭스 마스터)
+-- Table: sd_skill_matrix (스킬 매트릭스 마스터)
 -- Description: 스킬 종류 및 정의
 -- ============================================================
-CREATE TABLE IF NOT EXISTS core.si_skill_matrix (
+CREATE TABLE IF NOT EXISTS core.sd_skill_matrix (
     skill_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     skill_code VARCHAR(50) NOT NULL,
@@ -48,22 +48,22 @@ CREATE TABLE IF NOT EXISTS core.si_skill_matrix (
 
     -- Foreign Keys
     CONSTRAINT fk_skill_matrix_tenant FOREIGN KEY (tenant_id)
-        REFERENCES public.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES public.sd_tenants(tenant_id) ON DELETE CASCADE,
 
     -- Unique Constraints
     CONSTRAINT uk_skill_matrix_code UNIQUE (tenant_id, skill_code)
 );
 
--- Indexes for si_skill_matrix
-CREATE INDEX IF NOT EXISTS idx_skill_matrix_tenant ON core.si_skill_matrix(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_skill_matrix_category ON core.si_skill_matrix(skill_category);
-CREATE INDEX IF NOT EXISTS idx_skill_matrix_active ON core.si_skill_matrix(is_active);
+-- Indexes for sd_skill_matrix
+CREATE INDEX IF NOT EXISTS idx_skill_matrix_tenant ON core.sd_skill_matrix(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_skill_matrix_category ON core.sd_skill_matrix(skill_category);
+CREATE INDEX IF NOT EXISTS idx_skill_matrix_active ON core.sd_skill_matrix(is_active);
 
 -- ============================================================
--- Table: si_employee_skills (사원 스킬/자격)
+-- Table: sd_employee_skills (사원 스킬/자격)
 -- Description: 사원별 보유 스킬 및 자격 정보
 -- ============================================================
-CREATE TABLE IF NOT EXISTS core.si_employee_skills (
+CREATE TABLE IF NOT EXISTS core.sd_employee_skills (
     employee_skill_id BIGSERIAL PRIMARY KEY,
     tenant_id VARCHAR(50) NOT NULL,
     employee_id BIGINT NOT NULL,
@@ -96,39 +96,39 @@ CREATE TABLE IF NOT EXISTS core.si_employee_skills (
 
     -- Foreign Keys
     CONSTRAINT fk_employee_skill_tenant FOREIGN KEY (tenant_id)
-        REFERENCES public.si_tenants(tenant_id) ON DELETE CASCADE,
+        REFERENCES public.sd_tenants(tenant_id) ON DELETE CASCADE,
     CONSTRAINT fk_employee_skill_employee FOREIGN KEY (employee_id)
-        REFERENCES core.si_employees(employee_id) ON DELETE CASCADE,
+        REFERENCES core.sd_employees(employee_id) ON DELETE CASCADE,
     CONSTRAINT fk_employee_skill_skill FOREIGN KEY (skill_id)
-        REFERENCES core.si_skill_matrix(skill_id) ON DELETE CASCADE,
+        REFERENCES core.sd_skill_matrix(skill_id) ON DELETE CASCADE,
 
     -- Unique Constraints
     CONSTRAINT uk_employee_skill UNIQUE (tenant_id, employee_id, skill_id)
 );
 
--- Indexes for si_employee_skills
-CREATE INDEX IF NOT EXISTS idx_employee_skill_tenant ON core.si_employee_skills(tenant_id);
-CREATE INDEX IF NOT EXISTS idx_employee_skill_employee ON core.si_employee_skills(employee_id);
-CREATE INDEX IF NOT EXISTS idx_employee_skill_skill ON core.si_employee_skills(skill_id);
-CREATE INDEX IF NOT EXISTS idx_employee_skill_level ON core.si_employee_skills(skill_level);
-CREATE INDEX IF NOT EXISTS idx_employee_skill_expiry ON core.si_employee_skills(expiry_date);
-CREATE INDEX IF NOT EXISTS idx_employee_skill_active ON core.si_employee_skills(is_active);
+-- Indexes for sd_employee_skills
+CREATE INDEX IF NOT EXISTS idx_employee_skill_tenant ON core.sd_employee_skills(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_employee_skill_employee ON core.sd_employee_skills(employee_id);
+CREATE INDEX IF NOT EXISTS idx_employee_skill_skill ON core.sd_employee_skills(skill_id);
+CREATE INDEX IF NOT EXISTS idx_employee_skill_level ON core.sd_employee_skills(skill_level);
+CREATE INDEX IF NOT EXISTS idx_employee_skill_expiry ON core.sd_employee_skills(expiry_date);
+CREATE INDEX IF NOT EXISTS idx_employee_skill_active ON core.sd_employee_skills(is_active);
 
 -- ============================================================
 -- Triggers for updated_at
 -- ============================================================
 
--- Trigger for si_skill_matrix
-DROP TRIGGER IF EXISTS trigger_skill_matrix_updated_at ON core.si_skill_matrix;
+-- Trigger for sd_skill_matrix
+DROP TRIGGER IF EXISTS trigger_skill_matrix_updated_at ON core.sd_skill_matrix;
 CREATE TRIGGER trigger_skill_matrix_updated_at
-    BEFORE UPDATE ON core.si_skill_matrix
+    BEFORE UPDATE ON core.sd_skill_matrix
     FOR EACH ROW
     EXECUTE FUNCTION public.update_updated_at_column();
 
--- Trigger for si_employee_skills
-DROP TRIGGER IF EXISTS trigger_employee_skill_updated_at ON core.si_employee_skills;
+-- Trigger for sd_employee_skills
+DROP TRIGGER IF EXISTS trigger_employee_skill_updated_at ON core.sd_employee_skills;
 CREATE TRIGGER trigger_employee_skill_updated_at
-    BEFORE UPDATE ON core.si_employee_skills
+    BEFORE UPDATE ON core.sd_employee_skills
     FOR EACH ROW
     EXECUTE FUNCTION public.update_updated_at_column();
 
@@ -136,19 +136,19 @@ CREATE TRIGGER trigger_employee_skill_updated_at
 -- Comments
 -- ============================================================
 
-COMMENT ON TABLE core.si_skill_matrix IS '스킬 매트릭스 마스터 - 스킬 종류 및 정의';
-COMMENT ON TABLE core.si_employee_skills IS '사원 스킬/자격 - 사원별 보유 스킬 정보';
+COMMENT ON TABLE core.sd_skill_matrix IS '스킬 매트릭스 마스터 - 스킬 종류 및 정의';
+COMMENT ON TABLE core.sd_employee_skills IS '사원 스킬/자격 - 사원별 보유 스킬 정보';
 
-COMMENT ON COLUMN core.si_employee_skills.skill_level IS '스킬 레벨 (BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, MASTER)';
-COMMENT ON COLUMN core.si_employee_skills.skill_level_numeric IS '스킬 레벨 숫자 (1~5)';
-COMMENT ON COLUMN core.si_employee_skills.expiry_date IS '자격 만료일 (정기 갱신 필요시)';
+COMMENT ON COLUMN core.sd_employee_skills.skill_level IS '스킬 레벨 (BEGINNER, INTERMEDIATE, ADVANCED, EXPERT, MASTER)';
+COMMENT ON COLUMN core.sd_employee_skills.skill_level_numeric IS '스킬 레벨 숫자 (1~5)';
+COMMENT ON COLUMN core.sd_employee_skills.expiry_date IS '자격 만료일 (정기 갱신 필요시)';
 
 -- ============================================================
 -- Sample Data (Optional - for testing)
 -- ============================================================
 
 -- Insert sample skill categories for DEMO001 tenant
-INSERT INTO core.si_skill_matrix (tenant_id, skill_code, skill_name, skill_category, description, certification_required, is_active)
+INSERT INTO core.sd_skill_matrix (tenant_id, skill_code, skill_name, skill_category, description, certification_required, is_active)
 VALUES
 ('DEMO001', 'WELDING', '용접', 'TECHNICAL', '각종 용접 작업 능력', true, TRUE),
 ('DEMO001', 'FORKLIFT', '지게차 운전', 'OPERATIONAL', '지게차 운전 자격', true, TRUE),
