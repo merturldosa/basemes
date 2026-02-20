@@ -160,6 +160,10 @@
       "roles": "Role Management",
       "permissions": "Permission Management",
       "auditLogs": "Audit Logs",
+      "commonCodes": "Common Codes",
+      "holidays": "Holiday Management",
+      "approvals": "Approval Management",
+      "alarms": "Alarm Management",
       "themes": "Theme Settings",
       "profile": "Profile"
     }

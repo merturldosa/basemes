@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +69,61 @@ public class LotService {
     public void deleteLot(Long lotId) {
         log.info("Deleting lot: {}", lotId);
         lotRepository.deleteById(lotId);
+    }
+
+    @Transactional
+    public LotEntity splitLot(Long parentLotId, BigDecimal splitQuantity, String remarks) {
+        LotEntity parentLot = lotRepository.findByIdWithAllRelations(parentLotId)
+            .orElseThrow(() -> new IllegalArgumentException("Lot not found: " + parentLotId));
+
+        // Validate split quantity
+        if (splitQuantity.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Split quantity must be positive");
+        }
+        if (splitQuantity.compareTo(parentLot.getCurrentQuantity()) >= 0) {
+            throw new IllegalArgumentException("Split quantity must be less than current quantity");
+        }
+
+        // Generate child LOT number (lotNo-S01, lotNo-S02, ...)
+        String baseLotNo = parentLot.getLotNo();
+        int splitIndex = 1;
+        String childLotNo;
+        do {
+            childLotNo = baseLotNo + "-S" + String.format("%02d", splitIndex);
+            splitIndex++;
+        } while (lotRepository.findByTenant_TenantIdAndLotNo(
+                parentLot.getTenant().getTenantId(), childLotNo).isPresent());
+
+        // Reduce parent LOT quantity
+        BigDecimal newParentQty = parentLot.getCurrentQuantity().subtract(splitQuantity);
+        parentLot.setCurrentQuantity(newParentQty);
+        lotRepository.save(parentLot);
+
+        log.info("Split LOT {}: parent qty {} -> {}, child LOT {} qty {}",
+            parentLot.getLotNo(), parentLot.getCurrentQuantity().add(splitQuantity),
+            newParentQty, childLotNo, splitQuantity);
+
+        // Create child LOT
+        LotEntity childLot = LotEntity.builder()
+            .tenant(parentLot.getTenant())
+            .product(parentLot.getProduct())
+            .lotNo(childLotNo)
+            .batchNo(parentLot.getBatchNo())
+            .manufacturingDate(parentLot.getManufacturingDate())
+            .expiryDate(parentLot.getExpiryDate())
+            .initialQuantity(splitQuantity)
+            .currentQuantity(splitQuantity)
+            .reservedQuantity(BigDecimal.ZERO)
+            .unit(parentLot.getUnit())
+            .supplierName(parentLot.getSupplierName())
+            .supplierLotNo(parentLot.getSupplierLotNo())
+            .qualityStatus(parentLot.getQualityStatus())
+            .workOrder(parentLot.getWorkOrder())
+            .remarks(remarks != null ? remarks : "Split from " + parentLot.getLotNo())
+            .build();
+
+        LotEntity savedChild = lotRepository.save(childLot);
+        return lotRepository.findByIdWithAllRelations(savedChild.getLotId()).orElse(savedChild);
     }
 
     @Transactional

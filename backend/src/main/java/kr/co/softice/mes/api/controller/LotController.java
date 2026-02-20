@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import kr.co.softice.mes.common.dto.ApiResponse;
 import kr.co.softice.mes.common.dto.inventory.LotCreateRequest;
 import kr.co.softice.mes.common.dto.inventory.LotResponse;
+import kr.co.softice.mes.common.dto.inventory.LotSplitRequest;
 import kr.co.softice.mes.common.dto.inventory.LotUpdateRequest;
 import kr.co.softice.mes.domain.entity.LotEntity;
 import kr.co.softice.mes.domain.entity.ProductEntity;
@@ -150,6 +151,16 @@ public class LotController {
     public ResponseEntity<Void> deleteLot(@PathVariable Long lotId) {
         lotService.deleteLot(lotId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{lotId}/split")
+    @PreAuthorize("hasAnyRole('ADMIN', 'INVENTORY_MANAGER')")
+    public ResponseEntity<LotResponse> splitLot(
+        @PathVariable Long lotId,
+        @Valid @RequestBody LotSplitRequest request) {
+        log.info("Splitting lot ID: {} with quantity: {}", lotId, request.getSplitQuantity());
+        LotEntity childLot = lotService.splitLot(lotId, request.getSplitQuantity(), request.getRemarks());
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(childLot));
     }
 
     @PostMapping("/{lotId}/quality-status")

@@ -122,6 +122,14 @@ import EmployeeSkillsPage from './pages/hr/EmployeeSkillsPage';
 import AnalyticsDashboardPage from './pages/analytics/AnalyticsDashboardPage';
 import StatisticalReportsPage from './pages/analytics/StatisticalReportsPage';
 
+// Admin Pages
+import CommonCodesPage from './pages/admin/CommonCodesPage';
+
+// Common Management Extension Pages
+import HolidaysPage from './pages/common/HolidaysPage';
+import ApprovalPage from './pages/common/ApprovalPage';
+import AlarmPage from './pages/common/AlarmPage';
+
 // Protected Route Component
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -213,6 +221,10 @@ function App() {
             <Route path="common/sites" element={<SitesPage />} />
             <Route path="common/departments" element={<DepartmentsPage />} />
             <Route path="common/employees" element={<EmployeesPage />} />
+            <Route path="common/common-codes" element={<CommonCodesPage />} />
+            <Route path="common/holidays" element={<HolidaysPage />} />
+            <Route path="common/approvals" element={<ApprovalPage />} />
+            <Route path="common/alarms" element={<AlarmPage />} />
 
             {/* Warehouse Operations Routes */}
             <Route path="warehouse/receiving" element={<ReceivingPage />} />
