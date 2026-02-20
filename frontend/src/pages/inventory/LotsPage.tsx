@@ -55,7 +55,6 @@ const LotsPage: React.FC = () => {
       const data = await lotService.getAll();
       setLots(data || []);
     } catch (error) {
-      console.error('Failed to load lots:', error);
       setSnackbar({ open: true, message: 'LOT 목록 조회 실패', severity: 'error' });
       setLots([]);
     } finally {
@@ -68,7 +67,6 @@ const LotsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -78,7 +76,6 @@ const LotsPage: React.FC = () => {
       const data = await workOrderService.getWorkOrders();
       setWorkOrders(data || []);
     } catch (error) {
-      console.error('Failed to load work orders:', error);
       setWorkOrders([]);
     }
   };
@@ -139,7 +136,6 @@ const LotsPage: React.FC = () => {
       handleCloseDialog();
       loadLots();
     } catch (error) {
-      console.error('Failed to save lot:', error);
       setSnackbar({ open: true, message: 'LOT 저장 실패', severity: 'error' });
     }
   };
@@ -154,7 +150,6 @@ const LotsPage: React.FC = () => {
       setSelectedLot(null);
       loadLots();
     } catch (error) {
-      console.error('Failed to delete lot:', error);
       setSnackbar({ open: true, message: 'LOT 삭제 실패', severity: 'error' });
     }
   };

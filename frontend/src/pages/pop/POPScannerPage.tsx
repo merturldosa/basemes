@@ -67,8 +67,6 @@ const POPScannerPage: React.FC = () => {
   const currentScanType = scanTypes[activeTab];
 
   const handleScan = async (result: BarcodeScanResult) => {
-    console.log('Scanned:', result);
-
     const scanId = `${Date.now()}-${Math.random()}`;
     const apiType = scanTypeToApiType[currentScanType.value] || 'PRODUCT';
 

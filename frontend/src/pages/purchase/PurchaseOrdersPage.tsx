@@ -97,7 +97,6 @@ const PurchaseOrdersPage: React.FC = () => {
       const data = await purchaseOrderService.getAll();
       setPurchaseOrders(data || []);
     } catch (error) {
-      console.error('Failed to load purchase orders:', error);
       setPurchaseOrders([]);
       setSnackbar({ open: true, message: '구매 주문 목록 조회 실패', severity: 'error' });
     } finally {
@@ -110,7 +109,6 @@ const PurchaseOrdersPage: React.FC = () => {
       const data = await supplierService.getActive();
       setSuppliers(data || []);
     } catch (error) {
-      console.error('Failed to load suppliers:', error);
       setSuppliers([]);
     }
   }, []);
@@ -120,7 +118,6 @@ const PurchaseOrdersPage: React.FC = () => {
       const data = await materialService.getActive();
       setMaterials(data || []);
     } catch (error) {
-      console.error('Failed to load materials:', error);
       setMaterials([]);
     }
   }, []);
@@ -316,7 +313,6 @@ const PurchaseOrdersPage: React.FC = () => {
       handleCloseDialog();
       loadPurchaseOrders();
     } catch (error) {
-      console.error('Failed to save purchase order:', error);
       setSnackbar({ open: true, message: '구매 주문 저장 실패', severity: 'error' });
     }
   };
@@ -329,7 +325,6 @@ const PurchaseOrdersPage: React.FC = () => {
       handleCloseDeleteDialog();
       loadPurchaseOrders();
     } catch (error) {
-      console.error('Failed to delete purchase order:', error);
       setSnackbar({ open: true, message: '구매 주문 삭제 실패', severity: 'error' });
     }
   };
@@ -340,7 +335,6 @@ const PurchaseOrdersPage: React.FC = () => {
       setSnackbar({ open: true, message: '구매 주문이 확정되었습니다', severity: 'success' });
       loadPurchaseOrders();
     } catch (error) {
-      console.error('Failed to confirm purchase order:', error);
       setSnackbar({ open: true, message: '구매 주문 확정 실패', severity: 'error' });
     }
   };
@@ -351,7 +345,6 @@ const PurchaseOrdersPage: React.FC = () => {
       setSnackbar({ open: true, message: '구매 주문이 취소되었습니다', severity: 'success' });
       loadPurchaseOrders();
     } catch (error) {
-      console.error('Failed to cancel purchase order:', error);
       setSnackbar({ open: true, message: '구매 주문 취소 실패', severity: 'error' });
     }
   };

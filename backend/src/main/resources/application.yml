@@ -65,7 +65,7 @@ spring:
   redis:
     host: ${SPRING_REDIS_HOST:localhost}
     port: ${SPRING_REDIS_PORT:6379}
-    password: ${SPRING_REDIS_PASSWORD:}
+    password: ${SPRING_REDIS_PASSWORD:soice_redis_2024}
     database: 0  # Session storage
     timeout: 60000
     lettuce:

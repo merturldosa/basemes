@@ -74,7 +74,6 @@ const InspectionPlansPage: React.FC = () => {
       const data = await equipmentService.getActive();
       setEquipments(data || []);
     } catch (error) {
-      console.error('Failed to load equipments:', error);
       setEquipments([]);
     }
   };
@@ -84,7 +83,6 @@ const InspectionPlansPage: React.FC = () => {
       const data = await inspectionFormService.getActive();
       setForms(data || []);
     } catch (error) {
-      console.error('Failed to load forms:', error);
       setForms([]);
     }
   };

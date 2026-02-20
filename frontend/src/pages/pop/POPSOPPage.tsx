@@ -195,7 +195,6 @@ const POPSOPPage: React.FC = () => {
   const handleSign = () => {
     if (signature.trim()) {
       // Submit SOP completion with signature
-      console.log('SOP completed with signature:', signature);
       setOpenSignatureDialog(false);
       // Reset
       setSelectedSOP(null);

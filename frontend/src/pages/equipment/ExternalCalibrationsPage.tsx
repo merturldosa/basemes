@@ -79,7 +79,6 @@ const ExternalCalibrationsPage: React.FC = () => {
       const data = await gaugeService.getAll();
       setGauges(data || []);
     } catch (error) {
-      console.error('Failed to load gauges:', error);
       setGauges([]);
     }
   };

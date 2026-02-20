@@ -78,7 +78,6 @@ const MaterialHandoversPage: React.FC = () => {
       const response = await axios.get('/api/material-handovers');
       setHandovers(response.data.data || []);
     } catch (err: any) {
-      console.error('Failed to load material handovers:', err);
       setError(err.response?.data?.message || '인수인계 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -155,7 +154,6 @@ const MaterialHandoversPage: React.FC = () => {
       setConfirmDialogOpen(false);
       loadHandovers();
     } catch (err: any) {
-      console.error('Failed to confirm handover:', err);
       alert(err.response?.data?.message || '인수 확인에 실패했습니다.');
     }
   };
@@ -186,7 +184,6 @@ const MaterialHandoversPage: React.FC = () => {
       setRejectDialogOpen(false);
       loadHandovers();
     } catch (err: any) {
-      console.error('Failed to reject handover:', err);
       alert(err.response?.data?.message || '인수 거부에 실패했습니다.');
     }
   };

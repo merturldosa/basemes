@@ -63,7 +63,6 @@ const IQCRequestsPage: React.FC = () => {
       const response = await axios.get('/api/quality-inspections/iqc-requests');
       setInspections(response.data.data || []);
     } catch (err: any) {
-      console.error('Failed to load IQC requests:', err);
       setError(err.response?.data?.message || 'IQC 의뢰 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);

@@ -89,7 +89,6 @@ const SalesOrdersPage: React.FC = () => {
       const data = await customerService.getActive();
       setCustomers(data || []);
     } catch (error) {
-      console.error('Failed to load customers:', error);
       setCustomers([]);
     }
   };

@@ -85,7 +85,6 @@ const ReturnsPage: React.FC = () => {
       const response = await axios.get('/api/returns');
       setReturns(response.data.data || []);
     } catch (err: any) {
-      console.error('Failed to load returns:', err);
       setError(err.response?.data?.message || '반품 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -181,7 +180,6 @@ const ReturnsPage: React.FC = () => {
       alert('승인되었습니다.');
       loadReturns();
     } catch (err: any) {
-      console.error('Failed to approve return:', err);
       alert(err.response?.data?.message || '승인에 실패했습니다.');
     }
   };
@@ -212,7 +210,6 @@ const ReturnsPage: React.FC = () => {
       setRejectDialogOpen(false);
       loadReturns();
     } catch (err: any) {
-      console.error('Failed to reject return:', err);
       alert(err.response?.data?.message || '거부에 실패했습니다.');
     }
   };
@@ -231,7 +228,6 @@ const ReturnsPage: React.FC = () => {
       alert('입고가 완료되었습니다.');
       loadReturns();
     } catch (err: any) {
-      console.error('Failed to receive return:', err);
       alert(err.response?.data?.message || '입고 처리에 실패했습니다.');
     }
   };
@@ -247,7 +243,6 @@ const ReturnsPage: React.FC = () => {
       alert('완료되었습니다.');
       loadReturns();
     } catch (err: any) {
-      console.error('Failed to complete return:', err);
       alert(err.response?.data?.message || '완료 처리에 실패했습니다.');
     }
   };
@@ -271,7 +266,6 @@ const ReturnsPage: React.FC = () => {
       setCancelDialogOpen(false);
       loadReturns();
     } catch (err: any) {
-      console.error('Failed to cancel return:', err);
       alert(err.response?.data?.message || '취소에 실패했습니다.');
     }
   };

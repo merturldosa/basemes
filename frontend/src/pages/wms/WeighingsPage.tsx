@@ -79,7 +79,6 @@ const WeighingsPage: React.FC = () => {
       const data = await weighingService.getAll();
       setWeighings(data || []);
     } catch (error) {
-      console.error('Failed to load weighings:', error);
       setWeighings([]);
       setSnackbar({
         open: true,
@@ -96,7 +95,6 @@ const WeighingsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -106,7 +104,6 @@ const WeighingsPage: React.FC = () => {
       const data = await lotService.getAll();
       setLots(data || []);
     } catch (error) {
-      console.error('Failed to load lots:', error);
       setLots([]);
     }
   };
@@ -116,7 +113,6 @@ const WeighingsPage: React.FC = () => {
       const response = await userService.getUsers({ size: 1000 });
       setUsers(response?.content || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
       setUsers([]);
     }
   };
@@ -169,11 +165,6 @@ const WeighingsPage: React.FC = () => {
       const net = gross - tare;
 
       // Calculate variance if expected weight is provided
-      if (newFormData.expectedWeight) {
-        const expected = parseFloat(newFormData.expectedWeight as any) || 0;
-        const variance = net - expected;
-        console.log(`Net: ${net}, Expected: ${expected}, Variance: ${variance}`);
-      }
     }
 
     setFormData(newFormData);
@@ -190,7 +181,6 @@ const WeighingsPage: React.FC = () => {
       handleCloseDialog();
       loadWeighings();
     } catch (error) {
-      console.error('Failed to create weighing:', error);
       setSnackbar({
         open: true,
         message: '칭량 기록 생성 실패',
@@ -215,7 +205,6 @@ const WeighingsPage: React.FC = () => {
       handleCloseVerifyDialog();
       loadWeighings();
     } catch (error: any) {
-      console.error('Failed to verify weighing:', error);
       setSnackbar({
         open: true,
         message: error.response?.data?.message || '칭량 검증 실패',
@@ -240,7 +229,6 @@ const WeighingsPage: React.FC = () => {
       handleCloseVerifyDialog();
       loadWeighings();
     } catch (error: any) {
-      console.error('Failed to reject weighing:', error);
       setSnackbar({
         open: true,
         message: error.response?.data?.message || '칭량 반려 실패',
@@ -477,7 +465,7 @@ const WeighingsPage: React.FC = () => {
                 severity: 'info',
               });
             } catch (error) {
-              console.error('Failed to load tolerance exceeded:', error);
+              // Error silently handled - UI already shows previous data
             }
           }}
         >

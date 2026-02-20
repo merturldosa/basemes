@@ -57,7 +57,6 @@ const InventoryTransactionsPage: React.FC = () => {
       const data = await inventoryTransactionService.getAll();
       setTransactions(data || []);
     } catch (error) {
-      console.error('Failed to load transactions:', error);
       setSnackbar({ open: true, message: '재고 이동 내역 조회 실패', severity: 'error' });
       setTransactions([]);
     } finally {
@@ -70,7 +69,6 @@ const InventoryTransactionsPage: React.FC = () => {
       const data = await warehouseService.getAll();
       setWarehouses(data || []);
     } catch (error) {
-      console.error('Failed to load warehouses:', error);
       setWarehouses([]);
     }
   };
@@ -80,7 +78,6 @@ const InventoryTransactionsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -90,7 +87,6 @@ const InventoryTransactionsPage: React.FC = () => {
       const data = await lotService.getAll();
       setLots(data || []);
     } catch (error) {
-      console.error('Failed to load lots:', error);
       setLots([]);
     }
   };
@@ -100,7 +96,6 @@ const InventoryTransactionsPage: React.FC = () => {
       const response = await userService.getUsers();
       setUsers(response?.content || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
       setUsers([]);
     }
   };
@@ -127,7 +122,6 @@ const InventoryTransactionsPage: React.FC = () => {
       handleCloseDialog();
       loadTransactions();
     } catch (error) {
-      console.error('Failed to create transaction:', error);
       setSnackbar({ open: true, message: '재고 이동 생성 실패', severity: 'error' });
     }
   };

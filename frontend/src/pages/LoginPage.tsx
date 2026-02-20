@@ -49,7 +49,6 @@ export default function LoginPage() {
       navigate('/');
     } catch (err) {
       // Error is handled by store
-      console.error('Login failed:', err);
     }
   };
 

@@ -55,7 +55,6 @@ const WarehousesPage: React.FC = () => {
       const data = await warehouseService.getAll();
       setWarehouses(data || []);
     } catch (error) {
-      console.error('Failed to load warehouses:', error);
       setSnackbar({ open: true, message: '창고 목록 조회 실패', severity: 'error' });
       setWarehouses([]);
     } finally {
@@ -68,7 +67,6 @@ const WarehousesPage: React.FC = () => {
       const response = await userService.getUsers();
       setUsers(response?.content || []);
     } catch (error) {
-      console.error('Failed to load users:', error);
       setUsers([]);
     }
   };
@@ -131,7 +129,6 @@ const WarehousesPage: React.FC = () => {
       handleCloseDialog();
       loadWarehouses();
     } catch (error) {
-      console.error('Failed to save warehouse:', error);
       setSnackbar({ open: true, message: '창고 저장 실패', severity: 'error' });
     }
   };
@@ -146,7 +143,6 @@ const WarehousesPage: React.FC = () => {
       setSelectedWarehouse(null);
       loadWarehouses();
     } catch (error) {
-      console.error('Failed to delete warehouse:', error);
       setSnackbar({ open: true, message: '창고 삭제 실패', severity: 'error' });
     }
   };
@@ -161,7 +157,6 @@ const WarehousesPage: React.FC = () => {
       });
       loadWarehouses();
     } catch (error) {
-      console.error('Failed to toggle warehouse:', error);
       setSnackbar({ open: true, message: '창고 상태 변경 실패', severity: 'error' });
     }
   };

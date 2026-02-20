@@ -75,7 +75,6 @@ const BreakdownsPage: React.FC = () => {
       const data = await equipmentService.getActive();
       setEquipments(data || []);
     } catch (error) {
-      console.error('Failed to load equipments:', error);
       setEquipments([]);
     }
   };

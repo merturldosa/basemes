@@ -72,7 +72,6 @@ const MoldMaintenancesPage: React.FC = () => {
       const data = await moldService.getActive();
       setMolds(data || []);
     } catch (error) {
-      console.error('Failed to load molds:', error);
       setMolds([]);
     }
   };

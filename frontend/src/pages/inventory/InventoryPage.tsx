@@ -47,7 +47,6 @@ const InventoryPage: React.FC = () => {
       const data = await inventoryService.getAll();
       setInventory(data || []);
     } catch (error) {
-      console.error('Failed to load inventory:', error);
       setSnackbar({ open: true, message: '재고 목록 조회 실패', severity: 'error' });
       setInventory([]);
     } finally {
@@ -60,7 +59,6 @@ const InventoryPage: React.FC = () => {
       const data = await warehouseService.getAll();
       setWarehouses(data || []);
     } catch (error) {
-      console.error('Failed to load warehouses:', error);
       setWarehouses([]);
     }
   };
@@ -70,7 +68,6 @@ const InventoryPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -87,7 +84,6 @@ const InventoryPage: React.FC = () => {
       const data = await inventoryService.getByWarehouse(warehouseId);
       setInventory(data || []);
     } catch (error) {
-      console.error('Failed to filter by warehouse:', error);
       setSnackbar({ open: true, message: '창고별 재고 조회 실패', severity: 'error' });
       setInventory([]);
     } finally {
@@ -107,7 +103,6 @@ const InventoryPage: React.FC = () => {
       const data = await inventoryService.getByProduct(productId);
       setInventory(data || []);
     } catch (error) {
-      console.error('Failed to filter by product:', error);
       setSnackbar({ open: true, message: '제품별 재고 조회 실패', severity: 'error' });
       setInventory([]);
     } finally {
@@ -125,7 +120,6 @@ const InventoryPage: React.FC = () => {
       setSelectedInventory(null);
       loadInventory();
     } catch (error) {
-      console.error('Failed to delete inventory:', error);
       setSnackbar({ open: true, message: '재고 삭제 실패', severity: 'error' });
     }
   };

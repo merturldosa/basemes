@@ -83,6 +83,11 @@ import {
   Approval,
   NotificationsActive,
   Description,
+  CheckCircle,
+  RequestPage,
+  MoveDown,
+  KeyboardReturn,
+  DeleteSweep,
 } from '@mui/icons-material';
 import { useAuthStore } from '@/stores/authStore';
 import LanguageSelector from '@/components/common/LanguageSelector';
@@ -112,7 +117,13 @@ const getAllMenuItems = (tenantId: string | undefined, t: (key: string) => strin
     { text: t('navigation.menu.deliveries'), icon: <LocalShippingOutlined />, path: '/sales/deliveries', divider: true },
     { text: t('navigation.menu.receiving'), icon: <Unarchive />, path: '/warehouse/receiving', divider: false },
     { text: t('navigation.menu.shipping'), icon: <LocalShippingIcon />, path: '/warehouse/shipping', divider: false },
-    { text: t('navigation.menu.weighings'), icon: <Scale />, path: '/warehouse/weighings', divider: true },
+    { text: t('navigation.menu.weighings'), icon: <Scale />, path: '/warehouse/weighings', divider: false },
+    { text: t('navigation.menu.iqcRequests'), icon: <FactCheckIcon />, path: '/warehouse/iqc-requests', divider: false },
+    { text: t('navigation.menu.oqcRequests'), icon: <CheckCircle />, path: '/warehouse/oqc-requests', divider: false },
+    { text: t('navigation.menu.materialRequests'), icon: <RequestPage />, path: '/warehouse/material-requests', divider: false },
+    { text: t('navigation.menu.materialHandovers'), icon: <MoveDown />, path: '/warehouse/material-handovers', divider: false },
+    { text: t('navigation.menu.returns'), icon: <KeyboardReturn />, path: '/warehouse/returns', divider: false },
+    { text: t('navigation.menu.disposals'), icon: <DeleteSweep />, path: '/warehouse/disposals', divider: true },
     { text: t('navigation.menu.defects'), icon: <BugReport />, path: '/defect/defects', divider: false },
     { text: t('navigation.menu.afterSales'), icon: <Build />, path: '/defect/after-sales', divider: false },
     { text: t('navigation.menu.claims'), icon: <Report />, path: '/defect/claims', divider: true },

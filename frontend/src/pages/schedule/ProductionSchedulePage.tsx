@@ -64,7 +64,6 @@ const ProductionSchedulePage: React.FC = () => {
       const data = await productionScheduleService.getByPeriod(startDate, endDate);
       setSchedules(data || []);
     } catch (error) {
-      console.error('Failed to load schedules:', error);
       setSchedules([]);
       setSnackbar({ open: true, message: '일정 목록 조회 실패', severity: 'error' });
     } finally {
@@ -78,7 +77,6 @@ const ProductionSchedulePage: React.FC = () => {
       // routing이 있는 WorkOrder만 필터링
       setWorkOrders((data || []).filter((wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'));
     } catch (error) {
-      console.error('Failed to load work orders:', error);
       setWorkOrders([]);
     }
   };
@@ -93,7 +91,6 @@ const ProductionSchedulePage: React.FC = () => {
       setSelectedWorkOrder(null);
       loadSchedules();
     } catch (error: any) {
-      console.error('Failed to generate schedule:', error);
       const message = error.response?.data?.message || '일정 생성 실패';
       setSnackbar({ open: true, message, severity: 'error' });
     }
@@ -109,7 +106,6 @@ const ProductionSchedulePage: React.FC = () => {
       });
       loadSchedules();
     } catch (error) {
-      console.error('Failed to update status:', error);
       setSnackbar({ open: true, message: '상태 변경 실패', severity: 'error' });
     }
   };

@@ -81,7 +81,6 @@ const ProcessRoutingsPage: React.FC = () => {
       const data = await processRoutingService.getAll();
       setRoutings(data || []);
     } catch (error) {
-      console.error('Failed to load routings:', error);
       setSnackbar({ open: true, message: '라우팅 목록 조회 실패', severity: 'error' });
       setRoutings([]);
     } finally {
@@ -94,7 +93,6 @@ const ProcessRoutingsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      console.error('Failed to load products:', error);
       setProducts([]);
     }
   };
@@ -104,7 +102,6 @@ const ProcessRoutingsPage: React.FC = () => {
       const data = await processService.getProcesses();
       setProcesses(data || []);
     } catch (error) {
-      console.error('Failed to load processes:', error);
       setProcesses([]);
     }
   };
@@ -114,7 +111,6 @@ const ProcessRoutingsPage: React.FC = () => {
       const data = await equipmentService.getAll();
       setEquipments(data || []);
     } catch (error) {
-      console.error('Failed to load equipments:', error);
       setEquipments([]);
     }
   };
@@ -237,7 +233,6 @@ const ProcessRoutingsPage: React.FC = () => {
       handleCloseDialog();
       loadRoutings();
     } catch (error) {
-      console.error('Failed to save routing:', error);
       setSnackbar({ open: true, message: '라우팅 저장 실패', severity: 'error' });
     }
   };
@@ -252,7 +247,6 @@ const ProcessRoutingsPage: React.FC = () => {
       setSelectedRouting(null);
       loadRoutings();
     } catch (error) {
-      console.error('Failed to delete routing:', error);
       setSnackbar({ open: true, message: '라우팅 삭제 실패', severity: 'error' });
     }
   };
@@ -267,7 +261,6 @@ const ProcessRoutingsPage: React.FC = () => {
       });
       loadRoutings();
     } catch (error) {
-      console.error('Failed to toggle routing:', error);
       setSnackbar({ open: true, message: '라우팅 상태 변경 실패', severity: 'error' });
     }
   };
@@ -283,7 +276,6 @@ const ProcessRoutingsPage: React.FC = () => {
       setCopyVersion('');
       loadRoutings();
     } catch (error) {
-      console.error('Failed to copy routing:', error);
       setSnackbar({ open: true, message: '라우팅 복사 실패', severity: 'error' });
     }
   };

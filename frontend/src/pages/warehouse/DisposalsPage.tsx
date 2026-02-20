@@ -155,7 +155,6 @@ const DisposalsPage: React.FC = () => {
             setDisposals(data);
             calculateStatistics(data);
         } catch (error) {
-            console.error('Failed to fetch disposals:', error);
             setDisposals([]);
         } finally {
             setLoading(false);
@@ -189,7 +188,6 @@ const DisposalsPage: React.FC = () => {
             resetForm();
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to create disposal:', error);
             alert('폐기 생성 실패');
         }
     };
@@ -200,7 +198,6 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/approve?approverUserId=${approverId}`);
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to approve disposal:', error);
             alert('폐기 승인 실패');
         }
     };
@@ -214,7 +211,6 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/reject?approverUserId=${approverId}&reason=${encodeURIComponent(reason)}`);
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to reject disposal:', error);
             alert('폐기 거부 실패');
         }
     };
@@ -227,7 +223,6 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/process?processorUserId=${processorId}`);
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to process disposal:', error);
             alert('폐기 처리 실패');
         }
     };
@@ -241,7 +236,6 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/complete?method=${encodeURIComponent(method)}&location=${encodeURIComponent(location)}`);
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to complete disposal:', error);
             alert('폐기 완료 실패');
         }
     };
@@ -254,7 +248,6 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/cancel?reason=${encodeURIComponent(reason)}`);
             fetchDisposals();
         } catch (error) {
-            console.error('Failed to cancel disposal:', error);
             alert('폐기 취소 실패');
         }
     };
@@ -265,7 +258,7 @@ const DisposalsPage: React.FC = () => {
             setSelectedDisposal(response.data.data);
             setOpenDetail(true);
         } catch (error) {
-            console.error('Failed to fetch disposal detail:', error);
+            // Error silently handled - detail dialog will not open
         }
     };
 

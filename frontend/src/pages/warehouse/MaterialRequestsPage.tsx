@@ -86,7 +86,6 @@ const MaterialRequestsPage: React.FC = () => {
       const response = await axios.get('/api/material-requests');
       setRequests(response.data.data || []);
     } catch (err: any) {
-      console.error('Failed to load material requests:', err);
       setError(err.response?.data?.message || '불출 신청 목록을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -176,7 +175,6 @@ const MaterialRequestsPage: React.FC = () => {
       alert('승인되었습니다.');
       loadRequests();
     } catch (err: any) {
-      console.error('Failed to approve material request:', err);
       alert(err.response?.data?.message || '승인에 실패했습니다.');
     }
   };
@@ -207,7 +205,6 @@ const MaterialRequestsPage: React.FC = () => {
       setRejectDialogOpen(false);
       loadRequests();
     } catch (err: any) {
-      console.error('Failed to reject material request:', err);
       alert(err.response?.data?.message || '거부에 실패했습니다.');
     }
   };
@@ -226,7 +223,6 @@ const MaterialRequestsPage: React.FC = () => {
       alert('불출 지시가 완료되었습니다.');
       loadRequests();
     } catch (err: any) {
-      console.error('Failed to issue materials:', err);
       alert(err.response?.data?.message || '불출 지시에 실패했습니다.');
     }
   };
@@ -242,7 +238,6 @@ const MaterialRequestsPage: React.FC = () => {
       alert('완료되었습니다.');
       loadRequests();
     } catch (err: any) {
-      console.error('Failed to complete material request:', err);
       alert(err.response?.data?.message || '완료 처리에 실패했습니다.');
     }
   };
@@ -266,7 +261,6 @@ const MaterialRequestsPage: React.FC = () => {
       setCancelDialogOpen(false);
       loadRequests();
     } catch (err: any) {
-      console.error('Failed to cancel material request:', err);
       alert(err.response?.data?.message || '취소에 실패했습니다.');
     }
   };
