@@ -636,6 +636,96 @@ body {
   font-size: 9px;
   color: rgba(255,255,255,0.7);
 }
+
+/* Premium Footer Section */
+.premium-footer {
+  position: absolute;
+  bottom: 18px;
+  left: 36px;
+  right: 36px;
+}
+
+.footer-tech-badges {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.footer-tech-badge {
+  font-size: 8px;
+  font-weight: 500;
+  color: var(--steel);
+  background: rgba(74,111,165,0.08);
+  padding: 3px 9px;
+  border-radius: 10px;
+  letter-spacing: 0.3px;
+}
+
+.footer-compliance-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  font-size: 8px;
+  color: var(--gray);
+  margin-bottom: 12px;
+}
+
+.footer-compliance-line span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-compliance-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: inline-block;
+}
+
+.footer-bottom-bar {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  border-radius: 8px;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-bottom-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+
+.footer-copyright {
+  font-size: 8px;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer-version {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.footer-url {
+  font-size: 8px;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+}
 </style>
 </head>
 <body>
@@ -1742,8 +1832,29 @@ body {
     </div>
   </div>
 
-  <div class="page-footer-brand">SDS MES/WMS</div>
-  <div class="page-number">05</div>
+  <!-- Premium Footer -->
+  <div class="premium-footer">
+    <div class="footer-tech-badges">
+      <span class="footer-tech-badge">Spring Boot</span>
+      <span class="footer-tech-badge">React 18</span>
+      <span class="footer-tech-badge">PostgreSQL</span>
+      <span class="footer-tech-badge">Redis</span>
+      <span class="footer-tech-badge">Docker</span>
+      <span class="footer-tech-badge">Kubernetes</span>
+      <span class="footer-tech-badge">REST API</span>
+      <span class="footer-tech-badge">WebSocket</span>
+    </div>
+    <div class="footer-compliance-line">
+      <span><span class="footer-compliance-dot"></span>ISA-95 / IEC 62264 Compliant</span>
+      <span><span class="footer-compliance-dot"></span>ISO 9001 Quality Management</span>
+      <span><span class="footer-compliance-dot"></span>HACCP / GMP Traceability</span>
+    </div>
+    <div class="footer-bottom-bar">
+      <div class="footer-copyright">&copy; 2026 SmartDockingStation Co., Ltd. All rights reserved.</div>
+      <div class="footer-version">SDS MES / WMS v2.0</div>
+      <div class="footer-url">www.smartdocking.io</div>
+    </div>
+  </div>
 </div>
 
 </body>

@@ -780,6 +780,94 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Premium Footer Section */
+.page-footer-section {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+.footer-tech-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.tech-badge {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--steel);
+  background: rgba(74,111,165,0.08);
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.3px;
+}
+
+.footer-compliance {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 14px;
+}
+
+.footer-compliance span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.compliance-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  display: inline-block;
+}
+
+.footer-bar {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  border-radius: 8px;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.footer-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+
+.footer-bar-left {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.5);
+}
+
+.footer-bar-center {
+  font-size: 1.0rem;
+  font-weight: 600;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+
+.footer-bar-right {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+}
 </style>
 </head>
 <body>
@@ -1991,6 +2079,30 @@ body {
           </g>
         </svg>
       </div>
+    </div>
+  </div>
+
+  <!-- Premium Footer -->
+  <div class="page-footer-section">
+    <div class="footer-tech-bar">
+      <span class="tech-badge">Spring Boot</span>
+      <span class="tech-badge">React 18</span>
+      <span class="tech-badge">PostgreSQL</span>
+      <span class="tech-badge">Redis</span>
+      <span class="tech-badge">Docker</span>
+      <span class="tech-badge">Kubernetes</span>
+      <span class="tech-badge">REST API</span>
+      <span class="tech-badge">WebSocket</span>
+    </div>
+    <div class="footer-compliance">
+      <span><span class="compliance-dot"></span>ISA-95 / IEC 62264 兼容</span>
+      <span><span class="compliance-dot"></span>ISO 9001 质量管理支持</span>
+      <span><span class="compliance-dot"></span>HACCP / GMP 可追溯性</span>
+    </div>
+    <div class="footer-bar">
+      <div class="footer-bar-left">&copy; 2026 SmartDockingStation Co., Ltd. 版权所有</div>
+      <div class="footer-bar-center">SDS MES / WMS v2.0</div>
+      <div class="footer-bar-right">www.smartdocking.io</div>
     </div>
   </div>
 </div>
