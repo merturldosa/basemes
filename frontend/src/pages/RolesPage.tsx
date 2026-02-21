@@ -42,6 +42,7 @@ import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { Role, RoleCreateRequest, RoleUpdateRequest, Permission } from '@/types';
 import roleService from '@/services/roleService';
 import apiClient from '@/services/api';
+import { getErrorMessage } from '@/utils/errorUtils';
 import { format } from 'date-fns';
 
 export default function RolesPage() {
@@ -96,8 +97,8 @@ export default function RolesPage() {
           );
 
       setRoles(filteredRoles);
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.roles.messages.loadFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.roles.messages.loadFailed')), 'error');
     } finally {
       setLoading(false);
     }
@@ -105,7 +106,7 @@ export default function RolesPage() {
 
   useEffect(() => {
     loadRoles();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when status filter changes
   }, [statusFilter]);
 
   // Load All Permissions
@@ -116,7 +117,7 @@ export default function RolesPage() {
         size: 1000,
       });
       setAllPermissions(response.data || []);
-    } catch (error: any) {
+    } catch (_error) {
       showSnackbar(t('pages.roles.messages.permissionsLoadFailed'), 'error');
     }
   };
@@ -126,7 +127,7 @@ export default function RolesPage() {
     try {
       const permissions = await roleService.getRolePermissions(roleId);
       setRolePermissions(permissions);
-    } catch (error: any) {
+    } catch (_error) {
       showSnackbar(t('pages.roles.messages.rolePermissionsLoadFailed'), 'error');
     }
   };
@@ -151,8 +152,8 @@ export default function RolesPage() {
       setOpenDialog(false);
       resetForm();
       loadRoles();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.roles.messages.saveFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.roles.messages.saveFailed')), 'error');
     }
   };
 
@@ -166,8 +167,8 @@ export default function RolesPage() {
       setDeleteDialogOpen(false);
       setRoleToDelete(null);
       loadRoles();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.roles.messages.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.roles.messages.deleteFailed')), 'error');
     }
   };
 
@@ -182,8 +183,8 @@ export default function RolesPage() {
         showSnackbar(t('pages.roles.messages.activated'), 'success');
       }
       loadRoles();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.roles.messages.statusChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.roles.messages.statusChangeFailed')), 'error');
     }
   };
 
@@ -211,8 +212,8 @@ export default function RolesPage() {
       }
 
       await loadRolePermissions(selectedRole.roleId);
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.roles.messages.permissionChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.roles.messages.permissionChangeFailed')), 'error');
     }
   };
 

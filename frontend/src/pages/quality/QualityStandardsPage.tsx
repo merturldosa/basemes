@@ -33,6 +33,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import qualityStandardService, { QualityStandard, QualityStandardCreateRequest, QualityStandardUpdateRequest } from '../../services/qualityStandardService';
 import productService, { Product } from '../../services/productService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const QualityStandardsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -149,8 +150,8 @@ const QualityStandardsPage: React.FC = () => {
       }
       handleCloseDialog();
       loadQualityStandards();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.saveFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.qualityStandards.errors.saveFailed')), 'error');
     }
   };
 
@@ -164,8 +165,8 @@ const QualityStandardsPage: React.FC = () => {
         showSnackbar(t('pages.qualityStandards.messages.activateSuccess'), 'success');
       }
       loadQualityStandards();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.statusChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.qualityStandards.errors.statusChangeFailed')), 'error');
     }
   };
 
@@ -187,8 +188,8 @@ const QualityStandardsPage: React.FC = () => {
       showSnackbar(t('pages.qualityStandards.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadQualityStandards();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.qualityStandards.errors.deleteFailed')), 'error');
     }
   };
 

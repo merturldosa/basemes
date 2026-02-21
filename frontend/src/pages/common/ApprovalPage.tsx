@@ -45,6 +45,7 @@ import {
 } from '../../services/approvalService';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -87,7 +88,7 @@ export default function ApprovalPage() {
 
   useEffect(() => {
     loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when tab changes
   }, [currentTab]);
 
   // ==================== Data Loading ====================
@@ -114,8 +115,8 @@ export default function ApprovalPage() {
         const stats = await approvalService.getStatistics(tenantId);
         setStatistics(stats);
       }
-    } catch (err: any) {
-      setError(err.message || t('pages.approval.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.approval.errors.loadFailed')));
       if (currentTab === 0) {
         setPendingApprovals([]);
       } else if (currentTab === 1) {
@@ -174,8 +175,8 @@ export default function ApprovalPage() {
 
       setActionDialogOpen(false);
       loadData();
-    } catch (err: any) {
-      setError(err.message || t('pages.approval.errors.processFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.approval.errors.processFailed')));
     }
   };
 

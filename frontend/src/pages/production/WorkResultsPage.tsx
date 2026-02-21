@@ -32,6 +32,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import workResultService, { WorkResult, WorkResultCreateRequest, WorkResultUpdateRequest } from '../../services/workResultService';
 import workOrderService, { WorkOrder } from '../../services/workOrderService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const WorkResultsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -161,8 +162,8 @@ const WorkResultsPage: React.FC = () => {
       }
       handleCloseDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workResults.errors.operationFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workResults.errors.operationFailed')), 'error');
     }
   };
 
@@ -184,8 +185,8 @@ const WorkResultsPage: React.FC = () => {
       showSnackbar(t('pages.workResults.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workResults.errors.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workResults.errors.deleteFailed')), 'error');
     }
   };
 

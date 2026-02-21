@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface MaterialRequest {
   materialRequestId: number;
@@ -77,8 +78,8 @@ const MaterialRequestsPage: React.FC = () => {
     try {
       const response = await axios.get('/api/material-requests');
       setRequests(response.data.data || []);
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('pages.materialRequests.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.materialRequests.errors.loadFailed')));
     } finally {
       setLoading(false);
     }
@@ -140,8 +141,8 @@ const MaterialRequestsPage: React.FC = () => {
       await axios.post(`/api/material-requests/${request.materialRequestId}/approve`, null, { params: { approverUserId } });
       alert(t('pages.materialRequests.messages.approved'));
       loadRequests();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialRequests.messages.approveFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialRequests.messages.approveFailed')));
     }
   };
 
@@ -164,8 +165,8 @@ const MaterialRequestsPage: React.FC = () => {
       alert(t('pages.materialRequests.messages.rejected'));
       setRejectDialogOpen(false);
       loadRequests();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialRequests.messages.rejectFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialRequests.messages.rejectFailed')));
     }
   };
 
@@ -176,8 +177,8 @@ const MaterialRequestsPage: React.FC = () => {
       await axios.post(`/api/material-requests/${request.materialRequestId}/issue`, null, { params: { issuerUserId } });
       alert(t('pages.materialRequests.messages.issued'));
       loadRequests();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialRequests.messages.issueFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialRequests.messages.issueFailed')));
     }
   };
 
@@ -187,8 +188,8 @@ const MaterialRequestsPage: React.FC = () => {
       await axios.post(`/api/material-requests/${request.materialRequestId}/complete`);
       alert(t('pages.materialRequests.messages.completed'));
       loadRequests();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialRequests.messages.completeFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialRequests.messages.completeFailed')));
     }
   };
 
@@ -207,8 +208,8 @@ const MaterialRequestsPage: React.FC = () => {
       alert(t('pages.materialRequests.messages.cancelled'));
       setCancelDialogOpen(false);
       loadRequests();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialRequests.messages.cancelFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialRequests.messages.cancelFailed')));
     }
   };
 

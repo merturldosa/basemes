@@ -147,7 +147,7 @@ const DisposalsPage: React.FC = () => {
 
     useEffect(() => {
         fetchDisposals();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
     }, []);
 
     const fetchDisposals = async () => {
@@ -300,14 +300,14 @@ const DisposalsPage: React.FC = () => {
         setItems(items.filter((_, i) => i !== index));
     };
 
-    const updateItem = (index: number, field: keyof DisposalItem, value: any) => {
+    const updateItem = (index: number, field: keyof DisposalItem, value: string | number) => {
         const newItems = [...items];
         newItems[index] = { ...newItems[index], [field]: value };
         setItems(newItems);
     };
 
     const getStatusChip = (status: string) => {
-        const statusConfig: { [key: string]: { label: string; color: any } } = {
+        const statusConfig: { [key: string]: { label: string; color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' } } = {
             PENDING: { label: t('pages.disposals.status.pending'), color: 'warning' },
             APPROVED: { label: t('pages.disposals.status.approved'), color: 'info' },
             REJECTED: { label: t('pages.disposals.status.rejected'), color: 'error' },
@@ -320,7 +320,7 @@ const DisposalsPage: React.FC = () => {
     };
 
     const getTypeChip = (type: string) => {
-        const typeConfig: { [key: string]: { label: string; color: any } } = {
+        const typeConfig: { [key: string]: { label: string; color: 'default' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning' } } = {
             DEFECTIVE: { label: t('pages.disposals.types.defective'), color: 'error' },
             EXPIRED: { label: t('pages.disposals.types.expired'), color: 'warning' },
             DAMAGED: { label: t('pages.disposals.types.damaged'), color: 'info' },

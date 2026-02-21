@@ -30,8 +30,9 @@ import {
   Cancel,
   TrendingUp,
 } from '@mui/icons-material';
-import workOrderService from '@/services/workOrderService';
-import productService from '@/services/productService';
+import workOrderService, { WorkOrder } from '@/services/workOrderService';
+import productService, { Product } from '@/services/productService';
+import { getErrorMessage } from '@/utils/errorUtils';
 import { format, subDays } from 'date-fns';
 import ReactECharts from 'echarts-for-react';
 
@@ -98,8 +99,8 @@ function StatCard({ title, value, icon, color, percentage }: StatCardProps) {
 }
 
 export default function Dashboard() {
-  const [workOrders, setWorkOrders] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -150,8 +151,8 @@ export default function Dashboard() {
 
       setWorkOrders(workOrdersData);
       setProducts(productsData);
-    } catch (err: any) {
-      setError(err.response?.data?.message || '대시보드 데이터 로드 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '대시보드 데이터 로드 실패'));
     } finally {
       setLoading(false);
     }
@@ -275,7 +276,7 @@ export default function Dashboard() {
     // 제품별 완료된 작업 지시의 실적 수량 합계
     const productStats = workOrders
       .filter((wo) => wo.status === 'COMPLETED')
-      .reduce((acc: any, wo) => {
+      .reduce((acc: Record<string, number>, wo) => {
         const key = wo.productName;
         if (!acc[key]) {
           acc[key] = 0;

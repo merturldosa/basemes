@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface MaterialHandover {
   materialHandoverId: number;
@@ -69,8 +70,8 @@ const MaterialHandoversPage: React.FC = () => {
     try {
       const response = await axios.get('/api/material-handovers');
       setHandovers(response.data.data || []);
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('pages.materialHandovers.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.materialHandovers.errors.loadFailed')));
     } finally {
       setLoading(false);
     }
@@ -119,8 +120,8 @@ const MaterialHandoversPage: React.FC = () => {
       alert(t('pages.materialHandovers.messages.confirmed'));
       setConfirmDialogOpen(false);
       loadHandovers();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialHandovers.messages.confirmFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialHandovers.messages.confirmFailed')));
     }
   };
 
@@ -143,8 +144,8 @@ const MaterialHandoversPage: React.FC = () => {
       alert(t('pages.materialHandovers.messages.rejected'));
       setRejectDialogOpen(false);
       loadHandovers();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.materialHandovers.messages.rejectFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.materialHandovers.messages.rejectFailed')));
     }
   };
 

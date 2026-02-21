@@ -20,6 +20,7 @@ import {
 } from '@mui/icons-material';
 import axios from 'axios';
 import { format } from 'date-fns';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 /**
  * OQC 의뢰 리스트 페이지
@@ -62,8 +63,8 @@ const OQCRequestsPage: React.FC = () => {
     try {
       const response = await axios.get('/api/quality-inspections/oqc-requests');
       setInspections(response.data.data || []);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'OQC 의뢰 목록을 불러오는데 실패했습니다.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'OQC 의뢰 목록을 불러오는데 실패했습니다.'));
     } finally {
       setLoading(false);
     }

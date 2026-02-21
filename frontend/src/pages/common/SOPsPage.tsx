@@ -45,6 +45,7 @@ import sopService, {
   SOPCreateRequest,
   SOPStepCreateRequest,
 } from '../../services/sopService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const SOPsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -110,8 +111,8 @@ const SOPsPage: React.FC = () => {
       setError(null);
       const data = await sopService.getSOPs();
       setSOPs(data || []);
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.loadFailed')));
       setSOPs([]);
     } finally {
       setLoading(false);
@@ -122,8 +123,8 @@ const SOPsPage: React.FC = () => {
     try {
       const sop = await sopService.getSOPById(sopId);
       setSteps(sop?.steps || []);
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.stepsLoadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.stepsLoadFailed')));
       setSteps([]);
     }
   };
@@ -176,8 +177,8 @@ const SOPsPage: React.FC = () => {
       }
       handleCloseSOPDialog();
       loadSOPs();
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.saveFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.saveFailed')));
     }
   };
 
@@ -242,8 +243,8 @@ const SOPsPage: React.FC = () => {
       }
       handleCloseStepDialog();
       loadSteps(selectedSOP.sopId);
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.stepSaveFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.stepSaveFailed')));
     }
   };
 
@@ -275,8 +276,8 @@ const SOPsPage: React.FC = () => {
         }
       }
       handleCloseDeleteDialog();
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.deleteFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.deleteFailed')));
     }
   };
 
@@ -289,8 +290,8 @@ const SOPsPage: React.FC = () => {
         const updated = await sopService.getSOPById(sopId);
         setSelectedSOP(updated);
       }
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.submitFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.submitFailed')));
     }
   };
 
@@ -302,8 +303,8 @@ const SOPsPage: React.FC = () => {
         const updated = await sopService.getSOPById(sopId);
         setSelectedSOP(updated);
       }
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.approveFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.approveFailed')));
     }
   };
 
@@ -315,8 +316,8 @@ const SOPsPage: React.FC = () => {
         const updated = await sopService.getSOPById(sopId);
         setSelectedSOP(updated);
       }
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.rejectFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.rejectFailed')));
     }
   };
 
@@ -328,8 +329,8 @@ const SOPsPage: React.FC = () => {
         const updated = await sopService.getSOPById(sopId);
         setSelectedSOP(updated);
       }
-    } catch (err: any) {
-      setError(err.message || t('pages.sops.messages.obsoleteFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.sops.messages.obsoleteFailed')));
     }
   };
 

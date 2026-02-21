@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Client, IMessage } from '@stomp/stompjs';
+import { Client, IFrame, IMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
 /**
@@ -13,7 +13,7 @@ const WS_BASE_URL = import.meta.env.VITE_WS_BASE_URL || 'http://localhost:8080/w
 interface UseWebSocketOptions {
   onConnect?: () => void;
   onDisconnect?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: IFrame) => void;
 }
 
 export const useWebSocket = (options?: UseWebSocketOptions) => {
@@ -62,10 +62,10 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
       client.deactivate();
       clientRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- establish WebSocket connection once on mount
   }, []);
 
-  const subscribe = (topic: string, callback: (message: any) => void) => {
+  const subscribe = (topic: string, callback: (message: unknown) => void) => {
     if (!clientRef.current || !isConnected) {
       return () => {};
     }
@@ -84,7 +84,7 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
     };
   };
 
-  const send = (destination: string, body: any) => {
+  const send = (destination: string, body: unknown) => {
     if (!clientRef.current || !isConnected) {
       return;
     }
@@ -106,7 +106,7 @@ export const useWebSocket = (options?: UseWebSocketOptions) => {
 /**
  * Hook for work order updates
  */
-export const useWorkOrderUpdates = (callback: (workOrder: any) => void) => {
+export const useWorkOrderUpdates = (callback: (workOrder: unknown) => void) => {
   const { subscribe } = useWebSocket();
   const tenantId = localStorage.getItem('tenantId');
 
@@ -121,7 +121,7 @@ export const useWorkOrderUpdates = (callback: (workOrder: any) => void) => {
 /**
  * Hook for work progress updates
  */
-export const useWorkProgressUpdates = (callback: (progress: any) => void) => {
+export const useWorkProgressUpdates = (callback: (progress: unknown) => void) => {
   const { subscribe } = useWebSocket();
   const tenantId = localStorage.getItem('tenantId');
 
@@ -136,7 +136,7 @@ export const useWorkProgressUpdates = (callback: (progress: any) => void) => {
 /**
  * Hook for defect updates
  */
-export const useDefectUpdates = (callback: (defect: any) => void) => {
+export const useDefectUpdates = (callback: (defect: unknown) => void) => {
   const { subscribe } = useWebSocket();
   const tenantId = localStorage.getItem('tenantId');
 
@@ -151,7 +151,7 @@ export const useDefectUpdates = (callback: (defect: any) => void) => {
 /**
  * Hook for SOP execution updates
  */
-export const useSOPExecutionUpdates = (callback: (execution: any) => void) => {
+export const useSOPExecutionUpdates = (callback: (execution: unknown) => void) => {
   const { subscribe } = useWebSocket();
   const tenantId = localStorage.getItem('tenantId');
 

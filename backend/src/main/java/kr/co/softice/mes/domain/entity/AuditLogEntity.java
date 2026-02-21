@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(name = "SD_AuditLogs", indexes = {
+@Table(name = "sd_audit_logs", indexes = {
         @Index(name = "idx_audit_tenant", columnList = "tenant_id"),
         @Index(name = "idx_audit_user", columnList = "user_id"),
         @Index(name = "idx_audit_action", columnList = "action"),

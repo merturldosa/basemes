@@ -7,6 +7,7 @@
 import { create } from 'zustand';
 import { User, LoginRequest } from '@/types';
 import authService from '@/services/authService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface AuthState {
   user: User | null;
@@ -40,9 +41,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         isAuthenticated: true,
         isLoading: false,
       });
-    } catch (error: any) {
+    } catch (error) {
       set({
-        error: error.response?.data?.message || '로그인에 실패했습니다.',
+        error: getErrorMessage(error, '로그인에 실패했습니다.'),
         isLoading: false,
       });
       throw error;

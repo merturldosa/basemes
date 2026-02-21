@@ -152,7 +152,7 @@ const BomsPage: React.FC = () => {
     });
   };
 
-  const handleUpdateDetail = (index: number, field: keyof BomDetail, value: any) => {
+  const handleUpdateDetail = (index: number, field: keyof BomDetail, value: string | number | boolean) => {
     const updatedDetails = [...(formData.details || [])];
     updatedDetails[index] = { ...updatedDetails[index], [field]: value };
     setFormData({ ...formData, details: updatedDetails });

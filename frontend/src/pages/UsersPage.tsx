@@ -38,6 +38,7 @@ import { User, UserCreateRequest, UserUpdateRequest } from '@/types';
 import userService from '@/services/userService';
 import { format } from 'date-fns';
 import EnhancedDataGrid from '@/components/common/EnhancedDataGrid';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 export default function UsersPage() {
   const { t } = useTranslation();
@@ -102,8 +103,8 @@ export default function UsersPage() {
       setOpenDialog(false);
       resetForm();
       setRefreshKey((prev) => prev + 1); // Trigger data reload
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.users.messages.saveFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.users.messages.saveFailed')), 'error');
     }
   };
 
@@ -117,8 +118,8 @@ export default function UsersPage() {
       setDeleteDialogOpen(false);
       setUserToDelete(null);
       setRefreshKey((prev) => prev + 1); // Trigger data reload
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.users.messages.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.users.messages.deleteFailed')), 'error');
     }
   };
 
@@ -133,8 +134,8 @@ export default function UsersPage() {
         showSnackbar(t('pages.users.messages.activated'), 'success');
       }
       setRefreshKey((prev) => prev + 1); // Trigger data reload
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.users.messages.statusChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.users.messages.statusChangeFailed')), 'error');
     }
   };
 

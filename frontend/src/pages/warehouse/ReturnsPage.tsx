@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 /**
  * 반품 관리 페이지
@@ -85,8 +86,8 @@ const ReturnsPage: React.FC = () => {
     try {
       const response = await axios.get('/api/returns');
       setReturns(response.data.data || []);
-    } catch (err: any) {
-      setError(err.response?.data?.message || t('pages.returns.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.returns.errors.loadFailed')));
     } finally {
       setLoading(false);
     }
@@ -176,8 +177,8 @@ const ReturnsPage: React.FC = () => {
       });
       alert(t('pages.returns.messages.approved'));
       loadReturns();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.returns.messages.approveFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.returns.messages.approveFailed')));
     }
   };
 
@@ -204,8 +205,8 @@ const ReturnsPage: React.FC = () => {
       alert(t('pages.returns.messages.rejected'));
       setRejectDialogOpen(false);
       loadReturns();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.returns.messages.rejectFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.returns.messages.rejectFailed')));
     }
   };
 
@@ -221,8 +222,8 @@ const ReturnsPage: React.FC = () => {
       });
       alert(t('pages.returns.messages.received'));
       loadReturns();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.returns.messages.receiveFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.returns.messages.receiveFailed')));
     }
   };
 
@@ -235,8 +236,8 @@ const ReturnsPage: React.FC = () => {
       await axios.post(`/api/returns/${returnEntity.returnId}/complete`);
       alert(t('pages.returns.messages.completed'));
       loadReturns();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.returns.messages.completeFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.returns.messages.completeFailed')));
     }
   };
 
@@ -256,8 +257,8 @@ const ReturnsPage: React.FC = () => {
       alert(t('pages.returns.messages.cancelled'));
       setCancelDialogOpen(false);
       loadReturns();
-    } catch (err: any) {
-      alert(err.response?.data?.message || t('pages.returns.messages.cancelFailed'));
+    } catch (err) {
+      alert(getErrorMessage(err, t('pages.returns.messages.cancelFailed')));
     }
   };
 

@@ -34,6 +34,7 @@ import weighingService, {
 import productService, { Product } from '../../services/productService';
 import lotService, { Lot } from '../../services/lotService';
 import userService from '../../services/userService';
+import { getErrorMessage } from '@/utils/errorUtils';
 import { User } from '@/types';
 
 const WeighingsPage: React.FC = () => {
@@ -152,7 +153,7 @@ const WeighingsPage: React.FC = () => {
     setVerifyData({ verifierUserId: 0, action: 'VERIFY', remarks: '' });
   };
 
-  const handleInputChange = (field: string, value: any) => {
+  const handleInputChange = (field: string, value: string | number) => {
     const newFormData = { ...formData, [field]: value };
 
     // Auto-calculate net weight when tare or gross weight changes
@@ -200,10 +201,10 @@ const WeighingsPage: React.FC = () => {
       });
       handleCloseVerifyDialog();
       loadWeighings();
-    } catch (error: any) {
+    } catch (error) {
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || '칭량 검증 실패',
+        message: getErrorMessage(error, '칭량 검증 실패'),
         severity: 'error',
       });
     }
@@ -224,10 +225,10 @@ const WeighingsPage: React.FC = () => {
       });
       handleCloseVerifyDialog();
       loadWeighings();
-    } catch (error: any) {
+    } catch (error) {
       setSnackbar({
         open: true,
-        message: error.response?.data?.message || '칭량 반려 실패',
+        message: getErrorMessage(error, '칭량 반려 실패'),
         severity: 'error',
       });
     }
@@ -394,14 +395,14 @@ const WeighingsPage: React.FC = () => {
   ];
 
   const calculateNetWeight = () => {
-    const tare = parseFloat(formData.tareWeight as any) || 0;
-    const gross = parseFloat(formData.grossWeight as any) || 0;
+    const tare = parseFloat(String(formData.tareWeight)) || 0;
+    const gross = parseFloat(String(formData.grossWeight)) || 0;
     return (gross - tare).toFixed(3);
   };
 
   const calculateVariance = () => {
     const net = parseFloat(calculateNetWeight());
-    const expected = parseFloat(formData.expectedWeight as any) || 0;
+    const expected = parseFloat(String(formData.expectedWeight)) || 0;
     if (expected === 0) return '-';
     return ((net - expected)).toFixed(3);
   };

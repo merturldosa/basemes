@@ -33,6 +33,7 @@ import qualityStandardService, { QualityStandard } from '../../services/qualityS
 import productService, { Product } from '../../services/productService';
 import workOrderService, { WorkOrder } from '../../services/workOrderService';
 import userService, { User } from '../../services/userService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const QualityInspectionsPage: React.FC = () => {
   const [qualityInspections, setQualityInspections] = useState<QualityInspection[]>([]);
@@ -196,8 +197,8 @@ const QualityInspectionsPage: React.FC = () => {
       }
       handleCloseDialog();
       loadQualityInspections();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '작업 실패'), 'error');
     }
   };
 
@@ -219,8 +220,8 @@ const QualityInspectionsPage: React.FC = () => {
       showSnackbar('품질 검사 삭제 성공', 'success');
       handleCloseDeleteDialog();
       loadQualityInspections();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '삭제 실패'), 'error');
     }
   };
 

@@ -91,7 +91,7 @@ const CommonCodesPage: React.FC = () => {
 
   useEffect(() => {
     loadCodeGroups();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   useEffect(() => {
@@ -100,7 +100,7 @@ const CommonCodesPage: React.FC = () => {
     } else {
       setCodeDetails([]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload details when selected group changes
   }, [selectedGroupId]);
 
   const loadCodeGroups = async () => {

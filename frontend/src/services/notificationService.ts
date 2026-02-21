@@ -41,7 +41,7 @@ class NotificationService {
 
     // Create STOMP client
     this.client = new Client({
-      webSocketFactory: () => socket as any,
+      webSocketFactory: () => socket as WebSocket,
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,

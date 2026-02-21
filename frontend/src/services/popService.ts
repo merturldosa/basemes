@@ -91,6 +91,16 @@ export interface ScanBarcodeRequest {
   type: 'WORK_ORDER' | 'MATERIAL' | 'PRODUCT' | 'LOT';
 }
 
+export interface ScanBarcodeResponse {
+  message?: string;
+  name?: string;
+  productName?: string;
+  workOrderNo?: string;
+  barcode?: string;
+  type?: string;
+  [key: string]: unknown;
+}
+
 // ==================== Service ====================
 
 const popService = {
@@ -98,9 +108,9 @@ const popService = {
    * Get active work orders for operator
    * GET /api/pop/work-orders/active
    */
-  getActiveWorkOrders: async (operatorId?: number): Promise<any[]> => {
+  getActiveWorkOrders: async (operatorId?: number): Promise<WorkProgress[]> => {
     const params = operatorId ? { operatorId } : {};
-    const response = await apiClient.get<any[]>('/pop/work-orders/active', params);
+    const response = await apiClient.get<WorkProgress[]>('/pop/work-orders/active', params);
     return response.data;
   },
 
@@ -112,7 +122,7 @@ const popService = {
     const response = await apiClient.post<WorkProgress>(
       `/pop/work-orders/${workOrderId}/start`,
       null,
-      { operatorId }
+      { params: { operatorId } }
     );
     return response.data;
   },
@@ -130,8 +140,8 @@ const popService = {
    * Record defect
    * POST /api/pop/work-progress/defect
    */
-  recordDefect: async (request: DefectRecordRequest): Promise<any> => {
-    const response = await apiClient.post<any>('/pop/work-progress/defect', request);
+  recordDefect: async (request: DefectRecordRequest): Promise<WorkProgress> => {
+    const response = await apiClient.post<WorkProgress>('/pop/work-progress/defect', request);
     return response.data;
   },
 
@@ -160,9 +170,9 @@ const popService = {
    * Complete work order
    * POST /api/pop/work-orders/{id}/complete
    */
-  completeWorkOrder: async (workOrderId: number, remarks?: string): Promise<any> => {
-    const params = remarks ? { remarks } : {};
-    const response = await apiClient.post<any>(`/pop/work-orders/${workOrderId}/complete`, null, params);
+  completeWorkOrder: async (workOrderId: number, remarks?: string): Promise<WorkProgress> => {
+    const config = remarks ? { params: { remarks } } : {};
+    const response = await apiClient.post<WorkProgress>(`/pop/work-orders/${workOrderId}/complete`, null, config);
     return response.data;
   },
 
@@ -189,10 +199,12 @@ const popService = {
    * Scan barcode
    * POST /api/pop/scan
    */
-  scanBarcode: async (request: ScanBarcodeRequest): Promise<any> => {
-    const response = await apiClient.post<any>('/pop/scan', null, {
-      barcode: request.barcode,
-      type: request.type
+  scanBarcode: async (request: ScanBarcodeRequest): Promise<ScanBarcodeResponse> => {
+    const response = await apiClient.post<ScanBarcodeResponse>('/pop/scan', null, {
+      params: {
+        barcode: request.barcode,
+        type: request.type,
+      },
     });
     return response.data;
   },

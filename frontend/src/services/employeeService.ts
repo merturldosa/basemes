@@ -1,4 +1,5 @@
 import apiClient from './api';
+import { PageResponse } from '@/types';
 
 export interface Employee {
   id: number;
@@ -39,14 +40,14 @@ const employeeService = {
   },
 
   getPage: async (page: number, size: number) => {
-    const response = await apiClient.get<any>('/employees/page', {
+    const response = await apiClient.get<PageResponse<Employee>>('/employees/page', {
       params: { page, size },
     });
     return response.data;
   },
 
   search: async (keyword: string, page: number, size: number) => {
-    const response = await apiClient.get<any>('/employees/search', {
+    const response = await apiClient.get<PageResponse<Employee>>('/employees/search', {
       params: { keyword, page, size },
     });
     return response.data;

@@ -33,6 +33,7 @@ import dashboardService, {
   RoleDistribution,
 } from '@/services/dashboardService';
 import ReactECharts from 'echarts-for-react';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface StatCardProps {
   title: string;
@@ -113,8 +114,8 @@ export default function OverviewDashboard() {
       setUserStats(userStatsData);
       setLoginTrend(loginTrendData);
       setRoleDistribution(roleDistData);
-    } catch (err: any) {
-      setError(err.response?.data?.message || '대시보드 데이터 로드 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '대시보드 데이터 로드 실패'));
     } finally {
       setLoading(false);
     }
@@ -129,7 +130,7 @@ export default function OverviewDashboard() {
     }, 60000);
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when trend period changes, auto-refresh via setInterval
   }, [trendDays]);
 
   // 사용자 상태 도넛 차트
@@ -186,7 +187,7 @@ export default function OverviewDashboard() {
           data: userStats.map((stat) => ({
             value: stat.count,
             name: stat.displayName,
-            itemStyle: { color: (colors as any)[stat.displayName] || '#2196f3' },
+            itemStyle: { color: (colors as Record<string, string>)[stat.displayName] || '#2196f3' },
           })),
         },
       ],

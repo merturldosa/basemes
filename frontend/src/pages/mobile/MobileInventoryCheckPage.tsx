@@ -30,6 +30,7 @@ import QRScanner from '../../components/QRScanner';
 import { barcodeService } from '../../services/barcodeService';
 import { physicalInventoryService } from '../../services/physicalInventoryService';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface ScannedItem {
   lotNo: string;
@@ -95,8 +96,8 @@ const MobileInventoryCheckPage: React.FC = () => {
       setCurrentItem(newItem);
       setShowScanner(false);
       setShowCountDialog(true);
-    } catch (err: any) {
-      setError('QR 스캔 실패: ' + (err.response?.data?.message || err.message));
+    } catch (err) {
+      setError('QR 스캔 실패: ' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -163,8 +164,8 @@ const MobileInventoryCheckPage: React.FC = () => {
 
       // 목록 초기화
       setScannedItems([]);
-    } catch (err: any) {
-      setError('실사 완료 실패: ' + (err.response?.data?.message || err.message));
+    } catch (err) {
+      setError('실사 완료 실패: ' + getErrorMessage(err));
     } finally {
       setLoading(false);
     }

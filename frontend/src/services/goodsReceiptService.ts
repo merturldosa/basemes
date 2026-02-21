@@ -82,7 +82,7 @@ export interface GoodsReceiptRequest {
   receiptStatus: string;
   receiverName: string;
   remarks: string;
-  items: any[];
+  items: GoodsReceiptItemRequest[];
 }
 
 const goodsReceiptService = {

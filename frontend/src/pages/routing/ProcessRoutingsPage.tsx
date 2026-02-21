@@ -181,7 +181,7 @@ const ProcessRoutingsPage: React.FC = () => {
     });
   };
 
-  const handleUpdateStep = (index: number, field: keyof RoutingStep, value: any) => {
+  const handleUpdateStep = (index: number, field: keyof RoutingStep, value: string | number | boolean | undefined) => {
     const updatedSteps = [...(formData.steps || [])];
     updatedSteps[index] = { ...updatedSteps[index], [field]: value };
     setFormData({ ...formData, steps: updatedSteps });

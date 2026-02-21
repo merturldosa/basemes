@@ -77,7 +77,7 @@ export default function AuditLogsPage() {
 
       setAuditLogs(response?.content || []);
       setTotalElements(response?.totalElements || 0);
-    } catch (error: any) {
+    } catch (_error) {
       setAuditLogs([]);
       setTotalElements(0);
     } finally {
@@ -87,7 +87,7 @@ export default function AuditLogsPage() {
 
   useEffect(() => {
     loadAuditLogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when pagination changes
   }, [paginationModel]);
 
   // Handle Search

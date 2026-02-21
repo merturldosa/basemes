@@ -4,7 +4,7 @@
  * @author Moon Myung-seop
  */
 
-import axios, { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from 'axios';
 import { ApiResponse, ErrorResponse } from '@/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
@@ -93,19 +93,20 @@ class ApiClient {
   }
 
   // GET request
-  async get<T>(url: string, params?: any): Promise<ApiResponse<T>> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async get<T>(url: string, params?: Record<string, any>): Promise<ApiResponse<T>> {
     const response = await this.client.get<ApiResponse<T>>(url, { params });
     return response.data;
   }
 
   // POST request
-  async post<T>(url: string, data?: any, config?: any): Promise<ApiResponse<T>> {
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await this.client.post<ApiResponse<T>>(url, data, config);
     return response.data;
   }
 
   // PUT request
-  async put<T>(url: string, data?: any): Promise<ApiResponse<T>> {
+  async put<T>(url: string, data?: unknown): Promise<ApiResponse<T>> {
     const response = await this.client.put<ApiResponse<T>>(url, data);
     return response.data;
   }
@@ -117,7 +118,7 @@ class ApiClient {
   }
 
   // PATCH request
-  async patch<T>(url: string, data?: any, config?: any): Promise<ApiResponse<T>> {
+  async patch<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<ApiResponse<T>> {
     const response = await this.client.patch<ApiResponse<T>>(url, data, config);
     return response.data;
   }

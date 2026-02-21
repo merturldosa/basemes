@@ -50,7 +50,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
     return () => {
       stopCamera();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reinitialize camera only when device index changes
   }, [currentDeviceIndex]);
 
   // 카메라 장치 목록 가져오기
@@ -77,13 +77,14 @@ const QRScanner: React.FC<QRScannerProps> = ({
 
       setDevices(cameras);
       startScanning(cameras[currentDeviceIndex].deviceId);
-    } catch (err: any) {
-      if (err.name === 'NotAllowedError') {
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'NotAllowedError') {
         setError(t('qrScanner.errors.cameraPermissionDenied'));
-      } else if (err.name === 'NotFoundError') {
+      } else if (err instanceof DOMException && err.name === 'NotFoundError') {
         setError(t('qrScanner.errors.cameraNotFound'));
       } else {
-        setError(t('qrScanner.errors.cameraInitFailed', { message: err.message }));
+        const message = err instanceof Error ? err.message : 'Unknown error';
+        setError(t('qrScanner.errors.cameraInitFailed', { message }));
       }
     }
   };
@@ -149,8 +150,9 @@ const QRScanner: React.FC<QRScannerProps> = ({
           // Non-NotFoundException decode errors are silently ignored
         }
       );
-    } catch (err: any) {
-      setError(t('qrScanner.errors.scanStartFailed', { message: err.message }));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error';
+      setError(t('qrScanner.errors.scanStartFailed', { message }));
       setIsScanning(false);
     }
   };
@@ -185,12 +187,12 @@ const QRScanner: React.FC<QRScannerProps> = ({
     if (!streamRef.current) return;
 
     const track = streamRef.current.getVideoTracks()[0];
-    const capabilities = track.getCapabilities() as any;
+    const capabilities = track.getCapabilities() as MediaTrackCapabilities & { torch?: boolean };
 
     if (capabilities.torch) {
       try {
         await track.applyConstraints({
-          advanced: [{ torch: !torchEnabled } as any]
+          advanced: [{ torch: !torchEnabled } as MediaTrackConstraintSet]
         });
         setTorchEnabled(!torchEnabled);
       } catch (err) {

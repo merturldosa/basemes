@@ -31,6 +31,7 @@ import {
 } from '@mui/icons-material';
 import employeeSkillService, { EmployeeSkill, EmployeeSkillCreateRequest, EmployeeSkillUpdateRequest } from '../../services/employeeSkillService';
 import skillMatrixService, { SkillMatrix } from '../../services/skillMatrixService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const SKILL_LEVELS = [
   { value: 'BEGINNER', label: '초급', numeric: 1 },
@@ -158,7 +159,7 @@ const EmployeeSkillsPage: React.FC = () => {
   };
 
   const handleSelectChange = (name: string, value: string | number) => {
-    const updates: any = { [name]: value };
+    const updates: Record<string, string | number> = { [name]: value };
 
     // Auto-populate numeric level when text level is selected
     if (name === 'skillLevel') {
@@ -187,8 +188,8 @@ const EmployeeSkillsPage: React.FC = () => {
       }
       handleCloseDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '작업 실패'), 'error');
     }
   };
 
@@ -210,8 +211,8 @@ const EmployeeSkillsPage: React.FC = () => {
       showSnackbar('사원 스킬 삭제 성공', 'success');
       handleCloseDeleteDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '삭제 실패'), 'error');
     }
   };
 

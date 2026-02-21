@@ -33,6 +33,7 @@ import {
   ToggleOff as ToggleOffIcon,
 } from '@mui/icons-material';
 import skillMatrixService, { SkillMatrix, SkillMatrixCreateRequest, SkillMatrixUpdateRequest } from '../../services/skillMatrixService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const SKILL_CATEGORIES = [
   { value: 'TECHNICAL', label: '기술' },
@@ -153,8 +154,8 @@ const SkillMatrixPage: React.FC = () => {
       }
       handleCloseDialog();
       loadSkills();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '작업 실패'), 'error');
     }
   };
 
@@ -168,8 +169,8 @@ const SkillMatrixPage: React.FC = () => {
         showSnackbar('스킬 활성화 성공', 'success');
       }
       loadSkills();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '상태 변경 실패'), 'error');
     }
   };
 
@@ -191,8 +192,8 @@ const SkillMatrixPage: React.FC = () => {
       showSnackbar('스킬 삭제 성공', 'success');
       handleCloseDeleteDialog();
       loadSkills();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, '삭제 실패'), 'error');
     }
   };
 

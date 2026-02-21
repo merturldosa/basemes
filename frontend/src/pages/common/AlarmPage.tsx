@@ -54,6 +54,7 @@ import {
 } from '../../services/alarmService';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -104,7 +105,7 @@ const AlarmPage: React.FC = () => {
     // Auto-refresh every 30 seconds
     const interval = setInterval(loadData, 30000);
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount, auto-refresh via setInterval
   }, []);
 
   const loadData = async () => {
@@ -124,8 +125,8 @@ const AlarmPage: React.FC = () => {
       setStatistics(stats);
       setUnreadCount(count);
       setError(null);
-    } catch (err: any) {
-      setError(err.message || t('pages.alarm.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.alarm.errors.loadFailed')));
     } finally {
       setLoading(false);
     }
@@ -137,8 +138,8 @@ const AlarmPage: React.FC = () => {
       await alarmService.markAsRead(alarmId);
       setSuccess(t('pages.alarm.messages.markedAsRead'));
       await loadData();
-    } catch (err: any) {
-      setError(err.message || t('pages.alarm.messages.markReadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.alarm.messages.markReadFailed')));
     }
   };
 
@@ -149,8 +150,8 @@ const AlarmPage: React.FC = () => {
       await alarmService.markAllAsRead(tenantId, userId);
       setSuccess(t('pages.alarm.messages.allMarkedAsRead'));
       await loadData();
-    } catch (err: any) {
-      setError(err.message || t('pages.alarm.messages.markAllReadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.alarm.messages.markAllReadFailed')));
     } finally {
       setLoading(false);
     }

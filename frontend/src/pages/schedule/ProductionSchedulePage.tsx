@@ -29,6 +29,7 @@ import {
 import { format } from 'date-fns';
 import productionScheduleService, { ProductionSchedule } from '../../services/productionScheduleService';
 import workOrderService, { WorkOrder } from '../../services/workOrderService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const ProductionSchedulePage: React.FC = () => {
   const [schedules, setSchedules] = useState<ProductionSchedule[]>([]);
@@ -51,7 +52,7 @@ const ProductionSchedulePage: React.FC = () => {
   useEffect(() => {
     loadSchedules();
     loadWorkOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when date range changes
   }, [startDate, endDate]);
 
   const loadSchedules = async () => {
@@ -86,8 +87,8 @@ const ProductionSchedulePage: React.FC = () => {
       setOpenGenerateDialog(false);
       setSelectedWorkOrder(null);
       loadSchedules();
-    } catch (error: any) {
-      const message = error.response?.data?.message || '일정 생성 실패';
+    } catch (error) {
+      const message = getErrorMessage(error, '일정 생성 실패');
       setSnackbar({ open: true, message, severity: 'error' });
     }
   };

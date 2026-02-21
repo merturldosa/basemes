@@ -32,6 +32,7 @@ import {
 import BarcodeScanner from '@/components/pop/BarcodeScanner';
 import { BarcodeScanResult } from '@/hooks/useBarcodeScanner';
 import popService, { ScanBarcodeRequest } from '@/services/popService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface ScanHistory {
   id: string;
@@ -111,9 +112,8 @@ const POPScannerPage: React.FC = () => {
         message: t('pages.popScanner.scanSuccess', { type: currentScanType.label, data: result.data }),
         severity: 'success',
       });
-    } catch (error: any) {
-      const errorMessage =
-        error?.response?.data?.message || error?.message || t('pages.popScanner.scanError');
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t('pages.popScanner.scanError'));
 
       // Mark the scan as failed with error message
       setScanHistory((prev) =>

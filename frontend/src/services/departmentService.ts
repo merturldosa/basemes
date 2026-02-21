@@ -1,4 +1,5 @@
 import apiClient from './api';
+import { PageResponse } from '@/types';
 
 export interface Department {
   id: number;
@@ -29,7 +30,7 @@ const departmentService = {
   },
 
   getPage: async (page: number, size: number) => {
-    const response = await apiClient.get<any>('/departments/page', {
+    const response = await apiClient.get<PageResponse<Department>>('/departments/page', {
       params: { page, size },
     });
     return response.data;

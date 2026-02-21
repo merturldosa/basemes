@@ -162,7 +162,7 @@ const InspectionFormsPage: React.FC = () => {
     setFormData({ ...formData, fields });
   };
 
-  const handleFieldChange = (index: number, key: keyof InspectionFormField, value: any) => {
+  const handleFieldChange = (index: number, key: keyof InspectionFormField, value: string | number | boolean) => {
     const fields = [...(formData.fields || [])];
     fields[index] = { ...fields[index], [key]: value };
     setFormData({ ...formData, fields });
@@ -203,7 +203,7 @@ const InspectionFormsPage: React.FC = () => {
       field: 'fields',
       headerName: '필드 수',
       width: 100,
-      valueGetter: (params: any) => params.value ? params.value.length : 0,
+      valueGetter: (params: { value: InspectionFormField[] | null }) => params.value ? params.value.length : 0,
     },
     {
       field: 'isActive',

@@ -35,7 +35,7 @@ import {
   Close as CloseIcon,
   RemoveCircleOutline as RemoveIcon,
 } from '@mui/icons-material';
-import salesOrderService, { SalesOrder, SalesOrderCreateRequest, SalesOrderUpdateRequest } from '../../services/salesOrderService';
+import salesOrderService, { SalesOrder, SalesOrderItem, SalesOrderCreateRequest, SalesOrderUpdateRequest } from '../../services/salesOrderService';
 import customerService, { Customer } from '../../services/customerService';
 
 const SalesOrdersPage: React.FC = () => {
@@ -230,9 +230,9 @@ const SalesOrdersPage: React.FC = () => {
     setFormData({ ...formData, items: newItems });
   };
 
-  const updateItem = (index: number, field: string, value: any) => {
+  const updateItem = (index: number, field: keyof SalesOrderItem, value: string | number) => {
     const newItems = [...formData.items];
-    (newItems[index] as any)[field] = value;
+    newItems[index] = { ...newItems[index], [field]: value };
     setFormData({ ...formData, items: newItems });
   };
 

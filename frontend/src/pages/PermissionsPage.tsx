@@ -40,6 +40,7 @@ import permissionService, {
   PermissionCreateRequest,
   PermissionUpdateRequest,
 } from '@/services/permissionService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const MODULES = [
   '사용자관리',
@@ -82,9 +83,9 @@ export default function PermissionsPage() {
       setError(null);
       const data = await permissionService.getPermissions();
       setPermissions(data || []);
-    } catch (err: any) {
+    } catch (err) {
       setPermissions([]);
-      setError(err.response?.data?.message || '권한 목록 로드 실패');
+      setError(getErrorMessage(err, '권한 목록 로드 실패'));
     } finally {
       setLoading(false);
     }
@@ -97,8 +98,8 @@ export default function PermissionsPage() {
       setCreateDialogOpen(false);
       setFormData({ permissionCode: '', permissionName: '', module: '', description: '' });
       loadPermissions();
-    } catch (err: any) {
-      setError(err.response?.data?.message || '권한 생성 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '권한 생성 실패'));
     }
   };
 
@@ -116,8 +117,8 @@ export default function PermissionsPage() {
       setEditDialogOpen(false);
       setSelectedPermission(null);
       loadPermissions();
-    } catch (err: any) {
-      setError(err.response?.data?.message || '권한 수정 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '권한 수정 실패'));
     }
   };
 
@@ -130,8 +131,8 @@ export default function PermissionsPage() {
       setDeleteDialogOpen(false);
       setSelectedPermission(null);
       loadPermissions();
-    } catch (err: any) {
-      setError(err.response?.data?.message || '권한 삭제 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '권한 삭제 실패'));
     }
   };
 
@@ -144,8 +145,8 @@ export default function PermissionsPage() {
         await permissionService.activatePermission(permission.permissionId);
       }
       loadPermissions();
-    } catch (err: any) {
-      setError(err.response?.data?.message || '권한 상태 변경 실패');
+    } catch (err) {
+      setError(getErrorMessage(err, '권한 상태 변경 실패'));
     }
   };
 

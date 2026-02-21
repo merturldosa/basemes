@@ -80,6 +80,7 @@ export interface EnhancedDataGridProps<T> extends Omit<DataGridProps, 'rows' | '
  * />
  * ```
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function EnhancedDataGrid<T extends Record<string, any>>({
   loadData,
   columns,

@@ -11,6 +11,7 @@ import {
   UserUpdateRequest,
   ChangePasswordRequest,
   PageResponse,
+  Role,
 } from '@/types';
 
 class UserService {
@@ -88,8 +89,8 @@ class UserService {
   /**
    * 사용자 역할 조회
    */
-  async getUserRoles(userId: number): Promise<any[]> {
-    const response = await apiClient.get<any[]>(`${this.basePath}/${userId}/roles`);
+  async getUserRoles(userId: number): Promise<Role[]> {
+    const response = await apiClient.get<Role[]>(`${this.basePath}/${userId}/roles`);
     return response.data;
   }
 

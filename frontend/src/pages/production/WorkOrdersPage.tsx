@@ -36,6 +36,7 @@ import { useTranslation } from 'react-i18next';
 import workOrderService, { WorkOrder, WorkOrderCreateRequest, WorkOrderUpdateRequest } from '../../services/workOrderService';
 import productService, { Product } from '../../services/productService';
 import processService, { Process } from '../../services/processService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const WorkOrdersPage: React.FC = () => {
   const { t } = useTranslation();
@@ -157,8 +158,8 @@ const WorkOrdersPage: React.FC = () => {
       }
       handleCloseDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.operationFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workOrders.errors.operationFailed')), 'error');
     }
   };
 
@@ -167,8 +168,8 @@ const WorkOrdersPage: React.FC = () => {
       await workOrderService.startWorkOrder(workOrder.workOrderId);
       showSnackbar(t('pages.workOrders.messages.startSuccess'), 'success');
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.startFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workOrders.errors.startFailed')), 'error');
     }
   };
 
@@ -177,8 +178,8 @@ const WorkOrdersPage: React.FC = () => {
       await workOrderService.completeWorkOrder(workOrder.workOrderId);
       showSnackbar(t('pages.workOrders.messages.completeSuccess'), 'success');
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.completeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workOrders.errors.completeFailed')), 'error');
     }
   };
 
@@ -187,8 +188,8 @@ const WorkOrdersPage: React.FC = () => {
       await workOrderService.cancelWorkOrder(workOrder.workOrderId);
       showSnackbar(t('pages.workOrders.messages.cancelSuccess'), 'success');
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.cancelFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workOrders.errors.cancelFailed')), 'error');
     }
   };
 
@@ -210,8 +211,8 @@ const WorkOrdersPage: React.FC = () => {
       showSnackbar(t('pages.workOrders.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadData();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.workOrders.errors.deleteFailed')), 'error');
     }
   };
 

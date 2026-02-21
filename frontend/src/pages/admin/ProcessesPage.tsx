@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import processService, { Process, ProcessCreateRequest, ProcessUpdateRequest } from '../../services/processService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const ProcessesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -51,7 +52,7 @@ const ProcessesPage: React.FC = () => {
 
   useEffect(() => {
     loadProcesses();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   const loadProcesses = async () => {
@@ -121,8 +122,8 @@ const ProcessesPage: React.FC = () => {
       }
       handleCloseDialog();
       loadProcesses();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.processes.errors.operationFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.processes.errors.operationFailed')), 'error');
     }
   };
 
@@ -136,8 +137,8 @@ const ProcessesPage: React.FC = () => {
         showSnackbar(t('pages.processes.messages.activateSuccess'), 'success');
       }
       loadProcesses();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.processes.errors.statusChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.processes.errors.statusChangeFailed')), 'error');
     }
   };
 
@@ -159,8 +160,8 @@ const ProcessesPage: React.FC = () => {
       showSnackbar(t('pages.processes.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadProcesses();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.processes.errors.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.processes.errors.deleteFailed')), 'error');
     }
   };
 

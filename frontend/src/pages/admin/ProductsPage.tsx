@@ -28,6 +28,7 @@ import {
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import productService, { Product, ProductCreateRequest, ProductUpdateRequest } from '../../services/productService';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 const ProductsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -53,7 +54,7 @@ const ProductsPage: React.FC = () => {
 
   useEffect(() => {
     loadProducts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
   }, []);
 
   const loadProducts = async () => {
@@ -129,8 +130,8 @@ const ProductsPage: React.FC = () => {
       }
       handleCloseDialog();
       loadProducts();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.products.errors.saveFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.products.errors.saveFailed')), 'error');
     }
   };
 
@@ -144,8 +145,8 @@ const ProductsPage: React.FC = () => {
         showSnackbar(t('pages.products.messages.activateSuccess'), 'success');
       }
       loadProducts();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.products.errors.statusChangeFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.products.errors.statusChangeFailed')), 'error');
     }
   };
 
@@ -167,8 +168,8 @@ const ProductsPage: React.FC = () => {
       showSnackbar(t('pages.products.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadProducts();
-    } catch (error: any) {
-      showSnackbar(error.response?.data?.message || t('pages.products.errors.deleteFailed'), 'error');
+    } catch (error) {
+      showSnackbar(getErrorMessage(error, t('pages.products.errors.deleteFailed')), 'error');
     }
   };
 

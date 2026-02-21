@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
 @Entity
-@Table(name = "SD_Themes", indexes = {
+@Table(name = "sd_themes", indexes = {
         @Index(name = "idx_theme_code", columnList = "theme_code", unique = true),
         @Index(name = "idx_theme_industry", columnList = "industry_type"),
         @Index(name = "idx_theme_default", columnList = "is_default")

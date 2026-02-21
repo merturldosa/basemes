@@ -69,7 +69,20 @@ const POPWorkProgressPage: React.FC = () => {
       const response = await axios.get('/api/pop/work-orders/active');
       const workOrdersData = response.data;
       if (workOrdersData?.data) {
-        const progressList: WorkProgress[] = workOrdersData.data.map((wo: any) => ({
+        interface WorkOrderData {
+          workOrderId: number;
+          workOrderNo: string;
+          productName?: string;
+          productCode?: string;
+          operatorName?: string;
+          targetQuantity?: number;
+          producedQuantity?: number;
+          defectQuantity?: number;
+          status?: string;
+          actualStartDate?: string;
+          plannedStartDate?: string;
+        }
+        const progressList: WorkProgress[] = workOrdersData.data.map((wo: WorkOrderData) => ({
           workOrderId: wo.workOrderId,
           workOrderNo: wo.workOrderNo,
           productName: wo.productName || 'Unknown Product',

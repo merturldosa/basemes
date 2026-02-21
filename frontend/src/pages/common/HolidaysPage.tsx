@@ -47,9 +47,13 @@ import {
   getHolidayTypeLabel,
   getHolidayTypeColor,
   getRecurrenceRuleLabel,
-  formatTime
+  formatTime,
+  BusinessDayCheckResult,
+  BusinessDayCalculationResult,
+  BusinessDayAddResult,
 } from '../../services/holidayService';
 import { useAuthStore } from '@/stores/authStore';
+import { getErrorMessage } from '@/utils/errorUtils';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -101,13 +105,13 @@ export default function HolidaysPage() {
   // ==================== Business Day Calculator State ====================
   const [calculatorType, setCalculatorType] = useState<'check' | 'calculate' | 'add'>('check');
   const [checkDate, setCheckDate] = useState('');
-  const [checkResult, setCheckResult] = useState<any>(null);
+  const [checkResult, setCheckResult] = useState<BusinessDayCheckResult | null>(null);
   const [calcStartDate, setCalcStartDate] = useState('');
   const [calcEndDate, setCalcEndDate] = useState('');
-  const [calcResult, setCalcResult] = useState<any>(null);
+  const [calcResult, setCalcResult] = useState<BusinessDayCalculationResult | null>(null);
   const [addStartDate, setAddStartDate] = useState('');
   const [addDays, setAddDays] = useState(0);
-  const [addResult, setAddResult] = useState<any>(null);
+  const [addResult, setAddResult] = useState<BusinessDayAddResult | null>(null);
 
   // ==================== General State ====================
   const [loading, setLoading] = useState(false);
@@ -118,7 +122,7 @@ export default function HolidaysPage() {
   useEffect(() => {
     loadHolidays();
     loadWorkingHours();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- reload when selected year changes
   }, [selectedYear]);
 
   // ==================== Data Loading ====================
@@ -129,8 +133,8 @@ export default function HolidaysPage() {
       setError(null);
       const data = await holidayService.getHolidaysByYear(tenantId, selectedYear);
       setHolidays(data || []);
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.loadFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.loadFailed')));
       setHolidays([]);
     } finally {
       setLoading(false);
@@ -141,7 +145,7 @@ export default function HolidaysPage() {
     try {
       const data = await workingHoursService.getAllWorkingHours(tenantId);
       setWorkingHours(data || []);
-    } catch (err: any) {
+    } catch (_err) {
       setWorkingHours([]);
     }
   };
@@ -191,8 +195,8 @@ export default function HolidaysPage() {
       }
       setHolidayDialogOpen(false);
       loadHolidays();
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.saveFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.saveFailed')));
     }
   };
 
@@ -202,8 +206,8 @@ export default function HolidaysPage() {
       await holidayService.deleteHoliday(selectedHoliday.holidayId);
       setDeleteHolidayDialogOpen(false);
       loadHolidays();
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.deleteFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.deleteFailed')));
     }
   };
 
@@ -279,8 +283,8 @@ export default function HolidaysPage() {
       }
       setWorkingHoursDialogOpen(false);
       loadWorkingHours();
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.workingHoursSaveFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.workingHoursSaveFailed')));
     }
   };
 
@@ -290,8 +294,8 @@ export default function HolidaysPage() {
       await workingHoursService.deleteWorkingHours(selectedWorkingHours.workingHoursId);
       setDeleteWorkingHoursDialogOpen(false);
       loadWorkingHours();
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.workingHoursDeleteFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.workingHoursDeleteFailed')));
     }
   };
 
@@ -299,8 +303,8 @@ export default function HolidaysPage() {
     try {
       await workingHoursService.setAsDefault(wh.workingHoursId, tenantId);
       loadWorkingHours();
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.setDefaultFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.setDefaultFailed')));
     }
   };
 
@@ -310,8 +314,8 @@ export default function HolidaysPage() {
     try {
       const result = await holidayService.checkBusinessDay(tenantId, checkDate);
       setCheckResult(result);
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.checkBusinessDayFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.checkBusinessDayFailed')));
     }
   };
 
@@ -319,8 +323,8 @@ export default function HolidaysPage() {
     try {
       const result = await holidayService.calculateBusinessDays(tenantId, calcStartDate, calcEndDate);
       setCalcResult(result);
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.calculateBusinessDaysFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.calculateBusinessDaysFailed')));
     }
   };
 
@@ -328,8 +332,8 @@ export default function HolidaysPage() {
     try {
       const result = await holidayService.addBusinessDays(tenantId, addStartDate, addDays);
       setAddResult(result);
-    } catch (err: any) {
-      setError(err.message || t('pages.holidays.errors.addBusinessDaysFailed'));
+    } catch (err) {
+      setError(getErrorMessage(err, t('pages.holidays.errors.addBusinessDaysFailed')));
     }
   };
 
@@ -582,7 +586,7 @@ export default function HolidaysPage() {
                 <Select
                   value={calculatorType}
                   label={t('pages.holidays.calculator.calcType')}
-                  onChange={(e) => setCalculatorType(e.target.value as any)}
+                  onChange={(e) => setCalculatorType(e.target.value as 'check' | 'calculate' | 'add')}
                 >
                   <MenuItem value="check">{t('pages.holidays.calculator.checkBusinessDay')}</MenuItem>
                   <MenuItem value="calculate">{t('pages.holidays.calculator.calculateBusinessDays')}</MenuItem>
@@ -785,7 +789,7 @@ export default function HolidaysPage() {
                   value={holidayFormData.holidayType}
                   label={t('pages.holidays.fields.holidayType')}
                   onChange={(e) =>
-                    setHolidayFormData({ ...holidayFormData, holidayType: e.target.value as any })
+                    setHolidayFormData({ ...holidayFormData, holidayType: e.target.value as 'NATIONAL' | 'COMPANY' | 'SPECIAL' })
                   }
                 >
                   <MenuItem value="NATIONAL">{t('pages.holidays.types.national')}</MenuItem>

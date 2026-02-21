@@ -72,7 +72,7 @@ export const useBarcodeScanner = (options: BarcodeScannerOptions = {}) => {
         onError(err instanceof Error ? err : new Error(errorMessage));
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- startContinuousScanning is stable via ref
   }, [continuous, onError]);
 
   const stopScanning = useCallback(() => {

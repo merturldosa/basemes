@@ -366,7 +366,7 @@ class OfflineSyncService {
     for (const { queue } of queues) {
       const keys = await queue.keys();
       for (const key of keys) {
-        const item = await queue.getItem<any>(key);
+        const item = await queue.getItem<{ retryCount: number }>(key);
         if (item && item.retryCount >= this.maxRetries) {
           await queue.removeItem(key);
         }

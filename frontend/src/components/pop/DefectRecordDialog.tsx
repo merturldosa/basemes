@@ -212,7 +212,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
           <RadioGroup
             row
             value={severity}
-            onChange={(e) => setSeverity(e.target.value as any)}
+            onChange={(e) => setSeverity(e.target.value as 'CRITICAL' | 'MAJOR' | 'MINOR')}
           >
             <FormControlLabel
               value="MINOR"

@@ -105,11 +105,19 @@ export interface GanttTask {
   };
 }
 
+export interface GanttResource {
+  equipmentId?: number;
+  equipmentCode?: string;
+  equipmentName?: string;
+  workers?: number;
+  assignedUserName?: string;
+}
+
 export interface GanttChartData {
   startDate: string;
   endDate: string;
   tasks: GanttTask[];
-  resources?: any[];
+  resources?: GanttResource[];
 }
 
 const productionScheduleService = {

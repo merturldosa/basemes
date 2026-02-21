@@ -243,7 +243,7 @@ const PurchaseOrdersPage: React.FC = () => {
     setFormData({ ...formData, items: newItems });
   };
 
-  const updateItem = (index: number, field: string, value: any) => {
+  const updateItem = (index: number, field: string, value: string | number) => {
     const newItems = [...formData.items];
     const updatedItem = { ...newItems[index], [field]: value };
 
