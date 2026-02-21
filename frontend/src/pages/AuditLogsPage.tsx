@@ -31,9 +31,12 @@ import {
 import { DataGrid, GridColDef, GridPaginationModel } from '@mui/x-data-grid';
 import { AuditLog } from '@/types';
 import auditLogService from '@/services/auditLogService';
+import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
 export default function AuditLogsPage() {
+  const { t } = useTranslation();
+
   // State
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(false);
@@ -117,7 +120,7 @@ export default function AuditLogsPage() {
   const columns: GridColDef[] = [
     {
       field: 'timestamp',
-      headerName: '시간',
+      headerName: t('pages.auditLogs.fields.timestamp'),
       width: 180,
       renderCell: (params) => {
         try {
@@ -132,13 +135,13 @@ export default function AuditLogsPage() {
     },
     {
       field: 'username',
-      headerName: '사용자',
+      headerName: t('pages.auditLogs.fields.username'),
       width: 150,
       flex: 1,
     },
     {
       field: 'action',
-      headerName: '작업',
+      headerName: t('pages.auditLogs.fields.action'),
       width: 120,
       renderCell: (params) => (
         <Chip
@@ -158,23 +161,23 @@ export default function AuditLogsPage() {
     },
     {
       field: 'entityType',
-      headerName: '대상 유형',
+      headerName: t('pages.auditLogs.fields.entityType'),
       width: 150,
       flex: 1,
     },
     {
       field: 'entityId',
-      headerName: '대상 ID',
+      headerName: t('pages.auditLogs.fields.entityId'),
       width: 100,
     },
     {
       field: 'success',
-      headerName: '성공 여부',
+      headerName: t('pages.auditLogs.fields.success'),
       width: 100,
       renderCell: (params) => (
         <Chip
           icon={params.value ? <SuccessIcon /> : <FailIcon />}
-          label={params.value ? '성공' : '실패'}
+          label={params.value ? t('pages.auditLogs.filters.successLabel') : t('pages.auditLogs.filters.failLabel')}
           color={params.value ? 'success' : 'error'}
           size="small"
         />
@@ -182,12 +185,12 @@ export default function AuditLogsPage() {
     },
     {
       field: 'ipAddress',
-      headerName: 'IP 주소',
+      headerName: t('pages.auditLogs.fields.ipAddress'),
       width: 140,
     },
     {
       field: 'actions',
-      headerName: '상세',
+      headerName: t('pages.auditLogs.fields.detail'),
       width: 80,
       sortable: false,
       renderCell: (params) => (
@@ -196,7 +199,7 @@ export default function AuditLogsPage() {
           startIcon={<InfoIcon />}
           onClick={() => handleOpenDetailDialog(params.row)}
         >
-          보기
+          {t('pages.auditLogs.actions.view')}
         </Button>
       ),
     },
@@ -207,10 +210,10 @@ export default function AuditLogsPage() {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          감사 로그
+          {t('pages.auditLogs.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          시스템 작업 이력을 조회합니다
+          {t('pages.auditLogs.subtitle')}
         </Typography>
       </Box>
 
@@ -219,7 +222,7 @@ export default function AuditLogsPage() {
         <Grid container spacing={2}>
           <Grid item xs={12} md={3}>
             <TextField
-              label="사용자명"
+              label={t('pages.auditLogs.filters.username')}
               value={filters.username}
               onChange={(e) => setFilters({ ...filters, username: e.target.value })}
               size="small"
@@ -236,23 +239,23 @@ export default function AuditLogsPage() {
           <Grid item xs={12} md={2}>
             <TextField
               select
-              label="작업"
+              label={t('pages.auditLogs.filters.action')}
               value={filters.action}
               onChange={(e) => setFilters({ ...filters, action: e.target.value })}
               size="small"
               fullWidth
             >
-              <MenuItem value="">전체</MenuItem>
-              <MenuItem value="CREATE">생성</MenuItem>
-              <MenuItem value="UPDATE">수정</MenuItem>
-              <MenuItem value="DELETE">삭제</MenuItem>
-              <MenuItem value="LOGIN">로그인</MenuItem>
-              <MenuItem value="LOGOUT">로그아웃</MenuItem>
+              <MenuItem value="">{t('pages.auditLogs.filters.all')}</MenuItem>
+              <MenuItem value="CREATE">{t('pages.auditLogs.actions.create')}</MenuItem>
+              <MenuItem value="UPDATE">{t('pages.auditLogs.actions.update')}</MenuItem>
+              <MenuItem value="DELETE">{t('pages.auditLogs.actions.delete')}</MenuItem>
+              <MenuItem value="LOGIN">{t('pages.auditLogs.actions.login')}</MenuItem>
+              <MenuItem value="LOGOUT">{t('pages.auditLogs.actions.logout')}</MenuItem>
             </TextField>
           </Grid>
           <Grid item xs={12} md={2}>
             <TextField
-              label="대상 유형"
+              label={t('pages.auditLogs.filters.entityType')}
               value={filters.entityType}
               onChange={(e) => setFilters({ ...filters, entityType: e.target.value })}
               size="small"
@@ -261,7 +264,7 @@ export default function AuditLogsPage() {
           </Grid>
           <Grid item xs={12} md={2}>
             <TextField
-              label="시작일"
+              label={t('common.labels.startDate')}
               type="date"
               value={filters.startDate}
               onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
@@ -274,7 +277,7 @@ export default function AuditLogsPage() {
           </Grid>
           <Grid item xs={12} md={2}>
             <TextField
-              label="종료일"
+              label={t('common.labels.endDate')}
               type="date"
               value={filters.endDate}
               onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
@@ -288,32 +291,32 @@ export default function AuditLogsPage() {
           <Grid item xs={12} md={1}>
             <TextField
               select
-              label="성공"
+              label={t('pages.auditLogs.filters.success')}
               value={filters.success}
               onChange={(e) => setFilters({ ...filters, success: e.target.value })}
               size="small"
               fullWidth
             >
-              <MenuItem value="ALL">전체</MenuItem>
-              <MenuItem value="SUCCESS">성공</MenuItem>
-              <MenuItem value="FAIL">실패</MenuItem>
+              <MenuItem value="ALL">{t('pages.auditLogs.filters.all')}</MenuItem>
+              <MenuItem value="SUCCESS">{t('pages.auditLogs.filters.successLabel')}</MenuItem>
+              <MenuItem value="FAIL">{t('pages.auditLogs.filters.failLabel')}</MenuItem>
             </TextField>
           </Grid>
         </Grid>
 
         <Stack direction="row" spacing={2} sx={{ mt: 2 }} justifyContent="flex-end">
           <Button variant="outlined" onClick={handleResetFilters}>
-            초기화
+            {t('common.buttons.reset')}
           </Button>
           <Button
             variant="outlined"
             startIcon={<RefreshIcon />}
             onClick={loadAuditLogs}
           >
-            새로고침
+            {t('common.buttons.refresh')}
           </Button>
           <Button variant="contained" startIcon={<SearchIcon />} onClick={handleSearch}>
-            검색
+            {t('common.buttons.search')}
           </Button>
         </Stack>
       </Paper>
@@ -347,14 +350,14 @@ export default function AuditLogsPage() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>감사 로그 상세</DialogTitle>
+        <DialogTitle>{t('pages.auditLogs.detail.title')}</DialogTitle>
         <DialogContent>
           {selectedLog && (
             <Stack spacing={2} sx={{ mt: 2 }}>
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    작업 시간
+                    {t('pages.auditLogs.fields.actionTime')}
                   </Typography>
                   <Typography variant="body1">
                     {(() => {
@@ -371,14 +374,14 @@ export default function AuditLogsPage() {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    사용자
+                    {t('pages.auditLogs.fields.username')}
                   </Typography>
                   <Typography variant="body1">{selectedLog.username}</Typography>
                 </Grid>
 
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    작업
+                    {t('pages.auditLogs.fields.action')}
                   </Typography>
                   <Chip
                     label={selectedLog.action}
@@ -396,11 +399,11 @@ export default function AuditLogsPage() {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    성공 여부
+                    {t('pages.auditLogs.fields.success')}
                   </Typography>
                   <Chip
                     icon={selectedLog.success ? <SuccessIcon /> : <FailIcon />}
-                    label={selectedLog.success ? '성공' : '실패'}
+                    label={selectedLog.success ? t('pages.auditLogs.filters.successLabel') : t('pages.auditLogs.filters.failLabel')}
                     color={selectedLog.success ? 'success' : 'error'}
                     size="small"
                   />
@@ -408,20 +411,20 @@ export default function AuditLogsPage() {
 
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    대상 유형
+                    {t('pages.auditLogs.fields.entityType')}
                   </Typography>
                   <Typography variant="body1">{selectedLog.entityType}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    대상 ID
+                    {t('pages.auditLogs.fields.entityId')}
                   </Typography>
                   <Typography variant="body1">{selectedLog.entityId}</Typography>
                 </Grid>
 
                 <Grid item xs={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    IP 주소
+                    {t('pages.auditLogs.fields.ipAddress')}
                   </Typography>
                   <Typography variant="body1">{selectedLog.ipAddress || '-'}</Typography>
                 </Grid>
@@ -437,7 +440,7 @@ export default function AuditLogsPage() {
                 {selectedLog.errorMessage && (
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" color="error">
-                      오류 메시지
+                      {t('pages.auditLogs.fields.errorMessage')}
                     </Typography>
                     <Paper sx={{ p: 2, bgcolor: 'error.lighter' }}>
                       <Typography variant="body2" color="error">
@@ -450,7 +453,7 @@ export default function AuditLogsPage() {
                 {selectedLog.oldValue && (
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" color="text.secondary">
-                      이전 값
+                      {t('pages.auditLogs.fields.oldValue')}
                     </Typography>
                     <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
                       <pre style={{ margin: 0, fontSize: '0.875rem', overflow: 'auto' }}>
@@ -463,7 +466,7 @@ export default function AuditLogsPage() {
                 {selectedLog.newValue && (
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" color="text.secondary">
-                      새로운 값
+                      {t('pages.auditLogs.fields.newValue')}
                     </Typography>
                     <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
                       <pre style={{ margin: 0, fontSize: '0.875rem', overflow: 'auto' }}>
@@ -476,7 +479,7 @@ export default function AuditLogsPage() {
                 {selectedLog.metadata && (
                   <Grid item xs={12}>
                     <Typography variant="subtitle2" color="text.secondary">
-                      메타데이터
+                      {t('pages.auditLogs.fields.metadata')}
                     </Typography>
                     <Paper sx={{ p: 2, bgcolor: 'grey.100' }}>
                       <pre style={{ margin: 0, fontSize: '0.875rem', overflow: 'auto' }}>
@@ -490,7 +493,7 @@ export default function AuditLogsPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDetailDialogOpen(false)}>닫기</Button>
+          <Button onClick={() => setDetailDialogOpen(false)}>{t('common.buttons.close')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

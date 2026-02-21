@@ -36,6 +36,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import { useTranslation } from 'react-i18next';
 import {
   holidayService,
   workingHoursService,
@@ -66,6 +67,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function HolidaysPage() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [currentTab, setCurrentTab] = useState(0);
   const tenantId = user?.tenantId ?? '';
@@ -128,7 +130,7 @@ export default function HolidaysPage() {
       const data = await holidayService.getHolidaysByYear(tenantId, selectedYear);
       setHolidays(data || []);
     } catch (err: any) {
-      setError(err.message || '휴일 목록 로드 실패');
+      setError(err.message || t('pages.holidays.errors.loadFailed'));
       setHolidays([]);
     } finally {
       setLoading(false);
@@ -190,7 +192,7 @@ export default function HolidaysPage() {
       setHolidayDialogOpen(false);
       loadHolidays();
     } catch (err: any) {
-      setError(err.message || '휴일 저장 실패');
+      setError(err.message || t('pages.holidays.errors.saveFailed'));
     }
   };
 
@@ -201,7 +203,7 @@ export default function HolidaysPage() {
       setDeleteHolidayDialogOpen(false);
       loadHolidays();
     } catch (err: any) {
-      setError(err.message || '휴일 삭제 실패');
+      setError(err.message || t('pages.holidays.errors.deleteFailed'));
     }
   };
 
@@ -278,7 +280,7 @@ export default function HolidaysPage() {
       setWorkingHoursDialogOpen(false);
       loadWorkingHours();
     } catch (err: any) {
-      setError(err.message || '근무 시간 저장 실패');
+      setError(err.message || t('pages.holidays.errors.workingHoursSaveFailed'));
     }
   };
 
@@ -289,7 +291,7 @@ export default function HolidaysPage() {
       setDeleteWorkingHoursDialogOpen(false);
       loadWorkingHours();
     } catch (err: any) {
-      setError(err.message || '근무 시간 삭제 실패');
+      setError(err.message || t('pages.holidays.errors.workingHoursDeleteFailed'));
     }
   };
 
@@ -298,7 +300,7 @@ export default function HolidaysPage() {
       await workingHoursService.setAsDefault(wh.workingHoursId, tenantId);
       loadWorkingHours();
     } catch (err: any) {
-      setError(err.message || '기본 설정 실패');
+      setError(err.message || t('pages.holidays.errors.setDefaultFailed'));
     }
   };
 
@@ -309,7 +311,7 @@ export default function HolidaysPage() {
       const result = await holidayService.checkBusinessDay(tenantId, checkDate);
       setCheckResult(result);
     } catch (err: any) {
-      setError(err.message || '영업일 확인 실패');
+      setError(err.message || t('pages.holidays.errors.checkBusinessDayFailed'));
     }
   };
 
@@ -318,7 +320,7 @@ export default function HolidaysPage() {
       const result = await holidayService.calculateBusinessDays(tenantId, calcStartDate, calcEndDate);
       setCalcResult(result);
     } catch (err: any) {
-      setError(err.message || '영업일 계산 실패');
+      setError(err.message || t('pages.holidays.errors.calculateBusinessDaysFailed'));
     }
   };
 
@@ -327,7 +329,7 @@ export default function HolidaysPage() {
       const result = await holidayService.addBusinessDays(tenantId, addStartDate, addDays);
       setAddResult(result);
     } catch (err: any) {
-      setError(err.message || '영업일 더하기 실패');
+      setError(err.message || t('pages.holidays.errors.addBusinessDaysFailed'));
     }
   };
 
@@ -336,17 +338,17 @@ export default function HolidaysPage() {
   const holidayColumns: GridColDef[] = [
     {
       field: 'holidayDate',
-      headerName: '날짜',
+      headerName: t('pages.holidays.fields.date'),
       width: 150,
       valueFormatter: (params) => {
         const date = new Date(params.value);
         return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
       }
     },
-    { field: 'holidayName', headerName: '휴일명', width: 200 },
+    { field: 'holidayName', headerName: t('pages.holidays.fields.name'), width: 200 },
     {
       field: 'holidayType',
-      headerName: '타입',
+      headerName: t('pages.holidays.fields.type'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
@@ -358,7 +360,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'isRecurring',
-      headerName: '반복',
+      headerName: t('pages.holidays.fields.recurring'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         params.value ? (
@@ -370,21 +372,21 @@ export default function HolidaysPage() {
     },
     {
       field: 'isWorkingDay',
-      headerName: '근무일',
+      headerName: t('pages.holidays.fields.workingDay'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params.value ? '근무' : '휴무'}
+          label={params.value ? t('pages.holidays.status.working') : t('pages.holidays.status.dayOff')}
           color={params.value ? 'success' : 'default'}
           size="small"
           variant="outlined"
         />
       )
     },
-    { field: 'description', headerName: '설명', width: 250 },
+    { field: 'description', headerName: t('common.labels.description'), width: 250 },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 120,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -401,18 +403,18 @@ export default function HolidaysPage() {
   ];
 
   const workingHoursColumns: GridColDef[] = [
-    { field: 'scheduleName', headerName: '스케줄명', width: 200 },
+    { field: 'scheduleName', headerName: t('pages.holidays.workingHours.scheduleName'), width: 200 },
     {
       field: 'isDefault',
-      headerName: '기본',
+      headerName: t('pages.holidays.workingHours.default'),
       width: 80,
       renderCell: (params: GridRenderCellParams) => (
-        params.value ? <Chip label="기본" color="primary" size="small" /> : null
+        params.value ? <Chip label={t('pages.holidays.workingHours.default')} color="primary" size="small" /> : null
       )
     },
     {
       field: 'mondayStart',
-      headerName: '월',
+      headerName: t('pages.holidays.weekdays.mon'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -421,7 +423,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'tuesdayStart',
-      headerName: '화',
+      headerName: t('pages.holidays.weekdays.tue'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -430,7 +432,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'wednesdayStart',
-      headerName: '수',
+      headerName: t('pages.holidays.weekdays.wed'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -439,7 +441,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'thursdayStart',
-      headerName: '목',
+      headerName: t('pages.holidays.weekdays.thu'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -448,7 +450,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'fridayStart',
-      headerName: '금',
+      headerName: t('pages.holidays.weekdays.fri'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -457,7 +459,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'saturdayStart',
-      headerName: '토',
+      headerName: t('pages.holidays.weekdays.sat'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -466,7 +468,7 @@ export default function HolidaysPage() {
     },
     {
       field: 'sundayStart',
-      headerName: '일',
+      headerName: t('pages.holidays.weekdays.sun'),
       width: 100,
       valueFormatter: (params) => {
         if (!params.value) return '-';
@@ -475,14 +477,14 @@ export default function HolidaysPage() {
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
         <>
           {!params.row.isDefault && (
             <Button size="small" onClick={() => handleSetDefaultWorkingHours(params.row)}>
-              기본설정
+              {t('pages.holidays.actions.setDefault')}
             </Button>
           )}
           <IconButton size="small" onClick={() => handleEditWorkingHours(params.row)}>
@@ -500,7 +502,7 @@ export default function HolidaysPage() {
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         <CalendarMonthIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-        휴일 관리
+        {t('pages.holidays.title')}
       </Typography>
 
       {error && (
@@ -511,30 +513,30 @@ export default function HolidaysPage() {
 
       <Paper sx={{ width: '100%' }}>
         <Tabs value={currentTab} onChange={(e, v) => setCurrentTab(v)}>
-          <Tab label="휴일 관리" />
-          <Tab label="근무 시간 설정" />
-          <Tab label="영업일 계산기" />
+          <Tab label={t('pages.holidays.tabs.holidays')} />
+          <Tab label={t('pages.holidays.tabs.workingHours')} />
+          <Tab label={t('pages.holidays.tabs.calculator')} />
         </Tabs>
 
         {/* Tab 1: Holiday Management */}
         <TabPanel value={currentTab} index={0}>
           <Box sx={{ mb: 2, display: 'flex', gap: 2, alignItems: 'center' }}>
             <FormControl sx={{ minWidth: 120 }}>
-              <InputLabel>연도</InputLabel>
+              <InputLabel>{t('pages.holidays.fields.year')}</InputLabel>
               <Select
                 value={selectedYear}
-                label="연도"
+                label={t('pages.holidays.fields.year')}
                 onChange={(e) => setSelectedYear(Number(e.target.value))}
               >
                 {[2024, 2025, 2026, 2027, 2028].map((year) => (
                   <MenuItem key={year} value={year}>
-                    {year}년
+                    {year}{t('pages.holidays.fields.yearSuffix')}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreateHoliday}>
-              휴일 추가
+              {t('pages.holidays.actions.addHoliday')}
             </Button>
           </Box>
 
@@ -555,7 +557,7 @@ export default function HolidaysPage() {
         <TabPanel value={currentTab} index={1}>
           <Box sx={{ mb: 2 }}>
             <Button variant="contained" startIcon={<AddIcon />} onClick={handleCreateWorkingHours}>
-              근무 시간 추가
+              {t('pages.holidays.actions.addWorkingHours')}
             </Button>
           </Box>
 
@@ -576,15 +578,15 @@ export default function HolidaysPage() {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <FormControl fullWidth>
-                <InputLabel>계산 유형</InputLabel>
+                <InputLabel>{t('pages.holidays.calculator.calcType')}</InputLabel>
                 <Select
                   value={calculatorType}
-                  label="계산 유형"
+                  label={t('pages.holidays.calculator.calcType')}
                   onChange={(e) => setCalculatorType(e.target.value as any)}
                 >
-                  <MenuItem value="check">영업일 확인</MenuItem>
-                  <MenuItem value="calculate">영업일 수 계산</MenuItem>
-                  <MenuItem value="add">영업일 더하기</MenuItem>
+                  <MenuItem value="check">{t('pages.holidays.calculator.checkBusinessDay')}</MenuItem>
+                  <MenuItem value="calculate">{t('pages.holidays.calculator.calculateBusinessDays')}</MenuItem>
+                  <MenuItem value="add">{t('pages.holidays.calculator.addBusinessDays')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -595,7 +597,7 @@ export default function HolidaysPage() {
                   <TextField
                     fullWidth
                     type="date"
-                    label="확인할 날짜"
+                    label={t('pages.holidays.calculator.dateToCheck')}
                     value={checkDate}
                     onChange={(e) => setCheckDate(e.target.value)}
                     InputLabelProps={{ shrink: true }}
@@ -609,7 +611,7 @@ export default function HolidaysPage() {
                     onClick={handleCheckBusinessDay}
                     sx={{ height: '56px' }}
                   >
-                    확인
+                    {t('common.buttons.confirm')}
                   </Button>
                 </Grid>
                 {checkResult && (
@@ -617,18 +619,18 @@ export default function HolidaysPage() {
                     <Card>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
-                          결과
+                          {t('pages.holidays.calculator.result')}
                         </Typography>
                         <Typography>
-                          날짜: {checkResult.date}
+                          {t('pages.holidays.calculator.date')}: {checkResult.date}
                         </Typography>
                         <Typography>
-                          요일: {checkResult.dayOfWeek}
+                          {t('pages.holidays.calculator.dayOfWeek')}: {checkResult.dayOfWeek}
                         </Typography>
                         <Typography>
-                          영업일 여부:{' '}
+                          {t('pages.holidays.calculator.isBusinessDay')}:{' '}
                           <Chip
-                            label={checkResult.isBusinessDay ? '영업일' : '휴일'}
+                            label={checkResult.isBusinessDay ? t('pages.holidays.calculator.businessDay') : t('pages.holidays.calculator.holiday')}
                             color={checkResult.isBusinessDay ? 'success' : 'default'}
                           />
                         </Typography>
@@ -645,7 +647,7 @@ export default function HolidaysPage() {
                   <TextField
                     fullWidth
                     type="date"
-                    label="시작일"
+                    label={t('common.labels.startDate')}
                     value={calcStartDate}
                     onChange={(e) => setCalcStartDate(e.target.value)}
                     InputLabelProps={{ shrink: true }}
@@ -655,7 +657,7 @@ export default function HolidaysPage() {
                   <TextField
                     fullWidth
                     type="date"
-                    label="종료일"
+                    label={t('common.labels.endDate')}
                     value={calcEndDate}
                     onChange={(e) => setCalcEndDate(e.target.value)}
                     InputLabelProps={{ shrink: true }}
@@ -669,7 +671,7 @@ export default function HolidaysPage() {
                     onClick={handleCalculateBusinessDays}
                     sx={{ height: '56px' }}
                   >
-                    계산
+                    {t('pages.holidays.calculator.calculate')}
                   </Button>
                 </Grid>
                 {calcResult && (
@@ -677,16 +679,16 @@ export default function HolidaysPage() {
                     <Card>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
-                          결과
+                          {t('pages.holidays.calculator.result')}
                         </Typography>
                         <Typography>
-                          기간: {calcResult.startDate} ~ {calcResult.endDate}
+                          {t('pages.holidays.calculator.period')}: {calcResult.startDate} ~ {calcResult.endDate}
                         </Typography>
                         <Typography>
-                          전체 일수: {calcResult.totalDays}일
+                          {t('pages.holidays.calculator.totalDays')}: {calcResult.totalDays}{t('pages.holidays.calculator.daySuffix')}
                         </Typography>
                         <Typography variant="h5" color="primary">
-                          영업일 수: {calcResult.businessDays}일
+                          {t('pages.holidays.calculator.businessDayCount')}: {calcResult.businessDays}{t('pages.holidays.calculator.daySuffix')}
                         </Typography>
                       </CardContent>
                     </Card>
@@ -701,7 +703,7 @@ export default function HolidaysPage() {
                   <TextField
                     fullWidth
                     type="date"
-                    label="시작일"
+                    label={t('common.labels.startDate')}
                     value={addStartDate}
                     onChange={(e) => setAddStartDate(e.target.value)}
                     InputLabelProps={{ shrink: true }}
@@ -711,7 +713,7 @@ export default function HolidaysPage() {
                   <TextField
                     fullWidth
                     type="number"
-                    label="더할 영업일 수"
+                    label={t('pages.holidays.calculator.daysToAdd')}
                     value={addDays}
                     onChange={(e) => setAddDays(Number(e.target.value))}
                   />
@@ -724,7 +726,7 @@ export default function HolidaysPage() {
                     onClick={handleAddBusinessDays}
                     sx={{ height: '56px' }}
                   >
-                    계산
+                    {t('pages.holidays.calculator.calculate')}
                   </Button>
                 </Grid>
                 {addResult && (
@@ -732,16 +734,16 @@ export default function HolidaysPage() {
                     <Card>
                       <CardContent>
                         <Typography variant="h6" gutterBottom>
-                          결과
+                          {t('pages.holidays.calculator.result')}
                         </Typography>
                         <Typography>
-                          시작일: {addResult.startDate}
+                          {t('common.labels.startDate')}: {addResult.startDate}
                         </Typography>
                         <Typography>
-                          더한 영업일: {addResult.businessDaysAdded}일
+                          {t('pages.holidays.calculator.addedBusinessDays')}: {addResult.businessDaysAdded}{t('pages.holidays.calculator.daySuffix')}
                         </Typography>
                         <Typography variant="h5" color="primary">
-                          결과 날짜: {addResult.resultDate} ({addResult.dayOfWeek})
+                          {t('pages.holidays.calculator.resultDate')}: {addResult.resultDate} ({addResult.dayOfWeek})
                         </Typography>
                       </CardContent>
                     </Card>
@@ -755,13 +757,13 @@ export default function HolidaysPage() {
 
       {/* Holiday Create/Edit Dialog */}
       <Dialog open={holidayDialogOpen} onClose={() => setHolidayDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedHoliday ? '휴일 수정' : '휴일 추가'}</DialogTitle>
+        <DialogTitle>{selectedHoliday ? t('pages.holidays.actions.editHoliday') : t('pages.holidays.actions.addHoliday')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="휴일명"
+                label={t('pages.holidays.fields.name')}
                 value={holidayFormData.holidayName}
                 onChange={(e) => setHolidayFormData({ ...holidayFormData, holidayName: e.target.value })}
               />
@@ -770,7 +772,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="date"
-                label="날짜"
+                label={t('pages.holidays.fields.date')}
                 value={holidayFormData.holidayDate}
                 onChange={(e) => setHolidayFormData({ ...holidayFormData, holidayDate: e.target.value })}
                 InputLabelProps={{ shrink: true }}
@@ -778,17 +780,17 @@ export default function HolidaysPage() {
             </Grid>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth>
-                <InputLabel>휴일 타입</InputLabel>
+                <InputLabel>{t('pages.holidays.fields.holidayType')}</InputLabel>
                 <Select
                   value={holidayFormData.holidayType}
-                  label="휴일 타입"
+                  label={t('pages.holidays.fields.holidayType')}
                   onChange={(e) =>
                     setHolidayFormData({ ...holidayFormData, holidayType: e.target.value as any })
                   }
                 >
-                  <MenuItem value="NATIONAL">국경일</MenuItem>
-                  <MenuItem value="COMPANY">회사 휴일</MenuItem>
-                  <MenuItem value="SPECIAL">특별 휴일</MenuItem>
+                  <MenuItem value="NATIONAL">{t('pages.holidays.types.national')}</MenuItem>
+                  <MenuItem value="COMPANY">{t('pages.holidays.types.company')}</MenuItem>
+                  <MenuItem value="SPECIAL">{t('pages.holidays.types.special')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -802,23 +804,23 @@ export default function HolidaysPage() {
                     }
                   />
                 }
-                label="반복 휴일"
+                label={t('pages.holidays.fields.recurringHoliday')}
               />
             </Grid>
             {holidayFormData.isRecurring && (
               <Grid item xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel>반복 규칙</InputLabel>
+                  <InputLabel>{t('pages.holidays.fields.recurrenceRule')}</InputLabel>
                   <Select
                     value={holidayFormData.recurrenceRule || ''}
-                    label="반복 규칙"
+                    label={t('pages.holidays.fields.recurrenceRule')}
                     onChange={(e) =>
                       setHolidayFormData({ ...holidayFormData, recurrenceRule: e.target.value })
                     }
                   >
-                    <MenuItem value="YEARLY">매년</MenuItem>
-                    <MenuItem value="MONTHLY">매월</MenuItem>
-                    <MenuItem value="LUNAR">음력</MenuItem>
+                    <MenuItem value="YEARLY">{t('pages.holidays.recurrence.yearly')}</MenuItem>
+                    <MenuItem value="MONTHLY">{t('pages.holidays.recurrence.monthly')}</MenuItem>
+                    <MenuItem value="LUNAR">{t('pages.holidays.recurrence.lunar')}</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -833,7 +835,7 @@ export default function HolidaysPage() {
                     }
                   />
                 }
-                label="근무일 (대체 근무일)"
+                label={t('pages.holidays.fields.substituteWorkDay')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -841,7 +843,7 @@ export default function HolidaysPage() {
                 fullWidth
                 multiline
                 rows={3}
-                label="설명"
+                label={t('common.labels.description')}
                 value={holidayFormData.description || ''}
                 onChange={(e) => setHolidayFormData({ ...holidayFormData, description: e.target.value })}
               />
@@ -849,25 +851,25 @@ export default function HolidaysPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setHolidayDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setHolidayDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button variant="contained" onClick={handleSaveHoliday}>
-            저장
+            {t('common.buttons.save')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Holiday Delete Confirmation */}
       <Dialog open={deleteHolidayDialogOpen} onClose={() => setDeleteHolidayDialogOpen(false)}>
-        <DialogTitle>휴일 삭제</DialogTitle>
+        <DialogTitle>{t('pages.holidays.actions.deleteHoliday')}</DialogTitle>
         <DialogContent>
           <Typography>
-            '{selectedHoliday?.holidayName}' 휴일을 삭제하시겠습니까?
+            {t('pages.holidays.confirmDeleteHoliday', { name: selectedHoliday?.holidayName })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteHolidayDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setDeleteHolidayDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button variant="contained" color="error" onClick={handleConfirmDeleteHoliday}>
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -879,13 +881,13 @@ export default function HolidaysPage() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>{selectedWorkingHours ? '근무 시간 수정' : '근무 시간 추가'}</DialogTitle>
+        <DialogTitle>{selectedWorkingHours ? t('pages.holidays.workingHours.edit') : t('pages.holidays.workingHours.add')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                label="스케줄명"
+                label={t('pages.holidays.workingHours.scheduleName')}
                 value={workingHoursFormData.scheduleName}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, scheduleName: e.target.value })
@@ -902,23 +904,23 @@ export default function HolidaysPage() {
                     }
                   />
                 }
-                label="기본 스케줄로 설정"
+                label={t('pages.holidays.workingHours.setAsDefault')}
               />
             </Grid>
 
             <Grid item xs={12}>
-              <Divider sx={{ my: 1 }}>요일별 근무시간</Divider>
+              <Divider sx={{ my: 1 }}>{t('pages.holidays.workingHours.dailyHours')}</Divider>
             </Grid>
 
             {/* Monday */}
             <Grid item xs={12} md={4}>
-              <Typography>월요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.monday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.mondayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, mondayStart: e.target.value })
@@ -930,7 +932,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.mondayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, mondayEnd: e.target.value })
@@ -941,13 +943,13 @@ export default function HolidaysPage() {
 
             {/* Tuesday */}
             <Grid item xs={12} md={4}>
-              <Typography>화요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.tuesday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.tuesdayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, tuesdayStart: e.target.value })
@@ -959,7 +961,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.tuesdayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, tuesdayEnd: e.target.value })
@@ -970,13 +972,13 @@ export default function HolidaysPage() {
 
             {/* Wednesday */}
             <Grid item xs={12} md={4}>
-              <Typography>수요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.wednesday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.wednesdayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, wednesdayStart: e.target.value })
@@ -988,7 +990,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.wednesdayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, wednesdayEnd: e.target.value })
@@ -999,13 +1001,13 @@ export default function HolidaysPage() {
 
             {/* Thursday */}
             <Grid item xs={12} md={4}>
-              <Typography>목요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.thursday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.thursdayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, thursdayStart: e.target.value })
@@ -1017,7 +1019,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.thursdayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, thursdayEnd: e.target.value })
@@ -1028,13 +1030,13 @@ export default function HolidaysPage() {
 
             {/* Friday */}
             <Grid item xs={12} md={4}>
-              <Typography>금요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.friday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.fridayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, fridayStart: e.target.value })
@@ -1046,7 +1048,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.fridayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, fridayEnd: e.target.value })
@@ -1057,13 +1059,13 @@ export default function HolidaysPage() {
 
             {/* Saturday */}
             <Grid item xs={12} md={4}>
-              <Typography>토요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.saturday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.saturdayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, saturdayStart: e.target.value })
@@ -1075,7 +1077,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.saturdayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, saturdayEnd: e.target.value })
@@ -1086,13 +1088,13 @@ export default function HolidaysPage() {
 
             {/* Sunday */}
             <Grid item xs={12} md={4}>
-              <Typography>일요일</Typography>
+              <Typography>{t('pages.holidays.weekdays.sunday')}</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.sundayStart || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, sundayStart: e.target.value })
@@ -1104,7 +1106,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.sundayEnd || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, sundayEnd: e.target.value })
@@ -1114,18 +1116,18 @@ export default function HolidaysPage() {
             </Grid>
 
             <Grid item xs={12}>
-              <Divider sx={{ my: 1 }}>휴식시간</Divider>
+              <Divider sx={{ my: 1 }}>{t('pages.holidays.workingHours.breakTime')}</Divider>
             </Grid>
 
             {/* Break 1 */}
             <Grid item xs={12} md={4}>
-              <Typography>휴식시간 1</Typography>
+              <Typography>{t('pages.holidays.workingHours.breakTime')} 1</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.breakStart1 || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, breakStart1: e.target.value })
@@ -1137,7 +1139,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.breakEnd1 || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, breakEnd1: e.target.value })
@@ -1148,13 +1150,13 @@ export default function HolidaysPage() {
 
             {/* Break 2 */}
             <Grid item xs={12} md={4}>
-              <Typography>휴식시간 2</Typography>
+              <Typography>{t('pages.holidays.workingHours.breakTime')} 2</Typography>
             </Grid>
             <Grid item xs={6} md={4}>
               <TextField
                 fullWidth
                 type="time"
-                label="시작"
+                label={t('pages.holidays.workingHours.start')}
                 value={workingHoursFormData.breakStart2 || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, breakStart2: e.target.value })
@@ -1166,7 +1168,7 @@ export default function HolidaysPage() {
               <TextField
                 fullWidth
                 type="time"
-                label="종료"
+                label={t('pages.holidays.workingHours.end')}
                 value={workingHoursFormData.breakEnd2 || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, breakEnd2: e.target.value })
@@ -1180,7 +1182,7 @@ export default function HolidaysPage() {
                 fullWidth
                 multiline
                 rows={2}
-                label="설명"
+                label={t('common.labels.description')}
                 value={workingHoursFormData.description || ''}
                 onChange={(e) =>
                   setWorkingHoursFormData({ ...workingHoursFormData, description: e.target.value })
@@ -1190,9 +1192,9 @@ export default function HolidaysPage() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setWorkingHoursDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setWorkingHoursDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button variant="contained" onClick={handleSaveWorkingHours}>
-            저장
+            {t('common.buttons.save')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -1202,16 +1204,16 @@ export default function HolidaysPage() {
         open={deleteWorkingHoursDialogOpen}
         onClose={() => setDeleteWorkingHoursDialogOpen(false)}
       >
-        <DialogTitle>근무 시간 삭제</DialogTitle>
+        <DialogTitle>{t('pages.holidays.workingHours.delete')}</DialogTitle>
         <DialogContent>
           <Typography>
-            '{selectedWorkingHours?.scheduleName}' 근무 시간을 삭제하시겠습니까?
+            {t('pages.holidays.confirmDeleteWorkingHours', { name: selectedWorkingHours?.scheduleName })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteWorkingHoursDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setDeleteWorkingHoursDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button variant="contained" color="error" onClick={handleConfirmDeleteWorkingHours}>
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

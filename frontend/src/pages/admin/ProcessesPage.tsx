@@ -26,9 +26,11 @@ import {
   ToggleOn as ToggleOnIcon,
   ToggleOff as ToggleOffIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import processService, { Process, ProcessCreateRequest, ProcessUpdateRequest } from '../../services/processService';
 
 const ProcessesPage: React.FC = () => {
+  const { t } = useTranslation();
   const [processes, setProcesses] = useState<Process[]>([]);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
@@ -58,7 +60,7 @@ const ProcessesPage: React.FC = () => {
       const data = await processService.getProcesses();
       setProcesses(data || []);
     } catch (error) {
-      showSnackbar('공정 목록 조회 실패', 'error');
+      showSnackbar(t('pages.processes.errors.loadFailed'), 'error');
       setProcesses([]);
     } finally {
       setLoading(false);
@@ -112,15 +114,15 @@ const ProcessesPage: React.FC = () => {
     try {
       if (selectedProcess) {
         await processService.updateProcess(selectedProcess.processId, formData as ProcessUpdateRequest);
-        showSnackbar('공정 수정 성공', 'success');
+        showSnackbar(t('pages.processes.messages.updateSuccess'), 'success');
       } else {
         await processService.createProcess(formData as ProcessCreateRequest);
-        showSnackbar('공정 생성 성공', 'success');
+        showSnackbar(t('pages.processes.messages.createSuccess'), 'success');
       }
       handleCloseDialog();
       loadProcesses();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.processes.errors.operationFailed'), 'error');
     }
   };
 
@@ -128,14 +130,14 @@ const ProcessesPage: React.FC = () => {
     try {
       if (process.isActive) {
         await processService.deactivateProcess(process.processId);
-        showSnackbar('공정 비활성화 성공', 'success');
+        showSnackbar(t('pages.processes.messages.deactivateSuccess'), 'success');
       } else {
         await processService.activateProcess(process.processId);
-        showSnackbar('공정 활성화 성공', 'success');
+        showSnackbar(t('pages.processes.messages.activateSuccess'), 'success');
       }
       loadProcesses();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.processes.errors.statusChangeFailed'), 'error');
     }
   };
 
@@ -154,26 +156,26 @@ const ProcessesPage: React.FC = () => {
 
     try {
       await processService.deleteProcess(selectedProcess.processId);
-      showSnackbar('공정 삭제 성공', 'success');
+      showSnackbar(t('pages.processes.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadProcesses();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.processes.errors.deleteFailed'), 'error');
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'sequenceOrder', headerName: '순서', width: 80 },
-    { field: 'processCode', headerName: '공정 코드', width: 130 },
-    { field: 'processName', headerName: '공정명', flex: 1, minWidth: 200 },
-    { field: 'processType', headerName: '공정 유형', width: 150 },
+    { field: 'sequenceOrder', headerName: t('pages.processes.fields.sequence'), width: 80 },
+    { field: 'processCode', headerName: t('pages.processes.fields.processCode'), width: 130 },
+    { field: 'processName', headerName: t('pages.processes.fields.processName'), flex: 1, minWidth: 200 },
+    { field: 'processType', headerName: t('pages.processes.fields.processType'), width: 150 },
     {
       field: 'isActive',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           color={params.value ? 'success' : 'default'}
           size="small"
         />
@@ -181,29 +183,29 @@ const ProcessesPage: React.FC = () => {
     },
     {
       field: 'createdAt',
-      headerName: '생성일',
+      headerName: t('common.labels.createdAt'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       getActions: (params: GridRowParams<Process>) => [
         <GridActionsCellItem
           icon={<EditIcon />}
-          label="수정"
+          label={t('common.buttons.edit')}
           onClick={() => handleOpenDialog(params.row)}
         />,
         <GridActionsCellItem
           icon={params.row.isActive ? <ToggleOffIcon /> : <ToggleOnIcon />}
-          label={params.row.isActive ? '비활성화' : '활성화'}
+          label={params.row.isActive ? t('pages.processes.actions.deactivate') : t('pages.processes.actions.activate')}
           onClick={() => handleToggleActive(params.row)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
         />,
       ],
@@ -214,14 +216,14 @@ const ProcessesPage: React.FC = () => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5" component="h1">
-          공정 마스터 관리
+          {t('pages.processes.title')}
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
         >
-          신규 등록
+          {t('pages.processes.actions.create')}
         </Button>
       </Box>
 
@@ -250,13 +252,13 @@ const ProcessesPage: React.FC = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{selectedProcess ? '공정 수정' : '신규 공정 등록'}</DialogTitle>
+        <DialogTitle>{selectedProcess ? t('pages.processes.dialog.editTitle') : t('pages.processes.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} mt={1}>
             {!selectedProcess && (
               <TextField
                 name="processCode"
-                label="공정 코드"
+                label={t('pages.processes.fields.processCode')}
                 value={(formData as ProcessCreateRequest).processCode || ''}
                 onChange={handleInputChange}
                 required
@@ -265,7 +267,7 @@ const ProcessesPage: React.FC = () => {
             )}
             <TextField
               name="processName"
-              label="공정명"
+              label={t('pages.processes.fields.processName')}
               value={formData.processName || ''}
               onChange={handleInputChange}
               required
@@ -273,25 +275,25 @@ const ProcessesPage: React.FC = () => {
             />
             <TextField
               name="processType"
-              label="공정 유형"
+              label={t('pages.processes.fields.processType')}
               value={formData.processType || ''}
               onChange={handleInputChange}
-              placeholder="예: 제조, 조립, 검사, 포장"
+              placeholder={t('pages.processes.placeholders.processType')}
               fullWidth
             />
             <TextField
               name="sequenceOrder"
-              label="공정 순서"
+              label={t('pages.processes.fields.sequence')}
               type="number"
               value={formData.sequenceOrder || 1}
               onChange={handleInputChange}
               required
               fullWidth
-              helperText="공정 진행 순서를 입력하세요 (낮은 숫자가 먼저 진행)"
+              helperText={t('pages.processes.placeholders.sequenceHelp')}
             />
             <TextField
               name="remarks"
-              label="비고"
+              label={t('common.labels.remarks')}
               value={formData.remarks || ''}
               onChange={handleInputChange}
               multiline
@@ -301,28 +303,28 @@ const ProcessesPage: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedProcess ? '수정' : '등록'}
+            {selectedProcess ? t('common.buttons.edit') : t('pages.processes.actions.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>공정 삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.processes.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.processes.messages.irreversible')}
           </Alert>
           <Typography>
-            공정 <strong>{selectedProcess?.processName}</strong>을(를) 삭제하시겠습니까?
+            {t('pages.processes.messages.confirmDelete', { name: selectedProcess?.processName })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

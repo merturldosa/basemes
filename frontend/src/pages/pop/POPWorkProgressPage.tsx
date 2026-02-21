@@ -32,6 +32,7 @@ import {
   Timer as TimerIcon,
 } from '@mui/icons-material';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 interface WorkProgress {
   workOrderId: number;
@@ -57,6 +58,7 @@ interface ProductionStatistics {
 }
 
 const POPWorkProgressPage: React.FC = () => {
+  const { t } = useTranslation();
   const [workProgressList, setWorkProgressList] = useState<WorkProgress[]>([]);
   const [statistics, setStatistics] = useState<ProductionStatistics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +74,7 @@ const POPWorkProgressPage: React.FC = () => {
           workOrderNo: wo.workOrderNo,
           productName: wo.productName || 'Unknown Product',
           productCode: wo.productCode || '',
-          operatorName: wo.operatorName || '작업자',
+          operatorName: wo.operatorName || t('pages.popWorkProgress.fields.operator'),
           targetQuantity: wo.targetQuantity || 0,
           producedQuantity: wo.producedQuantity || 0,
           defectQuantity: wo.defectQuantity || 0,
@@ -154,13 +156,13 @@ const POPWorkProgressPage: React.FC = () => {
   const getStatusLabel = (status: string): string => {
     switch (status) {
       case 'IN_PROGRESS':
-        return '진행중';
+        return t('common.status.inProgress');
       case 'PAUSED':
-        return '일시정지';
+        return t('workOrder.status.paused');
       case 'READY':
-        return '대기';
+        return t('workOrder.status.ready');
       case 'COMPLETED':
-        return '완료';
+        return t('common.status.completed');
       default:
         return status;
     }
@@ -178,10 +180,10 @@ const POPWorkProgressPage: React.FC = () => {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Box>
           <Typography variant="h4" gutterBottom fontWeight="bold">
-            작업 진행 현황
+            {t('pages.popWorkProgress.title')}
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            모든 작업 지시의 실시간 진행 상황
+            {t('pages.popWorkProgress.subtitle')}
           </Typography>
         </Box>
         <IconButton onClick={() => refetch()} color="primary">
@@ -196,12 +198,12 @@ const POPWorkProgressPage: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <TrendingUpIcon sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">진행 중</Typography>
+                <Typography variant="subtitle2">{t('common.status.inProgress')}</Typography>
               </Box>
               <Typography variant="h3" fontWeight="bold">
                 {activeWorkOrders}
               </Typography>
-              <Typography variant="body2">작업 지시</Typography>
+              <Typography variant="body2">{t('pages.popWorkProgress.fields.workOrders')}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -211,7 +213,7 @@ const POPWorkProgressPage: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <CheckIcon sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">금일 생산</Typography>
+                <Typography variant="subtitle2">{t('pages.popWorkProgress.fields.todayProduction')}</Typography>
               </Box>
               <Typography variant="h3" fontWeight="bold">
                 {totalProduced.toLocaleString()}
@@ -226,7 +228,7 @@ const POPWorkProgressPage: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <WarningIcon sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">불량</Typography>
+                <Typography variant="subtitle2">{t('pages.popWorkProgress.fields.defects')}</Typography>
               </Box>
               <Typography variant="h3" fontWeight="bold">
                 {totalDefects.toLocaleString()}
@@ -241,16 +243,16 @@ const POPWorkProgressPage: React.FC = () => {
       <Card>
         <CardContent>
           <Typography variant="h6" gutterBottom fontWeight="bold">
-            작업 지시 목록 ({workProgressList.length})
+            {t('pages.popWorkProgress.workOrderList')} ({workProgressList.length})
           </Typography>
 
           {isLoading ? (
             <Box sx={{ py: 4, textAlign: 'center' }}>
-              <Typography>로딩 중...</Typography>
+              <Typography>{t('common.messages.loading')}</Typography>
             </Box>
           ) : workProgressList.length === 0 ? (
             <Alert severity="info" sx={{ mt: 2 }}>
-              현재 진행 중인 작업이 없습니다
+              {t('pages.popWorkProgress.noActiveWork')}
             </Alert>
           ) : (
             <List>
@@ -307,7 +309,7 @@ const POPWorkProgressPage: React.FC = () => {
                             </Typography>
                             {wp.defectQuantity > 0 && (
                               <Typography variant="body2" color="error.main" fontWeight="bold">
-                                (불량: {wp.defectQuantity})
+                                ({t('pages.popWorkProgress.fields.defects')}: {wp.defectQuantity})
                               </Typography>
                             )}
                           </Box>
@@ -321,7 +323,7 @@ const POPWorkProgressPage: React.FC = () => {
                             />
                           </Box>
                           <Typography variant="caption" color="text.secondary">
-                            {wp.progress.toFixed(1)}% 완료
+                            {wp.progress.toFixed(1)}% {t('common.status.completed')}
                           </Typography>
                         </Box>
                       }
@@ -337,7 +339,7 @@ const POPWorkProgressPage: React.FC = () => {
       {/* Auto-refresh indicator */}
       <Box sx={{ mt: 2, textAlign: 'center' }}>
         <Typography variant="caption" color="text.secondary">
-          🔄 5초마다 자동 새로고침
+          {t('pages.popWorkProgress.autoRefresh')}
         </Typography>
       </Box>
     </Box>

@@ -25,11 +25,13 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import shippingService, { Shipping, ShippingRequest } from '../../services/shippingService';
 import warehouseService, { Warehouse } from '../../services/warehouseService';
 import salesOrderService, { SalesOrder } from '../../services/salesOrderService';
 
 const ShippingPage: React.FC = () => {
+  const { t } = useTranslation();
   const [shippings, setShippings] = useState<Shipping[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [salesOrders, setSalesOrders] = useState<SalesOrder[]>([]);
@@ -75,7 +77,7 @@ const ShippingPage: React.FC = () => {
       setWarehouses(warehousesData || []);
       setSalesOrders(salesOrdersData || []);
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
       setShippings([]);
       setWarehouses([]);
       setSalesOrders([]);
@@ -123,132 +125,85 @@ const ShippingPage: React.FC = () => {
     setOpenDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedShipping(null);
-    setViewMode(false);
-  };
-
-  const handleOpenDeleteDialog = (shipping: Shipping) => {
-    setSelectedShipping(shipping);
-    setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-    setSelectedShipping(null);
-  };
+  const handleCloseDialog = () => { setOpenDialog(false); setSelectedShipping(null); setViewMode(false); };
+  const handleOpenDeleteDialog = (shipping: Shipping) => { setSelectedShipping(shipping); setOpenDeleteDialog(true); };
+  const handleCloseDeleteDialog = () => { setOpenDeleteDialog(false); setSelectedShipping(null); };
 
   const handleSubmit = async () => {
     try {
       await shippingService.create(formData);
-      setSnackbar({ open: true, message: 'Shipping created successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('common.messages.saveSuccess'), severity: 'success' });
       handleCloseDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to create shipping', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
     }
   };
 
   const handleDelete = async () => {
     if (!selectedShipping) return;
-
     try {
       await shippingService.delete(selectedShipping.shippingId);
-      setSnackbar({ open: true, message: 'Shipping deleted successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('common.messages.success'), severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to delete shipping', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
     }
   };
 
   const handleComplete = async (id: number) => {
     try {
       await shippingService.complete(id);
-      setSnackbar({ open: true, message: 'Shipping completed successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('common.messages.success'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to complete shipping', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'shippingNo', headerName: '출하번호', width: 150 },
+    { field: 'shippingNo', headerName: t('pages.shipping.fields.shippingNo'), width: 150 },
     {
-      field: 'shippingDate',
-      headerName: '출하일자',
-      width: 180,
+      field: 'shippingDate', headerName: t('pages.shipping.fields.shippingDate'), width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
-    { field: 'salesOrderNo', headerName: '판매주문번호', width: 150 },
-    { field: 'customerName', headerName: '고객', width: 150 },
-    { field: 'warehouseName', headerName: '창고', width: 120 },
+    { field: 'salesOrderNo', headerName: t('pages.shipping.fields.salesOrderNo'), width: 150 },
+    { field: 'customerName', headerName: t('pages.shipping.fields.customer'), width: 150 },
+    { field: 'warehouseName', headerName: t('pages.shipping.fields.warehouse'), width: 120 },
     {
-      field: 'shippingType',
-      headerName: '유형',
-      width: 100,
+      field: 'shippingType', headerName: t('pages.shipping.fields.shippingType'), width: 100,
       valueFormatter: (params) => {
         const types: { [key: string]: string } = {
-          SALES: '판매',
-          RETURN: '반품',
-          TRANSFER: '이동',
-          OTHER: '기타',
+          SALES: t('pages.shipping.types.sales'),
+          RETURN: t('pages.shipping.types.return'),
+          TRANSFER: t('pages.shipping.types.transfer'),
+          OTHER: t('pages.shipping.types.other'),
         };
         return types[params.value] || params.value;
       },
     },
     {
-      field: 'shippingStatus',
-      headerName: '상태',
-      width: 120,
+      field: 'shippingStatus', headerName: t('pages.shipping.fields.shippingStatus'), width: 120,
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'success' | 'error' } = {
-          PENDING: 'warning',
-          INSPECTING: 'default',
-          SHIPPED: 'success',
-          CANCELLED: 'default',
+          PENDING: 'warning', INSPECTING: 'default', SHIPPED: 'success', CANCELLED: 'default',
         };
         const statusLabels: { [key: string]: string } = {
-          PENDING: '대기',
-          INSPECTING: '검사중',
-          SHIPPED: '출하완료',
-          CANCELLED: '취소',
+          PENDING: t('pages.shipping.status.pending'), INSPECTING: t('pages.shipping.status.inspecting'),
+          SHIPPED: t('pages.shipping.status.shipped'), CANCELLED: t('pages.shipping.status.cancelled'),
         };
-        return (
-          <Chip
-            label={statusLabels[params.value] || params.value}
-            color={statusColors[params.value] || 'default'}
-            size="small"
-          />
-        );
+        return <Chip label={statusLabels[params.value] || params.value} color={statusColors[params.value] || 'default'} size="small" />;
       },
     },
-    { field: 'trackingNumber', headerName: '송장번호', width: 150 },
-    { field: 'carrierName', headerName: '택배사', width: 120 },
+    { field: 'trackingNumber', headerName: t('pages.shipping.fields.trackingNumber'), width: 150 },
+    { field: 'carrierName', headerName: t('pages.shipping.fields.carrierName'), width: 120 },
     {
-      field: 'actions',
-      type: 'actions',
-      headerName: '작업',
-      width: 150,
+      field: 'actions', type: 'actions', headerName: t('common.labels.actions'), width: 150,
       getActions: (params) => [
-        <GridActionsCellItem
-          icon={<VisibilityIcon />}
-          label="View"
-          onClick={() => handleOpenDialog(params.row, true)}
-        />,
-        <GridActionsCellItem
-          icon={<CheckCircleIcon />}
-          label="Complete"
-          onClick={() => handleComplete(params.row.shippingId)}
-          disabled={params.row.shippingStatus !== 'PENDING'}
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete"
-          onClick={() => handleOpenDeleteDialog(params.row)}
-          disabled={params.row.shippingStatus === 'SHIPPED'}
-        />,
+        <GridActionsCellItem icon={<VisibilityIcon />} label={t('common.buttons.edit')} onClick={() => handleOpenDialog(params.row, true)} />,
+        <GridActionsCellItem icon={<CheckCircleIcon />} label={t('common.buttons.confirm')} onClick={() => handleComplete(params.row.shippingId)} disabled={params.row.shippingStatus !== 'PENDING'} />,
+        <GridActionsCellItem icon={<DeleteIcon />} label={t('common.buttons.delete')} onClick={() => handleOpenDeleteDialog(params.row)} disabled={params.row.shippingStatus === 'SHIPPED'} />,
       ],
     },
   ];
@@ -257,192 +212,96 @@ const ShippingPage: React.FC = () => {
     <Box sx={{ height: '100%', p: 3 }}>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5">출하 관리</Typography>
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
-            신규 출하
-          </Button>
+          <Typography variant="h5">{t('pages.shipping.title')}</Typography>
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>{t('pages.shipping.actions.create')}</Button>
         </Box>
       </Paper>
 
       <Paper sx={{ height: 'calc(100vh - 250px)' }}>
-        <DataGrid
-          rows={shippings}
-          columns={columns}
-          loading={loading}
-          getRowId={(row) => row.shippingId}
-          pageSizeOptions={[10, 25, 50, 100]}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 25 } },
-          }}
-        />
+        <DataGrid rows={shippings} columns={columns} loading={loading} getRowId={(row) => row.shippingId} pageSizeOptions={[10, 25, 50, 100]} initialState={{ pagination: { paginationModel: { pageSize: 25 } } }} />
       </Paper>
 
       {/* Create/View Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{viewMode ? '출하 상세' : '신규 출하'}</DialogTitle>
+        <DialogTitle>{viewMode ? t('pages.shipping.dialogs.detailTitle') : t('pages.shipping.dialogs.createTitle')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="출하번호"
-                value={formData.shippingNo}
-                onChange={(e) => setFormData({ ...formData, shippingNo: e.target.value })}
-                required
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.shippingNo')} value={formData.shippingNo} onChange={(e) => setFormData({ ...formData, shippingNo: e.target.value })} required disabled={viewMode} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="출하일자"
-                type="datetime-local"
-                value={formData.shippingDate}
-                onChange={(e) => setFormData({ ...formData, shippingDate: e.target.value })}
-                required
-                disabled={viewMode}
-                InputLabelProps={{ shrink: true }}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.shippingDate')} type="datetime-local" value={formData.shippingDate} onChange={(e) => setFormData({ ...formData, shippingDate: e.target.value })} required disabled={viewMode} InputLabelProps={{ shrink: true }} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>판매주문</InputLabel>
-                <Select
-                  value={formData.salesOrderId || ''}
-                  onChange={(e) => setFormData({ ...formData, salesOrderId: e.target.value as number })}
-                  label="판매주문"
-                  disabled={viewMode}
-                >
-                  <MenuItem value="">
-                    <em>선택 안 함</em>
-                  </MenuItem>
-                  {salesOrders.map((so) => (
-                    <MenuItem key={so.salesOrderId} value={so.salesOrderId}>
-                      {so.orderNo}
-                    </MenuItem>
-                  ))}
+                <InputLabel>{t('pages.shipping.fields.salesOrder')}</InputLabel>
+                <Select value={formData.salesOrderId || ''} onChange={(e) => setFormData({ ...formData, salesOrderId: e.target.value as number })} label={t('pages.shipping.fields.salesOrder')} disabled={viewMode}>
+                  <MenuItem value=""><em>{t('pages.shipping.fields.noneSelected')}</em></MenuItem>
+                  {salesOrders.map((so) => (<MenuItem key={so.salesOrderId} value={so.salesOrderId}>{so.orderNo}</MenuItem>))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>창고</InputLabel>
-                <Select
-                  value={formData.warehouseId || ''}
-                  onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value as number })}
-                  label="창고"
-                  disabled={viewMode}
-                >
-                  {warehouses.map((wh) => (
-                    <MenuItem key={wh.warehouseId} value={wh.warehouseId}>
-                      {wh.warehouseName}
-                    </MenuItem>
-                  ))}
+                <InputLabel>{t('pages.shipping.fields.warehouse')}</InputLabel>
+                <Select value={formData.warehouseId || ''} onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value as number })} label={t('pages.shipping.fields.warehouse')} disabled={viewMode}>
+                  {warehouses.map((wh) => (<MenuItem key={wh.warehouseId} value={wh.warehouseId}>{wh.warehouseName}</MenuItem>))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>출하유형</InputLabel>
-                <Select
-                  value={formData.shippingType}
-                  onChange={(e) => setFormData({ ...formData, shippingType: e.target.value })}
-                  label="출하유형"
-                  disabled={viewMode}
-                >
-                  <MenuItem value="SALES">판매</MenuItem>
-                  <MenuItem value="RETURN">반품</MenuItem>
-                  <MenuItem value="TRANSFER">이동</MenuItem>
-                  <MenuItem value="OTHER">기타</MenuItem>
+                <InputLabel>{t('pages.shipping.fields.shippingTypeLabel')}</InputLabel>
+                <Select value={formData.shippingType} onChange={(e) => setFormData({ ...formData, shippingType: e.target.value })} label={t('pages.shipping.fields.shippingTypeLabel')} disabled={viewMode}>
+                  <MenuItem value="SALES">{t('pages.shipping.types.sales')}</MenuItem>
+                  <MenuItem value="RETURN">{t('pages.shipping.types.return')}</MenuItem>
+                  <MenuItem value="TRANSFER">{t('pages.shipping.types.transfer')}</MenuItem>
+                  <MenuItem value="OTHER">{t('pages.shipping.types.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="출하담당자"
-                value={formData.shipperName}
-                onChange={(e) => setFormData({ ...formData, shipperName: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.shipperName')} value={formData.shipperName} onChange={(e) => setFormData({ ...formData, shipperName: e.target.value })} disabled={viewMode} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="배송지 주소"
-                value={formData.deliveryAddress}
-                onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.deliveryAddress')} value={formData.deliveryAddress} onChange={(e) => setFormData({ ...formData, deliveryAddress: e.target.value })} disabled={viewMode} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="송장번호"
-                value={formData.trackingNumber}
-                onChange={(e) => setFormData({ ...formData, trackingNumber: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.trackingNumber')} value={formData.trackingNumber} onChange={(e) => setFormData({ ...formData, trackingNumber: e.target.value })} disabled={viewMode} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="택배사"
-                value={formData.carrierName}
-                onChange={(e) => setFormData({ ...formData, carrierName: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.shipping.fields.carrierName')} value={formData.carrierName} onChange={(e) => setFormData({ ...formData, carrierName: e.target.value })} disabled={viewMode} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="비고"
-                multiline
-                rows={3}
-                value={formData.remarks}
-                onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('common.labels.remarks')} multiline rows={3} value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} disabled={viewMode} />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>닫기</Button>
-          {!viewMode && (
-            <Button onClick={handleSubmit} variant="contained">
-              생성
-            </Button>
-          )}
+          <Button onClick={handleCloseDialog}>{t('common.buttons.close')}</Button>
+          {!viewMode && (<Button onClick={handleSubmit} variant="contained">{t('common.buttons.add')}</Button>)}
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>출하 삭제</DialogTitle>
+        <DialogTitle>{t('pages.shipping.dialogs.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <Typography>정말 이 출하를 삭제하시겠습니까?</Typography>
+          <Typography>{t('pages.shipping.dialogs.confirmDelete')}</Typography>
           {selectedShipping && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              출하번호: {selectedShipping.shippingNo}
+              {t('pages.shipping.dialogs.shippingNoLabel')}: {selectedShipping.shippingNo}
             </Typography>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
-          </Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
+          <Button onClick={handleDelete} color="error" variant="contained">{t('common.buttons.delete')}</Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-          {snackbar.message}
-        </Alert>
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>{snackbar.message}</Alert>
       </Snackbar>
     </Box>
   );

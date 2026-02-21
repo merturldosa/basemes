@@ -39,7 +39,8 @@
       "endDate": "结束日期",
       "quantity": "数量",
       "total": "总计",
-      "remarks": "备注"
+      "remarks": "备注",
+      "default": "默认"
     },
     "status": {
       "active": "活跃",
@@ -374,5 +375,803 @@
       "loadFailed": "加载数据时发生错误"
     },
     "scrollHint": "向下滚动将自动加载下一页"
+  },
+  "pages": {
+    "holidays": {
+      "title": "假日管理",
+      "tabs": {
+        "holidays": "假日管理",
+        "workingHours": "工作时间设置",
+        "calculator": "工作日计算器"
+      },
+      "fields": {
+        "date": "日期",
+        "name": "假日名称",
+        "type": "类型",
+        "recurring": "循环",
+        "workingDay": "工作日",
+        "year": "年份",
+        "yearSuffix": "年",
+        "holidayType": "假日类型",
+        "recurringHoliday": "循环假日",
+        "recurrenceRule": "循环规则",
+        "substituteWorkDay": "工作日（替代工作日）"
+      },
+      "types": {
+        "national": "国定假日",
+        "company": "公司假日",
+        "special": "特殊假日"
+      },
+      "recurrence": {
+        "yearly": "每年",
+        "monthly": "每月",
+        "lunar": "农历"
+      },
+      "status": {
+        "working": "工作",
+        "dayOff": "休息"
+      },
+      "actions": {
+        "addHoliday": "添加假日",
+        "editHoliday": "编辑假日",
+        "deleteHoliday": "删除假日",
+        "addWorkingHours": "添加工作时间",
+        "setDefault": "设为默认"
+      },
+      "weekdays": {
+        "mon": "一",
+        "tue": "二",
+        "wed": "三",
+        "thu": "四",
+        "fri": "五",
+        "sat": "六",
+        "sun": "日",
+        "monday": "星期一",
+        "tuesday": "星期二",
+        "wednesday": "星期三",
+        "thursday": "星期四",
+        "friday": "星期五",
+        "saturday": "星期六",
+        "sunday": "星期日"
+      },
+      "workingHours": {
+        "scheduleName": "排班名称",
+        "default": "默认",
+        "add": "添加工作时间",
+        "edit": "编辑工作时间",
+        "delete": "删除工作时间",
+        "setAsDefault": "设为默认排班",
+        "dailyHours": "每日工作时间",
+        "start": "开始",
+        "end": "结束",
+        "breakTime": "休息时间"
+      },
+      "calculator": {
+        "calcType": "计算类型",
+        "checkBusinessDay": "工作日确认",
+        "calculateBusinessDays": "计算工作日数",
+        "addBusinessDays": "添加工作日",
+        "dateToCheck": "要确认的日期",
+        "result": "结果",
+        "date": "日期",
+        "dayOfWeek": "星期",
+        "isBusinessDay": "是否工作日",
+        "businessDay": "工作日",
+        "holiday": "假日",
+        "calculate": "计算",
+        "period": "期间",
+        "totalDays": "总天数",
+        "daySuffix": "天",
+        "businessDayCount": "工作日数",
+        "daysToAdd": "要添加的工作日数",
+        "addedBusinessDays": "已添加的工作日",
+        "resultDate": "结果日期"
+      },
+      "errors": {
+        "loadFailed": "加载假日列表失败",
+        "saveFailed": "保存假日失败",
+        "deleteFailed": "删除假日失败",
+        "workingHoursSaveFailed": "保存工作时间失败",
+        "workingHoursDeleteFailed": "删除工作时间失败",
+        "setDefaultFailed": "设置默认失败",
+        "checkBusinessDayFailed": "确认工作日失败",
+        "calculateBusinessDaysFailed": "计算工作日失败",
+        "addBusinessDaysFailed": "添加工作日失败"
+      },
+      "confirmDeleteHoliday": "确定要删除假日'{{name}}'吗？",
+      "confirmDeleteWorkingHours": "确定要删除工作时间'{{name}}'吗？"
+    },
+    "approval": {
+      "title": "审批管理",
+      "tabs": {
+        "pending": "待处理审批",
+        "templates": "审批流程模板",
+        "delegations": "审批委托",
+        "statistics": "统计"
+      },
+      "fields": {
+        "documentNo": "文档编号",
+        "documentType": "文档类型",
+        "title": "标题",
+        "requester": "申请人",
+        "requestDate": "申请日期",
+        "templateName": "模板名称",
+        "templateCode": "代码",
+        "stepCount": "步骤数",
+        "delegator": "委托人",
+        "delegate": "受托人",
+        "delegationType": "类型",
+        "delegationReason": "理由",
+        "approvalComment": "审批意见",
+        "rejectionReason": "驳回理由"
+      },
+      "actions": {
+        "approve": "批准",
+        "reject": "驳回",
+        "view": "查看"
+      },
+      "status": {
+        "pending": "待处理",
+        "inProgress": "进行中",
+        "approved": "已批准",
+        "rejected": "已驳回",
+        "full": "全部",
+        "partial": "部分"
+      },
+      "statistics": {
+        "approvalRate": "批准率",
+        "totalApprovedOf": "共{{total}}件中{{approved}}件已批准"
+      },
+      "detail": {
+        "title": "审批详情",
+        "approvalProgress": "审批进度",
+        "approveTitle": "审批批准",
+        "rejectTitle": "审批驳回"
+      },
+      "errors": {
+        "loadFailed": "加载数据失败",
+        "processFailed": "审批处理失败"
+      }
+    },
+    "alarm": {
+      "title": "告警管理",
+      "subtitle": "管理系统通知和告警设置",
+      "tabs": {
+        "unread": "未读告警",
+        "all": "全部告警",
+        "recent": "最近告警（7天）",
+        "statistics": "统计"
+      },
+      "fields": {
+        "alarmType": "告警类型",
+        "priority": "优先级",
+        "title": "标题",
+        "message": "内容",
+        "time": "时间",
+        "isRead": "已读",
+        "referenceNo": "参考编号",
+        "sentTime": "发送时间",
+        "readTime": "已读时间",
+        "sentChannel": "发送渠道"
+      },
+      "actions": {
+        "markAllRead": "全部标为已读",
+        "markRead": "标为已读",
+        "viewDetail": "查看详情"
+      },
+      "status": {
+        "read": "已读",
+        "unread": "未读"
+      },
+      "statistics": {
+        "unread": "未读",
+        "total": "全部",
+        "approval": "审批",
+        "quality": "质量",
+        "production": "生产",
+        "inventory": "库存",
+        "overallStats": "总体统计",
+        "typeStats": "按类型统计",
+        "totalAlarms": "全部告警",
+        "unreadAlarms": "未读告警",
+        "readAlarms": "已读告警",
+        "readRate": "已读率",
+        "approvalAlarm": "审批告警",
+        "qualityAlarm": "质量告警",
+        "productionAlarm": "生产告警",
+        "inventoryAlarm": "库存告警"
+      },
+      "detail": {
+        "title": "告警详情"
+      },
+      "channels": {
+        "email": "电子邮件",
+        "sms": "短信",
+        "push": "推送",
+        "system": "系统"
+      },
+      "messages": {
+        "markedAsRead": "已将告警标为已读。",
+        "allMarkedAsRead": "已将所有告警标为已读。",
+        "markReadFailed": "标记告警为已读失败",
+        "markAllReadFailed": "标记所有告警为已读失败"
+      },
+      "errors": {
+        "loadFailed": "加载数据失败"
+      }
+    },
+    "commonCodes": {
+      "title": "公共代码管理",
+      "codeGroup": {
+        "title": "代码组",
+        "code": "代码组",
+        "name": "代码组名称",
+        "add": "添加组",
+        "create": "创建代码组",
+        "edit": "编辑代码组",
+        "system": "系统",
+        "user": "用户",
+        "displayOrder": "顺序",
+        "helperText": "使用大写字母、数字、下划线(_)",
+        "systemCode": "系统代码（不可删除）"
+      },
+      "codeDetail": {
+        "title": "代码详情",
+        "code": "代码",
+        "name": "代码名称",
+        "add": "添加代码",
+        "create": "创建代码详情",
+        "edit": "编辑代码详情",
+        "color": "颜色",
+        "colorCode": "颜色代码",
+        "defaultValue": "默认值",
+        "displayOrder": "显示顺序",
+        "iconName": "图标名称",
+        "extensionFields": "扩展字段",
+        "extensionField1": "扩展字段 1",
+        "extensionField2": "扩展字段 2",
+        "extensionField3": "扩展字段 3",
+        "selectGroup": "请选择代码组"
+      },
+      "deleteConfirm": {
+        "title": "删除确认",
+        "groupMessage": "确定要删除此代码组吗？",
+        "detailMessage": "确定要删除此代码详情吗？",
+        "groupWarning": "删除代码组将同时删除其所有代码详情。"
+      },
+      "messages": {
+        "groupLoadFailed": "加载代码组列表失败",
+        "detailLoadFailed": "加载代码详情列表失败",
+        "groupCreateSuccess": "代码组创建成功",
+        "groupUpdateSuccess": "代码组更新成功",
+        "groupCreateFailed": "代码组创建失败",
+        "groupUpdateFailed": "代码组更新失败",
+        "groupDeleteSuccess": "代码组删除成功",
+        "groupDeleteFailed": "代码组删除失败（系统代码不可删除）",
+        "detailCreateSuccess": "代码详情创建成功",
+        "detailUpdateSuccess": "代码详情更新成功",
+        "detailCreateFailed": "代码详情创建失败",
+        "detailUpdateFailed": "代码详情更新失败",
+        "detailDeleteSuccess": "代码详情删除成功",
+        "detailDeleteFailed": "代码详情删除失败",
+        "selectGroupFirst": "请先选择代码组"
+      }
+    },
+    "auditLogs": {
+      "title": "审计日志",
+      "subtitle": "查看系统操作记录",
+      "fields": {
+        "timestamp": "时间",
+        "username": "用户",
+        "action": "操作",
+        "entityType": "对象类型",
+        "entityId": "对象ID",
+        "success": "是否成功",
+        "ipAddress": "IP地址",
+        "detail": "详情",
+        "actionTime": "操作时间",
+        "errorMessage": "错误信息",
+        "oldValue": "旧值",
+        "newValue": "新值",
+        "metadata": "元数据"
+      },
+      "filters": {
+        "username": "用户名",
+        "action": "操作",
+        "entityType": "对象类型",
+        "success": "成功",
+        "all": "全部",
+        "successLabel": "成功",
+        "failLabel": "失败"
+      },
+      "actions": {
+        "create": "创建",
+        "update": "更新",
+        "delete": "删除",
+        "login": "登录",
+        "logout": "退出登录",
+        "view": "查看"
+      },
+      "detail": {
+        "title": "审计日志详情"
+      }
+    },
+    "returns": {
+      "title": "退货管理",
+      "actions": {
+        "create": "新建退货",
+        "approve": "批准",
+        "reject": "拒绝",
+        "receive": "入库",
+        "complete": "完成",
+        "cancel": "取消",
+        "view": "详情"
+      },
+      "fields": {
+        "returnNo": "退货编号",
+        "returnDate": "退货日期",
+        "returnType": "类型",
+        "materialRequestNo": "领料申请",
+        "workOrderNo": "工单",
+        "requester": "申请人",
+        "warehouse": "仓库",
+        "quantities": "数量",
+        "approver": "审批人"
+      },
+      "status": {
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "received": "已入库",
+        "inspecting": "检验中",
+        "completed": "已完成",
+        "cancelled": "已取消"
+      },
+      "types": {
+        "defective": "不良品",
+        "excess": "多余",
+        "wrongDelivery": "错误交付",
+        "other": "其他"
+      },
+      "quantities": {
+        "return": "退货",
+        "received": "已入库",
+        "passed": "合格",
+        "failed": "不合格"
+      },
+      "stats": {
+        "total": "全部",
+        "pending": "待处理",
+        "approved": "已批准",
+        "received": "已入库",
+        "inspecting": "检验中",
+        "completed": "已完成",
+        "defective": "不良品"
+      },
+      "dialogs": {
+        "rejectTitle": "拒绝退货",
+        "rejectReason": "拒绝理由",
+        "cancelTitle": "取消退货",
+        "cancelReason": "取消理由（选填）",
+        "cancelConfirm": "确认取消"
+      },
+      "errors": {
+        "loadFailed": "加载退货列表失败。"
+      },
+      "confirms": {
+        "approve": "确定要批准退货{{no}}吗？",
+        "receive": "确定要将退货{{no}}入库吗？\n\n将创建库存事务，如需要将自动申请质量检验。",
+        "complete": "确定要完成退货{{no}}吗？\n\n合格品将重新入库，不合格品将移至隔离仓库。"
+      },
+      "messages": {
+        "approved": "已批准。",
+        "rejected": "已拒绝。",
+        "received": "已完成入库。",
+        "completed": "已完成。",
+        "cancelled": "已取消。",
+        "approveFailed": "批准失败。",
+        "rejectFailed": "拒绝失败。",
+        "receiveFailed": "入库处理失败。",
+        "completeFailed": "完成处理失败。",
+        "cancelFailed": "取消失败。",
+        "enterRejectReason": "请输入拒绝理由。"
+      }
+    },
+    "disposals": {
+      "title": "报废管理",
+      "actions": {
+        "create": "创建报废",
+        "approve": "批准",
+        "reject": "拒绝",
+        "process": "处理",
+        "complete": "完成",
+        "cancel": "取消",
+        "viewDetail": "查看详情",
+        "addItem": "添加项目"
+      },
+      "fields": {
+        "disposalNo": "报废编号",
+        "disposalDate": "报废日期",
+        "disposalType": "报废类型",
+        "warehouse": "仓库",
+        "requester": "申请人",
+        "totalQuantity": "总数量",
+        "approver": "审批人",
+        "processor": "处理人",
+        "disposalMethod": "报废方法",
+        "disposalLocation": "报废地点",
+        "rejectionReason": "拒绝理由",
+        "cancellationReason": "取消理由",
+        "workOrderId": "工单ID（选填）",
+        "requesterId": "申请人ID",
+        "warehouseId": "仓库ID",
+        "productId": "产品ID",
+        "lotId": "批次ID（选填）",
+        "disposalQuantity": "报废数量",
+        "defectType": "不良类型",
+        "defectDescription": "不良描述",
+        "expiryDate": "有效期（选填）"
+      },
+      "types": {
+        "defective": "不良",
+        "expired": "过期",
+        "damaged": "损坏",
+        "obsolete": "淘汰",
+        "other": "其他"
+      },
+      "status": {
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "processed": "已处理",
+        "completed": "已完成",
+        "cancelled": "已取消"
+      },
+      "stats": {
+        "total": "全部",
+        "pending": "待处理",
+        "approved": "已批准",
+        "processed": "已处理",
+        "completed": "已完成"
+      },
+      "detail": {
+        "title": "报废详情",
+        "items": "报废项目",
+        "productCode": "产品代码",
+        "productName": "产品名称",
+        "lot": "批次"
+      },
+      "messages": {
+        "createFailed": "报废创建失败",
+        "approveFailed": "报废批准失败",
+        "rejectFailed": "报废拒绝失败",
+        "processFailed": "报废处理失败",
+        "completeFailed": "报废完成失败",
+        "cancelFailed": "报废取消失败",
+        "enterRejectReason": "请输入拒绝理由：",
+        "confirmProcess": "确定要处理报废吗？库存将被扣减。",
+        "enterMethod": "请输入报废方法（例：焚烧、填埋、委外处理）：",
+        "enterLocation": "请输入报废地点：",
+        "enterCancelReason": "请输入取消理由：",
+        "autoGenerate": "自动生成"
+      }
+    },
+    "materialRequests": {
+      "title": "领料申请管理",
+      "actions": {
+        "create": "新建申请",
+        "approve": "批准",
+        "reject": "拒绝",
+        "issue": "发料",
+        "complete": "完成",
+        "cancel": "取消",
+        "view": "详情"
+      },
+      "fields": {
+        "requestNo": "申请编号",
+        "requestDate": "申请日期",
+        "priority": "优先级",
+        "purpose": "用途",
+        "workOrderNo": "工单",
+        "requester": "申请人",
+        "warehouse": "仓库",
+        "requiredDate": "需求日期",
+        "quantities": "数量",
+        "approver": "审批人"
+      },
+      "status": {
+        "pending": "待处理",
+        "approved": "已批准",
+        "rejected": "已拒绝",
+        "issued": "已发料",
+        "completed": "已完成",
+        "cancelled": "已取消"
+      },
+      "priority": {
+        "urgent": "紧急",
+        "high": "高",
+        "normal": "普通",
+        "low": "低"
+      },
+      "purpose": {
+        "production": "生产",
+        "maintenance": "维修",
+        "sample": "样品",
+        "other": "其他"
+      },
+      "quantities": {
+        "requested": "申请",
+        "approved": "已批准",
+        "issued": "已发料"
+      },
+      "stats": {
+        "total": "全部",
+        "pending": "待处理",
+        "approved": "已批准",
+        "issued": "已发料",
+        "completed": "已完成",
+        "urgent": "紧急"
+      },
+      "dialogs": {
+        "rejectTitle": "拒绝领料申请",
+        "rejectReason": "拒绝理由",
+        "cancelTitle": "取消领料申请",
+        "cancelReason": "取消理由（选填）",
+        "cancelConfirm": "确认取消"
+      },
+      "errors": {
+        "loadFailed": "加载领料申请列表失败。"
+      },
+      "confirms": {
+        "approve": "确定要批准领料申请{{no}}吗？",
+        "issue": "确定要发料领料申请{{no}}吗？\n\n库存将被扣减，并将创建交接记录。",
+        "complete": "确定要完成领料申请{{no}}吗？"
+      },
+      "messages": {
+        "approved": "已批准。",
+        "rejected": "已拒绝。",
+        "issued": "发料已完成。",
+        "completed": "已完成。",
+        "cancelled": "已取消。",
+        "approveFailed": "批准失败。",
+        "rejectFailed": "拒绝失败。",
+        "issueFailed": "发料失败。",
+        "completeFailed": "完成处理失败。",
+        "cancelFailed": "取消失败。",
+        "enterRejectReason": "请输入拒绝理由。"
+      }
+    },
+    "materialHandovers": {
+      "title": "物料交接管理",
+      "fields": {
+        "handoverNo": "交接编号",
+        "handoverDate": "交接日期",
+        "materialRequestNo": "领料申请编号",
+        "productCode": "产品代码",
+        "productName": "产品名称",
+        "lotNo": "批次号",
+        "lotQuality": "批次质量",
+        "quantity": "数量",
+        "issuer": "发料人",
+        "issueLocation": "发料位置",
+        "receiver": "收料人",
+        "receiveLocation": "收料位置",
+        "receivedDate": "收料日期"
+      },
+      "status": {
+        "pending": "待处理",
+        "confirmed": "已确认",
+        "rejected": "已拒绝"
+      },
+      "lotQuality": {
+        "passed": "合格",
+        "failed": "不合格",
+        "pending": "待检",
+        "conditional": "有条件"
+      },
+      "stats": {
+        "total": "全部",
+        "pending": "待处理",
+        "confirmed": "已确认",
+        "rejected": "已拒绝"
+      },
+      "actions": {
+        "confirm": "确认收料",
+        "reject": "拒绝收料"
+      },
+      "dialogs": {
+        "confirmTitle": "确认物料收料",
+        "confirmMemo": "确认备注（选填）",
+        "confirmPlaceholder": "确认收料时可以留下备注。",
+        "rejectTitle": "拒绝物料收料",
+        "rejectReason": "拒绝理由",
+        "rejectReasonRequired": "请输入拒绝理由。",
+        "handoverNo": "交接编号",
+        "product": "产品",
+        "lot": "批次",
+        "quantity": "数量",
+        "issuer": "发料人"
+      },
+      "errors": {
+        "loadFailed": "加载交接列表失败。"
+      },
+      "messages": {
+        "confirmed": "收料已确认。",
+        "rejected": "收料已拒绝。",
+        "confirmFailed": "确认收料失败。",
+        "rejectFailed": "拒绝收料失败。",
+        "enterRejectReason": "请输入拒绝理由。"
+      }
+    },
+    "receiving": {
+      "title": "入库管理",
+      "actions": {
+        "create": "新建入库",
+        "complete": "完成",
+        "cancel": "取消",
+        "view": "详情",
+        "delete": "删除"
+      },
+      "fields": {
+        "receiptNo": "入库编号",
+        "receiptDate": "入库日期",
+        "purchaseOrderNo": "采购订单号",
+        "supplier": "供应商",
+        "warehouse": "仓库",
+        "receiptType": "类型",
+        "receiptStatus": "状态",
+        "receiverName": "入库负责人",
+        "purchaseOrder": "采购订单",
+        "receiptTypeLabel": "入库类型",
+        "noneSelected": "不选择"
+      },
+      "types": {
+        "purchase": "采购",
+        "return": "退货",
+        "transfer": "调拨",
+        "other": "其他"
+      },
+      "status": {
+        "pending": "待处理",
+        "inspecting": "检验中",
+        "completed": "已完成",
+        "rejected": "已拒绝",
+        "cancelled": "已取消"
+      },
+      "dialogs": {
+        "createTitle": "新建入库",
+        "detailTitle": "入库详情",
+        "deleteTitle": "删除入库",
+        "confirmDelete": "确定要删除此入库吗？",
+        "receiptNoLabel": "入库编号"
+      },
+      "messages": {
+        "completed": "入库已完成",
+        "completeFailed": "入库完成失败",
+        "cancelled": "入库已取消",
+        "cancelFailed": "入库取消失败"
+      }
+    },
+    "shipping": {
+      "title": "出库管理",
+      "actions": {
+        "create": "新建出库"
+      },
+      "fields": {
+        "shippingNo": "出库编号",
+        "shippingDate": "出库日期",
+        "salesOrderNo": "销售订单号",
+        "customer": "客户",
+        "warehouse": "仓库",
+        "shippingType": "类型",
+        "shippingStatus": "状态",
+        "trackingNumber": "快递单号",
+        "carrierName": "快递公司",
+        "salesOrder": "销售订单",
+        "shippingTypeLabel": "出库类型",
+        "shipperName": "出库负责人",
+        "deliveryAddress": "配送地址",
+        "noneSelected": "不选择"
+      },
+      "types": {
+        "sales": "销售",
+        "return": "退货",
+        "transfer": "调拨",
+        "other": "其他"
+      },
+      "status": {
+        "pending": "待处理",
+        "inspecting": "检验中",
+        "shipped": "已出库",
+        "cancelled": "已取消"
+      },
+      "dialogs": {
+        "createTitle": "新建出库",
+        "detailTitle": "出库详情",
+        "deleteTitle": "删除出库",
+        "confirmDelete": "确定要删除此出库吗？",
+        "shippingNoLabel": "出库编号"
+      }
+    },
+    "popWorkOrder": {
+      "title": "选择工单",
+      "subtitle": "选择要执行的工单或扫描条码",
+      "scanBarcode": "通过条码扫描加载工单",
+      "targetQuantity": "目标数量",
+      "workTime": "工作时间",
+      "operator": "操作员",
+      "unassigned": "未分配",
+      "productionProgress": "生产进度",
+      "percentComplete": "已完成{{percent}}%",
+      "goodQuantity": "合格品",
+      "defectQuantity": "不良品",
+      "quickInput": "快速生产录入",
+      "startWork": "开始工作",
+      "resumeWork": "恢复工作",
+      "pauseWork": "暂停",
+      "registerDefect": "登记不良",
+      "completeWork": "完成工作",
+      "defectDialog": {
+        "title": "登记不良",
+        "quantity": "不良数量",
+        "reason": "不良原因",
+        "register": "登记"
+      },
+      "completeDialog": {
+        "title": "确认完成工作",
+        "confirmMessage": "确定要完成工作吗？",
+        "producedQuantity": "生产数量",
+        "defectQuantity": "不良数量",
+        "workTime": "工作时间"
+      },
+      "completedMessage": "工作已完成。生产实绩：{{quantity}} EA"
+    },
+    "popScanner": {
+      "title": "条码扫描器",
+      "subtitle": "请选择要扫描的项目类型",
+      "scanTypes": {
+        "workOrder": "工单",
+        "lot": "批次",
+        "product": "产品",
+        "location": "位置"
+      },
+      "instructions": {
+        "workOrder": "请扫描工单上的二维码或条码",
+        "lot": "请扫描物料或产品的批次号条码",
+        "product": "请扫描产品条码查看信息",
+        "location": "请扫描仓库位置的二维码"
+      },
+      "scanHistory": "扫描记录",
+      "processing": "正在处理{{type}}扫描...",
+      "scanComplete": "{{type}}扫描完成",
+      "scanSuccess": "{{type}}条码扫描成功：{{data}}",
+      "scanFailed": "扫描失败：{{message}}",
+      "scanError": "扫描处理过程中发生错误。",
+      "failed": "失败"
+    },
+    "popSOP": {
+      "title": "SOP检查表",
+      "subtitle": "请选择要执行的标准操作程序",
+      "version": "版本",
+      "totalSteps": "共{{count}}步",
+      "backToList": "返回列表",
+      "progress": "进度",
+      "stepsCompleted": "{{completed}} / {{total}} 步已完成",
+      "required": "必须",
+      "checkItems": "检查项目",
+      "imageGuide": "图片指南",
+      "videoGuide": "视频指南",
+      "minutesRequired": "需要{{minutes}}分钟",
+      "allStepsCompleted": "所有步骤已完成！",
+      "signToComplete": "签名以完成工作",
+      "signatureDialog": {
+        "title": "工作完成签名",
+        "message": "SOP程序已完成。请签名确认。",
+        "signatureLabel": "签名（输入姓名）",
+        "signaturePad": "数字签名板",
+        "signaturePadNote": "（实际实现时为签名画布）",
+        "signComplete": "签名完成"
+      }
+    }
   }
 }

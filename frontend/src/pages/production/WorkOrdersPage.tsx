@@ -32,11 +32,13 @@ import {
   CheckCircle as CompleteIcon,
   Cancel as CancelIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import workOrderService, { WorkOrder, WorkOrderCreateRequest, WorkOrderUpdateRequest } from '../../services/workOrderService';
 import productService, { Product } from '../../services/productService';
 import processService, { Process } from '../../services/processService';
 
 const WorkOrdersPage: React.FC = () => {
+  const { t } = useTranslation();
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [processes, setProcesses] = useState<Process[]>([]);
@@ -76,7 +78,7 @@ const WorkOrdersPage: React.FC = () => {
       setProducts(productsData || []);
       setProcesses(processesData || []);
     } catch (error) {
-      showSnackbar('데이터 조회 실패', 'error');
+      showSnackbar(t('pages.workOrders.errors.loadFailed'), 'error');
       setWorkOrders([]);
       setProducts([]);
       setProcesses([]);
@@ -148,45 +150,45 @@ const WorkOrdersPage: React.FC = () => {
     try {
       if (selectedWorkOrder) {
         await workOrderService.updateWorkOrder(selectedWorkOrder.workOrderId, formData as WorkOrderUpdateRequest);
-        showSnackbar('작업지시 수정 성공', 'success');
+        showSnackbar(t('pages.workOrders.messages.updateSuccess'), 'success');
       } else {
         await workOrderService.createWorkOrder(formData as WorkOrderCreateRequest);
-        showSnackbar('작업지시 생성 성공', 'success');
+        showSnackbar(t('pages.workOrders.messages.createSuccess'), 'success');
       }
       handleCloseDialog();
       loadData();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.operationFailed'), 'error');
     }
   };
 
   const handleStartWorkOrder = async (workOrder: WorkOrder) => {
     try {
       await workOrderService.startWorkOrder(workOrder.workOrderId);
-      showSnackbar('작업 시작 성공', 'success');
+      showSnackbar(t('pages.workOrders.messages.startSuccess'), 'success');
       loadData();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 시작 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.startFailed'), 'error');
     }
   };
 
   const handleCompleteWorkOrder = async (workOrder: WorkOrder) => {
     try {
       await workOrderService.completeWorkOrder(workOrder.workOrderId);
-      showSnackbar('작업 완료 성공', 'success');
+      showSnackbar(t('pages.workOrders.messages.completeSuccess'), 'success');
       loadData();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 완료 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.completeFailed'), 'error');
     }
   };
 
   const handleCancelWorkOrder = async (workOrder: WorkOrder) => {
     try {
       await workOrderService.cancelWorkOrder(workOrder.workOrderId);
-      showSnackbar('작업 취소 성공', 'success');
+      showSnackbar(t('pages.workOrders.messages.cancelSuccess'), 'success');
       loadData();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 취소 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.cancelFailed'), 'error');
     }
   };
 
@@ -205,11 +207,11 @@ const WorkOrdersPage: React.FC = () => {
 
     try {
       await workOrderService.deleteWorkOrder(selectedWorkOrder.workOrderId);
-      showSnackbar('작업지시 삭제 성공', 'success');
+      showSnackbar(t('pages.workOrders.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadData();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.workOrders.errors.deleteFailed'), 'error');
     }
   };
 
@@ -226,20 +228,20 @@ const WorkOrdersPage: React.FC = () => {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case 'PENDING': return '대기';
-      case 'READY': return '준비';
-      case 'IN_PROGRESS': return '진행중';
-      case 'COMPLETED': return '완료';
-      case 'CANCELLED': return '취소';
+      case 'PENDING': return t('workOrder.status.pending');
+      case 'READY': return t('workOrder.status.ready');
+      case 'IN_PROGRESS': return t('workOrder.status.inProgress');
+      case 'COMPLETED': return t('workOrder.status.completed');
+      case 'CANCELLED': return t('workOrder.status.cancelled');
       default: return status;
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'workOrderNo', headerName: '작업지시 번호', width: 150 },
+    { field: 'workOrderNo', headerName: t('pages.workOrders.fields.workOrderNo'), width: 150 },
     {
       field: 'status',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
@@ -249,32 +251,32 @@ const WorkOrdersPage: React.FC = () => {
         />
       ),
     },
-    { field: 'productName', headerName: '제품명', width: 180 },
-    { field: 'processName', headerName: '공정명', width: 150 },
+    { field: 'productName', headerName: t('pages.workOrders.fields.productName'), width: 180 },
+    { field: 'processName', headerName: t('pages.workOrders.fields.processName'), width: 150 },
     {
       field: 'plannedQuantity',
-      headerName: '계획 수량',
+      headerName: t('pages.workOrders.fields.plannedQuantity'),
       width: 110,
       type: 'number',
       valueFormatter: (params) => params.value.toLocaleString(),
     },
     {
       field: 'actualQuantity',
-      headerName: '실적 수량',
+      headerName: t('pages.workOrders.fields.actualQuantity'),
       width: 110,
       type: 'number',
       valueFormatter: (params) => params.value.toLocaleString(),
     },
     {
       field: 'goodQuantity',
-      headerName: '양품',
+      headerName: t('pages.workOrders.fields.goodQuantity'),
       width: 100,
       type: 'number',
       valueFormatter: (params) => params.value.toLocaleString(),
     },
     {
       field: 'defectQuantity',
-      headerName: '불량',
+      headerName: t('pages.workOrders.fields.defectQuantity'),
       width: 100,
       type: 'number',
       valueFormatter: (params) => params.value.toLocaleString(),
@@ -282,7 +284,7 @@ const WorkOrdersPage: React.FC = () => {
     },
     {
       field: 'plannedStartDate',
-      headerName: '계획 시작일',
+      headerName: t('pages.workOrders.fields.plannedStartDate'),
       width: 160,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR', {
         year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
@@ -291,7 +293,7 @@ const WorkOrdersPage: React.FC = () => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 180,
       getActions: (params: GridRowParams<WorkOrder>) => {
         const actions = [];
@@ -300,7 +302,7 @@ const WorkOrdersPage: React.FC = () => {
           actions.push(
             <GridActionsCellItem
               icon={<StartIcon />}
-              label="시작"
+              label={t('pages.workOrders.actions.start')}
               onClick={() => handleStartWorkOrder(params.row)}
               showInMenu
             />
@@ -311,7 +313,7 @@ const WorkOrdersPage: React.FC = () => {
           actions.push(
             <GridActionsCellItem
               icon={<CompleteIcon />}
-              label="완료"
+              label={t('pages.workOrders.actions.complete')}
               onClick={() => handleCompleteWorkOrder(params.row)}
               showInMenu
             />
@@ -322,7 +324,7 @@ const WorkOrdersPage: React.FC = () => {
           actions.push(
             <GridActionsCellItem
               icon={<CancelIcon />}
-              label="취소"
+              label={t('pages.workOrders.actions.cancel')}
               onClick={() => handleCancelWorkOrder(params.row)}
               showInMenu
             />
@@ -332,13 +334,13 @@ const WorkOrdersPage: React.FC = () => {
         actions.push(
           <GridActionsCellItem
             icon={<EditIcon />}
-            label="수정"
+            label={t('common.buttons.edit')}
             onClick={() => handleOpenDialog(params.row)}
             showInMenu
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
-            label="삭제"
+            label={t('common.buttons.delete')}
             onClick={() => handleOpenDeleteDialog(params.row)}
             showInMenu
           />
@@ -353,14 +355,14 @@ const WorkOrdersPage: React.FC = () => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5" component="h1">
-          작업 지시 관리
+          {t('pages.workOrders.title')}
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
         >
-          신규 등록
+          {t('pages.workOrders.actions.create')}
         </Button>
       </Box>
 
@@ -392,13 +394,13 @@ const WorkOrdersPage: React.FC = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{selectedWorkOrder ? '작업지시 수정' : '신규 작업지시 등록'}</DialogTitle>
+        <DialogTitle>{selectedWorkOrder ? t('pages.workOrders.dialog.editTitle') : t('pages.workOrders.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} mt={1}>
             {!selectedWorkOrder && (
               <TextField
                 name="workOrderNo"
-                label="작업지시 번호"
+                label={t('pages.workOrders.fields.workOrderNo')}
                 value={(formData as WorkOrderCreateRequest).workOrderNo || ''}
                 onChange={handleInputChange}
                 required
@@ -407,12 +409,12 @@ const WorkOrdersPage: React.FC = () => {
             )}
 
             <FormControl fullWidth required>
-              <InputLabel>제품</InputLabel>
+              <InputLabel>{t('pages.workOrders.fields.product')}</InputLabel>
               <Select
                 name="productId"
                 value={formData.productId || ''}
                 onChange={handleSelectChange}
-                label="제품"
+                label={t('pages.workOrders.fields.product')}
               >
                 {products.map((product) => (
                   <MenuItem key={product.productId} value={product.productId}>
@@ -423,12 +425,12 @@ const WorkOrdersPage: React.FC = () => {
             </FormControl>
 
             <FormControl fullWidth required>
-              <InputLabel>공정</InputLabel>
+              <InputLabel>{t('pages.workOrders.fields.process')}</InputLabel>
               <Select
                 name="processId"
                 value={formData.processId || ''}
                 onChange={handleSelectChange}
-                label="공정"
+                label={t('pages.workOrders.fields.process')}
               >
                 {processes.map((process) => (
                   <MenuItem key={process.processId} value={process.processId}>
@@ -440,7 +442,7 @@ const WorkOrdersPage: React.FC = () => {
 
             <TextField
               name="plannedQuantity"
-              label="계획 수량"
+              label={t('pages.workOrders.fields.plannedQuantity')}
               type="number"
               value={formData.plannedQuantity || 0}
               onChange={handleInputChange}
@@ -450,7 +452,7 @@ const WorkOrdersPage: React.FC = () => {
 
             <TextField
               name="plannedStartDate"
-              label="계획 시작일"
+              label={t('pages.workOrders.fields.plannedStartDate')}
               type="datetime-local"
               value={formData.plannedStartDate || ''}
               onChange={handleInputChange}
@@ -461,7 +463,7 @@ const WorkOrdersPage: React.FC = () => {
 
             <TextField
               name="plannedEndDate"
-              label="계획 종료일"
+              label={t('pages.workOrders.fields.plannedEndDate')}
               type="datetime-local"
               value={formData.plannedEndDate || ''}
               onChange={handleInputChange}
@@ -471,24 +473,24 @@ const WorkOrdersPage: React.FC = () => {
             />
 
             <FormControl fullWidth>
-              <InputLabel>우선순위</InputLabel>
+              <InputLabel>{t('pages.workOrders.fields.priority')}</InputLabel>
               <Select
                 name="priority"
                 value={formData.priority || '5'}
                 onChange={handleSelectChange}
-                label="우선순위"
+                label={t('pages.workOrders.fields.priority')}
               >
-                <MenuItem value="1">높음 (1)</MenuItem>
-                <MenuItem value="3">보통 높음 (3)</MenuItem>
-                <MenuItem value="5">보통 (5)</MenuItem>
-                <MenuItem value="7">보통 낮음 (7)</MenuItem>
-                <MenuItem value="10">낮음 (10)</MenuItem>
+                <MenuItem value="1">{t('pages.workOrders.priority.high')} (1)</MenuItem>
+                <MenuItem value="3">{t('pages.workOrders.priority.mediumHigh')} (3)</MenuItem>
+                <MenuItem value="5">{t('pages.workOrders.priority.medium')} (5)</MenuItem>
+                <MenuItem value="7">{t('pages.workOrders.priority.mediumLow')} (7)</MenuItem>
+                <MenuItem value="10">{t('pages.workOrders.priority.low')} (10)</MenuItem>
               </Select>
             </FormControl>
 
             <TextField
               name="remarks"
-              label="비고"
+              label={t('common.labels.remarks')}
               value={formData.remarks || ''}
               onChange={handleInputChange}
               multiline
@@ -498,28 +500,28 @@ const WorkOrdersPage: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedWorkOrder ? '수정' : '등록'}
+            {selectedWorkOrder ? t('common.buttons.edit') : t('pages.workOrders.actions.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>작업지시 삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.workOrders.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.workOrders.messages.irreversible')}
           </Alert>
           <Typography>
-            작업지시 <strong>{selectedWorkOrder?.workOrderNo}</strong>을(를) 삭제하시겠습니까?
+            {t('pages.workOrders.messages.confirmDelete', { name: selectedWorkOrder?.workOrderNo })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

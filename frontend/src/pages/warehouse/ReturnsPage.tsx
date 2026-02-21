@@ -26,6 +26,7 @@ import {
   Close as CancelIcon,
   Visibility as ViewIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useAuthStore } from '@/stores/authStore';
@@ -64,6 +65,7 @@ interface Return {
 }
 
 const ReturnsPage: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [returns, setReturns] = useState<Return[]>([]);
@@ -77,7 +79,6 @@ const ReturnsPage: React.FC = () => {
   const [rejectionReason, setRejectionReason] = useState('');
   const [cancellationReason, setCancellationReason] = useState('');
 
-  // 데이터 로드
   const loadReturns = async () => {
     setLoading(true);
     setError(null);
@@ -85,7 +86,7 @@ const ReturnsPage: React.FC = () => {
       const response = await axios.get('/api/returns');
       setReturns(response.data.data || []);
     } catch (err: any) {
-      setError(err.response?.data?.message || '반품 목록을 불러오는데 실패했습니다.');
+      setError(err.response?.data?.message || t('pages.returns.errors.loadFailed'));
     } finally {
       setLoading(false);
     }
@@ -95,17 +96,16 @@ const ReturnsPage: React.FC = () => {
     loadReturns();
   }, []);
 
-  // 상태 렌더링
   const renderStatus = (params: GridRenderCellParams) => {
     const status = params.value as string;
     const statusConfig: Record<string, { color: 'default' | 'primary' | 'success' | 'error' | 'warning' | 'info', label: string }> = {
-      PENDING: { color: 'warning', label: '대기' },
-      APPROVED: { color: 'info', label: '승인' },
-      REJECTED: { color: 'error', label: '거부' },
-      RECEIVED: { color: 'primary', label: '입고' },
-      INSPECTING: { color: 'info', label: '검사중' },
-      COMPLETED: { color: 'success', label: '완료' },
-      CANCELLED: { color: 'default', label: '취소' },
+      PENDING: { color: 'warning', label: t('pages.returns.status.pending') },
+      APPROVED: { color: 'info', label: t('pages.returns.status.approved') },
+      REJECTED: { color: 'error', label: t('pages.returns.status.rejected') },
+      RECEIVED: { color: 'primary', label: t('pages.returns.status.received') },
+      INSPECTING: { color: 'info', label: t('pages.returns.status.inspecting') },
+      COMPLETED: { color: 'success', label: t('pages.returns.status.completed') },
+      CANCELLED: { color: 'default', label: t('pages.returns.status.cancelled') },
     };
 
     const config = statusConfig[status] || { color: 'default' as const, label: status };
@@ -120,14 +120,13 @@ const ReturnsPage: React.FC = () => {
     );
   };
 
-  // 반품 유형 렌더링
   const renderType = (params: GridRenderCellParams) => {
     const type = params.value as string;
     const typeConfig: Record<string, { color: 'default' | 'error' | 'warning' | 'info', label: string }> = {
-      DEFECTIVE: { color: 'error', label: '불량품' },
-      EXCESS: { color: 'warning', label: '과잉' },
-      WRONG_DELIVERY: { color: 'info', label: '오배송' },
-      OTHER: { color: 'default', label: '기타' },
+      DEFECTIVE: { color: 'error', label: t('pages.returns.types.defective') },
+      EXCESS: { color: 'warning', label: t('pages.returns.types.excess') },
+      WRONG_DELIVERY: { color: 'info', label: t('pages.returns.types.wrongDelivery') },
+      OTHER: { color: 'default', label: t('pages.returns.types.other') },
     };
 
     const config = typeConfig[type] || { color: 'default' as const, label: type };
@@ -141,34 +140,32 @@ const ReturnsPage: React.FC = () => {
     );
   };
 
-  // 수량 렌더링
   const renderQuantities = (params: GridRenderCellParams) => {
     const row = params.row as Return;
     return (
       <Stack direction="column" spacing={0.5}>
-        <Typography variant="caption">반품: {row.totalReturnQuantity}</Typography>
+        <Typography variant="caption">{t('pages.returns.quantities.return')}: {row.totalReturnQuantity}</Typography>
         {row.totalReceivedQuantity > 0 && (
           <Typography variant="caption" color="primary.main">
-            입고: {row.totalReceivedQuantity}
+            {t('pages.returns.quantities.received')}: {row.totalReceivedQuantity}
           </Typography>
         )}
         {row.totalPassedQuantity > 0 && (
           <Typography variant="caption" color="success.main">
-            합격: {row.totalPassedQuantity}
+            {t('pages.returns.quantities.passed')}: {row.totalPassedQuantity}
           </Typography>
         )}
         {row.totalFailedQuantity > 0 && (
           <Typography variant="caption" color="error.main">
-            불합격: {row.totalFailedQuantity}
+            {t('pages.returns.quantities.failed')}: {row.totalFailedQuantity}
           </Typography>
         )}
       </Stack>
     );
   };
 
-  // 승인
   const handleApprove = async (returnEntity: Return) => {
-    if (!window.confirm(`반품 ${returnEntity.returnNo}을(를) 승인하시겠습니까?`)) {
+    if (!window.confirm(t('pages.returns.confirms.approve', { no: returnEntity.returnNo }))) {
       return;
     }
 
@@ -177,24 +174,22 @@ const ReturnsPage: React.FC = () => {
       await axios.post(`/api/returns/${returnEntity.returnId}/approve`, null, {
         params: { approverUserId }
       });
-      alert('승인되었습니다.');
+      alert(t('pages.returns.messages.approved'));
       loadReturns();
     } catch (err: any) {
-      alert(err.response?.data?.message || '승인에 실패했습니다.');
+      alert(err.response?.data?.message || t('pages.returns.messages.approveFailed'));
     }
   };
 
-  // 거부 다이얼로그 열기
   const handleRejectDialogOpen = (returnEntity: Return) => {
     setSelectedReturn(returnEntity);
     setRejectionReason('');
     setRejectDialogOpen(true);
   };
 
-  // 거부 실행
   const handleReject = async () => {
     if (!selectedReturn || !rejectionReason.trim()) {
-      alert('거부 사유를 입력해주세요.');
+      alert(t('pages.returns.messages.enterRejectReason'));
       return;
     }
 
@@ -206,17 +201,16 @@ const ReturnsPage: React.FC = () => {
           reason: rejectionReason
         }
       });
-      alert('거부되었습니다.');
+      alert(t('pages.returns.messages.rejected'));
       setRejectDialogOpen(false);
       loadReturns();
     } catch (err: any) {
-      alert(err.response?.data?.message || '거부에 실패했습니다.');
+      alert(err.response?.data?.message || t('pages.returns.messages.rejectFailed'));
     }
   };
 
-  // 입고
   const handleReceive = async (returnEntity: Return) => {
-    if (!window.confirm(`반품 ${returnEntity.returnNo}을(를) 입고 처리하시겠습니까?\n\n재고 트랜잭션이 생성되고 검사가 필요한 경우 품질 검사가 자동 요청됩니다.`)) {
+    if (!window.confirm(t('pages.returns.confirms.receive', { no: returnEntity.returnNo }))) {
       return;
     }
 
@@ -225,36 +219,33 @@ const ReturnsPage: React.FC = () => {
       await axios.post(`/api/returns/${returnEntity.returnId}/receive`, null, {
         params: { receiverUserId }
       });
-      alert('입고가 완료되었습니다.');
+      alert(t('pages.returns.messages.received'));
       loadReturns();
     } catch (err: any) {
-      alert(err.response?.data?.message || '입고 처리에 실패했습니다.');
+      alert(err.response?.data?.message || t('pages.returns.messages.receiveFailed'));
     }
   };
 
-  // 완료 (재고 복원)
   const handleComplete = async (returnEntity: Return) => {
-    if (!window.confirm(`반품 ${returnEntity.returnNo}을(를) 완료 처리하시겠습니까?\n\n합격품은 재입고되고 불합격품은 격리창고로 이동됩니다.`)) {
+    if (!window.confirm(t('pages.returns.confirms.complete', { no: returnEntity.returnNo }))) {
       return;
     }
 
     try {
       await axios.post(`/api/returns/${returnEntity.returnId}/complete`);
-      alert('완료되었습니다.');
+      alert(t('pages.returns.messages.completed'));
       loadReturns();
     } catch (err: any) {
-      alert(err.response?.data?.message || '완료 처리에 실패했습니다.');
+      alert(err.response?.data?.message || t('pages.returns.messages.completeFailed'));
     }
   };
 
-  // 취소 다이얼로그 열기
   const handleCancelDialogOpen = (returnEntity: Return) => {
     setSelectedReturn(returnEntity);
     setCancellationReason('');
     setCancelDialogOpen(true);
   };
 
-  // 취소 실행
   const handleCancel = async () => {
     if (!selectedReturn) return;
 
@@ -262,30 +253,28 @@ const ReturnsPage: React.FC = () => {
       await axios.post(`/api/returns/${selectedReturn.returnId}/cancel`, null, {
         params: { reason: cancellationReason }
       });
-      alert('취소되었습니다.');
+      alert(t('pages.returns.messages.cancelled'));
       setCancelDialogOpen(false);
       loadReturns();
     } catch (err: any) {
-      alert(err.response?.data?.message || '취소에 실패했습니다.');
+      alert(err.response?.data?.message || t('pages.returns.messages.cancelFailed'));
     }
   };
 
-  // 상세 보기
   const handleView = (returnEntity: Return) => {
     navigate(`/warehouse/returns/${returnEntity.returnId}`);
   };
 
-  // DataGrid 컬럼 정의
   const columns: GridColDef[] = [
     {
       field: 'returnNo',
-      headerName: '반품번호',
+      headerName: t('pages.returns.fields.returnNo'),
       width: 150,
       sortable: true,
     },
     {
       field: 'returnDate',
-      headerName: '반품일시',
+      headerName: t('pages.returns.fields.returnDate'),
       width: 160,
       renderCell: (params) => {
         return format(new Date(params.value as string), 'yyyy-MM-dd HH:mm');
@@ -293,112 +282,109 @@ const ReturnsPage: React.FC = () => {
     },
     {
       field: 'returnStatus',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: renderStatus,
     },
     {
       field: 'returnType',
-      headerName: '유형',
+      headerName: t('pages.returns.fields.returnType'),
       width: 100,
       renderCell: renderType,
     },
     {
       field: 'materialRequestNo',
-      headerName: '불출신청',
+      headerName: t('pages.returns.fields.materialRequestNo'),
       width: 120,
     },
     {
       field: 'workOrderNo',
-      headerName: '작업지시',
+      headerName: t('pages.returns.fields.workOrderNo'),
       width: 120,
     },
     {
       field: 'requesterName',
-      headerName: '신청자',
+      headerName: t('pages.returns.fields.requester'),
       width: 100,
     },
     {
       field: 'warehouseName',
-      headerName: '창고',
+      headerName: t('pages.returns.fields.warehouse'),
       width: 120,
     },
     {
       field: 'quantities',
-      headerName: '수량',
+      headerName: t('pages.returns.fields.quantities'),
       width: 120,
       renderCell: renderQuantities,
       sortable: false,
     },
     {
       field: 'approverName',
-      headerName: '승인자',
+      headerName: t('pages.returns.fields.approver'),
       width: 100,
     },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 200,
       getActions: (params) => {
         const row = params.row as Return;
         const actions = [
           <GridActionsCellItem
             icon={<ViewIcon />}
-            label="상세"
+            label={t('pages.returns.actions.view')}
             onClick={() => handleView(row)}
             showInMenu
           />,
         ];
 
-        // PENDING → 승인/거부
         if (row.returnStatus === 'PENDING') {
           actions.push(
             <GridActionsCellItem
               icon={<ApproveIcon />}
-              label="승인"
+              label={t('pages.returns.actions.approve')}
               onClick={() => handleApprove(row)}
               showInMenu
             />,
             <GridActionsCellItem
               icon={<RejectIcon />}
-              label="거부"
+              label={t('pages.returns.actions.reject')}
               onClick={() => handleRejectDialogOpen(row)}
               showInMenu
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
-              label="취소"
+              label={t('pages.returns.actions.cancel')}
               onClick={() => handleCancelDialogOpen(row)}
               showInMenu
             />
           );
         }
 
-        // APPROVED → 입고/취소
         if (row.returnStatus === 'APPROVED') {
           actions.push(
             <GridActionsCellItem
               icon={<ReceiveIcon />}
-              label="입고"
+              label={t('pages.returns.actions.receive')}
               onClick={() => handleReceive(row)}
               showInMenu
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
-              label="취소"
+              label={t('pages.returns.actions.cancel')}
               onClick={() => handleCancelDialogOpen(row)}
               showInMenu
             />
           );
         }
 
-        // RECEIVED/INSPECTING → 완료
         if (row.returnStatus === 'RECEIVED' || row.returnStatus === 'INSPECTING') {
           actions.push(
             <GridActionsCellItem
               icon={<CompleteIcon />}
-              label="완료"
+              label={t('pages.returns.actions.complete')}
               onClick={() => handleComplete(row)}
               showInMenu
             />
@@ -410,7 +396,6 @@ const ReturnsPage: React.FC = () => {
     },
   ];
 
-  // 통계 계산
   const stats = {
     total: returns.length,
     pending: returns.filter(r => r.returnStatus === 'PENDING').length,
@@ -424,10 +409,9 @@ const ReturnsPage: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Paper sx={{ p: 2 }}>
-        {/* 헤더 */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="h5" component="h1">
-            반품 관리
+            {t('pages.returns.title')}
           </Typography>
           <Stack direction="row" spacing={1}>
             <Button
@@ -436,39 +420,36 @@ const ReturnsPage: React.FC = () => {
               onClick={loadReturns}
               disabled={loading}
             >
-              새로고침
+              {t('common.buttons.refresh')}
             </Button>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => navigate('/warehouse/returns/new')}
             >
-              신규 반품
+              {t('pages.returns.actions.create')}
             </Button>
           </Stack>
         </Box>
 
-        {/* 통계 */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Chip label={`전체: ${stats.total}`} />
-          <Chip label={`대기: ${stats.pending}`} color="warning" variant="outlined" />
-          <Chip label={`승인: ${stats.approved}`} color="info" variant="outlined" />
-          <Chip label={`입고: ${stats.received}`} color="primary" variant="outlined" />
-          <Chip label={`검사중: ${stats.inspecting}`} color="info" variant="outlined" />
-          <Chip label={`완료: ${stats.completed}`} color="success" variant="outlined" />
+          <Chip label={`${t('pages.returns.stats.total')}: ${stats.total}`} />
+          <Chip label={`${t('pages.returns.stats.pending')}: ${stats.pending}`} color="warning" variant="outlined" />
+          <Chip label={`${t('pages.returns.stats.approved')}: ${stats.approved}`} color="info" variant="outlined" />
+          <Chip label={`${t('pages.returns.stats.received')}: ${stats.received}`} color="primary" variant="outlined" />
+          <Chip label={`${t('pages.returns.stats.inspecting')}: ${stats.inspecting}`} color="info" variant="outlined" />
+          <Chip label={`${t('pages.returns.stats.completed')}: ${stats.completed}`} color="success" variant="outlined" />
           {stats.defective > 0 && (
-            <Chip label={`불량품: ${stats.defective}`} color="error" />
+            <Chip label={`${t('pages.returns.stats.defective')}: ${stats.defective}`} color="error" />
           )}
         </Stack>
 
-        {/* 에러 메시지 */}
         {error && (
           <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
             {error}
           </Alert>
         )}
 
-        {/* 데이터 그리드 */}
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
             <CircularProgress />
@@ -500,14 +481,14 @@ const ReturnsPage: React.FC = () => {
         )}
       </Paper>
 
-      {/* 거부 다이얼로그 */}
+      {/* Reject Dialog */}
       <Dialog open={rejectDialogOpen} onClose={() => setRejectDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>반품 거부</DialogTitle>
+        <DialogTitle>{t('pages.returns.dialogs.rejectTitle')}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="거부 사유"
+            label={t('pages.returns.dialogs.rejectReason')}
             fullWidth
             multiline
             rows={4}
@@ -517,21 +498,21 @@ const ReturnsPage: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRejectDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setRejectDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleReject} variant="contained" color="error">
-            거부
+            {t('pages.returns.actions.reject')}
           </Button>
         </DialogActions>
       </Dialog>
 
-      {/* 취소 다이얼로그 */}
+      {/* Cancel Dialog */}
       <Dialog open={cancelDialogOpen} onClose={() => setCancelDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>반품 취소</DialogTitle>
+        <DialogTitle>{t('pages.returns.dialogs.cancelTitle')}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="취소 사유 (선택)"
+            label={t('pages.returns.dialogs.cancelReason')}
             fullWidth
             multiline
             rows={4}
@@ -540,9 +521,9 @@ const ReturnsPage: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setCancelDialogOpen(false)}>닫기</Button>
+          <Button onClick={() => setCancelDialogOpen(false)}>{t('common.buttons.close')}</Button>
           <Button onClick={handleCancel} variant="contained" color="warning">
-            취소 확정
+            {t('pages.returns.dialogs.cancelConfirm')}
           </Button>
         </DialogActions>
       </Dialog>

@@ -39,7 +39,8 @@
       "endDate": "종료일",
       "quantity": "수량",
       "total": "합계",
-      "remarks": "비고"
+      "remarks": "비고",
+      "default": "기본"
     },
     "status": {
       "active": "활성",
@@ -374,5 +375,803 @@
       "loadFailed": "데이터를 불러오는 중 오류가 발생했습니다"
     },
     "scrollHint": "스크롤을 아래로 내리면 자동으로 다음 페이지가 로드됩니다"
+  },
+  "pages": {
+    "holidays": {
+      "title": "휴일 관리",
+      "tabs": {
+        "holidays": "휴일 관리",
+        "workingHours": "근무 시간 설정",
+        "calculator": "영업일 계산기"
+      },
+      "fields": {
+        "date": "날짜",
+        "name": "휴일명",
+        "type": "타입",
+        "recurring": "반복",
+        "workingDay": "근무일",
+        "year": "연도",
+        "yearSuffix": "년",
+        "holidayType": "휴일 타입",
+        "recurringHoliday": "반복 휴일",
+        "recurrenceRule": "반복 규칙",
+        "substituteWorkDay": "근무일 (대체 근무일)"
+      },
+      "types": {
+        "national": "국경일",
+        "company": "회사 휴일",
+        "special": "특별 휴일"
+      },
+      "recurrence": {
+        "yearly": "매년",
+        "monthly": "매월",
+        "lunar": "음력"
+      },
+      "status": {
+        "working": "근무",
+        "dayOff": "휴무"
+      },
+      "actions": {
+        "addHoliday": "휴일 추가",
+        "editHoliday": "휴일 수정",
+        "deleteHoliday": "휴일 삭제",
+        "addWorkingHours": "근무 시간 추가",
+        "setDefault": "기본설정"
+      },
+      "weekdays": {
+        "mon": "월",
+        "tue": "화",
+        "wed": "수",
+        "thu": "목",
+        "fri": "금",
+        "sat": "토",
+        "sun": "일",
+        "monday": "월요일",
+        "tuesday": "화요일",
+        "wednesday": "수요일",
+        "thursday": "목요일",
+        "friday": "금요일",
+        "saturday": "토요일",
+        "sunday": "일요일"
+      },
+      "workingHours": {
+        "scheduleName": "스케줄명",
+        "default": "기본",
+        "add": "근무 시간 추가",
+        "edit": "근무 시간 수정",
+        "delete": "근무 시간 삭제",
+        "setAsDefault": "기본 스케줄로 설정",
+        "dailyHours": "요일별 근무시간",
+        "start": "시작",
+        "end": "종료",
+        "breakTime": "휴식시간"
+      },
+      "calculator": {
+        "calcType": "계산 유형",
+        "checkBusinessDay": "영업일 확인",
+        "calculateBusinessDays": "영업일 수 계산",
+        "addBusinessDays": "영업일 더하기",
+        "dateToCheck": "확인할 날짜",
+        "result": "결과",
+        "date": "날짜",
+        "dayOfWeek": "요일",
+        "isBusinessDay": "영업일 여부",
+        "businessDay": "영업일",
+        "holiday": "휴일",
+        "calculate": "계산",
+        "period": "기간",
+        "totalDays": "전체 일수",
+        "daySuffix": "일",
+        "businessDayCount": "영업일 수",
+        "daysToAdd": "더할 영업일 수",
+        "addedBusinessDays": "더한 영업일",
+        "resultDate": "결과 날짜"
+      },
+      "errors": {
+        "loadFailed": "휴일 목록 로드 실패",
+        "saveFailed": "휴일 저장 실패",
+        "deleteFailed": "휴일 삭제 실패",
+        "workingHoursSaveFailed": "근무 시간 저장 실패",
+        "workingHoursDeleteFailed": "근무 시간 삭제 실패",
+        "setDefaultFailed": "기본 설정 실패",
+        "checkBusinessDayFailed": "영업일 확인 실패",
+        "calculateBusinessDaysFailed": "영업일 계산 실패",
+        "addBusinessDaysFailed": "영업일 더하기 실패"
+      },
+      "confirmDeleteHoliday": "'{{name}}' 휴일을 삭제하시겠습니까?",
+      "confirmDeleteWorkingHours": "'{{name}}' 근무 시간을 삭제하시겠습니까?"
+    },
+    "approval": {
+      "title": "결재 관리",
+      "tabs": {
+        "pending": "대기 중인 결재",
+        "templates": "결재 라인 템플릿",
+        "delegations": "결재 위임",
+        "statistics": "통계"
+      },
+      "fields": {
+        "documentNo": "문서 번호",
+        "documentType": "문서 타입",
+        "title": "제목",
+        "requester": "기안자",
+        "requestDate": "기안일",
+        "templateName": "템플릿명",
+        "templateCode": "코드",
+        "stepCount": "단계 수",
+        "delegator": "위임자",
+        "delegate": "수임자",
+        "delegationType": "유형",
+        "delegationReason": "사유",
+        "approvalComment": "승인 의견",
+        "rejectionReason": "반려 사유"
+      },
+      "actions": {
+        "approve": "승인",
+        "reject": "반려",
+        "view": "보기"
+      },
+      "status": {
+        "pending": "대기 중",
+        "inProgress": "진행 중",
+        "approved": "승인 완료",
+        "rejected": "반려",
+        "full": "전체",
+        "partial": "부분"
+      },
+      "statistics": {
+        "approvalRate": "승인율",
+        "totalApprovedOf": "전체 {{total}}건 중 {{approved}}건 승인"
+      },
+      "detail": {
+        "title": "결재 상세",
+        "approvalProgress": "결재 진행 현황",
+        "approveTitle": "결재 승인",
+        "rejectTitle": "결재 반려"
+      },
+      "errors": {
+        "loadFailed": "데이터 로드 실패",
+        "processFailed": "결재 처리 실패"
+      }
+    },
+    "alarm": {
+      "title": "알람 관리",
+      "subtitle": "시스템 알림 및 알람 설정을 관리합니다",
+      "tabs": {
+        "unread": "읽지 않은 알람",
+        "all": "전체 알람",
+        "recent": "최근 알람 (7일)",
+        "statistics": "통계"
+      },
+      "fields": {
+        "alarmType": "알람 타입",
+        "priority": "우선순위",
+        "title": "제목",
+        "message": "내용",
+        "time": "시간",
+        "isRead": "읽음",
+        "referenceNo": "참조 번호",
+        "sentTime": "발송 시간",
+        "readTime": "읽은 시간",
+        "sentChannel": "발송 채널"
+      },
+      "actions": {
+        "markAllRead": "모두 읽음 표시",
+        "markRead": "읽음 표시",
+        "viewDetail": "상세 보기"
+      },
+      "status": {
+        "read": "읽음",
+        "unread": "읽지 않음"
+      },
+      "statistics": {
+        "unread": "읽지 않음",
+        "total": "전체",
+        "approval": "결재",
+        "quality": "품질",
+        "production": "생산",
+        "inventory": "재고",
+        "overallStats": "전체 통계",
+        "typeStats": "타입별 통계",
+        "totalAlarms": "전체 알람",
+        "unreadAlarms": "읽지 않은 알람",
+        "readAlarms": "읽은 알람",
+        "readRate": "읽음율",
+        "approvalAlarm": "결재 알람",
+        "qualityAlarm": "품질 알람",
+        "productionAlarm": "생산 알람",
+        "inventoryAlarm": "재고 알람"
+      },
+      "detail": {
+        "title": "알람 상세"
+      },
+      "channels": {
+        "email": "이메일",
+        "sms": "SMS",
+        "push": "푸시",
+        "system": "시스템"
+      },
+      "messages": {
+        "markedAsRead": "알람을 읽음으로 표시했습니다.",
+        "allMarkedAsRead": "모든 알람을 읽음으로 표시했습니다.",
+        "markReadFailed": "알람 읽음 처리 실패",
+        "markAllReadFailed": "전체 알람 읽음 처리 실패"
+      },
+      "errors": {
+        "loadFailed": "데이터 로드 실패"
+      }
+    },
+    "commonCodes": {
+      "title": "공통 코드 관리",
+      "codeGroup": {
+        "title": "코드 그룹",
+        "code": "코드 그룹",
+        "name": "코드 그룹명",
+        "add": "그룹 추가",
+        "create": "코드 그룹 생성",
+        "edit": "코드 그룹 수정",
+        "system": "시스템",
+        "user": "사용자",
+        "displayOrder": "순서",
+        "helperText": "영문 대문자, 숫자, 언더스코어(_) 사용",
+        "systemCode": "시스템 코드 (삭제 불가)"
+      },
+      "codeDetail": {
+        "title": "코드 상세",
+        "code": "코드",
+        "name": "코드명",
+        "add": "코드 추가",
+        "create": "코드 상세 생성",
+        "edit": "코드 상세 수정",
+        "color": "색상",
+        "colorCode": "색상 코드",
+        "defaultValue": "기본값",
+        "displayOrder": "표시 순서",
+        "iconName": "아이콘명",
+        "extensionFields": "확장 필드",
+        "extensionField1": "확장 필드 1",
+        "extensionField2": "확장 필드 2",
+        "extensionField3": "확장 필드 3",
+        "selectGroup": "코드 그룹을 선택하세요"
+      },
+      "deleteConfirm": {
+        "title": "삭제 확인",
+        "groupMessage": "코드 그룹을 삭제하시겠습니까?",
+        "detailMessage": "코드 상세를 삭제하시겠습니까?",
+        "groupWarning": "코드 그룹을 삭제하면 하위 코드 상세도 모두 삭제됩니다."
+      },
+      "messages": {
+        "groupLoadFailed": "코드 그룹 목록 조회 실패",
+        "detailLoadFailed": "코드 상세 목록 조회 실패",
+        "groupCreateSuccess": "코드 그룹 생성 성공",
+        "groupUpdateSuccess": "코드 그룹 수정 성공",
+        "groupCreateFailed": "코드 그룹 생성 실패",
+        "groupUpdateFailed": "코드 그룹 수정 실패",
+        "groupDeleteSuccess": "코드 그룹 삭제 성공",
+        "groupDeleteFailed": "코드 그룹 삭제 실패 (시스템 코드는 삭제 불가)",
+        "detailCreateSuccess": "코드 상세 생성 성공",
+        "detailUpdateSuccess": "코드 상세 수정 성공",
+        "detailCreateFailed": "코드 상세 생성 실패",
+        "detailUpdateFailed": "코드 상세 수정 실패",
+        "detailDeleteSuccess": "코드 상세 삭제 성공",
+        "detailDeleteFailed": "코드 상세 삭제 실패",
+        "selectGroupFirst": "코드 그룹을 먼저 선택하세요"
+      }
+    },
+    "auditLogs": {
+      "title": "감사 로그",
+      "subtitle": "시스템 작업 이력을 조회합니다",
+      "fields": {
+        "timestamp": "시간",
+        "username": "사용자",
+        "action": "작업",
+        "entityType": "대상 유형",
+        "entityId": "대상 ID",
+        "success": "성공 여부",
+        "ipAddress": "IP 주소",
+        "detail": "상세",
+        "actionTime": "작업 시간",
+        "errorMessage": "오류 메시지",
+        "oldValue": "이전 값",
+        "newValue": "새로운 값",
+        "metadata": "메타데이터"
+      },
+      "filters": {
+        "username": "사용자명",
+        "action": "작업",
+        "entityType": "대상 유형",
+        "success": "성공",
+        "all": "전체",
+        "successLabel": "성공",
+        "failLabel": "실패"
+      },
+      "actions": {
+        "create": "생성",
+        "update": "수정",
+        "delete": "삭제",
+        "login": "로그인",
+        "logout": "로그아웃",
+        "view": "보기"
+      },
+      "detail": {
+        "title": "감사 로그 상세"
+      }
+    },
+    "returns": {
+      "title": "반품 관리",
+      "actions": {
+        "create": "신규 반품",
+        "approve": "승인",
+        "reject": "거부",
+        "receive": "입고",
+        "complete": "완료",
+        "cancel": "취소",
+        "view": "상세"
+      },
+      "fields": {
+        "returnNo": "반품번호",
+        "returnDate": "반품일시",
+        "returnType": "유형",
+        "materialRequestNo": "불출신청",
+        "workOrderNo": "작업지시",
+        "requester": "신청자",
+        "warehouse": "창고",
+        "quantities": "수량",
+        "approver": "승인자"
+      },
+      "status": {
+        "pending": "대기",
+        "approved": "승인",
+        "rejected": "거부",
+        "received": "입고",
+        "inspecting": "검사중",
+        "completed": "완료",
+        "cancelled": "취소"
+      },
+      "types": {
+        "defective": "불량품",
+        "excess": "과잉",
+        "wrongDelivery": "오배송",
+        "other": "기타"
+      },
+      "quantities": {
+        "return": "반품",
+        "received": "입고",
+        "passed": "합격",
+        "failed": "불합격"
+      },
+      "stats": {
+        "total": "전체",
+        "pending": "대기",
+        "approved": "승인",
+        "received": "입고",
+        "inspecting": "검사중",
+        "completed": "완료",
+        "defective": "불량품"
+      },
+      "dialogs": {
+        "rejectTitle": "반품 거부",
+        "rejectReason": "거부 사유",
+        "cancelTitle": "반품 취소",
+        "cancelReason": "취소 사유 (선택)",
+        "cancelConfirm": "취소 확정"
+      },
+      "errors": {
+        "loadFailed": "반품 목록을 불러오는데 실패했습니다."
+      },
+      "confirms": {
+        "approve": "반품 {{no}}을(를) 승인하시겠습니까?",
+        "receive": "반품 {{no}}을(를) 입고 처리하시겠습니까?\n\n재고 트랜잭션이 생성되고 검사가 필요한 경우 품질 검사가 자동 요청됩니다.",
+        "complete": "반품 {{no}}을(를) 완료 처리하시겠습니까?\n\n합격품은 재입고되고 불합격품은 격리창고로 이동됩니다."
+      },
+      "messages": {
+        "approved": "승인되었습니다.",
+        "rejected": "거부되었습니다.",
+        "received": "입고가 완료되었습니다.",
+        "completed": "완료되었습니다.",
+        "cancelled": "취소되었습니다.",
+        "approveFailed": "승인에 실패했습니다.",
+        "rejectFailed": "거부에 실패했습니다.",
+        "receiveFailed": "입고 처리에 실패했습니다.",
+        "completeFailed": "완료 처리에 실패했습니다.",
+        "cancelFailed": "취소에 실패했습니다.",
+        "enterRejectReason": "거부 사유를 입력해주세요."
+      }
+    },
+    "disposals": {
+      "title": "폐기 관리",
+      "actions": {
+        "create": "폐기 생성",
+        "approve": "승인",
+        "reject": "거부",
+        "process": "처리",
+        "complete": "완료",
+        "cancel": "취소",
+        "viewDetail": "상세보기",
+        "addItem": "항목 추가"
+      },
+      "fields": {
+        "disposalNo": "폐기번호",
+        "disposalDate": "폐기일자",
+        "disposalType": "폐기유형",
+        "warehouse": "창고",
+        "requester": "요청자",
+        "totalQuantity": "총수량",
+        "approver": "승인자",
+        "processor": "처리자",
+        "disposalMethod": "폐기방법",
+        "disposalLocation": "폐기장소",
+        "rejectionReason": "거부사유",
+        "cancellationReason": "취소사유",
+        "workOrderId": "작업지시 ID (선택)",
+        "requesterId": "요청자 ID",
+        "warehouseId": "창고 ID",
+        "productId": "제품 ID",
+        "lotId": "LOT ID (선택)",
+        "disposalQuantity": "폐기수량",
+        "defectType": "불량유형",
+        "defectDescription": "불량설명",
+        "expiryDate": "유효기간 (선택)"
+      },
+      "types": {
+        "defective": "불량",
+        "expired": "유효기간",
+        "damaged": "파손",
+        "obsolete": "폐기대상",
+        "other": "기타"
+      },
+      "status": {
+        "pending": "대기",
+        "approved": "승인",
+        "rejected": "거부",
+        "processed": "처리됨",
+        "completed": "완료",
+        "cancelled": "취소"
+      },
+      "stats": {
+        "total": "전체",
+        "pending": "대기",
+        "approved": "승인",
+        "processed": "처리됨",
+        "completed": "완료"
+      },
+      "detail": {
+        "title": "폐기 상세",
+        "items": "폐기 항목",
+        "productCode": "제품코드",
+        "productName": "제품명",
+        "lot": "LOT"
+      },
+      "messages": {
+        "createFailed": "폐기 생성 실패",
+        "approveFailed": "폐기 승인 실패",
+        "rejectFailed": "폐기 거부 실패",
+        "processFailed": "폐기 처리 실패",
+        "completeFailed": "폐기 완료 실패",
+        "cancelFailed": "폐기 취소 실패",
+        "enterRejectReason": "거부 사유를 입력하세요:",
+        "confirmProcess": "폐기를 처리하시겠습니까? 재고가 차감됩니다.",
+        "enterMethod": "폐기 방법을 입력하세요 (예: 소각, 매립, 위탁처리):",
+        "enterLocation": "폐기 장소를 입력하세요:",
+        "enterCancelReason": "취소 사유를 입력하세요:",
+        "autoGenerate": "자동 생성"
+      }
+    },
+    "materialRequests": {
+      "title": "불출 신청 관리",
+      "actions": {
+        "create": "신규 신청",
+        "approve": "승인",
+        "reject": "거부",
+        "issue": "불출 지시",
+        "complete": "완료",
+        "cancel": "취소",
+        "view": "상세"
+      },
+      "fields": {
+        "requestNo": "신청번호",
+        "requestDate": "신청일시",
+        "priority": "우선순위",
+        "purpose": "용도",
+        "workOrderNo": "작업지시",
+        "requester": "신청자",
+        "warehouse": "창고",
+        "requiredDate": "필요일자",
+        "quantities": "수량",
+        "approver": "승인자"
+      },
+      "status": {
+        "pending": "대기",
+        "approved": "승인",
+        "rejected": "거부",
+        "issued": "불출",
+        "completed": "완료",
+        "cancelled": "취소"
+      },
+      "priority": {
+        "urgent": "긴급",
+        "high": "높음",
+        "normal": "보통",
+        "low": "낮음"
+      },
+      "purpose": {
+        "production": "생산",
+        "maintenance": "보수",
+        "sample": "샘플",
+        "other": "기타"
+      },
+      "quantities": {
+        "requested": "요청",
+        "approved": "승인",
+        "issued": "불출"
+      },
+      "stats": {
+        "total": "전체",
+        "pending": "대기",
+        "approved": "승인",
+        "issued": "불출",
+        "completed": "완료",
+        "urgent": "긴급"
+      },
+      "dialogs": {
+        "rejectTitle": "불출 신청 거부",
+        "rejectReason": "거부 사유",
+        "cancelTitle": "불출 신청 취소",
+        "cancelReason": "취소 사유 (선택)",
+        "cancelConfirm": "취소 확정"
+      },
+      "errors": {
+        "loadFailed": "불출 신청 목록을 불러오는데 실패했습니다."
+      },
+      "confirms": {
+        "approve": "불출 신청 {{no}}을(를) 승인하시겠습니까?",
+        "issue": "불출 신청 {{no}}을(를) 불출 지시하시겠습니까?\n\n재고가 차감되고 인수인계 레코드가 생성됩니다.",
+        "complete": "불출 신청 {{no}}을(를) 완료 처리하시겠습니까?"
+      },
+      "messages": {
+        "approved": "승인되었습니다.",
+        "rejected": "거부되었습니다.",
+        "issued": "불출 지시가 완료되었습니다.",
+        "completed": "완료되었습니다.",
+        "cancelled": "취소되었습니다.",
+        "approveFailed": "승인에 실패했습니다.",
+        "rejectFailed": "거부에 실패했습니다.",
+        "issueFailed": "불출 지시에 실패했습니다.",
+        "completeFailed": "완료 처리에 실패했습니다.",
+        "cancelFailed": "취소에 실패했습니다.",
+        "enterRejectReason": "거부 사유를 입력해주세요."
+      }
+    },
+    "materialHandovers": {
+      "title": "자재 인수인계 관리",
+      "fields": {
+        "handoverNo": "인수인계번호",
+        "handoverDate": "인계일시",
+        "materialRequestNo": "불출신청번호",
+        "productCode": "제품코드",
+        "productName": "제품명",
+        "lotNo": "LOT번호",
+        "lotQuality": "LOT품질",
+        "quantity": "수량",
+        "issuer": "출고자",
+        "issueLocation": "출고위치",
+        "receiver": "인수자",
+        "receiveLocation": "인수위치",
+        "receivedDate": "인수일시"
+      },
+      "status": {
+        "pending": "대기",
+        "confirmed": "확인",
+        "rejected": "거부"
+      },
+      "lotQuality": {
+        "passed": "합격",
+        "failed": "불합격",
+        "pending": "검사대기",
+        "conditional": "조건부"
+      },
+      "stats": {
+        "total": "전체",
+        "pending": "대기",
+        "confirmed": "확인",
+        "rejected": "거부"
+      },
+      "actions": {
+        "confirm": "인수 확인",
+        "reject": "인수 거부"
+      },
+      "dialogs": {
+        "confirmTitle": "자재 인수 확인",
+        "confirmMemo": "확인 메모 (선택)",
+        "confirmPlaceholder": "인수 확인 시 메모를 남길 수 있습니다.",
+        "rejectTitle": "자재 인수 거부",
+        "rejectReason": "거부 사유",
+        "rejectReasonRequired": "거부 사유를 입력해주세요.",
+        "handoverNo": "인수인계번호",
+        "product": "제품",
+        "lot": "LOT",
+        "quantity": "수량",
+        "issuer": "출고자"
+      },
+      "errors": {
+        "loadFailed": "인수인계 목록을 불러오는데 실패했습니다."
+      },
+      "messages": {
+        "confirmed": "인수 확인되었습니다.",
+        "rejected": "인수 거부되었습니다.",
+        "confirmFailed": "인수 확인에 실패했습니다.",
+        "rejectFailed": "인수 거부에 실패했습니다.",
+        "enterRejectReason": "거부 사유를 입력해주세요."
+      }
+    },
+    "receiving": {
+      "title": "입하 관리",
+      "actions": {
+        "create": "신규 입하",
+        "complete": "완료",
+        "cancel": "취소",
+        "view": "상세",
+        "delete": "삭제"
+      },
+      "fields": {
+        "receiptNo": "입하번호",
+        "receiptDate": "입하일자",
+        "purchaseOrderNo": "구매주문번호",
+        "supplier": "공급업체",
+        "warehouse": "창고",
+        "receiptType": "유형",
+        "receiptStatus": "상태",
+        "receiverName": "입하담당자",
+        "purchaseOrder": "구매주문",
+        "receiptTypeLabel": "입하유형",
+        "noneSelected": "선택 안 함"
+      },
+      "types": {
+        "purchase": "구매",
+        "return": "반품",
+        "transfer": "이동",
+        "other": "기타"
+      },
+      "status": {
+        "pending": "대기",
+        "inspecting": "검사중",
+        "completed": "완료",
+        "rejected": "반려",
+        "cancelled": "취소"
+      },
+      "dialogs": {
+        "createTitle": "신규 입하",
+        "detailTitle": "입하 상세",
+        "deleteTitle": "입하 삭제",
+        "confirmDelete": "정말 이 입하를 삭제하시겠습니까?",
+        "receiptNoLabel": "입하번호"
+      },
+      "messages": {
+        "completed": "입하가 완료되었습니다",
+        "completeFailed": "입하 완료 실패",
+        "cancelled": "입하가 취소되었습니다",
+        "cancelFailed": "입하 취소 실패"
+      }
+    },
+    "shipping": {
+      "title": "출하 관리",
+      "actions": {
+        "create": "신규 출하"
+      },
+      "fields": {
+        "shippingNo": "출하번호",
+        "shippingDate": "출하일자",
+        "salesOrderNo": "판매주문번호",
+        "customer": "고객",
+        "warehouse": "창고",
+        "shippingType": "유형",
+        "shippingStatus": "상태",
+        "trackingNumber": "송장번호",
+        "carrierName": "택배사",
+        "salesOrder": "판매주문",
+        "shippingTypeLabel": "출하유형",
+        "shipperName": "출하담당자",
+        "deliveryAddress": "배송지 주소",
+        "noneSelected": "선택 안 함"
+      },
+      "types": {
+        "sales": "판매",
+        "return": "반품",
+        "transfer": "이동",
+        "other": "기타"
+      },
+      "status": {
+        "pending": "대기",
+        "inspecting": "검사중",
+        "shipped": "출하완료",
+        "cancelled": "취소"
+      },
+      "dialogs": {
+        "createTitle": "신규 출하",
+        "detailTitle": "출하 상세",
+        "deleteTitle": "출하 삭제",
+        "confirmDelete": "정말 이 출하를 삭제하시겠습니까?",
+        "shippingNoLabel": "출하번호"
+      }
+    },
+    "popWorkOrder": {
+      "title": "작업 지시 선택",
+      "subtitle": "작업할 지시를 선택하거나 바코드를 스캔하세요",
+      "scanBarcode": "바코드 스캔으로 작업 지시 불러오기",
+      "targetQuantity": "목표 수량",
+      "workTime": "작업 시간",
+      "operator": "작업자",
+      "unassigned": "미배정",
+      "productionProgress": "생산 진행률",
+      "percentComplete": "{{percent}}% 완료",
+      "goodQuantity": "양품",
+      "defectQuantity": "불량",
+      "quickInput": "빠른 생산 입력",
+      "startWork": "작업 시작",
+      "resumeWork": "작업 재개",
+      "pauseWork": "일시 정지",
+      "registerDefect": "불량 등록",
+      "completeWork": "작업 완료",
+      "defectDialog": {
+        "title": "불량 등록",
+        "quantity": "불량 수량",
+        "reason": "불량 사유",
+        "register": "등록"
+      },
+      "completeDialog": {
+        "title": "작업 완료 확인",
+        "confirmMessage": "작업을 완료하시겠습니까?",
+        "producedQuantity": "생산 수량",
+        "defectQuantity": "불량 수량",
+        "workTime": "작업 시간"
+      },
+      "completedMessage": "작업이 완료되었습니다. 생산 실적: {{quantity}} EA"
+    },
+    "popScanner": {
+      "title": "바코드 스캐너",
+      "subtitle": "스캔할 항목 유형을 선택하세요",
+      "scanTypes": {
+        "workOrder": "작업 지시",
+        "lot": "LOT",
+        "product": "제품",
+        "location": "위치"
+      },
+      "instructions": {
+        "workOrder": "작업 지시서의 QR 코드 또는 바코드를 스캔하세요",
+        "lot": "자재 또는 제품의 LOT 번호 바코드를 스캔하세요",
+        "product": "제품 바코드를 스캔하여 정보를 확인하세요",
+        "location": "창고 위치의 QR 코드를 스캔하세요"
+      },
+      "scanHistory": "스캔 기록",
+      "processing": "{{type}} 스캔 처리 중...",
+      "scanComplete": "{{type}} 스캔 완료",
+      "scanSuccess": "{{type}} 바코드 스캔 성공: {{data}}",
+      "scanFailed": "스캔 실패: {{message}}",
+      "scanError": "스캔 처리 중 오류가 발생했습니다.",
+      "failed": "실패"
+    },
+    "popSOP": {
+      "title": "SOP 체크리스트",
+      "subtitle": "실행할 표준 작업 절차를 선택하세요",
+      "version": "버전",
+      "totalSteps": "총 {{count}}단계",
+      "backToList": "목록으로",
+      "progress": "진행률",
+      "stepsCompleted": "{{completed}} / {{total}} 단계 완료",
+      "required": "필수",
+      "checkItems": "체크 항목",
+      "imageGuide": "이미지 가이드",
+      "videoGuide": "동영상 가이드",
+      "minutesRequired": "{{minutes}}분 소요",
+      "allStepsCompleted": "모든 단계가 완료되었습니다!",
+      "signToComplete": "서명하여 작업을 완료하세요",
+      "signatureDialog": {
+        "title": "작업 완료 서명",
+        "message": "SOP 절차를 완료했습니다. 서명하여 확인해주세요.",
+        "signatureLabel": "서명 (이름 입력)",
+        "signaturePad": "디지털 서명 패드",
+        "signaturePadNote": "(실제 구현 시 서명 캔버스)",
+        "signComplete": "서명 완료"
+      }
+    }
   }
 }

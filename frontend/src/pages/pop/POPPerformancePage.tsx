@@ -27,6 +27,7 @@ import {
   Speed as EfficiencyIcon,
   Timer as TimeIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 interface PerformanceData {
   shift: string;
@@ -49,6 +50,7 @@ interface WorkHistory {
 }
 
 const POPPerformancePage: React.FC = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
 
   // Mock data
@@ -103,17 +105,17 @@ const POPPerformancePage: React.FC = () => {
     <Box sx={{ p: 3 }}>
       {/* Header */}
       <Typography variant="h4" gutterBottom fontWeight="bold">
-        생산 실적
+        {t('pages.popPerformance.title')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        오늘의 생산 현황과 실적을 확인하세요
+        {t('pages.popPerformance.subtitle')}
       </Typography>
 
       {/* Tabs */}
       <Tabs value={activeTab} onChange={(_, v) => setActiveTab(v)} sx={{ mb: 3 }}>
-        <Tab label="오늘" />
-        <Tab label="이번 주" />
-        <Tab label="작업 이력" />
+        <Tab label={t('pages.popPerformance.tabs.today')} />
+        <Tab label={t('pages.popPerformance.tabs.thisWeek')} />
+        <Tab label={t('pages.popPerformance.tabs.workHistory')} />
       </Tabs>
 
       {/* Today Tab */}
@@ -125,7 +127,7 @@ const POPPerformancePage: React.FC = () => {
               <Card sx={{ bgcolor: 'primary.main', color: 'white' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <TrendingUpIcon sx={{ fontSize: 40, mb: 1 }} />
-                  <Typography variant="subtitle2">목표</Typography>
+                  <Typography variant="subtitle2">{t('pages.popPerformance.fields.target')}</Typography>
                   <Typography variant="h4" fontWeight="bold">
                     {todayPerformance.target}
                   </Typography>
@@ -138,7 +140,7 @@ const POPPerformancePage: React.FC = () => {
               <Card sx={{ bgcolor: 'success.main', color: 'white' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <SuccessIcon sx={{ fontSize: 40, mb: 1 }} />
-                  <Typography variant="subtitle2">생산</Typography>
+                  <Typography variant="subtitle2">{t('pages.popPerformance.fields.produced')}</Typography>
                   <Typography variant="h4" fontWeight="bold">
                     {todayPerformance.produced}
                   </Typography>
@@ -151,7 +153,7 @@ const POPPerformancePage: React.FC = () => {
               <Card sx={{ bgcolor: 'error.main', color: 'white' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <DefectIcon sx={{ fontSize: 40, mb: 1 }} />
-                  <Typography variant="subtitle2">불량</Typography>
+                  <Typography variant="subtitle2">{t('pages.popPerformance.fields.defect')}</Typography>
                   <Typography variant="h4" fontWeight="bold">
                     {todayPerformance.defect}
                   </Typography>
@@ -164,11 +166,11 @@ const POPPerformancePage: React.FC = () => {
               <Card sx={{ bgcolor: 'info.main', color: 'white' }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                   <EfficiencyIcon sx={{ fontSize: 40, mb: 1 }} />
-                  <Typography variant="subtitle2">달성률</Typography>
+                  <Typography variant="subtitle2">{t('pages.popPerformance.fields.achievementRate')}</Typography>
                   <Typography variant="h4" fontWeight="bold">
                     {todayPerformance.efficiency}%
                   </Typography>
-                  <Typography variant="caption">목표 대비</Typography>
+                  <Typography variant="caption">{t('pages.popPerformance.fields.vsTarget')}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -178,7 +180,7 @@ const POPPerformancePage: React.FC = () => {
           <Card sx={{ mb: 3 }}>
             <CardContent>
               <Typography variant="h6" gutterBottom fontWeight="bold">
-                목표 달성률
+                {t('pages.popPerformance.fields.targetAchievement')}
               </Typography>
               <Box sx={{ mb: 2 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -205,13 +207,13 @@ const POPPerformancePage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom fontWeight="bold">
-                    양품률
+                    {t('pages.popPerformance.fields.goodRate')}
                   </Typography>
                   <Typography variant="h3" color="success.main" fontWeight="bold">
                     {(((todayPerformance.produced - todayPerformance.defect) / todayPerformance.produced) * 100).toFixed(1)}%
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    양품: {todayPerformance.produced - todayPerformance.defect} EA
+                    {t('pages.popPerformance.fields.good')}: {todayPerformance.produced - todayPerformance.defect} EA
                   </Typography>
                 </CardContent>
               </Card>
@@ -221,13 +223,13 @@ const POPPerformancePage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom fontWeight="bold">
-                    완료 작업
+                    {t('pages.popPerformance.fields.completedOrders')}
                   </Typography>
                   <Typography variant="h3" color="primary.main" fontWeight="bold">
                     {todayPerformance.workOrders}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    건
+                    {t('pages.popPerformance.fields.count')}
                   </Typography>
                 </CardContent>
               </Card>
@@ -241,7 +243,7 @@ const POPPerformancePage: React.FC = () => {
         <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom fontWeight="bold">
-              주간 실적
+              {t('pages.popPerformance.weeklyPerformance')}
             </Typography>
             <List>
               {weekPerformance.map((day, index) => (
@@ -299,7 +301,7 @@ const POPPerformancePage: React.FC = () => {
                     </Typography>
                   </Box>
                   <Chip
-                    label="완료"
+                    label={t('common.status.completed')}
                     color="success"
                     size="small"
                   />
@@ -308,7 +310,7 @@ const POPPerformancePage: React.FC = () => {
                 <Grid container spacing={2} sx={{ mb: 2 }}>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">
-                      생산 수량
+                      {t('pages.popPerformance.fields.producedQty')}
                     </Typography>
                     <Typography variant="h6" fontWeight="bold">
                       {work.produced} / {work.target} EA
@@ -316,7 +318,7 @@ const POPPerformancePage: React.FC = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography variant="caption" color="text.secondary">
-                      불량 수량
+                      {t('pages.popPerformance.fields.defectQty')}
                     </Typography>
                     <Typography variant="h6" fontWeight="bold" color="error.main">
                       {work.defect} EA

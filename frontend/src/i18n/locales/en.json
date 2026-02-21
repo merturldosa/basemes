@@ -39,7 +39,8 @@
       "endDate": "End Date",
       "quantity": "Quantity",
       "total": "Total",
-      "remarks": "Remarks"
+      "remarks": "Remarks",
+      "default": "Default"
     },
     "status": {
       "active": "Active",
@@ -374,5 +375,803 @@
       "loadFailed": "An error occurred while loading data"
     },
     "scrollHint": "Scroll down to automatically load the next page"
+  },
+  "pages": {
+    "holidays": {
+      "title": "Holiday Management",
+      "tabs": {
+        "holidays": "Holiday Management",
+        "workingHours": "Working Hours Settings",
+        "calculator": "Business Day Calculator"
+      },
+      "fields": {
+        "date": "Date",
+        "name": "Holiday Name",
+        "type": "Type",
+        "recurring": "Recurring",
+        "workingDay": "Working Day",
+        "year": "Year",
+        "yearSuffix": "",
+        "holidayType": "Holiday Type",
+        "recurringHoliday": "Recurring Holiday",
+        "recurrenceRule": "Recurrence Rule",
+        "substituteWorkDay": "Working Day (Substitute)"
+      },
+      "types": {
+        "national": "National Holiday",
+        "company": "Company Holiday",
+        "special": "Special Holiday"
+      },
+      "recurrence": {
+        "yearly": "Yearly",
+        "monthly": "Monthly",
+        "lunar": "Lunar"
+      },
+      "status": {
+        "working": "Working",
+        "dayOff": "Day Off"
+      },
+      "actions": {
+        "addHoliday": "Add Holiday",
+        "editHoliday": "Edit Holiday",
+        "deleteHoliday": "Delete Holiday",
+        "addWorkingHours": "Add Working Hours",
+        "setDefault": "Set Default"
+      },
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      },
+      "workingHours": {
+        "scheduleName": "Schedule Name",
+        "default": "Default",
+        "add": "Add Working Hours",
+        "edit": "Edit Working Hours",
+        "delete": "Delete Working Hours",
+        "setAsDefault": "Set as Default Schedule",
+        "dailyHours": "Daily Working Hours",
+        "start": "Start",
+        "end": "End",
+        "breakTime": "Break Time"
+      },
+      "calculator": {
+        "calcType": "Calculation Type",
+        "checkBusinessDay": "Check Business Day",
+        "calculateBusinessDays": "Calculate Business Days",
+        "addBusinessDays": "Add Business Days",
+        "dateToCheck": "Date to Check",
+        "result": "Result",
+        "date": "Date",
+        "dayOfWeek": "Day of Week",
+        "isBusinessDay": "Is Business Day",
+        "businessDay": "Business Day",
+        "holiday": "Holiday",
+        "calculate": "Calculate",
+        "period": "Period",
+        "totalDays": "Total Days",
+        "daySuffix": " days",
+        "businessDayCount": "Business Days",
+        "daysToAdd": "Business Days to Add",
+        "addedBusinessDays": "Added Business Days",
+        "resultDate": "Result Date"
+      },
+      "errors": {
+        "loadFailed": "Failed to load holidays",
+        "saveFailed": "Failed to save holiday",
+        "deleteFailed": "Failed to delete holiday",
+        "workingHoursSaveFailed": "Failed to save working hours",
+        "workingHoursDeleteFailed": "Failed to delete working hours",
+        "setDefaultFailed": "Failed to set default",
+        "checkBusinessDayFailed": "Failed to check business day",
+        "calculateBusinessDaysFailed": "Failed to calculate business days",
+        "addBusinessDaysFailed": "Failed to add business days"
+      },
+      "confirmDeleteHoliday": "Are you sure you want to delete the holiday '{{name}}'?",
+      "confirmDeleteWorkingHours": "Are you sure you want to delete the working hours '{{name}}'?"
+    },
+    "approval": {
+      "title": "Approval Management",
+      "tabs": {
+        "pending": "Pending Approvals",
+        "templates": "Approval Line Templates",
+        "delegations": "Approval Delegation",
+        "statistics": "Statistics"
+      },
+      "fields": {
+        "documentNo": "Document No.",
+        "documentType": "Document Type",
+        "title": "Title",
+        "requester": "Requester",
+        "requestDate": "Request Date",
+        "templateName": "Template Name",
+        "templateCode": "Code",
+        "stepCount": "Step Count",
+        "delegator": "Delegator",
+        "delegate": "Delegate",
+        "delegationType": "Type",
+        "delegationReason": "Reason",
+        "approvalComment": "Approval Comment",
+        "rejectionReason": "Rejection Reason"
+      },
+      "actions": {
+        "approve": "Approve",
+        "reject": "Reject",
+        "view": "View"
+      },
+      "status": {
+        "pending": "Pending",
+        "inProgress": "In Progress",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "full": "Full",
+        "partial": "Partial"
+      },
+      "statistics": {
+        "approvalRate": "Approval Rate",
+        "totalApprovedOf": "{{approved}} of {{total}} approved"
+      },
+      "detail": {
+        "title": "Approval Detail",
+        "approvalProgress": "Approval Progress",
+        "approveTitle": "Approve",
+        "rejectTitle": "Reject"
+      },
+      "errors": {
+        "loadFailed": "Failed to load data",
+        "processFailed": "Failed to process approval"
+      }
+    },
+    "alarm": {
+      "title": "Alarm Management",
+      "subtitle": "Manage system notifications and alarm settings",
+      "tabs": {
+        "unread": "Unread Alarms",
+        "all": "All Alarms",
+        "recent": "Recent Alarms (7 days)",
+        "statistics": "Statistics"
+      },
+      "fields": {
+        "alarmType": "Alarm Type",
+        "priority": "Priority",
+        "title": "Title",
+        "message": "Message",
+        "time": "Time",
+        "isRead": "Read",
+        "referenceNo": "Reference No.",
+        "sentTime": "Sent Time",
+        "readTime": "Read Time",
+        "sentChannel": "Sent Channel"
+      },
+      "actions": {
+        "markAllRead": "Mark All as Read",
+        "markRead": "Mark as Read",
+        "viewDetail": "View Details"
+      },
+      "status": {
+        "read": "Read",
+        "unread": "Unread"
+      },
+      "statistics": {
+        "unread": "Unread",
+        "total": "Total",
+        "approval": "Approval",
+        "quality": "Quality",
+        "production": "Production",
+        "inventory": "Inventory",
+        "overallStats": "Overall Statistics",
+        "typeStats": "Statistics by Type",
+        "totalAlarms": "Total Alarms",
+        "unreadAlarms": "Unread Alarms",
+        "readAlarms": "Read Alarms",
+        "readRate": "Read Rate",
+        "approvalAlarm": "Approval Alarms",
+        "qualityAlarm": "Quality Alarms",
+        "productionAlarm": "Production Alarms",
+        "inventoryAlarm": "Inventory Alarms"
+      },
+      "detail": {
+        "title": "Alarm Detail"
+      },
+      "channels": {
+        "email": "Email",
+        "sms": "SMS",
+        "push": "Push",
+        "system": "System"
+      },
+      "messages": {
+        "markedAsRead": "Alarm marked as read.",
+        "allMarkedAsRead": "All alarms marked as read.",
+        "markReadFailed": "Failed to mark alarm as read",
+        "markAllReadFailed": "Failed to mark all alarms as read"
+      },
+      "errors": {
+        "loadFailed": "Failed to load data"
+      }
+    },
+    "commonCodes": {
+      "title": "Common Code Management",
+      "codeGroup": {
+        "title": "Code Group",
+        "code": "Code Group",
+        "name": "Code Group Name",
+        "add": "Add Group",
+        "create": "Create Code Group",
+        "edit": "Edit Code Group",
+        "system": "System",
+        "user": "User",
+        "displayOrder": "Order",
+        "helperText": "Use uppercase letters, numbers, underscore(_)",
+        "systemCode": "System Code (Cannot Delete)"
+      },
+      "codeDetail": {
+        "title": "Code Detail",
+        "code": "Code",
+        "name": "Code Name",
+        "add": "Add Code",
+        "create": "Create Code Detail",
+        "edit": "Edit Code Detail",
+        "color": "Color",
+        "colorCode": "Color Code",
+        "defaultValue": "Default",
+        "displayOrder": "Display Order",
+        "iconName": "Icon Name",
+        "extensionFields": "Extension Fields",
+        "extensionField1": "Extension Field 1",
+        "extensionField2": "Extension Field 2",
+        "extensionField3": "Extension Field 3",
+        "selectGroup": "Please select a code group"
+      },
+      "deleteConfirm": {
+        "title": "Delete Confirmation",
+        "groupMessage": "Are you sure you want to delete this code group?",
+        "detailMessage": "Are you sure you want to delete this code detail?",
+        "groupWarning": "Deleting a code group will also delete all its code details."
+      },
+      "messages": {
+        "groupLoadFailed": "Failed to load code groups",
+        "detailLoadFailed": "Failed to load code details",
+        "groupCreateSuccess": "Code group created successfully",
+        "groupUpdateSuccess": "Code group updated successfully",
+        "groupCreateFailed": "Failed to create code group",
+        "groupUpdateFailed": "Failed to update code group",
+        "groupDeleteSuccess": "Code group deleted successfully",
+        "groupDeleteFailed": "Failed to delete code group (system codes cannot be deleted)",
+        "detailCreateSuccess": "Code detail created successfully",
+        "detailUpdateSuccess": "Code detail updated successfully",
+        "detailCreateFailed": "Failed to create code detail",
+        "detailUpdateFailed": "Failed to update code detail",
+        "detailDeleteSuccess": "Code detail deleted successfully",
+        "detailDeleteFailed": "Failed to delete code detail",
+        "selectGroupFirst": "Please select a code group first"
+      }
+    },
+    "auditLogs": {
+      "title": "Audit Logs",
+      "subtitle": "View system operation history",
+      "fields": {
+        "timestamp": "Time",
+        "username": "User",
+        "action": "Action",
+        "entityType": "Entity Type",
+        "entityId": "Entity ID",
+        "success": "Success",
+        "ipAddress": "IP Address",
+        "detail": "Detail",
+        "actionTime": "Action Time",
+        "errorMessage": "Error Message",
+        "oldValue": "Old Value",
+        "newValue": "New Value",
+        "metadata": "Metadata"
+      },
+      "filters": {
+        "username": "Username",
+        "action": "Action",
+        "entityType": "Entity Type",
+        "success": "Success",
+        "all": "All",
+        "successLabel": "Success",
+        "failLabel": "Fail"
+      },
+      "actions": {
+        "create": "Create",
+        "update": "Update",
+        "delete": "Delete",
+        "login": "Login",
+        "logout": "Logout",
+        "view": "View"
+      },
+      "detail": {
+        "title": "Audit Log Detail"
+      }
+    },
+    "returns": {
+      "title": "Returns Management",
+      "actions": {
+        "create": "New Return",
+        "approve": "Approve",
+        "reject": "Reject",
+        "receive": "Receive",
+        "complete": "Complete",
+        "cancel": "Cancel",
+        "view": "Detail"
+      },
+      "fields": {
+        "returnNo": "Return No.",
+        "returnDate": "Return Date",
+        "returnType": "Type",
+        "materialRequestNo": "Material Request",
+        "workOrderNo": "Work Order",
+        "requester": "Requester",
+        "warehouse": "Warehouse",
+        "quantities": "Quantities",
+        "approver": "Approver"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "received": "Received",
+        "inspecting": "Inspecting",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "types": {
+        "defective": "Defective",
+        "excess": "Excess",
+        "wrongDelivery": "Wrong Delivery",
+        "other": "Other"
+      },
+      "quantities": {
+        "return": "Return",
+        "received": "Received",
+        "passed": "Passed",
+        "failed": "Failed"
+      },
+      "stats": {
+        "total": "Total",
+        "pending": "Pending",
+        "approved": "Approved",
+        "received": "Received",
+        "inspecting": "Inspecting",
+        "completed": "Completed",
+        "defective": "Defective"
+      },
+      "dialogs": {
+        "rejectTitle": "Reject Return",
+        "rejectReason": "Rejection Reason",
+        "cancelTitle": "Cancel Return",
+        "cancelReason": "Cancellation Reason (Optional)",
+        "cancelConfirm": "Confirm Cancellation"
+      },
+      "errors": {
+        "loadFailed": "Failed to load returns."
+      },
+      "confirms": {
+        "approve": "Are you sure you want to approve return {{no}}?",
+        "receive": "Are you sure you want to receive return {{no}}?\n\nInventory transactions will be created and quality inspection will be requested if needed.",
+        "complete": "Are you sure you want to complete return {{no}}?\n\nPassed items will be restocked and failed items will be moved to quarantine."
+      },
+      "messages": {
+        "approved": "Approved successfully.",
+        "rejected": "Rejected successfully.",
+        "received": "Received successfully.",
+        "completed": "Completed successfully.",
+        "cancelled": "Cancelled successfully.",
+        "approveFailed": "Failed to approve.",
+        "rejectFailed": "Failed to reject.",
+        "receiveFailed": "Failed to receive.",
+        "completeFailed": "Failed to complete.",
+        "cancelFailed": "Failed to cancel.",
+        "enterRejectReason": "Please enter the rejection reason."
+      }
+    },
+    "disposals": {
+      "title": "Disposal Management",
+      "actions": {
+        "create": "Create Disposal",
+        "approve": "Approve",
+        "reject": "Reject",
+        "process": "Process",
+        "complete": "Complete",
+        "cancel": "Cancel",
+        "viewDetail": "View Detail",
+        "addItem": "Add Item"
+      },
+      "fields": {
+        "disposalNo": "Disposal No.",
+        "disposalDate": "Disposal Date",
+        "disposalType": "Disposal Type",
+        "warehouse": "Warehouse",
+        "requester": "Requester",
+        "totalQuantity": "Total Qty",
+        "approver": "Approver",
+        "processor": "Processor",
+        "disposalMethod": "Disposal Method",
+        "disposalLocation": "Disposal Location",
+        "rejectionReason": "Rejection Reason",
+        "cancellationReason": "Cancellation Reason",
+        "workOrderId": "Work Order ID (Optional)",
+        "requesterId": "Requester ID",
+        "warehouseId": "Warehouse ID",
+        "productId": "Product ID",
+        "lotId": "LOT ID (Optional)",
+        "disposalQuantity": "Disposal Qty",
+        "defectType": "Defect Type",
+        "defectDescription": "Defect Description",
+        "expiryDate": "Expiry Date (Optional)"
+      },
+      "types": {
+        "defective": "Defective",
+        "expired": "Expired",
+        "damaged": "Damaged",
+        "obsolete": "Obsolete",
+        "other": "Other"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "processed": "Processed",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "stats": {
+        "total": "Total",
+        "pending": "Pending",
+        "approved": "Approved",
+        "processed": "Processed",
+        "completed": "Completed"
+      },
+      "detail": {
+        "title": "Disposal Detail",
+        "items": "Disposal Items",
+        "productCode": "Product Code",
+        "productName": "Product Name",
+        "lot": "LOT"
+      },
+      "messages": {
+        "createFailed": "Failed to create disposal",
+        "approveFailed": "Failed to approve disposal",
+        "rejectFailed": "Failed to reject disposal",
+        "processFailed": "Failed to process disposal",
+        "completeFailed": "Failed to complete disposal",
+        "cancelFailed": "Failed to cancel disposal",
+        "enterRejectReason": "Enter rejection reason:",
+        "confirmProcess": "Process this disposal? Inventory will be deducted.",
+        "enterMethod": "Enter disposal method (e.g., Incineration, Landfill, Outsourced):",
+        "enterLocation": "Enter disposal location:",
+        "enterCancelReason": "Enter cancellation reason:",
+        "autoGenerate": "Auto-generate"
+      }
+    },
+    "materialRequests": {
+      "title": "Material Request Management",
+      "actions": {
+        "create": "New Request",
+        "approve": "Approve",
+        "reject": "Reject",
+        "issue": "Issue",
+        "complete": "Complete",
+        "cancel": "Cancel",
+        "view": "Detail"
+      },
+      "fields": {
+        "requestNo": "Request No.",
+        "requestDate": "Request Date",
+        "priority": "Priority",
+        "purpose": "Purpose",
+        "workOrderNo": "Work Order",
+        "requester": "Requester",
+        "warehouse": "Warehouse",
+        "requiredDate": "Required Date",
+        "quantities": "Quantities",
+        "approver": "Approver"
+      },
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "issued": "Issued",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "priority": {
+        "urgent": "Urgent",
+        "high": "High",
+        "normal": "Normal",
+        "low": "Low"
+      },
+      "purpose": {
+        "production": "Production",
+        "maintenance": "Maintenance",
+        "sample": "Sample",
+        "other": "Other"
+      },
+      "quantities": {
+        "requested": "Requested",
+        "approved": "Approved",
+        "issued": "Issued"
+      },
+      "stats": {
+        "total": "Total",
+        "pending": "Pending",
+        "approved": "Approved",
+        "issued": "Issued",
+        "completed": "Completed",
+        "urgent": "Urgent"
+      },
+      "dialogs": {
+        "rejectTitle": "Reject Material Request",
+        "rejectReason": "Rejection Reason",
+        "cancelTitle": "Cancel Material Request",
+        "cancelReason": "Cancellation Reason (Optional)",
+        "cancelConfirm": "Confirm Cancellation"
+      },
+      "errors": {
+        "loadFailed": "Failed to load material requests."
+      },
+      "confirms": {
+        "approve": "Are you sure you want to approve request {{no}}?",
+        "issue": "Are you sure you want to issue request {{no}}?\n\nInventory will be deducted and handover records will be created.",
+        "complete": "Are you sure you want to complete request {{no}}?"
+      },
+      "messages": {
+        "approved": "Approved successfully.",
+        "rejected": "Rejected successfully.",
+        "issued": "Issue order completed.",
+        "completed": "Completed successfully.",
+        "cancelled": "Cancelled successfully.",
+        "approveFailed": "Failed to approve.",
+        "rejectFailed": "Failed to reject.",
+        "issueFailed": "Failed to issue.",
+        "completeFailed": "Failed to complete.",
+        "cancelFailed": "Failed to cancel.",
+        "enterRejectReason": "Please enter the rejection reason."
+      }
+    },
+    "materialHandovers": {
+      "title": "Material Handover Management",
+      "fields": {
+        "handoverNo": "Handover No.",
+        "handoverDate": "Handover Date",
+        "materialRequestNo": "Material Request No.",
+        "productCode": "Product Code",
+        "productName": "Product Name",
+        "lotNo": "LOT No.",
+        "lotQuality": "LOT Quality",
+        "quantity": "Quantity",
+        "issuer": "Issuer",
+        "issueLocation": "Issue Location",
+        "receiver": "Receiver",
+        "receiveLocation": "Receive Location",
+        "receivedDate": "Received Date"
+      },
+      "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "rejected": "Rejected"
+      },
+      "lotQuality": {
+        "passed": "Passed",
+        "failed": "Failed",
+        "pending": "Pending Inspection",
+        "conditional": "Conditional"
+      },
+      "stats": {
+        "total": "Total",
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "rejected": "Rejected"
+      },
+      "actions": {
+        "confirm": "Confirm Receipt",
+        "reject": "Reject Receipt"
+      },
+      "dialogs": {
+        "confirmTitle": "Confirm Material Receipt",
+        "confirmMemo": "Confirmation Memo (Optional)",
+        "confirmPlaceholder": "You can leave a memo upon confirming receipt.",
+        "rejectTitle": "Reject Material Receipt",
+        "rejectReason": "Rejection Reason",
+        "rejectReasonRequired": "Please enter the rejection reason.",
+        "handoverNo": "Handover No.",
+        "product": "Product",
+        "lot": "LOT",
+        "quantity": "Quantity",
+        "issuer": "Issuer"
+      },
+      "errors": {
+        "loadFailed": "Failed to load handover list."
+      },
+      "messages": {
+        "confirmed": "Receipt confirmed.",
+        "rejected": "Receipt rejected.",
+        "confirmFailed": "Failed to confirm receipt.",
+        "rejectFailed": "Failed to reject receipt.",
+        "enterRejectReason": "Please enter the rejection reason."
+      }
+    },
+    "receiving": {
+      "title": "Receiving Management",
+      "actions": {
+        "create": "New Receipt",
+        "complete": "Complete",
+        "cancel": "Cancel",
+        "view": "Detail",
+        "delete": "Delete"
+      },
+      "fields": {
+        "receiptNo": "Receipt No.",
+        "receiptDate": "Receipt Date",
+        "purchaseOrderNo": "PO No.",
+        "supplier": "Supplier",
+        "warehouse": "Warehouse",
+        "receiptType": "Type",
+        "receiptStatus": "Status",
+        "receiverName": "Receiver",
+        "purchaseOrder": "Purchase Order",
+        "receiptTypeLabel": "Receipt Type",
+        "noneSelected": "None"
+      },
+      "types": {
+        "purchase": "Purchase",
+        "return": "Return",
+        "transfer": "Transfer",
+        "other": "Other"
+      },
+      "status": {
+        "pending": "Pending",
+        "inspecting": "Inspecting",
+        "completed": "Completed",
+        "rejected": "Rejected",
+        "cancelled": "Cancelled"
+      },
+      "dialogs": {
+        "createTitle": "New Receipt",
+        "detailTitle": "Receipt Detail",
+        "deleteTitle": "Delete Receipt",
+        "confirmDelete": "Are you sure you want to delete this receipt?",
+        "receiptNoLabel": "Receipt No."
+      },
+      "messages": {
+        "completed": "Receipt completed",
+        "completeFailed": "Failed to complete receipt",
+        "cancelled": "Receipt cancelled",
+        "cancelFailed": "Failed to cancel receipt"
+      }
+    },
+    "shipping": {
+      "title": "Shipping Management",
+      "actions": {
+        "create": "New Shipping"
+      },
+      "fields": {
+        "shippingNo": "Shipping No.",
+        "shippingDate": "Shipping Date",
+        "salesOrderNo": "Sales Order No.",
+        "customer": "Customer",
+        "warehouse": "Warehouse",
+        "shippingType": "Type",
+        "shippingStatus": "Status",
+        "trackingNumber": "Tracking No.",
+        "carrierName": "Carrier",
+        "salesOrder": "Sales Order",
+        "shippingTypeLabel": "Shipping Type",
+        "shipperName": "Shipper",
+        "deliveryAddress": "Delivery Address",
+        "noneSelected": "None"
+      },
+      "types": {
+        "sales": "Sales",
+        "return": "Return",
+        "transfer": "Transfer",
+        "other": "Other"
+      },
+      "status": {
+        "pending": "Pending",
+        "inspecting": "Inspecting",
+        "shipped": "Shipped",
+        "cancelled": "Cancelled"
+      },
+      "dialogs": {
+        "createTitle": "New Shipping",
+        "detailTitle": "Shipping Detail",
+        "deleteTitle": "Delete Shipping",
+        "confirmDelete": "Are you sure you want to delete this shipping?",
+        "shippingNoLabel": "Shipping No."
+      }
+    },
+    "popWorkOrder": {
+      "title": "Select Work Order",
+      "subtitle": "Select a work order or scan a barcode",
+      "scanBarcode": "Load Work Order via Barcode Scan",
+      "targetQuantity": "Target Quantity",
+      "workTime": "Work Time",
+      "operator": "Operator",
+      "unassigned": "Unassigned",
+      "productionProgress": "Production Progress",
+      "percentComplete": "{{percent}}% Complete",
+      "goodQuantity": "Good",
+      "defectQuantity": "Defect",
+      "quickInput": "Quick Production Input",
+      "startWork": "Start Work",
+      "resumeWork": "Resume Work",
+      "pauseWork": "Pause",
+      "registerDefect": "Register Defect",
+      "completeWork": "Complete Work",
+      "defectDialog": {
+        "title": "Register Defect",
+        "quantity": "Defect Quantity",
+        "reason": "Defect Reason",
+        "register": "Register"
+      },
+      "completeDialog": {
+        "title": "Confirm Work Completion",
+        "confirmMessage": "Are you sure you want to complete this work?",
+        "producedQuantity": "Produced Quantity",
+        "defectQuantity": "Defect Quantity",
+        "workTime": "Work Time"
+      },
+      "completedMessage": "Work completed. Production: {{quantity}} EA"
+    },
+    "popScanner": {
+      "title": "Barcode Scanner",
+      "subtitle": "Select the item type to scan",
+      "scanTypes": {
+        "workOrder": "Work Order",
+        "lot": "LOT",
+        "product": "Product",
+        "location": "Location"
+      },
+      "instructions": {
+        "workOrder": "Scan the QR code or barcode on the work order",
+        "lot": "Scan the LOT number barcode on material or product",
+        "product": "Scan the product barcode to view information",
+        "location": "Scan the QR code at the warehouse location"
+      },
+      "scanHistory": "Scan History",
+      "processing": "Processing {{type}} scan...",
+      "scanComplete": "{{type}} scan complete",
+      "scanSuccess": "{{type}} barcode scan success: {{data}}",
+      "scanFailed": "Scan failed: {{message}}",
+      "scanError": "An error occurred during scan processing.",
+      "failed": "Failed"
+    },
+    "popSOP": {
+      "title": "SOP Checklist",
+      "subtitle": "Select a standard operating procedure to execute",
+      "version": "Version",
+      "totalSteps": "{{count}} steps",
+      "backToList": "Back to List",
+      "progress": "Progress",
+      "stepsCompleted": "{{completed}} / {{total}} steps completed",
+      "required": "Required",
+      "checkItems": "Check Items",
+      "imageGuide": "Image Guide",
+      "videoGuide": "Video Guide",
+      "minutesRequired": "{{minutes}} min required",
+      "allStepsCompleted": "All steps completed!",
+      "signToComplete": "Sign to complete the work",
+      "signatureDialog": {
+        "title": "Work Completion Signature",
+        "message": "SOP procedure completed. Please sign to confirm.",
+        "signatureLabel": "Signature (Enter Name)",
+        "signaturePad": "Digital Signature Pad",
+        "signaturePadNote": "(Signature canvas in actual implementation)",
+        "signComplete": "Sign & Complete"
+      }
+    }
   }
 }

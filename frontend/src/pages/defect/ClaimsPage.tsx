@@ -27,11 +27,13 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import claimService, { Claim, ClaimRequest } from '../../services/claimService';
 import customerService, { Customer } from '../../services/customerService';
 import productService, { Product } from '../../services/productService';
 
 const ClaimsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [claims, setClaims] = useState<Claim[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -70,7 +72,7 @@ const ClaimsPage: React.FC = () => {
       setCustomers(customersData);
       setProducts(productsData);
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.loadFailed'), severity: 'error' });
     } finally {
       setLoading(false);
     }
@@ -127,11 +129,11 @@ const ClaimsPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       await claimService.create(formData);
-      setSnackbar({ open: true, message: 'Claim created successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.claims.messages.createSuccess'), severity: 'success' });
       handleCloseDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to create claim', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.createFailed'), severity: 'error' });
     }
   };
 
@@ -140,75 +142,75 @@ const ClaimsPage: React.FC = () => {
 
     try {
       await claimService.delete(selectedClaim.claimId);
-      setSnackbar({ open: true, message: 'Claim deleted successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.claims.messages.deleteSuccess'), severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to delete claim', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.deleteFailed'), severity: 'error' });
     }
   };
 
   const handleInvestigate = async (id: number) => {
     try {
       await claimService.investigate(id);
-      setSnackbar({ open: true, message: 'Investigation started successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.claims.messages.investigateSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to start investigation', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.investigateFailed'), severity: 'error' });
     }
   };
 
   const handleResolve = async (id: number) => {
     try {
       await claimService.resolve(id);
-      setSnackbar({ open: true, message: 'Claim resolved successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.claims.messages.resolveSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to resolve claim', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.resolveFailed'), severity: 'error' });
     }
   };
 
   const handleClose = async (id: number) => {
     try {
       await claimService.close(id);
-      setSnackbar({ open: true, message: 'Claim closed successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.claims.messages.closeSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to close claim', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.claims.errors.closeFailed'), severity: 'error' });
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'claimNo', headerName: '클레임번호', width: 150 },
+    { field: 'claimNo', headerName: t('pages.claims.fields.claimNo'), width: 150 },
     {
       field: 'claimDate',
-      headerName: '클레임일자',
+      headerName: t('pages.claims.fields.claimDate'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
-    { field: 'customerName', headerName: '고객', width: 150 },
-    { field: 'productName', headerName: '제품', width: 150 },
+    { field: 'customerName', headerName: t('pages.claims.fields.customer'), width: 150 },
+    { field: 'productName', headerName: t('pages.claims.fields.product'), width: 150 },
     {
       field: 'claimType',
-      headerName: '유형',
+      headerName: t('pages.claims.fields.claimType'),
       width: 120,
       valueFormatter: (params) => {
         const types: { [key: string]: string } = {
-          QUALITY: '품질',
-          DELIVERY: '납기',
-          QUANTITY: '수량',
-          PACKAGING: '포장',
-          DOCUMENTATION: '문서',
-          SERVICE: '서비스',
-          PRICE: '가격',
-          OTHER: '기타',
+          QUALITY: t('pages.claims.claimTypes.quality'),
+          DELIVERY: t('pages.claims.claimTypes.delivery'),
+          QUANTITY: t('pages.claims.claimTypes.quantity'),
+          PACKAGING: t('pages.claims.claimTypes.packaging'),
+          DOCUMENTATION: t('pages.claims.claimTypes.documentation'),
+          SERVICE: t('pages.claims.claimTypes.service'),
+          PRICE: t('pages.claims.claimTypes.price'),
+          OTHER: t('pages.claims.claimTypes.other'),
         };
         return types[params.value] || params.value;
       },
     },
     {
       field: 'severity',
-      headerName: '심각도',
+      headerName: t('pages.claims.fields.severity'),
       width: 100,
       renderCell: (params) => {
         const severityColors: { [key: string]: 'error' | 'warning' | 'default' } = {
@@ -217,9 +219,9 @@ const ClaimsPage: React.FC = () => {
           MINOR: 'default',
         };
         const severityLabels: { [key: string]: string } = {
-          CRITICAL: '긴급',
-          MAJOR: '중요',
-          MINOR: '경미',
+          CRITICAL: t('pages.claims.severity.critical'),
+          MAJOR: t('pages.claims.severity.major'),
+          MINOR: t('pages.claims.severity.minor'),
         };
         return params.value ? (
           <Chip
@@ -232,7 +234,7 @@ const ClaimsPage: React.FC = () => {
     },
     {
       field: 'status',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 120,
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'info' | 'success' | 'error' } = {
@@ -244,12 +246,12 @@ const ClaimsPage: React.FC = () => {
           REJECTED: 'error',
         };
         const statusLabels: { [key: string]: string } = {
-          RECEIVED: '접수',
-          INVESTIGATING: '조사중',
-          IN_PROGRESS: '처리중',
-          RESOLVED: '해결',
-          CLOSED: '종료',
-          REJECTED: '거부',
+          RECEIVED: t('pages.claims.status.received'),
+          INVESTIGATING: t('pages.claims.status.investigating'),
+          IN_PROGRESS: t('pages.claims.status.inProgress'),
+          RESOLVED: t('pages.claims.status.resolved'),
+          CLOSED: t('pages.claims.status.closed'),
+          REJECTED: t('pages.claims.status.rejected'),
         };
         return (
           <Chip
@@ -263,35 +265,35 @@ const ClaimsPage: React.FC = () => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 200,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon />}
-          label="View"
+          label={t('pages.claims.actions.view')}
           onClick={() => handleOpenDialog(params.row, true)}
         />,
         <GridActionsCellItem
           icon={<InvestigateIcon />}
-          label="Investigate"
+          label={t('pages.claims.actions.investigate')}
           onClick={() => handleInvestigate(params.row.claimId)}
           disabled={params.row.status !== 'RECEIVED'}
         />,
         <GridActionsCellItem
           icon={<ResolveIcon />}
-          label="Resolve"
+          label={t('pages.claims.actions.resolve')}
           onClick={() => handleResolve(params.row.claimId)}
           disabled={!['INVESTIGATING', 'IN_PROGRESS'].includes(params.row.status)}
         />,
         <GridActionsCellItem
           icon={<CloseIcon />}
-          label="Close"
+          label={t('pages.claims.actions.close')}
           onClick={() => handleClose(params.row.claimId)}
           disabled={params.row.status !== 'RESOLVED'}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="Delete"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
           disabled={params.row.status === 'CLOSED'}
         />,
@@ -303,9 +305,9 @@ const ClaimsPage: React.FC = () => {
     <Box sx={{ height: '100%', p: 3 }}>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5">클레임 관리</Typography>
+          <Typography variant="h5">{t('pages.claims.title')}</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
-            신규 클레임
+            {t('pages.claims.actions.create')}
           </Button>
         </Box>
       </Paper>
@@ -325,13 +327,13 @@ const ClaimsPage: React.FC = () => {
 
       {/* Create/View Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{viewMode ? '클레임 상세' : '신규 클레임'}</DialogTitle>
+        <DialogTitle>{viewMode ? t('pages.claims.dialog.viewTitle') : t('pages.claims.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="클레임번호"
+                label={t('pages.claims.fields.claimNo')}
                 value={formData.claimNo}
                 onChange={(e) => setFormData({ ...formData, claimNo: e.target.value })}
                 required
@@ -341,7 +343,7 @@ const ClaimsPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="클레임일자"
+                label={t('pages.claims.fields.claimDate')}
                 type="datetime-local"
                 value={formData.claimDate}
                 onChange={(e) => setFormData({ ...formData, claimDate: e.target.value })}
@@ -352,11 +354,11 @@ const ClaimsPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>고객</InputLabel>
+                <InputLabel>{t('pages.claims.fields.customer')}</InputLabel>
                 <Select
                   value={formData.customerId || ''}
                   onChange={(e) => setFormData({ ...formData, customerId: e.target.value as number })}
-                  label="고객"
+                  label={t('pages.claims.fields.customer')}
                   disabled={viewMode}
                 >
                   {customers.map((customer) => (
@@ -369,15 +371,15 @@ const ClaimsPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>제품</InputLabel>
+                <InputLabel>{t('pages.claims.fields.product')}</InputLabel>
                 <Select
                   value={formData.productId || ''}
                   onChange={(e) => setFormData({ ...formData, productId: e.target.value as number })}
-                  label="제품"
+                  label={t('pages.claims.fields.product')}
                   disabled={viewMode}
                 >
                   <MenuItem value="">
-                    <em>선택 안 함</em>
+                    <em>{t('pages.claims.fields.noneSelected')}</em>
                   </MenuItem>
                   {products.map((product) => (
                     <MenuItem key={product.productId} value={product.productId}>
@@ -390,7 +392,7 @@ const ClaimsPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="연락처명"
+                label={t('pages.claims.fields.contactPerson')}
                 value={formData.contactPerson || ''}
                 onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
                 disabled={viewMode}
@@ -399,7 +401,7 @@ const ClaimsPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="연락전화"
+                label={t('pages.claims.fields.contactPhone')}
                 value={formData.contactPhone || ''}
                 onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                 disabled={viewMode}
@@ -407,59 +409,59 @@ const ClaimsPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>클레임유형</InputLabel>
+                <InputLabel>{t('pages.claims.fields.claimType')}</InputLabel>
                 <Select
                   value={formData.claimType || ''}
                   onChange={(e) => setFormData({ ...formData, claimType: e.target.value })}
-                  label="클레임유형"
+                  label={t('pages.claims.fields.claimType')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="QUALITY">품질</MenuItem>
-                  <MenuItem value="DELIVERY">납기</MenuItem>
-                  <MenuItem value="QUANTITY">수량</MenuItem>
-                  <MenuItem value="PACKAGING">포장</MenuItem>
-                  <MenuItem value="DOCUMENTATION">문서</MenuItem>
-                  <MenuItem value="SERVICE">서비스</MenuItem>
-                  <MenuItem value="PRICE">가격</MenuItem>
-                  <MenuItem value="OTHER">기타</MenuItem>
+                  <MenuItem value="QUALITY">{t('pages.claims.claimTypes.quality')}</MenuItem>
+                  <MenuItem value="DELIVERY">{t('pages.claims.claimTypes.delivery')}</MenuItem>
+                  <MenuItem value="QUANTITY">{t('pages.claims.claimTypes.quantity')}</MenuItem>
+                  <MenuItem value="PACKAGING">{t('pages.claims.claimTypes.packaging')}</MenuItem>
+                  <MenuItem value="DOCUMENTATION">{t('pages.claims.claimTypes.documentation')}</MenuItem>
+                  <MenuItem value="SERVICE">{t('pages.claims.claimTypes.service')}</MenuItem>
+                  <MenuItem value="PRICE">{t('pages.claims.claimTypes.price')}</MenuItem>
+                  <MenuItem value="OTHER">{t('pages.claims.claimTypes.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>심각도</InputLabel>
+                <InputLabel>{t('pages.claims.fields.severity')}</InputLabel>
                 <Select
                   value={formData.severity || ''}
                   onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                  label="심각도"
+                  label={t('pages.claims.fields.severity')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="CRITICAL">긴급</MenuItem>
-                  <MenuItem value="MAJOR">중요</MenuItem>
-                  <MenuItem value="MINOR">경미</MenuItem>
+                  <MenuItem value="CRITICAL">{t('pages.claims.severity.critical')}</MenuItem>
+                  <MenuItem value="MAJOR">{t('pages.claims.severity.major')}</MenuItem>
+                  <MenuItem value="MINOR">{t('pages.claims.severity.minor')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>우선순위</InputLabel>
+                <InputLabel>{t('pages.claims.fields.priority')}</InputLabel>
                 <Select
                   value={formData.priority || ''}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  label="우선순위"
+                  label={t('pages.claims.fields.priority')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="URGENT">긴급</MenuItem>
-                  <MenuItem value="HIGH">높음</MenuItem>
-                  <MenuItem value="NORMAL">보통</MenuItem>
-                  <MenuItem value="LOW">낮음</MenuItem>
+                  <MenuItem value="URGENT">{t('pages.claims.priority.urgent')}</MenuItem>
+                  <MenuItem value="HIGH">{t('pages.claims.priority.high')}</MenuItem>
+                  <MenuItem value="NORMAL">{t('pages.claims.priority.normal')}</MenuItem>
+                  <MenuItem value="LOW">{t('pages.claims.priority.low')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="클레임설명"
+                label={t('pages.claims.fields.claimDescription')}
                 multiline
                 rows={4}
                 value={formData.claimDescription}
@@ -471,7 +473,7 @@ const ClaimsPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="비고"
+                label={t('common.labels.remarks')}
                 multiline
                 rows={2}
                 value={formData.remarks || ''}
@@ -482,10 +484,10 @@ const ClaimsPage: React.FC = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>닫기</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.close')}</Button>
           {!viewMode && (
             <Button onClick={handleSubmit} variant="contained">
-              생성
+              {t('pages.claims.actions.createBtn')}
             </Button>
           )}
         </DialogActions>
@@ -493,19 +495,19 @@ const ClaimsPage: React.FC = () => {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>클레임 삭제</DialogTitle>
+        <DialogTitle>{t('pages.claims.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <Typography>정말 이 클레임을 삭제하시겠습니까?</Typography>
+          <Typography>{t('pages.claims.dialog.deleteConfirm')}</Typography>
           {selectedClaim && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              클레임번호: {selectedClaim.claimNo}
+              {t('pages.claims.fields.claimNo')}: {selectedClaim.claimNo}
             </Typography>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

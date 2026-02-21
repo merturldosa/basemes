@@ -12,35 +12,37 @@ import {
   PlayArrow as StartIcon,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const POPHomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const quickActions = [
     {
-      title: '작업 시작',
-      description: '새로운 작업 지시를 시작합니다',
+      title: t('pages.popHome.actions.startWork'),
+      description: t('pages.popHome.actions.startWorkDesc'),
       icon: <StartIcon sx={{ fontSize: 48 }} />,
       color: 'success.main',
       path: '/pop/work-orders',
     },
     {
-      title: '바코드 스캔',
-      description: '작업 지시서, LOT, 제품 스캔',
+      title: t('pages.popHome.actions.barcodeScan'),
+      description: t('pages.popHome.actions.barcodeScanDesc'),
       icon: <ScannerIcon sx={{ fontSize: 48 }} />,
       color: 'primary.main',
       path: '/pop/scanner',
     },
     {
-      title: 'SOP 확인',
-      description: '작업 표준서 체크리스트',
+      title: t('pages.popHome.actions.sopCheck'),
+      description: t('pages.popHome.actions.sopCheckDesc'),
       icon: <CheckIcon sx={{ fontSize: 48 }} />,
       color: 'warning.main',
       path: '/pop/sop',
     },
     {
-      title: '생산 실적',
-      description: '오늘의 생산 현황 확인',
+      title: t('pages.popHome.actions.performance'),
+      description: t('pages.popHome.actions.performanceDesc'),
       icon: <StatsIcon sx={{ fontSize: 48 }} />,
       color: 'info.main',
       path: '/pop/performance',
@@ -52,10 +54,10 @@ const POPHomePage: React.FC = () => {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          POP 현장 시스템
+          {t('pages.popHome.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          생산 현장 작업을 시작하세요
+          {t('pages.popHome.subtitle')}
         </Typography>
       </Box>
 
@@ -63,18 +65,18 @@ const POPHomePage: React.FC = () => {
       <Card sx={{ mb: 4, bgcolor: 'primary.main', color: 'primary.contrastText' }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            현재 작업 상태
+            {t('pages.popHome.currentStatus')}
           </Typography>
           <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-            <Chip label="작업 대기 중" color="default" sx={{ bgcolor: 'white', color: 'text.primary' }} />
-            <Chip label="금일 생산: 0 EA" color="default" sx={{ bgcolor: 'white', color: 'text.primary' }} />
+            <Chip label={t('pages.popHome.waiting')} color="default" sx={{ bgcolor: 'white', color: 'text.primary' }} />
+            <Chip label={t('pages.popHome.todayProduction', { count: 0 })} color="default" sx={{ bgcolor: 'white', color: 'text.primary' }} />
           </Box>
         </CardContent>
       </Card>
 
       {/* Quick Actions */}
       <Typography variant="h6" gutterBottom fontWeight="bold" sx={{ mb: 2 }}>
-        빠른 작업
+        {t('pages.popHome.quickActions')}
       </Typography>
 
       <Grid container spacing={3}>
@@ -124,15 +126,16 @@ const POPHomePage: React.FC = () => {
       <Card sx={{ mt: 4, bgcolor: 'grey.100' }}>
         <CardContent>
           <Typography variant="h6" gutterBottom>
-            💡 도움말
+            {t('pages.popHome.help.title')}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            • 작업을 시작하려면 <strong>"작업 시작"</strong> 버튼을 클릭하세요
+            {t('pages.popHome.help.line1')}
             <br />
-            • 바코드 스캔으로 빠르게 작업 지시를 불러올 수 있습니다
+            {t('pages.popHome.help.line2')}
             <br />
-            • 인터넷 연결이 끊어져도 작업을 계속할 수 있습니다 (오프라인 모드)
-            <br />• 문제가 발생하면 현장 관리자에게 문의하세요
+            {t('pages.popHome.help.line3')}
+            <br />
+            {t('pages.popHome.help.line4')}
           </Typography>
         </CardContent>
       </Card>

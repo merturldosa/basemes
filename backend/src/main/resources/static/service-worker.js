@@ -1,7 +1,7 @@
-// SoIce MES - Service Worker
+// SDS MES - Service Worker
 // 오프라인 지원 및 캐싱 (Phase 2 Enhanced)
 
-const CACHE_NAME = 'soice-mes-v3';
+const CACHE_NAME = 'sds-mes-v3';
 const OFFLINE_URL = '/offline.html';
 
 // 캐시할 정적 리소스
@@ -22,15 +22,15 @@ const STATIC_ASSETS = [
 ];
 
 // API 캐시 전략
-const API_CACHE_NAME = 'soice-mes-api-v3';
+const API_CACHE_NAME = 'sds-mes-api-v3';
 const API_CACHE_DURATION = 5 * 60 * 1000; // 5분
 
 // POP 페이지 캐시 (더 긴 유효 기간)
-const POP_CACHE_NAME = 'soice-mes-pop-v3';
+const POP_CACHE_NAME = 'sds-mes-pop-v3';
 const POP_CACHE_DURATION = 60 * 60 * 1000; // 60분
 
 // IndexedDB 설정
-const DB_NAME = 'SoIceMES';
+const DB_NAME = 'SDSMES';
 const DB_VERSION = 1;
 const QUEUE_STORE = 'offline_queue';
 
@@ -384,7 +384,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('SoIce MES', options)
+    self.registration.showNotification('SDS MES', options)
   );
 });
 

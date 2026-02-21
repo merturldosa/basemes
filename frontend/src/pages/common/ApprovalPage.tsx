@@ -43,6 +43,7 @@ import {
   getDocumentTypeLabel,
   formatDateTime
 } from '../../services/approvalService';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 
 interface TabPanelProps {
@@ -61,6 +62,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function ApprovalPage() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [currentTab, setCurrentTab] = useState(0);
   const tenantId = user?.tenantId ?? '';
@@ -113,7 +115,7 @@ export default function ApprovalPage() {
         setStatistics(stats);
       }
     } catch (err: any) {
-      setError(err.message || '데이터 로드 실패');
+      setError(err.message || t('pages.approval.errors.loadFailed'));
       if (currentTab === 0) {
         setPendingApprovals([]);
       } else if (currentTab === 1) {
@@ -173,7 +175,7 @@ export default function ApprovalPage() {
       setActionDialogOpen(false);
       loadData();
     } catch (err: any) {
-      setError(err.message || '결재 처리 실패');
+      setError(err.message || t('pages.approval.errors.processFailed'));
     }
   };
 
@@ -182,32 +184,32 @@ export default function ApprovalPage() {
   const pendingColumns: GridColDef[] = [
     {
       field: 'documentNo',
-      headerName: '문서 번호',
+      headerName: t('pages.approval.fields.documentNo'),
       width: 150
     },
     {
       field: 'documentType',
-      headerName: '문서 타입',
+      headerName: t('pages.approval.fields.documentType'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip label={getDocumentTypeLabel(params.value)} size="small" />
       )
     },
-    { field: 'documentTitle', headerName: '제목', width: 250 },
+    { field: 'documentTitle', headerName: t('pages.approval.fields.title'), width: 250 },
     {
       field: 'requesterName',
-      headerName: '기안자',
+      headerName: t('pages.approval.fields.requester'),
       width: 100
     },
     {
       field: 'requestDate',
-      headerName: '기안일',
+      headerName: t('pages.approval.fields.requestDate'),
       width: 150,
       valueFormatter: (params) => formatDateTime(params.value)
     },
     {
       field: 'approvalStatus',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
@@ -219,7 +221,7 @@ export default function ApprovalPage() {
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 200,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -233,7 +235,7 @@ export default function ApprovalPage() {
             onClick={() => handleApproveClick(params.row)}
             sx={{ ml: 1 }}
           >
-            승인
+            {t('pages.approval.actions.approve')}
           </Button>
           <Button
             size="small"
@@ -242,7 +244,7 @@ export default function ApprovalPage() {
             color="error"
             sx={{ ml: 1 }}
           >
-            반려
+            {t('pages.approval.actions.reject')}
           </Button>
         </Box>
       )
@@ -250,11 +252,11 @@ export default function ApprovalPage() {
   ];
 
   const templateColumns: GridColDef[] = [
-    { field: 'templateName', headerName: '템플릿명', width: 200 },
-    { field: 'templateCode', headerName: '코드', width: 150 },
+    { field: 'templateName', headerName: t('pages.approval.fields.templateName'), width: 200 },
+    { field: 'templateCode', headerName: t('pages.approval.fields.templateCode'), width: 150 },
     {
       field: 'documentType',
-      headerName: '문서 타입',
+      headerName: t('pages.approval.fields.documentType'),
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Chip label={getDocumentTypeLabel(params.value)} size="small" />
@@ -262,39 +264,39 @@ export default function ApprovalPage() {
     },
     {
       field: 'isDefault',
-      headerName: '기본',
+      headerName: t('common.labels.default'),
       width: 80,
       renderCell: (params: GridRenderCellParams) => (
-        params.value ? <Chip label="기본" color="primary" size="small" /> : null
+        params.value ? <Chip label={t('common.labels.default')} color="primary" size="small" /> : null
       )
     },
     {
       field: 'steps',
-      headerName: '단계 수',
+      headerName: t('pages.approval.fields.stepCount'),
       width: 100,
       valueGetter: (params) => params.row.steps?.length || 0
     },
-    { field: 'description', headerName: '설명', width: 300 }
+    { field: 'description', headerName: t('common.labels.description'), width: 300 }
   ];
 
   const delegationColumns: GridColDef[] = [
-    { field: 'delegatorName', headerName: '위임자', width: 120 },
-    { field: 'delegateName', headerName: '수임자', width: 120 },
+    { field: 'delegatorName', headerName: t('pages.approval.fields.delegator'), width: 120 },
+    { field: 'delegateName', headerName: t('pages.approval.fields.delegate'), width: 120 },
     {
       field: 'delegationType',
-      headerName: '유형',
+      headerName: t('pages.approval.fields.delegationType'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params.value === 'FULL' ? '전체' : '부분'}
+          label={params.value === 'FULL' ? t('pages.approval.status.full') : t('pages.approval.status.partial')}
           color={params.value === 'FULL' ? 'primary' : 'default'}
           size="small"
         />
       )
     },
-    { field: 'startDate', headerName: '시작일', width: 120 },
-    { field: 'endDate', headerName: '종료일', width: 120 },
-    { field: 'delegationReason', headerName: '사유', width: 250 }
+    { field: 'startDate', headerName: t('common.labels.startDate'), width: 120 },
+    { field: 'endDate', headerName: t('common.labels.endDate'), width: 120 },
+    { field: 'delegationReason', headerName: t('pages.approval.fields.delegationReason'), width: 250 }
   ];
 
   // ==================== Render ====================
@@ -303,7 +305,7 @@ export default function ApprovalPage() {
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
         <ApprovalIcon sx={{ mr: 1, verticalAlign: 'middle' }} />
-        결재 관리
+        {t('pages.approval.title')}
       </Typography>
 
       {error && (
@@ -314,10 +316,10 @@ export default function ApprovalPage() {
 
       <Paper sx={{ width: '100%' }}>
         <Tabs value={currentTab} onChange={(e, v) => setCurrentTab(v)}>
-          <Tab label="대기 중인 결재" />
-          <Tab label="결재 라인 템플릿" />
-          <Tab label="결재 위임" />
-          <Tab label="통계" />
+          <Tab label={t('pages.approval.tabs.pending')} />
+          <Tab label={t('pages.approval.tabs.templates')} />
+          <Tab label={t('pages.approval.tabs.delegations')} />
+          <Tab label={t('pages.approval.tabs.statistics')} />
         </Tabs>
 
         {/* Tab 1: Pending Approvals */}
@@ -373,7 +375,7 @@ export default function ApprovalPage() {
                 <Card>
                   <CardContent>
                     <Typography color="text.secondary" gutterBottom>
-                      대기 중
+                      {t('pages.approval.status.pending')}
                     </Typography>
                     <Typography variant="h4">{statistics.pending}</Typography>
                   </CardContent>
@@ -383,7 +385,7 @@ export default function ApprovalPage() {
                 <Card>
                   <CardContent>
                     <Typography color="text.secondary" gutterBottom>
-                      진행 중
+                      {t('pages.approval.status.inProgress')}
                     </Typography>
                     <Typography variant="h4" color="primary">
                       {statistics.inProgress}
@@ -395,7 +397,7 @@ export default function ApprovalPage() {
                 <Card>
                   <CardContent>
                     <Typography color="text.secondary" gutterBottom>
-                      승인 완료
+                      {t('pages.approval.status.approved')}
                     </Typography>
                     <Typography variant="h4" color="success.main">
                       {statistics.approved}
@@ -407,7 +409,7 @@ export default function ApprovalPage() {
                 <Card>
                   <CardContent>
                     <Typography color="text.secondary" gutterBottom>
-                      반려
+                      {t('pages.approval.status.rejected')}
                     </Typography>
                     <Typography variant="h4" color="error.main">
                       {statistics.rejected}
@@ -419,7 +421,7 @@ export default function ApprovalPage() {
                 <Card>
                   <CardContent>
                     <Typography variant="h6" gutterBottom>
-                      승인율
+                      {t('pages.approval.statistics.approvalRate')}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                       <Box sx={{ width: '100%', mr: 1 }}>
@@ -436,7 +438,7 @@ export default function ApprovalPage() {
                       </Box>
                     </Box>
                     <Typography variant="body2" color="text.secondary">
-                      전체 {statistics.total}건 중 {statistics.approved}건 승인
+                      {t('pages.approval.statistics.totalApprovedOf', { total: statistics.total, approved: statistics.approved })}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -453,20 +455,20 @@ export default function ApprovalPage() {
         maxWidth="md"
         fullWidth
       >
-        <DialogTitle>결재 상세</DialogTitle>
+        <DialogTitle>{t('pages.approval.detail.title')}</DialogTitle>
         <DialogContent>
           {selectedInstance && (
             <Box>
               <Grid container spacing={2} sx={{ mb: 3 }}>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">
-                    문서 번호
+                    {t('pages.approval.fields.documentNo')}
                   </Typography>
                   <Typography variant="body1">{selectedInstance.documentNo}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">
-                    문서 타입
+                    {t('pages.approval.fields.documentType')}
                   </Typography>
                   <Typography variant="body1">
                     {getDocumentTypeLabel(selectedInstance.documentType)}
@@ -474,13 +476,13 @@ export default function ApprovalPage() {
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="body2" color="text.secondary">
-                    제목
+                    {t('pages.approval.fields.title')}
                   </Typography>
                   <Typography variant="body1">{selectedInstance.documentTitle}</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">
-                    기안자
+                    {t('pages.approval.fields.requester')}
                   </Typography>
                   <Typography variant="body1">
                     {selectedInstance.requesterName} ({selectedInstance.requesterDepartment})
@@ -488,7 +490,7 @@ export default function ApprovalPage() {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography variant="body2" color="text.secondary">
-                    기안일
+                    {t('pages.approval.fields.requestDate')}
                   </Typography>
                   <Typography variant="body1">
                     {formatDateTime(selectedInstance.requestDate)}
@@ -497,7 +499,7 @@ export default function ApprovalPage() {
               </Grid>
 
               <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-                결재 진행 현황
+                {t('pages.approval.detail.approvalProgress')}
               </Typography>
               <Stepper activeStep={selectedInstance.currentStepOrder || 0} alternativeLabel>
                 {selectedInstance.stepInstances?.map((step) => (
@@ -527,34 +529,34 @@ export default function ApprovalPage() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDetailDialogOpen(false)}>닫기</Button>
+          <Button onClick={() => setDetailDialogOpen(false)}>{t('common.buttons.close')}</Button>
         </DialogActions>
       </Dialog>
 
       {/* Action Dialog */}
       <Dialog open={actionDialogOpen} onClose={() => setActionDialogOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>
-          {actionType === 'approve' ? '결재 승인' : '결재 반려'}
+          {actionType === 'approve' ? t('pages.approval.detail.approveTitle') : t('pages.approval.detail.rejectTitle')}
         </DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
             multiline
             rows={4}
-            label={actionType === 'approve' ? '승인 의견' : '반려 사유'}
+            label={actionType === 'approve' ? t('pages.approval.fields.approvalComment') : t('pages.approval.fields.rejectionReason')}
             value={actionComment}
             onChange={(e) => setActionComment(e.target.value)}
             sx={{ mt: 2 }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setActionDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setActionDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button
             variant="contained"
             color={actionType === 'approve' ? 'primary' : 'error'}
             onClick={handleConfirmAction}
           >
-            {actionType === 'approve' ? '승인' : '반려'}
+            {actionType === 'approve' ? t('pages.approval.actions.approve') : t('pages.approval.actions.reject')}
           </Button>
         </DialogActions>
       </Dialog>

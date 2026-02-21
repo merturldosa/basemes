@@ -31,6 +31,7 @@ import {
   Delete as DeleteIcon,
   Refresh as RefreshIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import commonCodeService, {
   CommonCodeGroup,
   CommonCodeDetail,
@@ -39,6 +40,8 @@ import commonCodeService, {
 } from '../../services/commonCodeService';
 
 const CommonCodesPage: React.FC = () => {
+  const { t } = useTranslation();
+
   // State for code groups
   const [codeGroups, setCodeGroups] = useState<CommonCodeGroup[]>([]);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
@@ -106,7 +109,7 @@ const CommonCodesPage: React.FC = () => {
       const data = await commonCodeService.getCodeGroups();
       setCodeGroups(data || []);
     } catch (error) {
-      showSnackbar('코드 그룹 목록 조회 실패', 'error');
+      showSnackbar(t('pages.commonCodes.messages.groupLoadFailed'), 'error');
       setCodeGroups([]);
     } finally {
       setLoadingGroups(false);
@@ -119,7 +122,7 @@ const CommonCodesPage: React.FC = () => {
       const data = await commonCodeService.getCodeDetails(groupId);
       setCodeDetails(data || []);
     } catch (error) {
-      showSnackbar('코드 상세 목록 조회 실패', 'error');
+      showSnackbar(t('pages.commonCodes.messages.detailLoadFailed'), 'error');
       setCodeDetails([]);
     } finally {
       setLoadingDetails(false);
@@ -170,15 +173,15 @@ const CommonCodesPage: React.FC = () => {
     try {
       if (selectedGroup) {
         await commonCodeService.updateCodeGroup(selectedGroup.codeGroupId, groupFormData);
-        showSnackbar('코드 그룹 수정 성공', 'success');
+        showSnackbar(t('pages.commonCodes.messages.groupUpdateSuccess'), 'success');
       } else {
         await commonCodeService.createCodeGroup(groupFormData);
-        showSnackbar('코드 그룹 생성 성공', 'success');
+        showSnackbar(t('pages.commonCodes.messages.groupCreateSuccess'), 'success');
       }
       handleCloseGroupDialog();
       loadCodeGroups();
     } catch (error) {
-      showSnackbar(selectedGroup ? '코드 그룹 수정 실패' : '코드 그룹 생성 실패', 'error');
+      showSnackbar(selectedGroup ? t('pages.commonCodes.messages.groupUpdateFailed') : t('pages.commonCodes.messages.groupCreateFailed'), 'error');
     }
   };
 
@@ -187,13 +190,13 @@ const CommonCodesPage: React.FC = () => {
 
     try {
       await commonCodeService.deleteCodeGroup(deleteTarget.id);
-      showSnackbar('코드 그룹 삭제 성공', 'success');
+      showSnackbar(t('pages.commonCodes.messages.groupDeleteSuccess'), 'success');
       setOpenDeleteDialog(false);
       setDeleteTarget(null);
       setSelectedGroupId(null);
       loadCodeGroups();
     } catch (error) {
-      showSnackbar('코드 그룹 삭제 실패 (시스템 코드는 삭제 불가)', 'error');
+      showSnackbar(t('pages.commonCodes.messages.groupDeleteFailed'), 'error');
     }
   };
 
@@ -201,7 +204,7 @@ const CommonCodesPage: React.FC = () => {
 
   const handleOpenDetailDialog = (detail?: CommonCodeDetail) => {
     if (!selectedGroupId) {
-      showSnackbar('코드 그룹을 먼저 선택하세요', 'error');
+      showSnackbar(t('pages.commonCodes.messages.selectGroupFirst'), 'error');
       return;
     }
 
@@ -250,15 +253,15 @@ const CommonCodesPage: React.FC = () => {
     try {
       if (selectedDetail) {
         await commonCodeService.updateCodeDetail(selectedDetail.codeDetailId, detailFormData);
-        showSnackbar('코드 상세 수정 성공', 'success');
+        showSnackbar(t('pages.commonCodes.messages.detailUpdateSuccess'), 'success');
       } else {
         await commonCodeService.createCodeDetail(selectedGroupId, detailFormData);
-        showSnackbar('코드 상세 생성 성공', 'success');
+        showSnackbar(t('pages.commonCodes.messages.detailCreateSuccess'), 'success');
       }
       handleCloseDetailDialog();
       loadCodeDetails(selectedGroupId);
     } catch (error) {
-      showSnackbar(selectedDetail ? '코드 상세 수정 실패' : '코드 상세 생성 실패', 'error');
+      showSnackbar(selectedDetail ? t('pages.commonCodes.messages.detailUpdateFailed') : t('pages.commonCodes.messages.detailCreateFailed'), 'error');
     }
   };
 
@@ -267,14 +270,14 @@ const CommonCodesPage: React.FC = () => {
 
     try {
       await commonCodeService.deleteCodeDetail(deleteTarget.id);
-      showSnackbar('코드 상세 삭제 성공', 'success');
+      showSnackbar(t('pages.commonCodes.messages.detailDeleteSuccess'), 'success');
       setOpenDeleteDialog(false);
       setDeleteTarget(null);
       if (selectedGroupId) {
         loadCodeDetails(selectedGroupId);
       }
     } catch (error) {
-      showSnackbar('코드 상세 삭제 실패', 'error');
+      showSnackbar(t('pages.commonCodes.messages.detailDeleteFailed'), 'error');
     }
   };
 
@@ -291,15 +294,15 @@ const CommonCodesPage: React.FC = () => {
   // ==================== Data Grid Columns ====================
 
   const groupColumns: GridColDef[] = [
-    { field: 'codeGroup', headerName: '코드 그룹', width: 150 },
-    { field: 'codeGroupName', headerName: '코드 그룹명', width: 200, flex: 1 },
+    { field: 'codeGroup', headerName: t('pages.commonCodes.codeGroup.code'), width: 150 },
+    { field: 'codeGroupName', headerName: t('pages.commonCodes.codeGroup.name'), width: 200, flex: 1 },
     {
       field: 'isSystem',
-      headerName: '시스템',
+      headerName: t('pages.commonCodes.codeGroup.system'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '시스템' : '사용자'}
+          label={params.value ? t('pages.commonCodes.codeGroup.system') : t('pages.commonCodes.codeGroup.user')}
           color={params.value ? 'warning' : 'default'}
           size="small"
         />
@@ -307,31 +310,31 @@ const CommonCodesPage: React.FC = () => {
     },
     {
       field: 'isActive',
-      headerName: '활성',
+      headerName: t('common.status.active'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           color={params.value ? 'success' : 'default'}
           size="small"
         />
       ),
     },
-    { field: 'displayOrder', headerName: '순서', width: 80 },
+    { field: 'displayOrder', headerName: t('pages.commonCodes.codeGroup.displayOrder'), width: 80 },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 100,
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
           icon={<EditIcon />}
-          label="수정"
+          label={t('common.buttons.edit')}
           onClick={() => handleOpenGroupDialog(params.row as CommonCodeGroup)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog('group', params.row.codeGroupId)}
           disabled={params.row.isSystem}
         />,
@@ -340,11 +343,11 @@ const CommonCodesPage: React.FC = () => {
   ];
 
   const detailColumns: GridColDef[] = [
-    { field: 'code', headerName: '코드', width: 120 },
-    { field: 'codeName', headerName: '코드명', width: 150, flex: 1 },
+    { field: 'code', headerName: t('pages.commonCodes.codeDetail.code'), width: 120 },
+    { field: 'codeName', headerName: t('pages.commonCodes.codeDetail.name'), width: 150, flex: 1 },
     {
       field: 'colorCode',
-      headerName: '색상',
+      headerName: t('pages.commonCodes.codeDetail.color'),
       width: 100,
       renderCell: (params) =>
         params.value ? (
@@ -361,39 +364,39 @@ const CommonCodesPage: React.FC = () => {
     },
     {
       field: 'isDefault',
-      headerName: '기본값',
+      headerName: t('pages.commonCodes.codeDetail.defaultValue'),
       width: 90,
       renderCell: (params) => (
-        params.value ? <Chip label="기본" color="primary" size="small" /> : null
+        params.value ? <Chip label={t('common.labels.default')} color="primary" size="small" /> : null
       ),
     },
     {
       field: 'isActive',
-      headerName: '활성',
+      headerName: t('common.status.active'),
       width: 90,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           color={params.value ? 'success' : 'default'}
           size="small"
         />
       ),
     },
-    { field: 'displayOrder', headerName: '순서', width: 80 },
+    { field: 'displayOrder', headerName: t('pages.commonCodes.codeDetail.displayOrder'), width: 80 },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 100,
       getActions: (params: GridRowParams) => [
         <GridActionsCellItem
           icon={<EditIcon />}
-          label="수정"
+          label={t('common.buttons.edit')}
           onClick={() => handleOpenDetailDialog(params.row as CommonCodeDetail)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog('detail', params.row.codeDetailId)}
         />,
       ],
@@ -403,7 +406,7 @@ const CommonCodesPage: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        공통 코드 관리
+        {t('pages.commonCodes.title')}
       </Typography>
 
       <Grid container spacing={2}>
@@ -411,7 +414,7 @@ const CommonCodesPage: React.FC = () => {
         <Grid item xs={12} md={5}>
           <Paper sx={{ p: 2, height: 'calc(100vh - 200px)' }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">코드 그룹</Typography>
+              <Typography variant="h6">{t('pages.commonCodes.codeGroup.title')}</Typography>
               <Box>
                 <IconButton onClick={loadCodeGroups} size="small">
                   <RefreshIcon />
@@ -423,7 +426,7 @@ const CommonCodesPage: React.FC = () => {
                   size="small"
                   sx={{ ml: 1 }}
                 >
-                  그룹 추가
+                  {t('pages.commonCodes.codeGroup.add')}
                 </Button>
               </Box>
             </Box>
@@ -451,7 +454,7 @@ const CommonCodesPage: React.FC = () => {
           <Paper sx={{ p: 2, height: 'calc(100vh - 200px)' }}>
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant="h6">
-                코드 상세 {selectedGroupId && `(${codeGroups.find(g => g.codeGroupId === selectedGroupId)?.codeGroupName})`}
+                {t('pages.commonCodes.codeDetail.title')} {selectedGroupId && `(${codeGroups.find(g => g.codeGroupId === selectedGroupId)?.codeGroupName})`}
               </Typography>
               <Button
                 variant="contained"
@@ -460,7 +463,7 @@ const CommonCodesPage: React.FC = () => {
                 disabled={!selectedGroupId}
                 size="small"
               >
-                코드 추가
+                {t('pages.commonCodes.codeDetail.add')}
               </Button>
             </Box>
 
@@ -479,7 +482,7 @@ const CommonCodesPage: React.FC = () => {
             ) : (
               <Box sx={{ height: 'calc(100% - 60px)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Typography color="text.secondary">
-                  코드 그룹을 선택하세요
+                  {t('pages.commonCodes.codeDetail.selectGroup')}
                 </Typography>
               </Box>
             )}
@@ -489,21 +492,21 @@ const CommonCodesPage: React.FC = () => {
 
       {/* Code Group Dialog */}
       <Dialog open={openGroupDialog} onClose={handleCloseGroupDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedGroup ? '코드 그룹 수정' : '코드 그룹 생성'}</DialogTitle>
+        <DialogTitle>{selectedGroup ? t('pages.commonCodes.codeGroup.edit') : t('pages.commonCodes.codeGroup.create')}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="코드 그룹"
+            label={t('pages.commonCodes.codeGroup.code')}
             value={groupFormData.codeGroup}
             onChange={(e) => setGroupFormData({ ...groupFormData, codeGroup: e.target.value.toUpperCase() })}
             margin="normal"
             required
             disabled={!!selectedGroup}
-            helperText="영문 대문자, 숫자, 언더스코어(_) 사용"
+            helperText={t('pages.commonCodes.codeGroup.helperText')}
           />
           <TextField
             fullWidth
-            label="코드 그룹명"
+            label={t('pages.commonCodes.codeGroup.name')}
             value={groupFormData.codeGroupName}
             onChange={(e) => setGroupFormData({ ...groupFormData, codeGroupName: e.target.value })}
             margin="normal"
@@ -511,7 +514,7 @@ const CommonCodesPage: React.FC = () => {
           />
           <TextField
             fullWidth
-            label="설명"
+            label={t('common.labels.description')}
             value={groupFormData.description}
             onChange={(e) => setGroupFormData({ ...groupFormData, description: e.target.value })}
             margin="normal"
@@ -521,7 +524,7 @@ const CommonCodesPage: React.FC = () => {
           <TextField
             fullWidth
             type="number"
-            label="표시 순서"
+            label={t('pages.commonCodes.codeDetail.displayOrder')}
             value={groupFormData.displayOrder}
             onChange={(e) => setGroupFormData({ ...groupFormData, displayOrder: parseInt(e.target.value) })}
             margin="normal"
@@ -533,7 +536,7 @@ const CommonCodesPage: React.FC = () => {
                 onChange={(e) => setGroupFormData({ ...groupFormData, isActive: e.target.checked })}
               />
             }
-            label="활성"
+            label={t('common.status.active')}
             sx={{ mt: 2 }}
           />
           {!selectedGroup && (
@@ -544,36 +547,36 @@ const CommonCodesPage: React.FC = () => {
                   onChange={(e) => setGroupFormData({ ...groupFormData, isSystem: e.target.checked })}
                 />
               }
-              label="시스템 코드 (삭제 불가)"
+              label={t('pages.commonCodes.codeGroup.systemCode')}
               sx={{ mt: 1 }}
             />
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseGroupDialog}>취소</Button>
+          <Button onClick={handleCloseGroupDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveGroup} variant="contained">
-            {selectedGroup ? '수정' : '생성'}
+            {selectedGroup ? t('common.buttons.edit') : t('common.buttons.add')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Code Detail Dialog */}
       <Dialog open={openDetailDialog} onClose={handleCloseDetailDialog} maxWidth="sm" fullWidth>
-        <DialogTitle>{selectedDetail ? '코드 상세 수정' : '코드 상세 생성'}</DialogTitle>
+        <DialogTitle>{selectedDetail ? t('pages.commonCodes.codeDetail.edit') : t('pages.commonCodes.codeDetail.create')}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="코드"
+            label={t('pages.commonCodes.codeDetail.code')}
             value={detailFormData.code}
             onChange={(e) => setDetailFormData({ ...detailFormData, code: e.target.value.toUpperCase() })}
             margin="normal"
             required
             disabled={!!selectedDetail}
-            helperText="영문 대문자, 숫자, 언더스코어(_) 사용"
+            helperText={t('pages.commonCodes.codeGroup.helperText')}
           />
           <TextField
             fullWidth
-            label="코드명"
+            label={t('pages.commonCodes.codeDetail.name')}
             value={detailFormData.codeName}
             onChange={(e) => setDetailFormData({ ...detailFormData, codeName: e.target.value })}
             margin="normal"
@@ -581,7 +584,7 @@ const CommonCodesPage: React.FC = () => {
           />
           <TextField
             fullWidth
-            label="설명"
+            label={t('common.labels.description')}
             value={detailFormData.description}
             onChange={(e) => setDetailFormData({ ...detailFormData, description: e.target.value })}
             margin="normal"
@@ -593,7 +596,7 @@ const CommonCodesPage: React.FC = () => {
               <TextField
                 fullWidth
                 type="number"
-                label="표시 순서"
+                label={t('pages.commonCodes.codeDetail.displayOrder')}
                 value={detailFormData.displayOrder}
                 onChange={(e) => setDetailFormData({ ...detailFormData, displayOrder: parseInt(e.target.value) })}
                 margin="normal"
@@ -602,7 +605,7 @@ const CommonCodesPage: React.FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="색상 코드"
+                label={t('pages.commonCodes.codeDetail.colorCode')}
                 value={detailFormData.colorCode}
                 onChange={(e) => setDetailFormData({ ...detailFormData, colorCode: e.target.value })}
                 margin="normal"
@@ -612,7 +615,7 @@ const CommonCodesPage: React.FC = () => {
           </Grid>
           <TextField
             fullWidth
-            label="아이콘명"
+            label={t('pages.commonCodes.codeDetail.iconName')}
             value={detailFormData.iconName}
             onChange={(e) => setDetailFormData({ ...detailFormData, iconName: e.target.value })}
             margin="normal"
@@ -620,11 +623,11 @@ const CommonCodesPage: React.FC = () => {
           />
 
           <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle2" gutterBottom>확장 필드</Typography>
+          <Typography variant="subtitle2" gutterBottom>{t('pages.commonCodes.codeDetail.extensionFields')}</Typography>
 
           <TextField
             fullWidth
-            label="확장 필드 1"
+            label={t('pages.commonCodes.codeDetail.extensionField1')}
             value={detailFormData.value1}
             onChange={(e) => setDetailFormData({ ...detailFormData, value1: e.target.value })}
             margin="normal"
@@ -632,7 +635,7 @@ const CommonCodesPage: React.FC = () => {
           />
           <TextField
             fullWidth
-            label="확장 필드 2"
+            label={t('pages.commonCodes.codeDetail.extensionField2')}
             value={detailFormData.value2}
             onChange={(e) => setDetailFormData({ ...detailFormData, value2: e.target.value })}
             margin="normal"
@@ -640,7 +643,7 @@ const CommonCodesPage: React.FC = () => {
           />
           <TextField
             fullWidth
-            label="확장 필드 3"
+            label={t('pages.commonCodes.codeDetail.extensionField3')}
             value={detailFormData.value3}
             onChange={(e) => setDetailFormData({ ...detailFormData, value3: e.target.value })}
             margin="normal"
@@ -654,7 +657,7 @@ const CommonCodesPage: React.FC = () => {
                 onChange={(e) => setDetailFormData({ ...detailFormData, isDefault: e.target.checked })}
               />
             }
-            label="기본값"
+            label={t('pages.commonCodes.codeDetail.defaultValue')}
             sx={{ mt: 2 }}
           />
           <FormControlLabel
@@ -664,39 +667,39 @@ const CommonCodesPage: React.FC = () => {
                 onChange={(e) => setDetailFormData({ ...detailFormData, isActive: e.target.checked })}
               />
             }
-            label="활성"
+            label={t('common.status.active')}
             sx={{ mt: 1 }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDetailDialog}>취소</Button>
+          <Button onClick={handleCloseDetailDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveDetail} variant="contained">
-            {selectedDetail ? '수정' : '생성'}
+            {selectedDetail ? t('common.buttons.edit') : t('common.buttons.add')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.commonCodes.deleteConfirm.title')}</DialogTitle>
         <DialogContent>
           <Typography>
-            {deleteTarget?.type === 'group' ? '코드 그룹을' : '코드 상세를'} 삭제하시겠습니까?
+            {deleteTarget?.type === 'group' ? t('pages.commonCodes.deleteConfirm.groupMessage') : t('pages.commonCodes.deleteConfirm.detailMessage')}
           </Typography>
           {deleteTarget?.type === 'group' && (
             <Alert severity="warning" sx={{ mt: 2 }}>
-              코드 그룹을 삭제하면 하위 코드 상세도 모두 삭제됩니다.
+              {t('pages.commonCodes.deleteConfirm.groupWarning')}
             </Alert>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button
             onClick={deleteTarget?.type === 'group' ? handleDeleteGroup : handleDeleteDetail}
             color="error"
             variant="contained"
           >
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

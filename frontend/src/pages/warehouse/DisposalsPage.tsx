@@ -38,6 +38,7 @@ import {
     Visibility as ViewIcon
 } from '@mui/icons-material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 import { useAuthStore } from '@/stores/authStore';
 
@@ -109,6 +110,7 @@ interface Statistics {
 }
 
 const DisposalsPage: React.FC = () => {
+    const { t } = useTranslation();
     const { user } = useAuthStore();
     const [disposals, setDisposals] = useState<Disposal[]>([]);
     const [loading, setLoading] = useState(false);
@@ -189,7 +191,7 @@ const DisposalsPage: React.FC = () => {
             resetForm();
             fetchDisposals();
         } catch (error) {
-            alert('폐기 생성 실패');
+            alert(t('pages.disposals.messages.createFailed'));
         }
     };
 
@@ -199,12 +201,12 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/approve?approverUserId=${approverId}`);
             fetchDisposals();
         } catch (error) {
-            alert('폐기 승인 실패');
+            alert(t('pages.disposals.messages.approveFailed'));
         }
     };
 
     const handleReject = async (disposalId: number) => {
-        const reason = prompt('거부 사유를 입력하세요:');
+        const reason = prompt(t('pages.disposals.messages.enterRejectReason'));
         if (!reason) return;
 
         try {
@@ -212,44 +214,44 @@ const DisposalsPage: React.FC = () => {
             await axios.post(`/api/disposals/${disposalId}/reject?approverUserId=${approverId}&reason=${encodeURIComponent(reason)}`);
             fetchDisposals();
         } catch (error) {
-            alert('폐기 거부 실패');
+            alert(t('pages.disposals.messages.rejectFailed'));
         }
     };
 
     const handleProcess = async (disposalId: number) => {
-        if (!confirm('폐기를 처리하시겠습니까? 재고가 차감됩니다.')) return;
+        if (!confirm(t('pages.disposals.messages.confirmProcess'))) return;
 
         try {
             const processorId = user?.userId ?? 0;
             await axios.post(`/api/disposals/${disposalId}/process?processorUserId=${processorId}`);
             fetchDisposals();
         } catch (error) {
-            alert('폐기 처리 실패');
+            alert(t('pages.disposals.messages.processFailed'));
         }
     };
 
     const handleComplete = async (disposalId: number) => {
-        const method = prompt('폐기 방법을 입력하세요 (예: 소각, 매립, 위탁처리):');
-        const location = prompt('폐기 장소를 입력하세요:');
+        const method = prompt(t('pages.disposals.messages.enterMethod'));
+        const location = prompt(t('pages.disposals.messages.enterLocation'));
         if (!method || !location) return;
 
         try {
             await axios.post(`/api/disposals/${disposalId}/complete?method=${encodeURIComponent(method)}&location=${encodeURIComponent(location)}`);
             fetchDisposals();
         } catch (error) {
-            alert('폐기 완료 실패');
+            alert(t('pages.disposals.messages.completeFailed'));
         }
     };
 
     const handleCancel = async (disposalId: number) => {
-        const reason = prompt('취소 사유를 입력하세요:');
+        const reason = prompt(t('pages.disposals.messages.enterCancelReason'));
         if (!reason) return;
 
         try {
             await axios.post(`/api/disposals/${disposalId}/cancel?reason=${encodeURIComponent(reason)}`);
             fetchDisposals();
         } catch (error) {
-            alert('폐기 취소 실패');
+            alert(t('pages.disposals.messages.cancelFailed'));
         }
     };
 
@@ -306,12 +308,12 @@ const DisposalsPage: React.FC = () => {
 
     const getStatusChip = (status: string) => {
         const statusConfig: { [key: string]: { label: string; color: any } } = {
-            PENDING: { label: '대기', color: 'warning' },
-            APPROVED: { label: '승인', color: 'info' },
-            REJECTED: { label: '거부', color: 'error' },
-            PROCESSED: { label: '처리됨', color: 'primary' },
-            COMPLETED: { label: '완료', color: 'success' },
-            CANCELLED: { label: '취소', color: 'default' }
+            PENDING: { label: t('pages.disposals.status.pending'), color: 'warning' },
+            APPROVED: { label: t('pages.disposals.status.approved'), color: 'info' },
+            REJECTED: { label: t('pages.disposals.status.rejected'), color: 'error' },
+            PROCESSED: { label: t('pages.disposals.status.processed'), color: 'primary' },
+            COMPLETED: { label: t('pages.disposals.status.completed'), color: 'success' },
+            CANCELLED: { label: t('pages.disposals.status.cancelled'), color: 'default' }
         };
         const config = statusConfig[status] || { label: status, color: 'default' };
         return <Chip label={config.label} color={config.color} size="small" />;
@@ -319,73 +321,73 @@ const DisposalsPage: React.FC = () => {
 
     const getTypeChip = (type: string) => {
         const typeConfig: { [key: string]: { label: string; color: any } } = {
-            DEFECTIVE: { label: '불량', color: 'error' },
-            EXPIRED: { label: '유효기간', color: 'warning' },
-            DAMAGED: { label: '파손', color: 'info' },
-            OBSOLETE: { label: '폐기대상', color: 'default' },
-            OTHER: { label: '기타', color: 'default' }
+            DEFECTIVE: { label: t('pages.disposals.types.defective'), color: 'error' },
+            EXPIRED: { label: t('pages.disposals.types.expired'), color: 'warning' },
+            DAMAGED: { label: t('pages.disposals.types.damaged'), color: 'info' },
+            OBSOLETE: { label: t('pages.disposals.types.obsolete'), color: 'default' },
+            OTHER: { label: t('pages.disposals.types.other'), color: 'default' }
         };
         const config = typeConfig[type] || { label: type, color: 'default' };
         return <Chip label={config.label} color={config.color} size="small" />;
     };
 
     const columns: GridColDef[] = [
-        { field: 'disposalNo', headerName: '폐기번호', width: 150 },
+        { field: 'disposalNo', headerName: t('pages.disposals.fields.disposalNo'), width: 150 },
         {
             field: 'disposalDate',
-            headerName: '폐기일자',
+            headerName: t('pages.disposals.fields.disposalDate'),
             width: 120,
             valueFormatter: (params) => new Date(params.value).toLocaleDateString('ko-KR')
         },
         {
             field: 'disposalType',
-            headerName: '폐기유형',
+            headerName: t('pages.disposals.fields.disposalType'),
             width: 120,
             renderCell: (params: GridRenderCellParams) => getTypeChip(params.value)
         },
         {
             field: 'disposalStatus',
-            headerName: '상태',
+            headerName: t('common.labels.status'),
             width: 100,
             renderCell: (params: GridRenderCellParams) => getStatusChip(params.value)
         },
-        { field: 'warehouseName', headerName: '창고', width: 130 },
-        { field: 'requesterUserName', headerName: '요청자', width: 100 },
+        { field: 'warehouseName', headerName: t('pages.disposals.fields.warehouse'), width: 130 },
+        { field: 'requesterUserName', headerName: t('pages.disposals.fields.requester'), width: 100 },
         {
             field: 'totalDisposalQuantity',
-            headerName: '총수량',
+            headerName: t('pages.disposals.fields.totalQuantity'),
             width: 100,
             type: 'number'
         },
-        { field: 'approverUserName', headerName: '승인자', width: 100 },
-        { field: 'processorUserName', headerName: '처리자', width: 100 },
+        { field: 'approverUserName', headerName: t('pages.disposals.fields.approver'), width: 100 },
+        { field: 'processorUserName', headerName: t('pages.disposals.fields.processor'), width: 100 },
         {
             field: 'actions',
-            headerName: '작업',
+            headerName: t('common.labels.actions'),
             width: 250,
             sortable: false,
             renderCell: (params: GridRenderCellParams) => {
                 const disposal = params.row as Disposal;
                 return (
                     <Stack direction="row" spacing={0.5}>
-                        <Tooltip title="상세보기">
+                        <Tooltip title={t('pages.disposals.actions.viewDetail')}>
                             <IconButton size="small" onClick={() => handleViewDetail(disposal.disposalId)}>
                                 <ViewIcon fontSize="small" />
                             </IconButton>
                         </Tooltip>
                         {disposal.disposalStatus === 'PENDING' && (
                             <>
-                                <Tooltip title="승인">
+                                <Tooltip title={t('pages.disposals.actions.approve')}>
                                     <IconButton size="small" color="success" onClick={() => handleApprove(disposal.disposalId)}>
                                         <ApproveIcon fontSize="small" />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="거부">
+                                <Tooltip title={t('pages.disposals.actions.reject')}>
                                     <IconButton size="small" color="error" onClick={() => handleReject(disposal.disposalId)}>
                                         <RejectIcon fontSize="small" />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="취소">
+                                <Tooltip title={t('pages.disposals.actions.cancel')}>
                                     <IconButton size="small" onClick={() => handleCancel(disposal.disposalId)}>
                                         <CancelIcon fontSize="small" />
                                     </IconButton>
@@ -394,12 +396,12 @@ const DisposalsPage: React.FC = () => {
                         )}
                         {disposal.disposalStatus === 'APPROVED' && (
                             <>
-                                <Tooltip title="처리">
+                                <Tooltip title={t('pages.disposals.actions.process')}>
                                     <IconButton size="small" color="primary" onClick={() => handleProcess(disposal.disposalId)}>
                                         <ProcessIcon fontSize="small" />
                                     </IconButton>
                                 </Tooltip>
-                                <Tooltip title="취소">
+                                <Tooltip title={t('pages.disposals.actions.cancel')}>
                                     <IconButton size="small" onClick={() => handleCancel(disposal.disposalId)}>
                                         <CancelIcon fontSize="small" />
                                     </IconButton>
@@ -407,7 +409,7 @@ const DisposalsPage: React.FC = () => {
                             </>
                         )}
                         {disposal.disposalStatus === 'PROCESSED' && (
-                            <Tooltip title="완료">
+                            <Tooltip title={t('pages.disposals.actions.complete')}>
                                 <IconButton size="small" color="success" onClick={() => handleComplete(disposal.disposalId)}>
                                     <CompleteIcon fontSize="small" />
                                 </IconButton>
@@ -422,13 +424,13 @@ const DisposalsPage: React.FC = () => {
     return (
         <Box sx={{ p: 3 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-                <Typography variant="h4">폐기 관리</Typography>
+                <Typography variant="h4">{t('pages.disposals.title')}</Typography>
                 <Button
                     variant="contained"
                     startIcon={<AddIcon />}
                     onClick={() => setOpenCreate(true)}
                 >
-                    폐기 생성
+                    {t('pages.disposals.actions.create')}
                 </Button>
             </Box>
 
@@ -437,7 +439,7 @@ const DisposalsPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={2.4}>
                     <Card>
                         <CardContent>
-                            <Typography color="textSecondary" gutterBottom>전체</Typography>
+                            <Typography color="textSecondary" gutterBottom>{t('pages.disposals.stats.total')}</Typography>
                             <Typography variant="h5">{statistics.total}</Typography>
                         </CardContent>
                     </Card>
@@ -445,7 +447,7 @@ const DisposalsPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={2.4}>
                     <Card>
                         <CardContent>
-                            <Typography color="textSecondary" gutterBottom>대기</Typography>
+                            <Typography color="textSecondary" gutterBottom>{t('pages.disposals.stats.pending')}</Typography>
                             <Typography variant="h5" color="warning.main">{statistics.pending}</Typography>
                         </CardContent>
                     </Card>
@@ -453,7 +455,7 @@ const DisposalsPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={2.4}>
                     <Card>
                         <CardContent>
-                            <Typography color="textSecondary" gutterBottom>승인</Typography>
+                            <Typography color="textSecondary" gutterBottom>{t('pages.disposals.stats.approved')}</Typography>
                             <Typography variant="h5" color="info.main">{statistics.approved}</Typography>
                         </CardContent>
                     </Card>
@@ -461,7 +463,7 @@ const DisposalsPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={2.4}>
                     <Card>
                         <CardContent>
-                            <Typography color="textSecondary" gutterBottom>처리됨</Typography>
+                            <Typography color="textSecondary" gutterBottom>{t('pages.disposals.stats.processed')}</Typography>
                             <Typography variant="h5" color="primary.main">{statistics.processed}</Typography>
                         </CardContent>
                     </Card>
@@ -469,7 +471,7 @@ const DisposalsPage: React.FC = () => {
                 <Grid item xs={12} sm={6} md={2.4}>
                     <Card>
                         <CardContent>
-                            <Typography color="textSecondary" gutterBottom>완료</Typography>
+                            <Typography color="textSecondary" gutterBottom>{t('pages.disposals.stats.completed')}</Typography>
                             <Typography variant="h5" color="success.main">{statistics.completed}</Typography>
                         </CardContent>
                     </Card>
@@ -492,23 +494,23 @@ const DisposalsPage: React.FC = () => {
 
             {/* Create Dialog */}
             <Dialog open={openCreate} onClose={() => setOpenCreate(false)} maxWidth="md" fullWidth>
-                <DialogTitle>폐기 생성</DialogTitle>
+                <DialogTitle>{t('pages.disposals.actions.create')}</DialogTitle>
                 <DialogContent>
                     <Grid container spacing={2} sx={{ mt: 1 }}>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label="폐기번호"
+                                label={t('pages.disposals.fields.disposalNo')}
                                 value={formData.disposalNo}
                                 onChange={(e) => setFormData({ ...formData, disposalNo: e.target.value })}
-                                placeholder="자동 생성"
+                                placeholder={t('pages.disposals.messages.autoGenerate')}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
                                 type="date"
-                                label="폐기일자"
+                                label={t('pages.disposals.fields.disposalDate')}
                                 value={formData.disposalDate}
                                 onChange={(e) => setFormData({ ...formData, disposalDate: e.target.value })}
                                 InputLabelProps={{ shrink: true }}
@@ -516,17 +518,17 @@ const DisposalsPage: React.FC = () => {
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <FormControl fullWidth>
-                                <InputLabel>폐기유형</InputLabel>
+                                <InputLabel>{t('pages.disposals.fields.disposalType')}</InputLabel>
                                 <Select
                                     value={formData.disposalType}
-                                    label="폐기유형"
+                                    label={t('pages.disposals.fields.disposalType')}
                                     onChange={(e) => setFormData({ ...formData, disposalType: e.target.value })}
                                 >
-                                    <MenuItem value="DEFECTIVE">불량</MenuItem>
-                                    <MenuItem value="EXPIRED">유효기간</MenuItem>
-                                    <MenuItem value="DAMAGED">파손</MenuItem>
-                                    <MenuItem value="OBSOLETE">폐기대상</MenuItem>
-                                    <MenuItem value="OTHER">기타</MenuItem>
+                                    <MenuItem value="DEFECTIVE">{t('pages.disposals.types.defective')}</MenuItem>
+                                    <MenuItem value="EXPIRED">{t('pages.disposals.types.expired')}</MenuItem>
+                                    <MenuItem value="DAMAGED">{t('pages.disposals.types.damaged')}</MenuItem>
+                                    <MenuItem value="OBSOLETE">{t('pages.disposals.types.obsolete')}</MenuItem>
+                                    <MenuItem value="OTHER">{t('pages.disposals.types.other')}</MenuItem>
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -534,7 +536,7 @@ const DisposalsPage: React.FC = () => {
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="작업지시 ID (선택)"
+                                label={t('pages.disposals.fields.workOrderId')}
                                 value={formData.workOrderId}
                                 onChange={(e) => setFormData({ ...formData, workOrderId: e.target.value })}
                             />
@@ -543,7 +545,7 @@ const DisposalsPage: React.FC = () => {
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="요청자 ID"
+                                label={t('pages.disposals.fields.requesterId')}
                                 value={formData.requesterUserId}
                                 onChange={(e) => setFormData({ ...formData, requesterUserId: Number(e.target.value) })}
                             />
@@ -552,7 +554,7 @@ const DisposalsPage: React.FC = () => {
                             <TextField
                                 fullWidth
                                 type="number"
-                                label="창고 ID"
+                                label={t('pages.disposals.fields.warehouseId')}
                                 value={formData.warehouseId}
                                 onChange={(e) => setFormData({ ...formData, warehouseId: Number(e.target.value) })}
                             />
@@ -562,7 +564,7 @@ const DisposalsPage: React.FC = () => {
                                 fullWidth
                                 multiline
                                 rows={2}
-                                label="비고"
+                                label={t('common.labels.remarks')}
                                 value={formData.remarks}
                                 onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
                             />
@@ -570,8 +572,8 @@ const DisposalsPage: React.FC = () => {
                     </Grid>
 
                     <Box sx={{ mt: 3, mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="h6">폐기 항목</Typography>
-                        <Button startIcon={<AddIcon />} onClick={addItem}>항목 추가</Button>
+                        <Typography variant="h6">{t('pages.disposals.detail.items')}</Typography>
+                        <Button startIcon={<AddIcon />} onClick={addItem}>{t('pages.disposals.actions.addItem')}</Button>
                     </Box>
 
                     {items.map((item, index) => (
@@ -581,7 +583,7 @@ const DisposalsPage: React.FC = () => {
                                     <TextField
                                         fullWidth
                                         type="number"
-                                        label="제품 ID"
+                                        label={t('pages.disposals.fields.productId')}
                                         value={item.productId || ''}
                                         onChange={(e) => updateItem(index, 'productId', Number(e.target.value))}
                                     />
@@ -590,7 +592,7 @@ const DisposalsPage: React.FC = () => {
                                     <TextField
                                         fullWidth
                                         type="number"
-                                        label="LOT ID (선택)"
+                                        label={t('pages.disposals.fields.lotId')}
                                         value={item.lotId || ''}
                                         onChange={(e) => updateItem(index, 'lotId', e.target.value ? Number(e.target.value) : null)}
                                     />
@@ -599,7 +601,7 @@ const DisposalsPage: React.FC = () => {
                                     <TextField
                                         fullWidth
                                         type="number"
-                                        label="폐기수량"
+                                        label={t('pages.disposals.fields.disposalQuantity')}
                                         value={item.disposalQuantity || ''}
                                         onChange={(e) => updateItem(index, 'disposalQuantity', Number(e.target.value))}
                                     />
@@ -607,7 +609,7 @@ const DisposalsPage: React.FC = () => {
                                 <Grid item xs={12} sm={4}>
                                     <TextField
                                         fullWidth
-                                        label="불량유형"
+                                        label={t('pages.disposals.fields.defectType')}
                                         value={item.defectType || ''}
                                         onChange={(e) => updateItem(index, 'defectType', e.target.value)}
                                     />
@@ -616,7 +618,7 @@ const DisposalsPage: React.FC = () => {
                                     <TextField
                                         fullWidth
                                         type="date"
-                                        label="유효기간 (선택)"
+                                        label={t('pages.disposals.fields.expiryDate')}
                                         value={item.expiryDate || ''}
                                         onChange={(e) => updateItem(index, 'expiryDate', e.target.value)}
                                         InputLabelProps={{ shrink: true }}
@@ -625,7 +627,7 @@ const DisposalsPage: React.FC = () => {
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
-                                        label="불량설명"
+                                        label={t('pages.disposals.fields.defectDescription')}
                                         value={item.defectDescription || ''}
                                         onChange={(e) => updateItem(index, 'defectDescription', e.target.value)}
                                     />
@@ -634,7 +636,7 @@ const DisposalsPage: React.FC = () => {
                                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <TextField
                                             fullWidth
-                                            label="비고"
+                                            label={t('common.labels.remarks')}
                                             value={item.remarks || ''}
                                             onChange={(e) => updateItem(index, 'remarks', e.target.value)}
                                             sx={{ mr: 1 }}
@@ -649,91 +651,91 @@ const DisposalsPage: React.FC = () => {
                     ))}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenCreate(false)}>취소</Button>
-                    <Button variant="contained" onClick={handleCreate}>생성</Button>
+                    <Button onClick={() => setOpenCreate(false)}>{t('common.buttons.cancel')}</Button>
+                    <Button variant="contained" onClick={handleCreate}>{t('common.buttons.add')}</Button>
                 </DialogActions>
             </Dialog>
 
             {/* Detail Dialog */}
             <Dialog open={openDetail} onClose={() => setOpenDetail(false)} maxWidth="md" fullWidth>
-                <DialogTitle>폐기 상세</DialogTitle>
+                <DialogTitle>{t('pages.disposals.detail.title')}</DialogTitle>
                 <DialogContent>
                     {selectedDisposal && (
                         <Box sx={{ mt: 2 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">폐기번호</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.disposalNo')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.disposalNo}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">상태</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('common.labels.status')}</Typography>
                                     {getStatusChip(selectedDisposal.disposalStatus)}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">폐기유형</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.disposalType')}</Typography>
                                     {getTypeChip(selectedDisposal.disposalType)}
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">폐기일자</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.disposalDate')}</Typography>
                                     <Typography variant="body1">
                                         {new Date(selectedDisposal.disposalDate).toLocaleString('ko-KR')}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">창고</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.warehouse')}</Typography>
                                     <Typography variant="body1">
                                         {selectedDisposal.warehouseCode} - {selectedDisposal.warehouseName}
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">요청자</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.requester')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.requesterUserName}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">승인자</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.approver')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.approverUserName || '-'}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">처리자</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.processor')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.processorUserName || '-'}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">폐기방법</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.disposalMethod')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.disposalMethod || '-'}</Typography>
                                 </Grid>
                                 <Grid item xs={12} sm={6}>
-                                    <Typography variant="body2" color="textSecondary">폐기장소</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.disposalLocation')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.disposalLocation || '-'}</Typography>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Typography variant="body2" color="textSecondary">비고</Typography>
+                                    <Typography variant="body2" color="textSecondary">{t('common.labels.remarks')}</Typography>
                                     <Typography variant="body1">{selectedDisposal.remarks || '-'}</Typography>
                                 </Grid>
                                 {selectedDisposal.rejectionReason && (
                                     <Grid item xs={12}>
-                                        <Typography variant="body2" color="textSecondary">거부사유</Typography>
+                                        <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.rejectionReason')}</Typography>
                                         <Typography variant="body1" color="error">{selectedDisposal.rejectionReason}</Typography>
                                     </Grid>
                                 )}
                                 {selectedDisposal.cancellationReason && (
                                     <Grid item xs={12}>
-                                        <Typography variant="body2" color="textSecondary">취소사유</Typography>
+                                        <Typography variant="body2" color="textSecondary">{t('pages.disposals.fields.cancellationReason')}</Typography>
                                         <Typography variant="body1" color="error">{selectedDisposal.cancellationReason}</Typography>
                                     </Grid>
                                 )}
                             </Grid>
 
-                            <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>폐기 항목</Typography>
+                            <Typography variant="h6" sx={{ mt: 3, mb: 2 }}>{t('pages.disposals.detail.items')}</Typography>
                             <TableContainer>
                                 <Table size="small">
                                     <TableHead>
                                         <TableRow>
-                                            <TableCell>제품코드</TableCell>
-                                            <TableCell>제품명</TableCell>
-                                            <TableCell>LOT</TableCell>
-                                            <TableCell align="right">폐기수량</TableCell>
-                                            <TableCell>불량유형</TableCell>
-                                            <TableCell>불량설명</TableCell>
+                                            <TableCell>{t('pages.disposals.detail.productCode')}</TableCell>
+                                            <TableCell>{t('pages.disposals.detail.productName')}</TableCell>
+                                            <TableCell>{t('pages.disposals.detail.lot')}</TableCell>
+                                            <TableCell align="right">{t('pages.disposals.fields.disposalQuantity')}</TableCell>
+                                            <TableCell>{t('pages.disposals.fields.defectType')}</TableCell>
+                                            <TableCell>{t('pages.disposals.fields.defectDescription')}</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -756,7 +758,7 @@ const DisposalsPage: React.FC = () => {
                     )}
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpenDetail(false)}>닫기</Button>
+                    <Button onClick={() => setOpenDetail(false)}>{t('common.buttons.close')}</Button>
                 </DialogActions>
             </Dialog>
         </Box>

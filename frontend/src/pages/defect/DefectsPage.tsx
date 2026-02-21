@@ -25,10 +25,12 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import defectService, { Defect, DefectRequest } from '../../services/defectService';
 import productService, { Product } from '../../services/productService';
 
 const DefectsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [defects, setDefects] = useState<Defect[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -73,7 +75,7 @@ const DefectsPage: React.FC = () => {
       setDefects(defectsData);
       setProducts(productsData);
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.defects.errors.loadFailed'), severity: 'error' });
     } finally {
       setLoading(false);
     }
@@ -141,11 +143,11 @@ const DefectsPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       await defectService.create(formData);
-      setSnackbar({ open: true, message: 'Defect created successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.defects.messages.createSuccess'), severity: 'success' });
       handleCloseDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to create defect', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.defects.errors.createFailed'), severity: 'error' });
     }
   };
 
@@ -154,68 +156,68 @@ const DefectsPage: React.FC = () => {
 
     try {
       await defectService.delete(selectedDefect.defectId);
-      setSnackbar({ open: true, message: 'Defect deleted successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.defects.messages.deleteSuccess'), severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to delete defect', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.defects.errors.deleteFailed'), severity: 'error' });
     }
   };
 
   const handleClose = async (id: number) => {
     try {
       await defectService.close(id);
-      setSnackbar({ open: true, message: 'Defect closed successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.defects.messages.closeSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to close defect', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.defects.errors.closeFailed'), severity: 'error' });
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'defectNo', headerName: '불량번호', width: 150 },
+    { field: 'defectNo', headerName: t('pages.defects.fields.defectNo'), width: 150 },
     {
       field: 'defectDate',
-      headerName: '불량일자',
+      headerName: t('pages.defects.fields.defectDate'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     {
       field: 'sourceType',
-      headerName: '발생원천',
+      headerName: t('pages.defects.fields.sourceType'),
       width: 120,
       valueFormatter: (params) => {
         const types: { [key: string]: string } = {
-          PRODUCTION: '생산',
-          RECEIVING: '입하',
-          SHIPPING: '출하',
-          INSPECTION: '검사',
-          CUSTOMER: '고객',
+          PRODUCTION: t('pages.defects.sourceTypes.production'),
+          RECEIVING: t('pages.defects.sourceTypes.receiving'),
+          SHIPPING: t('pages.defects.sourceTypes.shipping'),
+          INSPECTION: t('pages.defects.sourceTypes.inspection'),
+          CUSTOMER: t('pages.defects.sourceTypes.customer'),
         };
         return types[params.value] || params.value;
       },
     },
-    { field: 'productName', headerName: '제품', width: 150 },
+    { field: 'productName', headerName: t('pages.defects.fields.product'), width: 150 },
     {
       field: 'defectType',
-      headerName: '불량유형',
+      headerName: t('pages.defects.fields.defectType'),
       width: 120,
       valueFormatter: (params) => {
         const types: { [key: string]: string } = {
-          APPEARANCE: '외관',
-          DIMENSION: '치수',
-          FUNCTION: '기능',
-          MATERIAL: '재질',
-          ASSEMBLY: '조립',
-          OTHER: '기타',
+          APPEARANCE: t('pages.defects.defectTypes.appearance'),
+          DIMENSION: t('pages.defects.defectTypes.dimension'),
+          FUNCTION: t('pages.defects.defectTypes.function'),
+          MATERIAL: t('pages.defects.defectTypes.material'),
+          ASSEMBLY: t('pages.defects.defectTypes.assembly'),
+          OTHER: t('pages.defects.defectTypes.other'),
         };
         return types[params.value] || params.value;
       },
     },
-    { field: 'defectQuantity', headerName: '불량수량', width: 100 },
+    { field: 'defectQuantity', headerName: t('pages.defects.fields.defectQuantity'), width: 100 },
     {
       field: 'severity',
-      headerName: '심각도',
+      headerName: t('pages.defects.fields.severity'),
       width: 100,
       renderCell: (params) => {
         const severityColors: { [key: string]: 'error' | 'warning' | 'default' } = {
@@ -224,9 +226,9 @@ const DefectsPage: React.FC = () => {
           MINOR: 'default',
         };
         const severityLabels: { [key: string]: string } = {
-          CRITICAL: '긴급',
-          MAJOR: '중요',
-          MINOR: '경미',
+          CRITICAL: t('pages.defects.severity.critical'),
+          MAJOR: t('pages.defects.severity.major'),
+          MINOR: t('pages.defects.severity.minor'),
         };
         return (
           <Chip
@@ -239,7 +241,7 @@ const DefectsPage: React.FC = () => {
     },
     {
       field: 'status',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 120,
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'info' | 'success' | 'error' } = {
@@ -250,11 +252,11 @@ const DefectsPage: React.FC = () => {
           CLOSED: 'success',
         };
         const statusLabels: { [key: string]: string } = {
-          REPORTED: '보고',
-          IN_REVIEW: '검토중',
-          REWORK: '재작업',
-          SCRAP: '폐기',
-          CLOSED: '종료',
+          REPORTED: t('pages.defects.status.reported'),
+          IN_REVIEW: t('pages.defects.status.inReview'),
+          REWORK: t('pages.defects.status.rework'),
+          SCRAP: t('pages.defects.status.scrap'),
+          CLOSED: t('pages.defects.status.closed'),
         };
         return (
           <Chip
@@ -268,23 +270,23 @@ const DefectsPage: React.FC = () => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon />}
-          label="View"
+          label={t('pages.defects.actions.view')}
           onClick={() => handleOpenDialog(params.row, true)}
         />,
         <GridActionsCellItem
           icon={<CheckCircleIcon />}
-          label="Close"
+          label={t('pages.defects.actions.close')}
           onClick={() => handleClose(params.row.defectId)}
           disabled={params.row.status === 'CLOSED'}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="Delete"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
           disabled={params.row.status === 'CLOSED'}
         />,
@@ -296,9 +298,9 @@ const DefectsPage: React.FC = () => {
     <Box sx={{ height: '100%', p: 3 }}>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5">불량 관리</Typography>
+          <Typography variant="h5">{t('pages.defects.title')}</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
-            신규 불량
+            {t('pages.defects.actions.create')}
           </Button>
         </Box>
       </Paper>
@@ -318,13 +320,13 @@ const DefectsPage: React.FC = () => {
 
       {/* Create/View Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{viewMode ? '불량 상세' : '신규 불량'}</DialogTitle>
+        <DialogTitle>{viewMode ? t('pages.defects.dialog.viewTitle') : t('pages.defects.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="불량번호"
+                label={t('pages.defects.fields.defectNo')}
                 value={formData.defectNo}
                 onChange={(e) => setFormData({ ...formData, defectNo: e.target.value })}
                 required
@@ -334,7 +336,7 @@ const DefectsPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="불량일자"
+                label={t('pages.defects.fields.defectDate')}
                 type="datetime-local"
                 value={formData.defectDate}
                 onChange={(e) => setFormData({ ...formData, defectDate: e.target.value })}
@@ -345,28 +347,28 @@ const DefectsPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>발생원천</InputLabel>
+                <InputLabel>{t('pages.defects.fields.sourceType')}</InputLabel>
                 <Select
                   value={formData.sourceType}
                   onChange={(e) => setFormData({ ...formData, sourceType: e.target.value })}
-                  label="발생원천"
+                  label={t('pages.defects.fields.sourceType')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="PRODUCTION">생산</MenuItem>
-                  <MenuItem value="RECEIVING">입하</MenuItem>
-                  <MenuItem value="SHIPPING">출하</MenuItem>
-                  <MenuItem value="INSPECTION">검사</MenuItem>
-                  <MenuItem value="CUSTOMER">고객</MenuItem>
+                  <MenuItem value="PRODUCTION">{t('pages.defects.sourceTypes.production')}</MenuItem>
+                  <MenuItem value="RECEIVING">{t('pages.defects.sourceTypes.receiving')}</MenuItem>
+                  <MenuItem value="SHIPPING">{t('pages.defects.sourceTypes.shipping')}</MenuItem>
+                  <MenuItem value="INSPECTION">{t('pages.defects.sourceTypes.inspection')}</MenuItem>
+                  <MenuItem value="CUSTOMER">{t('pages.defects.sourceTypes.customer')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>제품</InputLabel>
+                <InputLabel>{t('pages.defects.fields.product')}</InputLabel>
                 <Select
                   value={formData.productId || ''}
                   onChange={(e) => setFormData({ ...formData, productId: e.target.value as number })}
-                  label="제품"
+                  label={t('pages.defects.fields.product')}
                   disabled={viewMode}
                 >
                   {products.map((product) => (
@@ -379,41 +381,41 @@ const DefectsPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>불량유형</InputLabel>
+                <InputLabel>{t('pages.defects.fields.defectType')}</InputLabel>
                 <Select
                   value={formData.defectType}
                   onChange={(e) => setFormData({ ...formData, defectType: e.target.value })}
-                  label="불량유형"
+                  label={t('pages.defects.fields.defectType')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="APPEARANCE">외관</MenuItem>
-                  <MenuItem value="DIMENSION">치수</MenuItem>
-                  <MenuItem value="FUNCTION">기능</MenuItem>
-                  <MenuItem value="MATERIAL">재질</MenuItem>
-                  <MenuItem value="ASSEMBLY">조립</MenuItem>
-                  <MenuItem value="OTHER">기타</MenuItem>
+                  <MenuItem value="APPEARANCE">{t('pages.defects.defectTypes.appearance')}</MenuItem>
+                  <MenuItem value="DIMENSION">{t('pages.defects.defectTypes.dimension')}</MenuItem>
+                  <MenuItem value="FUNCTION">{t('pages.defects.defectTypes.function')}</MenuItem>
+                  <MenuItem value="MATERIAL">{t('pages.defects.defectTypes.material')}</MenuItem>
+                  <MenuItem value="ASSEMBLY">{t('pages.defects.defectTypes.assembly')}</MenuItem>
+                  <MenuItem value="OTHER">{t('pages.defects.defectTypes.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>심각도</InputLabel>
+                <InputLabel>{t('pages.defects.fields.severity')}</InputLabel>
                 <Select
                   value={formData.severity}
                   onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                  label="심각도"
+                  label={t('pages.defects.fields.severity')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="CRITICAL">긴급</MenuItem>
-                  <MenuItem value="MAJOR">중요</MenuItem>
-                  <MenuItem value="MINOR">경미</MenuItem>
+                  <MenuItem value="CRITICAL">{t('pages.defects.severity.critical')}</MenuItem>
+                  <MenuItem value="MAJOR">{t('pages.defects.severity.major')}</MenuItem>
+                  <MenuItem value="MINOR">{t('pages.defects.severity.minor')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="불량수량"
+                label={t('pages.defects.fields.defectQuantity')}
                 type="number"
                 value={formData.defectQuantity}
                 onChange={(e) => setFormData({ ...formData, defectQuantity: parseFloat(e.target.value) })}
@@ -423,7 +425,7 @@ const DefectsPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="LOT 번호"
+                label={t('pages.defects.fields.lotNo')}
                 value={formData.lotNo}
                 onChange={(e) => setFormData({ ...formData, lotNo: e.target.value })}
                 disabled={viewMode}
@@ -432,7 +434,7 @@ const DefectsPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="불량설명"
+                label={t('pages.defects.fields.defectDescription')}
                 multiline
                 rows={3}
                 value={formData.defectDescription}
@@ -443,7 +445,7 @@ const DefectsPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="비고"
+                label={t('common.labels.remarks')}
                 multiline
                 rows={2}
                 value={formData.remarks}
@@ -454,10 +456,10 @@ const DefectsPage: React.FC = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>닫기</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.close')}</Button>
           {!viewMode && (
             <Button onClick={handleSubmit} variant="contained">
-              생성
+              {t('pages.defects.actions.createBtn')}
             </Button>
           )}
         </DialogActions>
@@ -465,19 +467,19 @@ const DefectsPage: React.FC = () => {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>불량 삭제</DialogTitle>
+        <DialogTitle>{t('pages.defects.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <Typography>정말 이 불량을 삭제하시겠습니까?</Typography>
+          <Typography>{t('pages.defects.dialog.deleteConfirm')}</Typography>
           {selectedDefect && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              불량번호: {selectedDefect.defectNo}
+              {t('pages.defects.fields.defectNo')}: {selectedDefect.defectNo}
             </Typography>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

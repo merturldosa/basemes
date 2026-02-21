@@ -37,7 +37,7 @@ public class HealthController {
 
         Map<String, Object> healthInfo = new HashMap<>();
         healthInfo.put("status", "UP");
-        healthInfo.put("application", "SoIce MES Backend");
+        healthInfo.put("application", "SDS MES Backend");
         healthInfo.put("version", "0.1.0-SNAPSHOT");
         healthInfo.put("timestamp", LocalDateTime.now());
         healthInfo.put("message", "서버가 정상적으로 실행 중입니다.");
@@ -56,7 +56,7 @@ public class HealthController {
 
         Map<String, Object> healthInfo = new HashMap<>();
         healthInfo.put("status", "UP");
-        healthInfo.put("application", "SoIce MES Backend");
+        healthInfo.put("application", "SDS MES Backend");
         healthInfo.put("version", "0.1.0-SNAPSHOT");
         healthInfo.put("timestamp", LocalDateTime.now());
 

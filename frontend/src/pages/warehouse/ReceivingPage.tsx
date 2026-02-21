@@ -26,11 +26,13 @@ import {
   Visibility as VisibilityIcon,
   Cancel as CancelIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import goodsReceiptService, { GoodsReceipt, GoodsReceiptRequest } from '../../services/goodsReceiptService';
 import warehouseService, { Warehouse } from '../../services/warehouseService';
 import purchaseOrderService, { PurchaseOrder } from '../../services/purchaseOrderService';
 
 const ReceivingPage: React.FC = () => {
+  const { t } = useTranslation();
   const [receipts, setReceipts] = useState<GoodsReceipt[]>([]);
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>([]);
@@ -73,7 +75,7 @@ const ReceivingPage: React.FC = () => {
       setWarehouses(warehousesData || []);
       setPurchaseOrders(purchaseOrdersData || []);
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.receiving.messages.loadFailed') || 'Failed to load data', severity: 'error' });
       setReceipts([]);
       setWarehouses([]);
       setPurchaseOrders([]);
@@ -134,75 +136,74 @@ const ReceivingPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       await goodsReceiptService.create(formData);
-      setSnackbar({ open: true, message: 'Goods receipt created successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('common.messages.saveSuccess'), severity: 'success' });
       handleCloseDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to create goods receipt', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
     }
   };
 
   const handleDelete = async () => {
     if (!selectedReceipt) return;
-
     try {
       await goodsReceiptService.cancel(selectedReceipt.goodsReceiptId);
-      setSnackbar({ open: true, message: 'Goods receipt deleted successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('common.messages.success'), severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to delete goods receipt', severity: 'error' });
+      setSnackbar({ open: true, message: t('common.messages.error'), severity: 'error' });
     }
   };
 
   const handleComplete = async (id: number) => {
     try {
       await goodsReceiptService.complete(id);
-      setSnackbar({ open: true, message: '입하가 완료되었습니다', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.receiving.messages.completed'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: '입하 완료 실패', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.receiving.messages.completeFailed'), severity: 'error' });
     }
   };
 
   const handleCancel = async (id: number) => {
     try {
-      await goodsReceiptService.cancel(id, '사용자 요청');
-      setSnackbar({ open: true, message: '입하가 취소되었습니다', severity: 'success' });
+      await goodsReceiptService.cancel(id, t('common.messages.confirmDelete'));
+      setSnackbar({ open: true, message: t('pages.receiving.messages.cancelled'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: '입하 취소 실패', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.receiving.messages.cancelFailed'), severity: 'error' });
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'receiptNo', headerName: '입하번호', width: 150 },
+    { field: 'receiptNo', headerName: t('pages.receiving.fields.receiptNo'), width: 150 },
     {
       field: 'receiptDate',
-      headerName: '입하일자',
+      headerName: t('pages.receiving.fields.receiptDate'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
-    { field: 'purchaseOrderNo', headerName: '구매주문번호', width: 150 },
-    { field: 'supplierName', headerName: '공급업체', width: 150 },
-    { field: 'warehouseName', headerName: '창고', width: 120 },
+    { field: 'purchaseOrderNo', headerName: t('pages.receiving.fields.purchaseOrderNo'), width: 150 },
+    { field: 'supplierName', headerName: t('pages.receiving.fields.supplier'), width: 150 },
+    { field: 'warehouseName', headerName: t('pages.receiving.fields.warehouse'), width: 120 },
     {
       field: 'receiptType',
-      headerName: '유형',
+      headerName: t('pages.receiving.fields.receiptType'),
       width: 100,
       valueFormatter: (params) => {
         const types: { [key: string]: string } = {
-          PURCHASE: '구매',
-          RETURN: '반품',
-          TRANSFER: '이동',
-          OTHER: '기타',
+          PURCHASE: t('pages.receiving.types.purchase'),
+          RETURN: t('pages.receiving.types.return'),
+          TRANSFER: t('pages.receiving.types.transfer'),
+          OTHER: t('pages.receiving.types.other'),
         };
         return types[params.value] || params.value;
       },
     },
     {
       field: 'receiptStatus',
-      headerName: '상태',
+      headerName: t('pages.receiving.fields.receiptStatus'),
       width: 120,
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'success' | 'error' } = {
@@ -213,11 +214,11 @@ const ReceivingPage: React.FC = () => {
           CANCELLED: 'default',
         };
         const statusLabels: { [key: string]: string } = {
-          PENDING: '대기',
-          INSPECTING: '검사중',
-          COMPLETED: '완료',
-          REJECTED: '반려',
-          CANCELLED: '취소',
+          PENDING: t('pages.receiving.status.pending'),
+          INSPECTING: t('pages.receiving.status.inspecting'),
+          COMPLETED: t('pages.receiving.status.completed'),
+          REJECTED: t('pages.receiving.status.rejected'),
+          CANCELLED: t('pages.receiving.status.cancelled'),
         };
         return (
           <Chip
@@ -228,36 +229,36 @@ const ReceivingPage: React.FC = () => {
         );
       },
     },
-    { field: 'receiverName', headerName: '입하담당자', width: 120 },
+    { field: 'receiverName', headerName: t('pages.receiving.fields.receiverName'), width: 120 },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon />}
-          label="상세"
+          label={t('pages.receiving.actions.view')}
           onClick={() => handleOpenDialog(params.row, true)}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<CheckCircleIcon />}
-          label="완료"
+          label={t('pages.receiving.actions.complete')}
           onClick={() => handleComplete(params.row.goodsReceiptId)}
           disabled={params.row.receiptStatus !== 'PENDING' && params.row.receiptStatus !== 'INSPECTING'}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<CancelIcon />}
-          label="취소"
+          label={t('pages.receiving.actions.cancel')}
           onClick={() => handleCancel(params.row.goodsReceiptId)}
           disabled={params.row.receiptStatus === 'COMPLETED' || params.row.receiptStatus === 'CANCELLED'}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('pages.receiving.actions.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
           disabled={params.row.receiptStatus === 'COMPLETED'}
           showInMenu
@@ -270,9 +271,9 @@ const ReceivingPage: React.FC = () => {
     <Box sx={{ height: '100%', p: 3 }}>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5">입하 관리</Typography>
+          <Typography variant="h5">{t('pages.receiving.title')}</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
-            신규 입하
+            {t('pages.receiving.actions.create')}
           </Button>
         </Box>
       </Paper>
@@ -292,143 +293,76 @@ const ReceivingPage: React.FC = () => {
 
       {/* Create/View Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{viewMode ? '입하 상세' : '신규 입하'}</DialogTitle>
+        <DialogTitle>{viewMode ? t('pages.receiving.dialogs.detailTitle') : t('pages.receiving.dialogs.createTitle')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="입하번호"
-                value={formData.receiptNo}
-                onChange={(e) => setFormData({ ...formData, receiptNo: e.target.value })}
-                required
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.receiving.fields.receiptNo')} value={formData.receiptNo} onChange={(e) => setFormData({ ...formData, receiptNo: e.target.value })} required disabled={viewMode} />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="입하일자"
-                type="datetime-local"
-                value={formData.receiptDate}
-                onChange={(e) => setFormData({ ...formData, receiptDate: e.target.value })}
-                required
-                disabled={viewMode}
-                InputLabelProps={{ shrink: true }}
-              />
+              <TextField fullWidth label={t('pages.receiving.fields.receiptDate')} type="datetime-local" value={formData.receiptDate} onChange={(e) => setFormData({ ...formData, receiptDate: e.target.value })} required disabled={viewMode} InputLabelProps={{ shrink: true }} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>구매주문</InputLabel>
-                <Select
-                  value={formData.purchaseOrderId || ''}
-                  onChange={(e) => setFormData({ ...formData, purchaseOrderId: e.target.value as number })}
-                  label="구매주문"
-                  disabled={viewMode}
-                >
-                  <MenuItem value="">
-                    <em>선택 안 함</em>
-                  </MenuItem>
-                  {purchaseOrders.map((po) => (
-                    <MenuItem key={po.purchaseOrderId} value={po.purchaseOrderId}>
-                      {po.orderNo}
-                    </MenuItem>
-                  ))}
+                <InputLabel>{t('pages.receiving.fields.purchaseOrder')}</InputLabel>
+                <Select value={formData.purchaseOrderId || ''} onChange={(e) => setFormData({ ...formData, purchaseOrderId: e.target.value as number })} label={t('pages.receiving.fields.purchaseOrder')} disabled={viewMode}>
+                  <MenuItem value=""><em>{t('pages.receiving.fields.noneSelected')}</em></MenuItem>
+                  {purchaseOrders.map((po) => (<MenuItem key={po.purchaseOrderId} value={po.purchaseOrderId}>{po.orderNo}</MenuItem>))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>창고</InputLabel>
-                <Select
-                  value={formData.warehouseId || ''}
-                  onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value as number })}
-                  label="창고"
-                  disabled={viewMode}
-                >
-                  {warehouses.map((wh) => (
-                    <MenuItem key={wh.warehouseId} value={wh.warehouseId}>
-                      {wh.warehouseName}
-                    </MenuItem>
-                  ))}
+                <InputLabel>{t('pages.receiving.fields.warehouse')}</InputLabel>
+                <Select value={formData.warehouseId || ''} onChange={(e) => setFormData({ ...formData, warehouseId: e.target.value as number })} label={t('pages.receiving.fields.warehouse')} disabled={viewMode}>
+                  {warehouses.map((wh) => (<MenuItem key={wh.warehouseId} value={wh.warehouseId}>{wh.warehouseName}</MenuItem>))}
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>입하유형</InputLabel>
-                <Select
-                  value={formData.receiptType}
-                  onChange={(e) => setFormData({ ...formData, receiptType: e.target.value })}
-                  label="입하유형"
-                  disabled={viewMode}
-                >
-                  <MenuItem value="PURCHASE">구매</MenuItem>
-                  <MenuItem value="RETURN">반품</MenuItem>
-                  <MenuItem value="TRANSFER">이동</MenuItem>
-                  <MenuItem value="OTHER">기타</MenuItem>
+                <InputLabel>{t('pages.receiving.fields.receiptTypeLabel')}</InputLabel>
+                <Select value={formData.receiptType} onChange={(e) => setFormData({ ...formData, receiptType: e.target.value })} label={t('pages.receiving.fields.receiptTypeLabel')} disabled={viewMode}>
+                  <MenuItem value="PURCHASE">{t('pages.receiving.types.purchase')}</MenuItem>
+                  <MenuItem value="RETURN">{t('pages.receiving.types.return')}</MenuItem>
+                  <MenuItem value="TRANSFER">{t('pages.receiving.types.transfer')}</MenuItem>
+                  <MenuItem value="OTHER">{t('pages.receiving.types.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="입하담당자"
-                value={formData.receiverName}
-                onChange={(e) => setFormData({ ...formData, receiverName: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('pages.receiving.fields.receiverName')} value={formData.receiverName} onChange={(e) => setFormData({ ...formData, receiverName: e.target.value })} disabled={viewMode} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="비고"
-                multiline
-                rows={3}
-                value={formData.remarks}
-                onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-                disabled={viewMode}
-              />
+              <TextField fullWidth label={t('common.labels.remarks')} multiline rows={3} value={formData.remarks} onChange={(e) => setFormData({ ...formData, remarks: e.target.value })} disabled={viewMode} />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>닫기</Button>
-          {!viewMode && (
-            <Button onClick={handleSubmit} variant="contained">
-              생성
-            </Button>
-          )}
+          <Button onClick={handleCloseDialog}>{t('common.buttons.close')}</Button>
+          {!viewMode && (<Button onClick={handleSubmit} variant="contained">{t('common.buttons.add')}</Button>)}
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>입하 삭제</DialogTitle>
+        <DialogTitle>{t('pages.receiving.dialogs.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <Typography>정말 이 입하를 삭제하시겠습니까?</Typography>
+          <Typography>{t('pages.receiving.dialogs.confirmDelete')}</Typography>
           {selectedReceipt && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              입하번호: {selectedReceipt.receiptNo}
+              {t('pages.receiving.dialogs.receiptNoLabel')}: {selectedReceipt.receiptNo}
             </Typography>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
-          </Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
+          <Button onClick={handleDelete} color="error" variant="contained">{t('common.buttons.delete')}</Button>
         </DialogActions>
       </Dialog>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-      >
-        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>
-          {snackbar.message}
-        </Alert>
+      <Snackbar open={snackbar.open} autoHideDuration={6000} onClose={() => setSnackbar({ ...snackbar, open: false })}>
+        <Alert severity={snackbar.severity} onClose={() => setSnackbar({ ...snackbar, open: false })}>{snackbar.message}</Alert>
       </Snackbar>
     </Box>
   );

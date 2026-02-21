@@ -27,11 +27,13 @@ import {
   Delete as DeleteIcon,
   Visibility as VisibilityIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import afterSalesService, { AfterSales, AfterSalesRequest } from '../../services/afterSalesService';
 import customerService, { Customer } from '../../services/customerService';
 import productService, { Product } from '../../services/productService';
 
 const AfterSalesPage: React.FC = () => {
+  const { t } = useTranslation();
   const [afterSales, setAfterSales] = useState<AfterSales[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
@@ -71,7 +73,7 @@ const AfterSalesPage: React.FC = () => {
       setCustomers(customersData);
       setProducts(productsData);
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to load data', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.loadFailed'), severity: 'error' });
     } finally {
       setLoading(false);
     }
@@ -128,11 +130,11 @@ const AfterSalesPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       await afterSalesService.create(formData);
-      setSnackbar({ open: true, message: 'A/S created successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.afterSales.messages.createSuccess'), severity: 'success' });
       handleCloseDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to create A/S', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.createFailed'), severity: 'error' });
     }
   };
 
@@ -141,57 +143,57 @@ const AfterSalesPage: React.FC = () => {
 
     try {
       await afterSalesService.delete(selectedAfterSales.afterSalesId);
-      setSnackbar({ open: true, message: 'A/S deleted successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.afterSales.messages.deleteSuccess'), severity: 'success' });
       handleCloseDeleteDialog();
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to delete A/S', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.deleteFailed'), severity: 'error' });
     }
   };
 
   const handleStart = async (id: number) => {
     try {
       await afterSalesService.start(id);
-      setSnackbar({ open: true, message: 'Service started successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.afterSales.messages.startSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to start service', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.startFailed'), severity: 'error' });
     }
   };
 
   const handleComplete = async (id: number) => {
     try {
       await afterSalesService.complete(id);
-      setSnackbar({ open: true, message: 'Service completed successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.afterSales.messages.completeSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to complete service', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.completeFailed'), severity: 'error' });
     }
   };
 
   const handleClose = async (id: number) => {
     try {
       await afterSalesService.close(id);
-      setSnackbar({ open: true, message: 'A/S closed successfully', severity: 'success' });
+      setSnackbar({ open: true, message: t('pages.afterSales.messages.closeSuccess'), severity: 'success' });
       loadData();
     } catch (error) {
-      setSnackbar({ open: true, message: 'Failed to close A/S', severity: 'error' });
+      setSnackbar({ open: true, message: t('pages.afterSales.errors.closeFailed'), severity: 'error' });
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'asNo', headerName: 'A/S번호', width: 150 },
+    { field: 'asNo', headerName: t('pages.afterSales.fields.asNo'), width: 150 },
     {
       field: 'receiptDate',
-      headerName: '접수일자',
+      headerName: t('pages.afterSales.fields.receiptDate'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
-    { field: 'customerName', headerName: '고객', width: 150 },
-    { field: 'productName', headerName: '제품', width: 150 },
+    { field: 'customerName', headerName: t('pages.afterSales.fields.customer'), width: 150 },
+    { field: 'productName', headerName: t('pages.afterSales.fields.product'), width: 150 },
     {
       field: 'priority',
-      headerName: '우선순위',
+      headerName: t('pages.afterSales.fields.priority'),
       width: 100,
       renderCell: (params) => {
         const priorityColors: { [key: string]: 'error' | 'warning' | 'info' | 'default' } = {
@@ -201,14 +203,14 @@ const AfterSalesPage: React.FC = () => {
           LOW: 'default',
         };
         const priorityLabels: { [key: string]: string } = {
-          URGENT: '긴급',
-          HIGH: '높음',
-          NORMAL: '보통',
-          LOW: '낮음',
+          URGENT: t('pages.afterSales.priority.urgent'),
+          HIGH: t('pages.afterSales.priority.high'),
+          NORMAL: t('pages.afterSales.priority.normal'),
+          LOW: t('pages.afterSales.priority.low'),
         };
         return (
           <Chip
-            label={priorityLabels[params.value] || params.value || '보통'}
+            label={priorityLabels[params.value] || params.value || t('pages.afterSales.priority.normal')}
             color={priorityColors[params.value] || 'default'}
             size="small"
           />
@@ -217,7 +219,7 @@ const AfterSalesPage: React.FC = () => {
     },
     {
       field: 'serviceStatus',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 120,
       renderCell: (params) => {
         const statusColors: { [key: string]: 'default' | 'warning' | 'info' | 'success' | 'error' } = {
@@ -228,11 +230,11 @@ const AfterSalesPage: React.FC = () => {
           CANCELLED: 'error',
         };
         const statusLabels: { [key: string]: string } = {
-          RECEIVED: '접수',
-          IN_PROGRESS: '진행중',
-          COMPLETED: '완료',
-          CLOSED: '종료',
-          CANCELLED: '취소',
+          RECEIVED: t('pages.afterSales.status.received'),
+          IN_PROGRESS: t('pages.afterSales.status.inProgress'),
+          COMPLETED: t('pages.afterSales.status.completed'),
+          CLOSED: t('pages.afterSales.status.closed'),
+          CANCELLED: t('pages.afterSales.status.cancelled'),
         };
         return (
           <Chip
@@ -243,39 +245,39 @@ const AfterSalesPage: React.FC = () => {
         );
       },
     },
-    { field: 'assignedEngineerName', headerName: '담당엔지니어', width: 120 },
+    { field: 'assignedEngineerName', headerName: t('pages.afterSales.fields.assignedEngineer'), width: 120 },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 200,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<VisibilityIcon />}
-          label="View"
+          label={t('pages.afterSales.actions.view')}
           onClick={() => handleOpenDialog(params.row, true)}
         />,
         <GridActionsCellItem
           icon={<StartIcon />}
-          label="Start"
+          label={t('pages.afterSales.actions.start')}
           onClick={() => handleStart(params.row.afterSalesId)}
           disabled={params.row.serviceStatus !== 'RECEIVED'}
         />,
         <GridActionsCellItem
           icon={<CompleteIcon />}
-          label="Complete"
+          label={t('pages.afterSales.actions.complete')}
           onClick={() => handleComplete(params.row.afterSalesId)}
           disabled={params.row.serviceStatus !== 'IN_PROGRESS'}
         />,
         <GridActionsCellItem
           icon={<CloseIcon />}
-          label="Close"
+          label={t('pages.afterSales.actions.close')}
           onClick={() => handleClose(params.row.afterSalesId)}
           disabled={params.row.serviceStatus !== 'COMPLETED'}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="Delete"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
           disabled={params.row.serviceStatus === 'CLOSED'}
         />,
@@ -287,9 +289,9 @@ const AfterSalesPage: React.FC = () => {
     <Box sx={{ height: '100%', p: 3 }}>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="h5">A/S 관리</Typography>
+          <Typography variant="h5">{t('pages.afterSales.title')}</Typography>
           <Button variant="contained" startIcon={<AddIcon />} onClick={() => handleOpenDialog()}>
-            신규 A/S
+            {t('pages.afterSales.actions.create')}
           </Button>
         </Box>
       </Paper>
@@ -309,13 +311,13 @@ const AfterSalesPage: React.FC = () => {
 
       {/* Create/View Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{viewMode ? 'A/S 상세' : '신규 A/S'}</DialogTitle>
+        <DialogTitle>{viewMode ? t('pages.afterSales.dialog.viewTitle') : t('pages.afterSales.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="A/S번호"
+                label={t('pages.afterSales.fields.asNo')}
                 value={formData.asNo}
                 onChange={(e) => setFormData({ ...formData, asNo: e.target.value })}
                 required
@@ -325,7 +327,7 @@ const AfterSalesPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="접수일자"
+                label={t('pages.afterSales.fields.receiptDate')}
                 type="datetime-local"
                 value={formData.receiptDate}
                 onChange={(e) => setFormData({ ...formData, receiptDate: e.target.value })}
@@ -336,11 +338,11 @@ const AfterSalesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>고객</InputLabel>
+                <InputLabel>{t('pages.afterSales.fields.customer')}</InputLabel>
                 <Select
                   value={formData.customerId || ''}
                   onChange={(e) => setFormData({ ...formData, customerId: e.target.value as number })}
-                  label="고객"
+                  label={t('pages.afterSales.fields.customer')}
                   disabled={viewMode}
                 >
                   {customers.map((customer) => (
@@ -353,11 +355,11 @@ const AfterSalesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth required>
-                <InputLabel>제품</InputLabel>
+                <InputLabel>{t('pages.afterSales.fields.product')}</InputLabel>
                 <Select
                   value={formData.productId || ''}
                   onChange={(e) => setFormData({ ...formData, productId: e.target.value as number })}
-                  label="제품"
+                  label={t('pages.afterSales.fields.product')}
                   disabled={viewMode}
                 >
                   {products.map((product) => (
@@ -371,7 +373,7 @@ const AfterSalesPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="연락처명"
+                label={t('pages.afterSales.fields.contactPerson')}
                 value={formData.contactPerson || ''}
                 onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
                 disabled={viewMode}
@@ -380,7 +382,7 @@ const AfterSalesPage: React.FC = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="연락전화"
+                label={t('pages.afterSales.fields.contactPhone')}
                 value={formData.contactPhone || ''}
                 onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
                 disabled={viewMode}
@@ -388,41 +390,41 @@ const AfterSalesPage: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>문제분류</InputLabel>
+                <InputLabel>{t('pages.afterSales.fields.issueCategory')}</InputLabel>
                 <Select
                   value={formData.issueCategory || ''}
                   onChange={(e) => setFormData({ ...formData, issueCategory: e.target.value })}
-                  label="문제분류"
+                  label={t('pages.afterSales.fields.issueCategory')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="DEFECT">불량</MenuItem>
-                  <MenuItem value="BREAKDOWN">고장</MenuItem>
-                  <MenuItem value="INSTALLATION">설치</MenuItem>
-                  <MenuItem value="USAGE">사용법</MenuItem>
-                  <MenuItem value="OTHER">기타</MenuItem>
+                  <MenuItem value="DEFECT">{t('pages.afterSales.issueCategories.defect')}</MenuItem>
+                  <MenuItem value="BREAKDOWN">{t('pages.afterSales.issueCategories.breakdown')}</MenuItem>
+                  <MenuItem value="INSTALLATION">{t('pages.afterSales.issueCategories.installation')}</MenuItem>
+                  <MenuItem value="USAGE">{t('pages.afterSales.issueCategories.usage')}</MenuItem>
+                  <MenuItem value="OTHER">{t('pages.afterSales.issueCategories.other')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth>
-                <InputLabel>우선순위</InputLabel>
+                <InputLabel>{t('pages.afterSales.fields.priority')}</InputLabel>
                 <Select
                   value={formData.priority || ''}
                   onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
-                  label="우선순위"
+                  label={t('pages.afterSales.fields.priority')}
                   disabled={viewMode}
                 >
-                  <MenuItem value="URGENT">긴급</MenuItem>
-                  <MenuItem value="HIGH">높음</MenuItem>
-                  <MenuItem value="NORMAL">보통</MenuItem>
-                  <MenuItem value="LOW">낮음</MenuItem>
+                  <MenuItem value="URGENT">{t('pages.afterSales.priority.urgent')}</MenuItem>
+                  <MenuItem value="HIGH">{t('pages.afterSales.priority.high')}</MenuItem>
+                  <MenuItem value="NORMAL">{t('pages.afterSales.priority.normal')}</MenuItem>
+                  <MenuItem value="LOW">{t('pages.afterSales.priority.low')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="문제설명"
+                label={t('pages.afterSales.fields.issueDescription')}
                 multiline
                 rows={4}
                 value={formData.issueDescription}
@@ -434,7 +436,7 @@ const AfterSalesPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="비고"
+                label={t('common.labels.remarks')}
                 multiline
                 rows={2}
                 value={formData.remarks || ''}
@@ -445,10 +447,10 @@ const AfterSalesPage: React.FC = () => {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>닫기</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.close')}</Button>
           {!viewMode && (
             <Button onClick={handleSubmit} variant="contained">
-              생성
+              {t('pages.afterSales.actions.createBtn')}
             </Button>
           )}
         </DialogActions>
@@ -456,19 +458,19 @@ const AfterSalesPage: React.FC = () => {
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>A/S 삭제</DialogTitle>
+        <DialogTitle>{t('pages.afterSales.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
-          <Typography>정말 이 A/S를 삭제하시겠습니까?</Typography>
+          <Typography>{t('pages.afterSales.dialog.deleteConfirm')}</Typography>
           {selectedAfterSales && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-              A/S번호: {selectedAfterSales.asNo}
+              {t('pages.afterSales.fields.asNo')}: {selectedAfterSales.asNo}
             </Typography>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

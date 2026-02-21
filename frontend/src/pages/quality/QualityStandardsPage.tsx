@@ -30,10 +30,12 @@ import {
   ToggleOn as ToggleOnIcon,
   ToggleOff as ToggleOffIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import qualityStandardService, { QualityStandard, QualityStandardCreateRequest, QualityStandardUpdateRequest } from '../../services/qualityStandardService';
 import productService, { Product } from '../../services/productService';
 
 const QualityStandardsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [qualityStandards, setQualityStandards] = useState<QualityStandard[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -68,7 +70,7 @@ const QualityStandardsPage: React.FC = () => {
       setQualityStandards(standardsData || []);
       setProducts(productsData || []);
     } catch (error) {
-      showSnackbar('품질 기준 목록 조회 실패', 'error');
+      showSnackbar(t('pages.qualityStandards.errors.loadFailed'), 'error');
       setQualityStandards([]);
       setProducts([]);
     } finally {
@@ -139,18 +141,16 @@ const QualityStandardsPage: React.FC = () => {
   const handleSubmit = async () => {
     try {
       if (selectedQualityStandard) {
-        // Update
         await qualityStandardService.updateQualityStandard(selectedQualityStandard.qualityStandardId, formData as QualityStandardUpdateRequest);
-        showSnackbar('품질 기준 수정 성공', 'success');
+        showSnackbar(t('pages.qualityStandards.messages.updateSuccess'), 'success');
       } else {
-        // Create
         await qualityStandardService.createQualityStandard(formData as QualityStandardCreateRequest);
-        showSnackbar('품질 기준 생성 성공', 'success');
+        showSnackbar(t('pages.qualityStandards.messages.createSuccess'), 'success');
       }
       handleCloseDialog();
       loadQualityStandards();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.saveFailed'), 'error');
     }
   };
 
@@ -158,14 +158,14 @@ const QualityStandardsPage: React.FC = () => {
     try {
       if (qualityStandard.isActive) {
         await qualityStandardService.deactivateQualityStandard(qualityStandard.qualityStandardId);
-        showSnackbar('품질 기준 비활성화 성공', 'success');
+        showSnackbar(t('pages.qualityStandards.messages.deactivateSuccess'), 'success');
       } else {
         await qualityStandardService.activateQualityStandard(qualityStandard.qualityStandardId);
-        showSnackbar('품질 기준 활성화 성공', 'success');
+        showSnackbar(t('pages.qualityStandards.messages.activateSuccess'), 'success');
       }
       loadQualityStandards();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.statusChangeFailed'), 'error');
     }
   };
 
@@ -184,30 +184,30 @@ const QualityStandardsPage: React.FC = () => {
 
     try {
       await qualityStandardService.deleteQualityStandard(selectedQualityStandard.qualityStandardId);
-      showSnackbar('품질 기준 삭제 성공', 'success');
+      showSnackbar(t('pages.qualityStandards.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadQualityStandards();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.qualityStandards.errors.deleteFailed'), 'error');
     }
   };
 
   const inspectionTypeLabels: Record<string, string> = {
-    INCOMING: '입고검사',
-    IN_PROCESS: '공정검사',
-    OUTGOING: '출하검사',
-    FINAL: '최종검사',
+    INCOMING: t('pages.qualityStandards.inspectionTypes.incoming'),
+    IN_PROCESS: t('pages.qualityStandards.inspectionTypes.inProcess'),
+    OUTGOING: t('pages.qualityStandards.inspectionTypes.outgoing'),
+    FINAL: t('pages.qualityStandards.inspectionTypes.final'),
   };
 
   const columns: GridColDef[] = [
-    { field: 'standardCode', headerName: '기준 코드', width: 130 },
-    { field: 'standardName', headerName: '기준명', flex: 1, minWidth: 200 },
-    { field: 'standardVersion', headerName: '버전', width: 80 },
-    { field: 'productCode', headerName: '제품 코드', width: 130 },
-    { field: 'productName', headerName: '제품명', width: 150 },
+    { field: 'standardCode', headerName: t('pages.qualityStandards.fields.standardCode'), width: 130 },
+    { field: 'standardName', headerName: t('pages.qualityStandards.fields.standardName'), flex: 1, minWidth: 200 },
+    { field: 'standardVersion', headerName: t('pages.qualityStandards.fields.version'), width: 80 },
+    { field: 'productCode', headerName: t('pages.qualityStandards.fields.productCode'), width: 130 },
+    { field: 'productName', headerName: t('pages.qualityStandards.fields.productName'), width: 150 },
     {
       field: 'inspectionType',
-      headerName: '검사 유형',
+      headerName: t('pages.qualityStandards.fields.inspectionType'),
       width: 120,
       renderCell: (params) => (
         <Chip
@@ -220,30 +220,30 @@ const QualityStandardsPage: React.FC = () => {
     },
     {
       field: 'minValue',
-      headerName: '최소값',
+      headerName: t('pages.qualityStandards.fields.minValue'),
       width: 100,
       valueFormatter: (params) => params.value !== null && params.value !== undefined ? params.value : '-',
     },
     {
       field: 'maxValue',
-      headerName: '최대값',
+      headerName: t('pages.qualityStandards.fields.maxValue'),
       width: 100,
       valueFormatter: (params) => params.value !== null && params.value !== undefined ? params.value : '-',
     },
     {
       field: 'targetValue',
-      headerName: '목표값',
+      headerName: t('pages.qualityStandards.fields.targetValue'),
       width: 100,
       valueFormatter: (params) => params.value !== null && params.value !== undefined ? params.value : '-',
     },
-    { field: 'unit', headerName: '단위', width: 80 },
+    { field: 'unit', headerName: t('pages.qualityStandards.fields.unit'), width: 80 },
     {
       field: 'isActive',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           color={params.value ? 'success' : 'default'}
           size="small"
         />
@@ -252,22 +252,22 @@ const QualityStandardsPage: React.FC = () => {
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       getActions: (params: GridRowParams<QualityStandard>) => [
         <GridActionsCellItem
           icon={<EditIcon />}
-          label="수정"
+          label={t('common.buttons.edit')}
           onClick={() => handleOpenDialog(params.row)}
         />,
         <GridActionsCellItem
           icon={params.row.isActive ? <ToggleOffIcon /> : <ToggleOnIcon />}
-          label={params.row.isActive ? '비활성화' : '활성화'}
+          label={params.row.isActive ? t('common.status.inactive') : t('common.status.active')}
           onClick={() => handleToggleActive(params.row)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
         />,
       ],
@@ -278,14 +278,14 @@ const QualityStandardsPage: React.FC = () => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5" component="h1">
-          품질 기준 관리
+          {t('pages.qualityStandards.title')}
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
         >
-          품질 기준 추가
+          {t('pages.qualityStandards.actions.create')}
         </Button>
       </Box>
 
@@ -311,16 +311,16 @@ const QualityStandardsPage: React.FC = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{selectedQualityStandard ? '품질 기준 수정' : '신규 품질 기준 등록'}</DialogTitle>
+        <DialogTitle>{selectedQualityStandard ? t('pages.qualityStandards.dialog.editTitle') : t('pages.qualityStandards.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} mt={1}>
             <FormControl fullWidth required>
-              <InputLabel>제품</InputLabel>
+              <InputLabel>{t('pages.qualityStandards.fields.product')}</InputLabel>
               <Select
                 name="productId"
                 value={formData.productId || ''}
                 onChange={(e) => setFormData({ ...formData, productId: Number(e.target.value) })}
-                label="제품"
+                label={t('pages.qualityStandards.fields.product')}
               >
                 {products.map((product) => (
                   <MenuItem key={product.productId} value={product.productId}>
@@ -333,7 +333,7 @@ const QualityStandardsPage: React.FC = () => {
             {!selectedQualityStandard && (
               <TextField
                 name="standardCode"
-                label="기준 코드"
+                label={t('pages.qualityStandards.fields.standardCode')}
                 value={(formData as QualityStandardCreateRequest).standardCode || ''}
                 onChange={handleInputChange}
                 required
@@ -343,7 +343,7 @@ const QualityStandardsPage: React.FC = () => {
 
             <TextField
               name="standardName"
-              label="기준명"
+              label={t('pages.qualityStandards.fields.standardName')}
               value={formData.standardName || ''}
               onChange={handleInputChange}
               required
@@ -353,7 +353,7 @@ const QualityStandardsPage: React.FC = () => {
             {!selectedQualityStandard && (
               <TextField
                 name="standardVersion"
-                label="버전"
+                label={t('pages.qualityStandards.fields.version')}
                 value={(formData as QualityStandardCreateRequest).standardVersion || ''}
                 onChange={handleInputChange}
                 fullWidth
@@ -361,23 +361,23 @@ const QualityStandardsPage: React.FC = () => {
             )}
 
             <FormControl fullWidth required>
-              <InputLabel>검사 유형</InputLabel>
+              <InputLabel>{t('pages.qualityStandards.fields.inspectionType')}</InputLabel>
               <Select
                 name="inspectionType"
                 value={formData.inspectionType || 'INCOMING'}
                 onChange={(e) => setFormData({ ...formData, inspectionType: e.target.value })}
-                label="검사 유형"
+                label={t('pages.qualityStandards.fields.inspectionType')}
               >
-                <MenuItem value="INCOMING">입고검사</MenuItem>
-                <MenuItem value="IN_PROCESS">공정검사</MenuItem>
-                <MenuItem value="OUTGOING">출하검사</MenuItem>
-                <MenuItem value="FINAL">최종검사</MenuItem>
+                <MenuItem value="INCOMING">{t('pages.qualityStandards.inspectionTypes.incoming')}</MenuItem>
+                <MenuItem value="IN_PROCESS">{t('pages.qualityStandards.inspectionTypes.inProcess')}</MenuItem>
+                <MenuItem value="OUTGOING">{t('pages.qualityStandards.inspectionTypes.outgoing')}</MenuItem>
+                <MenuItem value="FINAL">{t('pages.qualityStandards.inspectionTypes.final')}</MenuItem>
               </Select>
             </FormControl>
 
             <TextField
               name="inspectionMethod"
-              label="검사 방법"
+              label={t('pages.qualityStandards.fields.inspectionMethod')}
               value={formData.inspectionMethod || ''}
               onChange={handleInputChange}
               fullWidth
@@ -386,7 +386,7 @@ const QualityStandardsPage: React.FC = () => {
             <Box display="flex" gap={2}>
               <TextField
                 name="minValue"
-                label="최소값"
+                label={t('pages.qualityStandards.fields.minValue')}
                 type="number"
                 value={formData.minValue || ''}
                 onChange={handleInputChange}
@@ -394,7 +394,7 @@ const QualityStandardsPage: React.FC = () => {
               />
               <TextField
                 name="targetValue"
-                label="목표값"
+                label={t('pages.qualityStandards.fields.targetValue')}
                 type="number"
                 value={formData.targetValue || ''}
                 onChange={handleInputChange}
@@ -402,7 +402,7 @@ const QualityStandardsPage: React.FC = () => {
               />
               <TextField
                 name="maxValue"
-                label="최대값"
+                label={t('pages.qualityStandards.fields.maxValue')}
                 type="number"
                 value={formData.maxValue || ''}
                 onChange={handleInputChange}
@@ -413,7 +413,7 @@ const QualityStandardsPage: React.FC = () => {
             <Box display="flex" gap={2}>
               <TextField
                 name="toleranceValue"
-                label="허용 오차"
+                label={t('pages.qualityStandards.fields.toleranceValue')}
                 type="number"
                 value={formData.toleranceValue || ''}
                 onChange={handleInputChange}
@@ -421,7 +421,7 @@ const QualityStandardsPage: React.FC = () => {
               />
               <TextField
                 name="unit"
-                label="단위"
+                label={t('pages.qualityStandards.fields.unit')}
                 value={formData.unit || ''}
                 onChange={handleInputChange}
                 fullWidth
@@ -430,7 +430,7 @@ const QualityStandardsPage: React.FC = () => {
 
             <TextField
               name="measurementItem"
-              label="측정 항목"
+              label={t('pages.qualityStandards.fields.measurementItem')}
               value={formData.measurementItem || ''}
               onChange={handleInputChange}
               fullWidth
@@ -438,7 +438,7 @@ const QualityStandardsPage: React.FC = () => {
 
             <TextField
               name="measurementEquipment"
-              label="측정 장비"
+              label={t('pages.qualityStandards.fields.measurementEquipment')}
               value={formData.measurementEquipment || ''}
               onChange={handleInputChange}
               fullWidth
@@ -447,14 +447,14 @@ const QualityStandardsPage: React.FC = () => {
             <Box display="flex" gap={2}>
               <TextField
                 name="samplingMethod"
-                label="샘플링 방법"
+                label={t('pages.qualityStandards.fields.samplingMethod')}
                 value={formData.samplingMethod || ''}
                 onChange={handleInputChange}
                 fullWidth
               />
               <TextField
                 name="sampleSize"
-                label="샘플 크기"
+                label={t('pages.qualityStandards.fields.sampleSize')}
                 type="number"
                 value={formData.sampleSize || ''}
                 onChange={handleInputChange}
@@ -465,7 +465,7 @@ const QualityStandardsPage: React.FC = () => {
             <Box display="flex" gap={2}>
               <TextField
                 name="effectiveDate"
-                label="유효 시작일"
+                label={t('pages.qualityStandards.fields.effectiveDate')}
                 type="date"
                 value={formData.effectiveDate || ''}
                 onChange={handleInputChange}
@@ -475,7 +475,7 @@ const QualityStandardsPage: React.FC = () => {
               />
               <TextField
                 name="expiryDate"
-                label="만료일"
+                label={t('pages.qualityStandards.fields.expiryDate')}
                 type="date"
                 value={formData.expiryDate || ''}
                 onChange={handleInputChange}
@@ -486,7 +486,7 @@ const QualityStandardsPage: React.FC = () => {
 
             <TextField
               name="remarks"
-              label="비고"
+              label={t('common.labels.remarks')}
               value={formData.remarks || ''}
               onChange={handleInputChange}
               multiline
@@ -496,28 +496,28 @@ const QualityStandardsPage: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedQualityStandard ? '수정' : '등록'}
+            {selectedQualityStandard ? t('common.buttons.edit') : t('pages.qualityStandards.actions.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>품질 기준 삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.qualityStandards.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.qualityStandards.dialog.deleteWarning')}
           </Alert>
           <Typography>
-            품질 기준 <strong>{selectedQualityStandard?.standardName}</strong>을(를) 삭제하시겠습니까?
+            {t('pages.qualityStandards.dialog.deleteConfirm', { name: selectedQualityStandard?.standardName })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

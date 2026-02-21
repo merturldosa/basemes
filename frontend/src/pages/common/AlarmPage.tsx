@@ -52,6 +52,7 @@ import {
   formatDateTime,
   getRelativeTime,
 } from '../../services/alarmService';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 
 interface TabPanelProps {
@@ -76,6 +77,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const AlarmPage: React.FC = () => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const tenantId = user?.tenantId ?? '';
   const userId = user?.userId ?? 0;
@@ -123,7 +125,7 @@ const AlarmPage: React.FC = () => {
       setUnreadCount(count);
       setError(null);
     } catch (err: any) {
-      setError(err.message || '데이터 로드 실패');
+      setError(err.message || t('pages.alarm.errors.loadFailed'));
     } finally {
       setLoading(false);
     }
@@ -133,10 +135,10 @@ const AlarmPage: React.FC = () => {
   const handleMarkAsRead = async (alarmId: number) => {
     try {
       await alarmService.markAsRead(alarmId);
-      setSuccess('알람을 읽음으로 표시했습니다.');
+      setSuccess(t('pages.alarm.messages.markedAsRead'));
       await loadData();
     } catch (err: any) {
-      setError(err.message || '알람 읽음 처리 실패');
+      setError(err.message || t('pages.alarm.messages.markReadFailed'));
     }
   };
 
@@ -145,10 +147,10 @@ const AlarmPage: React.FC = () => {
     try {
       setLoading(true);
       await alarmService.markAllAsRead(tenantId, userId);
-      setSuccess('모든 알람을 읽음으로 표시했습니다.');
+      setSuccess(t('pages.alarm.messages.allMarkedAsRead'));
       await loadData();
     } catch (err: any) {
-      setError(err.message || '전체 알람 읽음 처리 실패');
+      setError(err.message || t('pages.alarm.messages.markAllReadFailed'));
     } finally {
       setLoading(false);
     }
@@ -169,7 +171,7 @@ const AlarmPage: React.FC = () => {
   const columns: GridColDef[] = [
     {
       field: 'alarmType',
-      headerName: '알람 타입',
+      headerName: t('pages.alarm.fields.alarmType'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
@@ -181,7 +183,7 @@ const AlarmPage: React.FC = () => {
     },
     {
       field: 'priority',
-      headerName: '우선순위',
+      headerName: t('pages.alarm.fields.priority'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
@@ -193,7 +195,7 @@ const AlarmPage: React.FC = () => {
     },
     {
       field: 'title',
-      headerName: '제목',
+      headerName: t('pages.alarm.fields.title'),
       flex: 1,
       minWidth: 300,
       renderCell: (params: GridRenderCellParams) => (
@@ -216,13 +218,13 @@ const AlarmPage: React.FC = () => {
     },
     {
       field: 'message',
-      headerName: '내용',
+      headerName: t('pages.alarm.fields.message'),
       flex: 1,
       minWidth: 250,
     },
     {
       field: 'createdAt',
-      headerName: '시간',
+      headerName: t('pages.alarm.fields.time'),
       width: 150,
       renderCell: (params: GridRenderCellParams) => (
         <Typography variant="body2" color="text.secondary">
@@ -232,19 +234,19 @@ const AlarmPage: React.FC = () => {
     },
     {
       field: 'isRead',
-      headerName: '읽음',
+      headerName: t('pages.alarm.fields.isRead'),
       width: 80,
       renderCell: (params: GridRenderCellParams) => (
         params.value ? (
-          <Chip label="읽음" size="small" color="default" />
+          <Chip label={t('pages.alarm.status.read')} size="small" color="default" />
         ) : (
-          <Chip label="읽지 않음" size="small" color="primary" />
+          <Chip label={t('pages.alarm.status.unread')} size="small" color="primary" />
         )
       ),
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 120,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -252,7 +254,7 @@ const AlarmPage: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => handleViewDetails(params.row)}
-            title="상세 보기"
+            title={t('pages.alarm.actions.viewDetail')}
           >
             <InfoIcon />
           </IconButton>
@@ -260,7 +262,7 @@ const AlarmPage: React.FC = () => {
             <IconButton
               size="small"
               onClick={() => handleMarkAsRead(params.row.alarmId)}
-              title="읽음 표시"
+              title={t('pages.alarm.actions.markRead')}
             >
               <MarkReadIcon />
             </IconButton>
@@ -278,10 +280,10 @@ const AlarmPage: React.FC = () => {
           <NotificationsActiveIcon sx={{ fontSize: 40, color: 'primary.main' }} />
           <Box>
             <Typography variant="h4" gutterBottom>
-              알람 관리
+              {t('pages.alarm.title')}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              시스템 알림 및 알람 설정을 관리합니다
+              {t('pages.alarm.subtitle')}
             </Typography>
           </Box>
         </Box>
@@ -295,7 +297,7 @@ const AlarmPage: React.FC = () => {
               startIcon={<MarkAllReadIcon />}
               onClick={handleMarkAllAsRead}
             >
-              모두 읽음 표시
+              {t('pages.alarm.actions.markAllRead')}
             </Button>
           )}
         </Box>
@@ -320,7 +322,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  읽지 않음
+                  {t('pages.alarm.statistics.unread')}
                 </Typography>
                 <Typography variant="h4" color="error.main">
                   {statistics.unreadCount}
@@ -332,7 +334,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  전체
+                  {t('pages.alarm.statistics.total')}
                 </Typography>
                 <Typography variant="h4">
                   {statistics.totalCount}
@@ -344,7 +346,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  결재
+                  {t('pages.alarm.statistics.approval')}
                 </Typography>
                 <Typography variant="h4" color="primary.main">
                   {statistics.approvalCount}
@@ -356,7 +358,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  품질
+                  {t('pages.alarm.statistics.quality')}
                 </Typography>
                 <Typography variant="h4" color="warning.main">
                   {statistics.qualityCount}
@@ -368,7 +370,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  생산
+                  {t('pages.alarm.statistics.production')}
                 </Typography>
                 <Typography variant="h4" color="success.main">
                   {statistics.productionCount}
@@ -380,7 +382,7 @@ const AlarmPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography color="text.secondary" gutterBottom variant="body2">
-                  재고
+                  {t('pages.alarm.statistics.inventory')}
                 </Typography>
                 <Typography variant="h4" color="error.main">
                   {statistics.inventoryCount}
@@ -397,13 +399,13 @@ const AlarmPage: React.FC = () => {
           <Tab
             label={
               <Badge badgeContent={unreadCount} color="error">
-                읽지 않은 알람
+                {t('pages.alarm.tabs.unread')}
               </Badge>
             }
           />
-          <Tab label="전체 알람" />
-          <Tab label="최근 알람 (7일)" />
-          <Tab label="통계" />
+          <Tab label={t('pages.alarm.tabs.all')} />
+          <Tab label={t('pages.alarm.tabs.recent')} />
+          <Tab label={t('pages.alarm.tabs.statistics')} />
         </Tabs>
       </Paper>
 
@@ -492,18 +494,18 @@ const AlarmPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    전체 통계
+                    {t('pages.alarm.statistics.overallStats')}
                   </Typography>
                   <Divider sx={{ my: 2 }} />
                   <List>
                     <ListItem>
-                      <ListItemText primary="전체 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.totalAlarms')} />
                       <ListItemSecondaryAction>
                         <Typography variant="h6">{statistics.totalCount}</Typography>
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="읽지 않은 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.unreadAlarms')} />
                       <ListItemSecondaryAction>
                         <Typography variant="h6" color="error.main">
                           {statistics.unreadCount}
@@ -511,13 +513,13 @@ const AlarmPage: React.FC = () => {
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="읽은 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.readAlarms')} />
                       <ListItemSecondaryAction>
                         <Typography variant="h6">{statistics.readCount}</Typography>
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="읽음율" />
+                      <ListItemText primary={t('pages.alarm.statistics.readRate')} />
                       <ListItemSecondaryAction>
                         <Typography variant="h6" color="success.main">
                           {statistics.readRate.toFixed(1)}%
@@ -533,12 +535,12 @@ const AlarmPage: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" gutterBottom>
-                    타입별 통계
+                    {t('pages.alarm.statistics.typeStats')}
                   </Typography>
                   <Divider sx={{ my: 2 }} />
                   <List>
                     <ListItem>
-                      <ListItemText primary="결재 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.approvalAlarm')} />
                       <ListItemSecondaryAction>
                         <Chip
                           label={statistics.approvalCount}
@@ -548,7 +550,7 @@ const AlarmPage: React.FC = () => {
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="품질 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.qualityAlarm')} />
                       <ListItemSecondaryAction>
                         <Chip
                           label={statistics.qualityCount}
@@ -558,7 +560,7 @@ const AlarmPage: React.FC = () => {
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="생산 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.productionAlarm')} />
                       <ListItemSecondaryAction>
                         <Chip
                           label={statistics.productionCount}
@@ -568,7 +570,7 @@ const AlarmPage: React.FC = () => {
                       </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem>
-                      <ListItemText primary="재고 알람" />
+                      <ListItemText primary={t('pages.alarm.statistics.inventoryAlarm')} />
                       <ListItemSecondaryAction>
                         <Chip
                           label={statistics.inventoryCount}
@@ -595,7 +597,7 @@ const AlarmPage: React.FC = () => {
         <DialogTitle>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <NotificationsIcon />
-            알람 상세
+            {t('pages.alarm.detail.title')}
           </Box>
         </DialogTitle>
         <DialogContent dividers>
@@ -603,7 +605,7 @@ const AlarmPage: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  알람 타입
+                  {t('pages.alarm.fields.alarmType')}
                 </Typography>
                 <Chip
                   label={getAlarmTypeLabel(selectedAlarm.alarmType)}
@@ -613,7 +615,7 @@ const AlarmPage: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  우선순위
+                  {t('pages.alarm.fields.priority')}
                 </Typography>
                 <Chip
                   label={getPriorityLabel(selectedAlarm.priority)}
@@ -623,7 +625,7 @@ const AlarmPage: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  제목
+                  {t('pages.alarm.fields.title')}
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 1 }}>
                   {selectedAlarm.title}
@@ -631,7 +633,7 @@ const AlarmPage: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  내용
+                  {t('pages.alarm.fields.message')}
                 </Typography>
                 <Typography variant="body1" sx={{ mt: 1 }}>
                   {selectedAlarm.message}
@@ -640,7 +642,7 @@ const AlarmPage: React.FC = () => {
               {selectedAlarm.referenceNo && (
                 <Grid item xs={12}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    참조 번호
+                    {t('pages.alarm.fields.referenceNo')}
                   </Typography>
                   <Typography variant="body1" sx={{ mt: 1 }}>
                     {selectedAlarm.referenceType}: {selectedAlarm.referenceNo}
@@ -649,7 +651,7 @@ const AlarmPage: React.FC = () => {
               )}
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  발송 시간
+                  {t('pages.alarm.fields.sentTime')}
                 </Typography>
                 <Typography variant="body2" sx={{ mt: 1 }}>
                   {formatDateTime(selectedAlarm.createdAt)}
@@ -658,7 +660,7 @@ const AlarmPage: React.FC = () => {
               {selectedAlarm.readAt && (
                 <Grid item xs={12} sm={6}>
                   <Typography variant="subtitle2" color="text.secondary">
-                    읽은 시간
+                    {t('pages.alarm.fields.readTime')}
                   </Typography>
                   <Typography variant="body2" sx={{ mt: 1 }}>
                     {formatDateTime(selectedAlarm.readAt)}
@@ -667,13 +669,13 @@ const AlarmPage: React.FC = () => {
               )}
               <Grid item xs={12}>
                 <Typography variant="subtitle2" color="text.secondary">
-                  발송 채널
+                  {t('pages.alarm.fields.sentChannel')}
                 </Typography>
                 <Box sx={{ mt: 1, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {selectedAlarm.sentViaEmail && <Chip label="이메일" size="small" />}
-                  {selectedAlarm.sentViaSms && <Chip label="SMS" size="small" />}
-                  {selectedAlarm.sentViaPush && <Chip label="푸시" size="small" />}
-                  {selectedAlarm.sentViaSystem && <Chip label="시스템" size="small" />}
+                  {selectedAlarm.sentViaEmail && <Chip label={t('pages.alarm.channels.email')} size="small" />}
+                  {selectedAlarm.sentViaSms && <Chip label={t('pages.alarm.channels.sms')} size="small" />}
+                  {selectedAlarm.sentViaPush && <Chip label={t('pages.alarm.channels.push')} size="small" />}
+                  {selectedAlarm.sentViaSystem && <Chip label={t('pages.alarm.channels.system')} size="small" />}
                 </Box>
               </Grid>
             </Grid>
@@ -688,10 +690,10 @@ const AlarmPage: React.FC = () => {
                 setDetailDialog(false);
               }}
             >
-              읽음 표시
+              {t('pages.alarm.actions.markRead')}
             </Button>
           )}
-          <Button onClick={() => setDetailDialog(false)}>닫기</Button>
+          <Button onClick={() => setDetailDialog(false)}>{t('common.buttons.close')}</Button>
         </DialogActions>
       </Dialog>
     </Box>

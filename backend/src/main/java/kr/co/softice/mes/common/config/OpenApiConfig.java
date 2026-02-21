@@ -26,10 +26,10 @@ public class OpenApiConfig {
     private String serverDescription;
 
     @Bean
-    public OpenAPI soIceMesOpenAPI() {
+    public OpenAPI sdsMesOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("SoIce MES API")
+                        .title("SDS MES API")
                         .description("Base MES Platform - REST API Documentation")
                         .version("v0.1.0-SNAPSHOT")
                         .contact(new Contact()

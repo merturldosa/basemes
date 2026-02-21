@@ -26,9 +26,11 @@ import {
   ToggleOn as ToggleOnIcon,
   ToggleOff as ToggleOffIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 import productService, { Product, ProductCreateRequest, ProductUpdateRequest } from '../../services/productService';
 
 const ProductsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [openDialog, setOpenDialog] = useState(false);
@@ -60,7 +62,7 @@ const ProductsPage: React.FC = () => {
       const data = await productService.getProducts();
       setProducts(data || []);
     } catch (error) {
-      showSnackbar('제품 목록 조회 실패', 'error');
+      showSnackbar(t('pages.products.errors.loadFailed'), 'error');
       setProducts([]);
     } finally {
       setLoading(false);
@@ -119,16 +121,16 @@ const ProductsPage: React.FC = () => {
       if (selectedProduct) {
         // Update
         await productService.updateProduct(selectedProduct.productId, formData as ProductUpdateRequest);
-        showSnackbar('제품 수정 성공', 'success');
+        showSnackbar(t('pages.products.messages.updateSuccess'), 'success');
       } else {
         // Create
         await productService.createProduct(formData as ProductCreateRequest);
-        showSnackbar('제품 생성 성공', 'success');
+        showSnackbar(t('pages.products.messages.createSuccess'), 'success');
       }
       handleCloseDialog();
       loadProducts();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '작업 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.products.errors.saveFailed'), 'error');
     }
   };
 
@@ -136,14 +138,14 @@ const ProductsPage: React.FC = () => {
     try {
       if (product.isActive) {
         await productService.deactivateProduct(product.productId);
-        showSnackbar('제품 비활성화 성공', 'success');
+        showSnackbar(t('pages.products.messages.deactivateSuccess'), 'success');
       } else {
         await productService.activateProduct(product.productId);
-        showSnackbar('제품 활성화 성공', 'success');
+        showSnackbar(t('pages.products.messages.activateSuccess'), 'success');
       }
       loadProducts();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.products.errors.statusChangeFailed'), 'error');
     }
   };
 
@@ -162,33 +164,33 @@ const ProductsPage: React.FC = () => {
 
     try {
       await productService.deleteProduct(selectedProduct.productId);
-      showSnackbar('제품 삭제 성공', 'success');
+      showSnackbar(t('pages.products.messages.deleteSuccess'), 'success');
       handleCloseDeleteDialog();
       loadProducts();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.products.errors.deleteFailed'), 'error');
     }
   };
 
   const columns: GridColDef[] = [
-    { field: 'productCode', headerName: '제품 코드', width: 130 },
-    { field: 'productName', headerName: '제품명', flex: 1, minWidth: 200 },
-    { field: 'productType', headerName: '제품 유형', width: 120 },
-    { field: 'specification', headerName: '규격', width: 200 },
-    { field: 'unit', headerName: '단위', width: 80 },
+    { field: 'productCode', headerName: t('pages.products.fields.productCode'), width: 130 },
+    { field: 'productName', headerName: t('pages.products.fields.productName'), flex: 1, minWidth: 200 },
+    { field: 'productType', headerName: t('pages.products.fields.productType'), width: 120 },
+    { field: 'specification', headerName: t('pages.products.fields.specification'), width: 200 },
+    { field: 'unit', headerName: t('pages.products.fields.unit'), width: 80 },
     {
       field: 'standardCycleTime',
-      headerName: '표준 사이클 타임(초)',
+      headerName: t('pages.products.fields.standardCycleTime'),
       width: 160,
-      valueFormatter: (params) => params.value ? `${params.value}초` : '-',
+      valueFormatter: (params) => params.value ? `${params.value}${t('pages.products.fields.seconds')}` : '-',
     },
     {
       field: 'isActive',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           color={params.value ? 'success' : 'default'}
           size="small"
         />
@@ -196,29 +198,29 @@ const ProductsPage: React.FC = () => {
     },
     {
       field: 'createdAt',
-      headerName: '생성일',
+      headerName: t('common.labels.createdAt'),
       width: 180,
       valueFormatter: (params) => new Date(params.value).toLocaleString('ko-KR'),
     },
     {
       field: 'actions',
       type: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       getActions: (params: GridRowParams<Product>) => [
         <GridActionsCellItem
           icon={<EditIcon />}
-          label="수정"
+          label={t('common.buttons.edit')}
           onClick={() => handleOpenDialog(params.row)}
         />,
         <GridActionsCellItem
           icon={params.row.isActive ? <ToggleOffIcon /> : <ToggleOnIcon />}
-          label={params.row.isActive ? '비활성화' : '활성화'}
+          label={params.row.isActive ? t('common.status.inactive') : t('common.status.active')}
           onClick={() => handleToggleActive(params.row)}
         />,
         <GridActionsCellItem
           icon={<DeleteIcon />}
-          label="삭제"
+          label={t('common.buttons.delete')}
           onClick={() => handleOpenDeleteDialog(params.row)}
         />,
       ],
@@ -229,14 +231,14 @@ const ProductsPage: React.FC = () => {
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h5" component="h1">
-          제품 마스터 관리
+          {t('pages.products.title')}
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenDialog()}
         >
-          신규 등록
+          {t('pages.products.actions.create')}
         </Button>
       </Box>
 
@@ -262,13 +264,13 @@ const ProductsPage: React.FC = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{selectedProduct ? '제품 수정' : '신규 제품 등록'}</DialogTitle>
+        <DialogTitle>{selectedProduct ? t('pages.products.dialog.editTitle') : t('pages.products.dialog.createTitle')}</DialogTitle>
         <DialogContent>
           <Box display="flex" flexDirection="column" gap={2} mt={1}>
             {!selectedProduct && (
               <TextField
                 name="productCode"
-                label="제품 코드"
+                label={t('pages.products.fields.productCode')}
                 value={(formData as ProductCreateRequest).productCode || ''}
                 onChange={handleInputChange}
                 required
@@ -277,7 +279,7 @@ const ProductsPage: React.FC = () => {
             )}
             <TextField
               name="productName"
-              label="제품명"
+              label={t('pages.products.fields.productName')}
               value={formData.productName || ''}
               onChange={handleInputChange}
               required
@@ -285,15 +287,15 @@ const ProductsPage: React.FC = () => {
             />
             <TextField
               name="productType"
-              label="제품 유형"
+              label={t('pages.products.fields.productType')}
               value={formData.productType || ''}
               onChange={handleInputChange}
-              placeholder="예: 완제품, 반제품, 원자재"
+              placeholder={t('pages.products.placeholders.productType')}
               fullWidth
             />
             <TextField
               name="specification"
-              label="규격"
+              label={t('pages.products.fields.specification')}
               value={formData.specification || ''}
               onChange={handleInputChange}
               multiline
@@ -302,16 +304,16 @@ const ProductsPage: React.FC = () => {
             />
             <TextField
               name="unit"
-              label="단위"
+              label={t('pages.products.fields.unit')}
               value={formData.unit || 'EA'}
               onChange={handleInputChange}
-              placeholder="예: EA, KG, L"
+              placeholder={t('pages.products.placeholders.unit')}
               required
               fullWidth
             />
             <TextField
               name="standardCycleTime"
-              label="표준 사이클 타임(초)"
+              label={t('pages.products.fields.standardCycleTime')}
               type="number"
               value={formData.standardCycleTime || ''}
               onChange={handleInputChange}
@@ -319,7 +321,7 @@ const ProductsPage: React.FC = () => {
             />
             <TextField
               name="remarks"
-              label="비고"
+              label={t('common.labels.remarks')}
               value={formData.remarks || ''}
               onChange={handleInputChange}
               multiline
@@ -329,28 +331,28 @@ const ProductsPage: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedProduct ? '수정' : '등록'}
+            {selectedProduct ? t('common.buttons.edit') : t('pages.products.actions.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>제품 삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.products.dialog.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Alert severity="warning" sx={{ mb: 2 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.products.dialog.deleteWarning')}
           </Alert>
           <Typography>
-            제품 <strong>{selectedProduct?.productName}</strong>을(를) 삭제하시겠습니까?
+            {t('pages.products.dialog.deleteConfirm', { name: selectedProduct?.productName })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>
