@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Prometheus Alert Rules for SoIce MES Platform
+# Prometheus Alert Rules for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -11,7 +11,7 @@ groups:
     interval: 30s
     rules:
       - alert: ServiceDown
-        expr: up{job=~"soice-mes-.*"} == 0
+        expr: up{job=~"sds-mes-.*"} == 0
         for: 1m
         labels:
           severity: critical

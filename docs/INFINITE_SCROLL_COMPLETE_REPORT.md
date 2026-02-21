@@ -1,16 +1,16 @@
 # Infinite Scroll Implementation - Completion Report
 
-**Project:** SoIce MES Platform
+**Project:** SDS MES Platform
 **Version:** 1.3.0
 **Date:** 2026-01-27
 **Author:** Moon Myung-seop (msmoon@softice.co.kr)
-**Company:** (주)소프트아이스 SoftIce Co., Ltd.
+**Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ---
 
 ## 📊 Executive Summary
 
-Successfully implemented comprehensive infinite scroll functionality for the SoIce MES platform, completing **Priority 2** requirements from the development roadmap. The implementation provides two distinct approaches optimized for different use cases: **EnhancedDataGrid** for desktop table views and **InfiniteScrollList** for mobile card-based layouts.
+Successfully implemented comprehensive infinite scroll functionality for the SDS MES platform, completing **Priority 2** requirements from the development roadmap. The implementation provides two distinct approaches optimized for different use cases: **EnhancedDataGrid** for desktop table views and **InfiniteScrollList** for mobile card-based layouts.
 
 ### Completion Status
 
@@ -796,7 +796,7 @@ For developers migrating existing pages:
 **Name:** Moon Myung-seop (문명섭)
 **Email:** msmoon@softice.co.kr
 **Phone:** 010-4882-2035
-**Company:** (주)소프트아이스 SoftIce Co., Ltd.
+**Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ### Getting Help
 

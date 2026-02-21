@@ -1,11 +1,11 @@
 # Phase 2: POP Enhancement - Completion Report
 
-**Project**: SoIce MES (Manufacturing Execution System)
+**Project**: SDS MES (Manufacturing Execution System)
 **Phase**: Phase 2 - POP Enhancement
 **Status**: ✅ COMPLETED
 **Completion Date**: 2025-02-05
 **Author**: Moon Myung-seop (문명섭)
-**Company**: SoftIce Co., Ltd. (주)소프트아이스
+**Company**: SoftIce Co., Ltd. (주)스마트도킹스테이션
 
 ---
 

@@ -14,14 +14,14 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "sop_execution_steps",
+@Table(schema = "common", name = "SD_sop_execution_steps",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_sop_exec_step", columnNames = {"execution_id", "sop_step_id"})
+        @UniqueConstraint(name = "uk_sd_sop_exec_step", columnNames = {"execution_id", "sop_step_id"})
     },
     indexes = {
-        @Index(name = "idx_sop_exec_step_exec", columnList = "execution_id"),
-        @Index(name = "idx_sop_exec_step_sop_step", columnList = "sop_step_id"),
-        @Index(name = "idx_sop_exec_step_status", columnList = "step_status")
+        @Index(name = "idx_sd_sop_exec_step_exec", columnList = "execution_id"),
+        @Index(name = "idx_sd_sop_exec_step_sop_step", columnList = "sop_step_id"),
+        @Index(name = "idx_sd_sop_exec_step_status", columnList = "step_status")
     }
 )
 @Getter

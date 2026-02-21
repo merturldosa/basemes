@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "alarm_history",
+@Table(schema = "common", name = "SD_alarm_history",
     indexes = {
-        @Index(name = "idx_alarm_history_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_alarm_history_recipient", columnList = "recipient_user_id"),
-        @Index(name = "idx_alarm_history_type", columnList = "alarm_type"),
-        @Index(name = "idx_alarm_history_reference", columnList = "reference_type, reference_id"),
-        @Index(name = "idx_alarm_history_created", columnList = "created_at")
+        @Index(name = "idx_sd_alarm_history_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_alarm_history_recipient", columnList = "recipient_user_id"),
+        @Index(name = "idx_sd_alarm_history_type", columnList = "alarm_type"),
+        @Index(name = "idx_sd_alarm_history_reference", columnList = "reference_type, reference_id"),
+        @Index(name = "idx_sd_alarm_history_created", columnList = "created_at")
     }
 )
 @Getter

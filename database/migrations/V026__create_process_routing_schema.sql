@@ -17,7 +17,7 @@
 --   - 품질 체크 요구사항
 --   - 총 표준 시간 자동 계산
 --
--- Author: SoIce MES Development Team
+-- Author: SDS MES Development Team
 -- Date: 2026-01-27
 -- ============================================================================
 

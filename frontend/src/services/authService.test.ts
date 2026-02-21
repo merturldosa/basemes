@@ -3,7 +3,7 @@
  * @author Moon Myung-seop
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import authService from './authService';
 import { mockLocalStorage } from '@/test/test-utils';
 

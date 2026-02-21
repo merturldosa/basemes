@@ -1,6 +1,6 @@
 # POP 시스템 운영자 빠른 시작 가이드
 
-**SoIce MES - Point of Production (POP) System**
+**SDS MES - Point of Production (POP) System**
 **작성자**: 문명섭
 **버전**: 1.0
 **작성일**: 2025-02-05

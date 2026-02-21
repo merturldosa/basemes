@@ -507,7 +507,7 @@ Phase 4 (Disposal Management) is now complete with full backend and frontend imp
 - ✅ Defect tracking and reporting
 - ✅ Integration with inventory, quality, and production modules
 
-The disposal management module is production-ready and fully integrated with the SoIce MES platform.
+The disposal management module is production-ready and fully integrated with the SDS MES platform.
 
 ---
 

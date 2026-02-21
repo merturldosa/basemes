@@ -1,5 +1,5 @@
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- SoIce MES - Database Initialization Script
+-- SDS MES - Database Initialization Script
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- Purpose: Initialize database extensions, schemas, and roles
 -- Author: Moon Myung-seop <msmoon@softice.co.kr>
@@ -7,7 +7,7 @@
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 \echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
-\echo 'SoIce MES Database Initialization Starting...'
+\echo 'SDS MES Database Initialization Starting...'
 \echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
 
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -158,10 +158,10 @@ SET client_encoding = 'UTF8';
 
 \echo ''
 \echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
-\echo '✅ SoIce MES Database Initialization Completed Successfully!'
+\echo '✅ SDS MES Database Initialization Completed Successfully!'
 \echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'
 \echo ''
-\echo 'Database: soice_mes_dev'
+\echo 'Database: sds_mes_dev'
 \echo 'Schemas: common, mes, qms, wms, ems, lims, audit'
 \echo 'Users: mes_admin (admin), mes_app (app), mes_readonly (readonly)'
 \echo ''

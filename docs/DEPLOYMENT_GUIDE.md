@@ -1,7 +1,7 @@
-# SoIce MES Platform - Deployment Guide
+# SDS MES Platform - Deployment Guide
 
 > **Author**: Moon Myung-seop (문명섭)
-> **Company**: SoftIce Co., Ltd. (주)소프트아이스
+> **Company**: SoftIce Co., Ltd. (주)스마트도킹스테이션
 > **Version**: 0.1.0
 > **Last Updated**: 2026-01-27
 
@@ -22,7 +22,7 @@
 
 ## Overview
 
-This guide covers deployment options for the SoIce MES Platform:
+This guide covers deployment options for the SDS MES Platform:
 
 - **Local Development**: Running services directly on your machine
 - **Docker**: Containerized deployment for testing and small-scale production
@@ -65,29 +65,29 @@ This guide covers deployment options for the SoIce MES Platform:
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/your-org/SoIceMES.git
-cd SoIceMES
+git clone https://github.com/your-org/SDMES.git
+cd SDMES
 ```
 
 ### 2. Setup PostgreSQL
 
 ```bash
 # Create database
-createdb soice_mes
+createdb sds_mes
 
 # Create user
-psql -c "CREATE USER soice_admin WITH PASSWORD 'soice_password_2024';"
-psql -c "GRANT ALL PRIVILEGES ON DATABASE soice_mes TO soice_admin;"
+psql -c "CREATE USER sds_admin WITH PASSWORD 'sds_password_2024';"
+psql -c "GRANT ALL PRIVILEGES ON DATABASE sds_mes TO sds_admin;"
 
 # Run migrations
-psql -U soice_admin -d soice_mes -f database/migrations/V001__init_schema.sql
+psql -U sds_admin -d sds_mes -f database/migrations/V001__init_schema.sql
 ```
 
 ### 3. Setup Redis
 
 ```bash
 # Start Redis with password
-redis-server --requirepass soice_redis_2024
+redis-server --requirepass sds_redis_2024
 ```
 
 ### 4. Backend Setup
@@ -165,11 +165,11 @@ Access monitoring:
 ```bash
 # Build backend
 cd backend
-docker build -t soice-mes-backend:latest .
+docker build -t sds-mes-backend:latest .
 
 # Build frontend
 cd frontend
-docker build -t soice-mes-frontend:latest .
+docker build -t sds-mes-frontend:latest .
 ```
 
 ### Docker Commands Cheat Sheet
@@ -204,7 +204,7 @@ Ensure you have a running Kubernetes cluster and `kubectl` configured:
 kubectl cluster-info
 
 # Create namespace
-kubectl create namespace soice-mes
+kubectl create namespace sds-mes
 ```
 
 ### 2. Configure Secrets
@@ -213,15 +213,15 @@ kubectl create namespace soice-mes
 
 ```bash
 # Create secrets
-kubectl create secret generic soice-mes-secret \
-  --from-literal=POSTGRES_USER=soice_admin \
+kubectl create secret generic sds-mes-secret \
+  --from-literal=POSTGRES_USER=sds_admin \
   --from-literal=POSTGRES_PASSWORD='YOUR_STRONG_PASSWORD' \
   --from-literal=REDIS_PASSWORD='YOUR_REDIS_PASSWORD' \
   --from-literal=JWT_SECRET='YOUR_JWT_SECRET_KEY_MIN_256_BITS' \
-  --from-literal=SPRING_DATASOURCE_URL='jdbc:postgresql://postgres-service:5432/soice_mes' \
-  --from-literal=SPRING_DATASOURCE_USERNAME=soice_admin \
+  --from-literal=SPRING_DATASOURCE_URL='jdbc:postgresql://postgres-service:5432/sds_mes' \
+  --from-literal=SPRING_DATASOURCE_USERNAME=sds_admin \
   --from-literal=SPRING_DATASOURCE_PASSWORD='YOUR_STRONG_PASSWORD' \
-  --namespace=soice-mes
+  --namespace=sds-mes
 ```
 
 ### 3. Deploy Infrastructure
@@ -238,8 +238,8 @@ kubectl apply -f k8s/10-postgres-statefulset.yaml
 kubectl apply -f k8s/11-redis-deployment.yaml
 
 # Wait for databases to be ready
-kubectl wait --for=condition=ready pod -l app=postgres -n soice-mes --timeout=300s
-kubectl wait --for=condition=ready pod -l app=redis -n soice-mes --timeout=300s
+kubectl wait --for=condition=ready pod -l app=postgres -n sds-mes --timeout=300s
+kubectl wait --for=condition=ready pod -l app=redis -n sds-mes --timeout=300s
 ```
 
 ### 4. Deploy Application
@@ -249,13 +249,13 @@ kubectl wait --for=condition=ready pod -l app=redis -n soice-mes --timeout=300s
 kubectl apply -f k8s/20-backend-deployment.yaml
 
 # Wait for backend to be ready
-kubectl rollout status deployment/backend -n soice-mes
+kubectl rollout status deployment/backend -n sds-mes
 
 # Deploy frontend
 kubectl apply -f k8s/21-frontend-deployment.yaml
 
 # Wait for frontend to be ready
-kubectl rollout status deployment/frontend -n soice-mes
+kubectl rollout status deployment/frontend -n sds-mes
 ```
 
 ### 5. Setup Ingress
@@ -264,7 +264,7 @@ kubectl rollout status deployment/frontend -n soice-mes
 
 ```bash
 # Edit ingress configuration
-# Replace 'soice-mes.yourdomain.com' with your actual domain
+# Replace 'sds-mes.yourdomain.com' with your actual domain
 
 # Apply ingress
 kubectl apply -f k8s/30-ingress.yaml
@@ -274,14 +274,14 @@ kubectl apply -f k8s/30-ingress.yaml
 
 ```bash
 # Check all resources
-kubectl get all -n soice-mes
+kubectl get all -n sds-mes
 
 # Check pod logs
-kubectl logs -f deployment/backend -n soice-mes
-kubectl logs -f deployment/frontend -n soice-mes
+kubectl logs -f deployment/backend -n sds-mes
+kubectl logs -f deployment/frontend -n sds-mes
 
 # Get ingress details
-kubectl get ingress -n soice-mes
+kubectl get ingress -n sds-mes
 ```
 
 ### SSL/TLS with cert-manager
@@ -384,7 +384,7 @@ In GitHub repository settings → Secrets and variables → Actions:
 DOCKERHUB_USERNAME=your-dockerhub-username
 DOCKERHUB_TOKEN=your-dockerhub-token
 KUBE_CONFIG=base64-encoded-kubeconfig
-POSTGRES_USER=soice_admin
+POSTGRES_USER=sds_admin
 POSTGRES_PASSWORD=your-strong-password
 REDIS_PASSWORD=your-redis-password
 JWT_SECRET=your-jwt-secret-key
@@ -445,7 +445,7 @@ docker-compose ps postgres
 docker-compose logs postgres
 
 # Verify connection
-psql -h localhost -U soice_admin -d soice_mes
+psql -h localhost -U sds_admin -d sds_mes
 
 # Reset database (WARNING: deletes data!)
 docker-compose down -v
@@ -490,13 +490,13 @@ environment:
 **Solution**:
 ```bash
 # Check pod logs
-kubectl logs -f pod/backend-xxx -n soice-mes
+kubectl logs -f pod/backend-xxx -n sds-mes
 
 # Describe pod for events
-kubectl describe pod backend-xxx -n soice-mes
+kubectl describe pod backend-xxx -n sds-mes
 
 # Check resource limits
-kubectl top pods -n soice-mes
+kubectl top pods -n sds-mes
 
 # Increase resource limits in deployment YAML if needed
 ```
@@ -508,7 +508,7 @@ kubectl top pods -n soice-mes
 **Solution**:
 ```bash
 # Run migrations manually
-kubectl exec -it pod/postgres-0 -n soice-mes -- psql -U soice_admin -d soice_mes -f /migrations/V001__init_schema.sql
+kubectl exec -it pod/postgres-0 -n sds-mes -- psql -U sds_admin -d sds_mes -f /migrations/V001__init_schema.sql
 
 # Or rollback and reapply
 kubectl delete -f k8s/10-postgres-statefulset.yaml
@@ -537,16 +537,16 @@ docker-compose up -d
 
 ```bash
 # Check rollout history
-kubectl rollout history deployment/backend -n soice-mes
+kubectl rollout history deployment/backend -n sds-mes
 
 # Rollback to previous version
-kubectl rollout undo deployment/backend -n soice-mes
+kubectl rollout undo deployment/backend -n sds-mes
 
 # Rollback to specific revision
-kubectl rollout undo deployment/backend --to-revision=2 -n soice-mes
+kubectl rollout undo deployment/backend --to-revision=2 -n sds-mes
 
 # Verify rollback
-kubectl rollout status deployment/backend -n soice-mes
+kubectl rollout status deployment/backend -n sds-mes
 ```
 
 ### Database Rollback
@@ -555,10 +555,10 @@ kubectl rollout status deployment/backend -n soice-mes
 
 ```bash
 # Backup database
-kubectl exec -it postgres-0 -n soice-mes -- pg_dump -U soice_admin soice_mes > backup.sql
+kubectl exec -it postgres-0 -n sds-mes -- pg_dump -U sds_admin sds_mes > backup.sql
 
 # Restore from backup
-kubectl exec -i postgres-0 -n soice-mes -- psql -U soice_admin soice_mes < backup.sql
+kubectl exec -i postgres-0 -n sds-mes -- psql -U sds_admin sds_mes < backup.sql
 ```
 
 ---
@@ -584,7 +584,7 @@ For issues or questions:
 
 - **Email**: msmoon@softice.co.kr
 - **Phone**: 010-4882-2035
-- **GitHub Issues**: https://github.com/your-org/SoIceMES/issues
+- **GitHub Issues**: https://github.com/your-org/SDMES/issues
 
 ---
 

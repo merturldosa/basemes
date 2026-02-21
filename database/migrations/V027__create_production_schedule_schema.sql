@@ -17,7 +17,7 @@
 --   - 지연 자동 감지
 --   - 진행률 추적
 --
--- Author: SoIce MES Development Team
+-- Author: SDS MES Development Team
 -- Date: 2026-01-27
 -- ============================================================================
 

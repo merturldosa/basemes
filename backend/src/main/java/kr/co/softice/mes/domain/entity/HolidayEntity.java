@@ -12,16 +12,16 @@ import java.time.LocalDate;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "holidays",
+@Table(schema = "common", name = "SD_holidays",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_holiday_date", columnNames = {"tenant_id", "holiday_date"})
+        @UniqueConstraint(name = "uk_sd_holiday_date", columnNames = {"tenant_id", "holiday_date"})
     },
     indexes = {
-        @Index(name = "idx_holiday_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_holiday_date", columnList = "holiday_date"),
-        @Index(name = "idx_holiday_type", columnList = "holiday_type"),
-        @Index(name = "idx_holiday_active", columnList = "is_active"),
-        @Index(name = "idx_holiday_date_range", columnList = "tenant_id, holiday_date")
+        @Index(name = "idx_sd_holiday_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_holiday_date", columnList = "holiday_date"),
+        @Index(name = "idx_sd_holiday_type", columnList = "holiday_type"),
+        @Index(name = "idx_sd_holiday_active", columnList = "is_active"),
+        @Index(name = "idx_sd_holiday_date_range", columnList = "tenant_id, holiday_date")
     }
 )
 @Getter

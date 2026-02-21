@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# CI Workflow for SoIce MES Platform
+# CI Workflow for SDS MES Platform
 # @author Moon Myung-seop
 #
 # Triggers: Push to main/develop, Pull Requests
@@ -30,7 +30,7 @@ jobs:
       postgres:
         image: postgres:15-alpine
         env:
-          POSTGRES_DB: soice_mes_test
+          POSTGRES_DB: sds_mes_test
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
         ports:
@@ -78,7 +78,7 @@ jobs:
         working-directory: ./backend
         run: mvn test -B
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/soice_mes_test
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/sds_mes_test
           SPRING_DATASOURCE_USERNAME: test_user
           SPRING_DATASOURCE_PASSWORD: test_password
           SPRING_REDIS_HOST: localhost

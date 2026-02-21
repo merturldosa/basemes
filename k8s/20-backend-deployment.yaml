@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Backend Deployment for SoIce MES Platform
+# Backend Deployment for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: backend
 spec:
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: backend
 spec:
@@ -49,7 +49,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: soice-mes-backend:latest  # Replace with your registry/image
+          image: sds-mes-backend:latest  # Replace with your registry/image
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -60,84 +60,84 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: SPRING_PROFILES_ACTIVE
             - name: SERVER_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: SERVER_PORT
 
             # Database Configuration
             - name: SPRING_DATASOURCE_URL
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: SPRING_DATASOURCE_URL
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: SPRING_DATASOURCE_USERNAME
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: SPRING_DATASOURCE_PASSWORD
 
             # Redis Configuration
             - name: SPRING_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: REDIS_HOST
             - name: SPRING_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: REDIS_PORT
             - name: SPRING_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: REDIS_PASSWORD
 
             # JPA Configuration
             - name: SPRING_JPA_HIBERNATE_DDL_AUTO
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: SPRING_JPA_HIBERNATE_DDL_AUTO
             - name: SPRING_JPA_SHOW_SQL
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: SPRING_JPA_SHOW_SQL
 
             # JWT Configuration
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: JWT_SECRET
             - name: JWT_EXPIRATION
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: JWT_EXPIRATION
 
             # Timezone
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: TZ
 
             # Java Options
             - name: JAVA_OPTS
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: JAVA_OPTS
 
           resources:
@@ -184,7 +184,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: soice-mes
+  namespace: sds-mes
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

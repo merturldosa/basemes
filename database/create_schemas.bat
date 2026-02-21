@@ -1,19 +1,19 @@
 @echo off
 REM ============================================================================
-REM SoIce MES - Create Database Schemas
+REM SDS MES - Create Database Schemas
 REM Automatically finds psql and creates required schemas
 REM ============================================================================
 
 echo.
 echo ========================================
-echo SoIce MES - Schema Creation Script
+echo SDS MES - Schema Creation Script
 echo ========================================
 echo.
 
 REM Database connection parameters
 set DB_HOST=localhost
 set DB_PORT=5432
-set DB_NAME=soice_mes_dev
+set DB_NAME=sds_mes_dev
 set DB_USER=mes_admin
 set DB_PASS=mes_password_2024
 
@@ -96,7 +96,7 @@ if %errorlevel% equ 0 (
     echo.
     echo You can now start the backend application:
     echo   cd backend
-    echo   java -jar target/soice-mes-backend-0.0.1-SNAPSHOT.jar
+    echo   java -jar target/sds-mes-backend-0.0.1-SNAPSHOT.jar
     echo.
 ) else (
     echo.
@@ -107,7 +107,7 @@ if %errorlevel% equ 0 (
     echo Please check:
     echo 1. Database connection parameters
     echo 2. PostgreSQL is running
-    echo 3. Database 'soice_mes_dev' exists
+    echo 3. Database 'sds_mes_dev' exists
     echo.
     echo See database/README_SCHEMA_SETUP.md for manual setup
     echo.

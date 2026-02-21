@@ -1,9 +1,9 @@
 # Phase 1 Completion Report
-## SoIce MES - Weighing, Sales/Shipping, QC Enhancement
+## SDS MES - Weighing, Sales/Shipping, QC Enhancement
 
 **Date**: 2026-02-04
 **Developer**: Moon Myung-seop (with Claude Sonnet 4.5)
-**Project**: SoIce MES (Manufacturing Execution System)
+**Project**: SDS MES (Manufacturing Execution System)
 
 ---
 

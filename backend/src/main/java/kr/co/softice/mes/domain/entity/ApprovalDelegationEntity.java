@@ -12,12 +12,12 @@ import java.time.LocalDate;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "approval_delegations",
+@Table(schema = "common", name = "SD_approval_delegations",
     indexes = {
-        @Index(name = "idx_approval_delegation_delegator", columnList = "delegator_id"),
-        @Index(name = "idx_approval_delegation_delegate", columnList = "delegate_id"),
-        @Index(name = "idx_approval_delegation_date", columnList = "start_date, end_date"),
-        @Index(name = "idx_approval_delegation_active", columnList = "is_active")
+        @Index(name = "idx_sd_approval_delegation_delegator", columnList = "delegator_id"),
+        @Index(name = "idx_sd_approval_delegation_delegate", columnList = "delegate_id"),
+        @Index(name = "idx_sd_approval_delegation_date", columnList = "start_date, end_date"),
+        @Index(name = "idx_sd_approval_delegation_active", columnList = "is_active")
     }
 )
 @Getter

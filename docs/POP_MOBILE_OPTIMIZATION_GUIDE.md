@@ -1,6 +1,6 @@
 # POP Mobile Optimization Guide
 
-**SoIce MES - Mobile & PWA Optimization**
+**SDS MES - Mobile & PWA Optimization**
 **Version**: 1.0
 **Author**: Moon Myung-seop
 **Last Updated**: 2025-02-05
@@ -59,7 +59,7 @@ Location: `/public/manifest.json`
 
 ```json
 {
-  "name": "SoIce MES POP",
+  "name": "SDS MES POP",
   "short_name": "POP",
   "description": "Point of Production System for factory operators",
   "start_url": "/pop",
@@ -393,7 +393,7 @@ async function networkFirstStrategy(request) {
 import localforage from 'localforage';
 
 const offlineQueue = localforage.createInstance({
-  name: 'SoIceMES',
+  name: 'SDMES',
   storeName: 'offline_queue'
 });
 

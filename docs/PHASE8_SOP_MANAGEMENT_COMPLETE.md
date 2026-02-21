@@ -2,7 +2,7 @@
 
 **작성자**: Moon Myung-seop (문명섭)
 **작성일**: 2026-01-25
-**프로젝트**: SoIce MES Platform
+**프로젝트**: SDS MES Platform
 
 ---
 

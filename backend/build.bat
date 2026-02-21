@@ -1,11 +1,11 @@
 @echo off
 REM ============================================
-REM SoIce MES Backend Build Script
+REM SDS MES Backend Build Script
 REM ============================================
 REM This script ensures Java 21 is used for building
 
 echo ============================================
-echo SoIce MES Backend Build
+echo SDS MES Backend Build
 echo ============================================
 echo.
 

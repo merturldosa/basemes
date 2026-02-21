@@ -26,7 +26,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Project-Specific Requirements
 - **Date/Time Format**: Always use 24-hour format
-- **Database Table Prefix**: All tables must use `SI_` prefix (e.g., `SI_Orders`, `SI_Products`)
+- **Database Table Prefix**: All tables must use `SD_` prefix (e.g., `SD_Orders`, `SD_Products`)
 - **Database Schema**: Always optimize for performance
 - **prd.txt**: Monitor this file continuously - it is updated regularly with evolving requirements
 
@@ -83,7 +83,7 @@ Since this is a greenfield project, establish patterns early that support:
 - Industry-agnostic core functionality
 - Industry-specific extension points
 - Configuration-driven behavior
-- Database schema optimization with `SI_` table naming convention
+- Database schema optimization with `SD_` table naming convention
 
 ## Next Steps for Initial Development
 

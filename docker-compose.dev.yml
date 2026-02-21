@@ -64,7 +64,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: soice_mes_dev
+      POSTGRES_DB: sds_mes_dev
       POSTGRES_USER: dev_admin
       POSTGRES_PASSWORD: dev_password
 
@@ -81,6 +81,6 @@ services:
 # ═══════════════════════════════════════════════════════════════
 volumes:
   maven_cache:
-    name: soice-mes-maven-cache
+    name: sds-mes-maven-cache
   node_modules:
-    name: soice-mes-node-modules
+    name: sds-mes-node-modules

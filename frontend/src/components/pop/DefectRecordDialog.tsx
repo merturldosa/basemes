@@ -25,6 +25,7 @@ import {
   Warning as WarningIcon,
 } from '@mui/icons-material';
 import TouchQuantityInput from './TouchQuantityInput';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Defect Record Dialog
@@ -55,6 +56,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
   onSubmit,
   maxQuantity = 1000,
 }) => {
+  const { t } = useTranslation();
   const [defectQuantity, setDefectQuantity] = useState(1);
   const [defectType, setDefectType] = useState('');
   const [defectReason, setDefectReason] = useState('');
@@ -65,13 +67,13 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const defectTypes = [
-    { value: '외관불량', label: '외관 불량' },
-    { value: '치수불량', label: '치수 불량' },
-    { value: '기능불량', label: '기능 불량' },
-    { value: '재질불량', label: '재질 불량' },
-    { value: '조립불량', label: '조립 불량' },
-    { value: '포장불량', label: '포장 불량' },
-    { value: '기타', label: '기타' },
+    { value: 'APPEARANCE', label: t('defectRecord.defectTypes.appearance') },
+    { value: 'DIMENSION', label: t('defectRecord.defectTypes.dimension') },
+    { value: 'FUNCTION', label: t('defectRecord.defectTypes.function') },
+    { value: 'MATERIAL', label: t('defectRecord.defectTypes.material') },
+    { value: 'ASSEMBLY', label: t('defectRecord.defectTypes.assembly') },
+    { value: 'PACKAGING', label: t('defectRecord.defectTypes.packaging') },
+    { value: 'OTHER', label: t('defectRecord.defectTypes.other') },
   ];
 
   const handleReset = () => {
@@ -101,11 +103,11 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (defectQuantity <= 0) {
-      newErrors.defectQuantity = '불량 수량은 1 이상이어야 합니다';
+      newErrors.defectQuantity = t('defectRecord.errors.quantityMin');
     }
 
     if (!defectType) {
-      newErrors.defectType = '불량 유형을 선택하세요';
+      newErrors.defectType = t('defectRecord.errors.typeRequired');
     }
 
     setErrors(newErrors);
@@ -156,7 +158,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <WarningIcon />
           <Typography variant="h6" fontWeight="bold">
-            불량 기록
+            {t('defectRecord.title')}
           </Typography>
         </Box>
         <IconButton onClick={handleClose} sx={{ color: 'white' }}>
@@ -172,7 +174,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
             onChange={setDefectQuantity}
             min={1}
             max={maxQuantity}
-            label="불량 수량"
+            label={t('defectRecord.defectQuantity')}
             size="medium"
           />
         </Box>
@@ -185,11 +187,11 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
 
         {/* Defect Type */}
         <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.defectType}>
-          <InputLabel>불량 유형 *</InputLabel>
+          <InputLabel>{t('defectRecord.defectType')} *</InputLabel>
           <Select
             value={defectType}
             onChange={(e) => setDefectType(e.target.value)}
-            label="불량 유형 *"
+            label={`${t('defectRecord.defectType')} *`}
           >
             {defectTypes.map((type) => (
               <MenuItem key={type.value} value={type.value}>
@@ -206,7 +208,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
 
         {/* Severity */}
         <FormControl component="fieldset" sx={{ mb: 2 }}>
-          <FormLabel component="legend">심각도</FormLabel>
+          <FormLabel component="legend">{t('defectRecord.severity')}</FormLabel>
           <RadioGroup
             row
             value={severity}
@@ -215,17 +217,17 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
             <FormControlLabel
               value="MINOR"
               control={<Radio />}
-              label="경미"
+              label={t('defectRecord.severityLevels.minor')}
             />
             <FormControlLabel
               value="MAJOR"
               control={<Radio />}
-              label="주요"
+              label={t('defectRecord.severityLevels.major')}
             />
             <FormControlLabel
               value="CRITICAL"
               control={<Radio />}
-              label="심각"
+              label={t('defectRecord.severityLevels.critical')}
             />
           </RadioGroup>
         </FormControl>
@@ -233,35 +235,35 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
         {/* Defect Reason */}
         <TextField
           fullWidth
-          label="불량 사유"
+          label={t('defectRecord.defectReason')}
           value={defectReason}
           onChange={(e) => setDefectReason(e.target.value)}
           multiline
           rows={2}
           sx={{ mb: 2 }}
-          placeholder="불량 발생 원인을 입력하세요"
+          placeholder={t('defectRecord.placeholders.defectReason')}
         />
 
         {/* Defect Location */}
         <TextField
           fullWidth
-          label="불량 위치"
+          label={t('defectRecord.defectLocation')}
           value={defectLocation}
           onChange={(e) => setDefectLocation(e.target.value)}
           sx={{ mb: 2 }}
-          placeholder="예: 상단 모서리, 중앙부"
+          placeholder={t('defectRecord.placeholders.defectLocation')}
         />
 
         {/* Notes */}
         <TextField
           fullWidth
-          label="비고"
+          label={t('common.labels.remarks')}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           multiline
           rows={2}
           sx={{ mb: 2 }}
-          placeholder="추가 메모 사항"
+          placeholder={t('defectRecord.placeholders.notes')}
         />
 
         {/* Photo Capture */}
@@ -272,7 +274,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
             component="label"
             fullWidth
           >
-            {photo ? `사진 첨부됨: ${photo.name}` : '불량 사진 촬영 (선택)'}
+            {photo ? t('defectRecord.photoAttached', { name: photo.name }) : t('defectRecord.capturePhoto')}
             <input
               type="file"
               hidden
@@ -291,7 +293,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
           size="large"
           fullWidth
         >
-          취소
+          {t('common.buttons.cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
@@ -300,7 +302,7 @@ const DefectRecordDialog: React.FC<DefectRecordDialogProps> = ({
           size="large"
           fullWidth
         >
-          불량 기록
+          {t('defectRecord.title')}
         </Button>
       </DialogActions>
     </Dialog>

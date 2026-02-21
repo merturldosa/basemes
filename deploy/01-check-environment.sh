@@ -9,7 +9,7 @@
 set -e
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "SoIce MES Phase 2 - Environment Check"
+echo "SDS MES Phase 2 - Environment Check"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
@@ -40,7 +40,7 @@ check_postgres() {
         psql --version
 
         # Try to connect
-        if psql -U mes_admin -d soice_mes_dev -c "SELECT version();" &> /dev/null; then
+        if psql -U mes_admin -d sds_mes_dev -c "SELECT version();" &> /dev/null; then
             echo -e "${GREEN}✓${NC} Database connection successful"
         else
             echo -e "${YELLOW}⚠${NC} Cannot connect to database (may not be running)"

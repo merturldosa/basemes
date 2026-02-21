@@ -12,13 +12,13 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "common_code_groups",
+@Table(schema = "common", name = "SD_common_code_groups",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_code_group_tenant", columnNames = {"tenant_id", "code_group"})
+        @UniqueConstraint(name = "uk_sd_code_group_tenant", columnNames = {"tenant_id", "code_group"})
     },
     indexes = {
-        @Index(name = "idx_code_group_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_code_group_active", columnList = "is_active")
+        @Index(name = "idx_sd_code_group_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_code_group_active", columnList = "is_active")
     }
 )
 @Getter

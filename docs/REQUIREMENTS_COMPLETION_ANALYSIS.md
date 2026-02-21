@@ -1,8 +1,8 @@
-# SoIce MES Platform - 요구사항 대비 완성도 분석 보고서
+# SDS MES Platform - 요구사항 대비 완성도 분석 보고서
 
 ## Executive Summary
 
-**프로젝트**: SoIce MES (Manufacturing Execution System)
+**프로젝트**: SDS MES (Manufacturing Execution System)
 **분석 일자**: 2026-01-27
 **참조 문서**:
 - MES개발_2안_화면설계서.pdf (374 pages)
@@ -619,7 +619,7 @@
 
 ### 9.1 전체 평가
 
-**SoIce MES Platform**은 **85-90%** 완성도를 달성했으며, **프로덕션 배포가 가능한 상태**입니다.
+**SDS MES Platform**은 **85-90%** 완성도를 달성했으며, **프로덕션 배포가 가능한 상태**입니다.
 
 #### ✅ 강점
 1. **완벽한 백엔드**: 91.8% 평균 Unit Test 커버리지
@@ -688,8 +688,8 @@
 
 **분석 완료 일자**: 2026-01-27
 **분석자**: Claude Code (Sonnet 4.5)
-**프로젝트**: SoIce MES Platform
-**회사**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**프로젝트**: SDS MES Platform
+**회사**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)
 
 ---
 

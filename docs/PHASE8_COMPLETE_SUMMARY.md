@@ -533,10 +533,10 @@ GET    /api/alarms/statistics
 ./gradlew flywayMigrate
 
 # 또는 수동 실행
-psql -U postgres -d soicemes -f database/migrations/V022__create_holiday_schema.sql
-psql -U postgres -d soicemes -f database/migrations/V023__create_working_hours_schema.sql
-psql -U postgres -d soicemes -f database/migrations/V024__create_approval_line_schema.sql
-psql -U postgres -d soicemes -f database/migrations/V025__create_alarm_schema.sql
+psql -U postgres -d sdsmes -f database/migrations/V022__create_holiday_schema.sql
+psql -U postgres -d sdsmes -f database/migrations/V023__create_working_hours_schema.sql
+psql -U postgres -d sdsmes -f database/migrations/V024__create_approval_line_schema.sql
+psql -U postgres -d sdsmes -f database/migrations/V025__create_alarm_schema.sql
 ```
 
 ### 2. Backend 빌드 및 실행
@@ -547,7 +547,7 @@ cd backend
 ./gradlew clean build
 
 # 실행
-java -jar build/libs/soicemes-backend-0.0.1-SNAPSHOT.jar
+java -jar build/libs/sdsmes-backend-0.0.1-SNAPSHOT.jar
 
 # 또는 개발 모드
 ./gradlew bootRun
@@ -574,7 +574,7 @@ npm run preview
 
 ```properties
 # Backend (application.properties)
-spring.datasource.url=jdbc:postgresql://localhost:5432/soicemes
+spring.datasource.url=jdbc:postgresql://localhost:5432/sdsmes
 spring.datasource.username=postgres
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=validate

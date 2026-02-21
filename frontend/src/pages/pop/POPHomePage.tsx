@@ -4,9 +4,8 @@
  * @author Moon Myung-seop
  */
 
-import { Box, Card, CardContent, Typography, Button, Grid, Chip } from '@mui/material';
+import { Box, Card, CardContent, Typography, Grid, Chip } from '@mui/material';
 import {
-  Assignment as WorkOrderIcon,
   QrCodeScanner as ScannerIcon,
   CheckCircle as CheckIcon,
   BarChart as StatsIcon,

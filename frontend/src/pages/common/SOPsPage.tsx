@@ -22,7 +22,6 @@ import {
   Alert,
   Tabs,
   Tab,
-  Divider,
 } from '@mui/material';
 import {
   DataGrid,
@@ -34,12 +33,10 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Visibility as ViewIcon,
   CheckCircle as ApproveIcon,
   Cancel as RejectIcon,
   Send as SubmitIcon,
   Archive as ObsoleteIcon,
-  PlayArrow as ExecuteIcon,
 } from '@mui/icons-material';
 import sopService, {
   SOP,

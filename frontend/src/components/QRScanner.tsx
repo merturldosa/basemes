@@ -14,6 +14,7 @@ import {
   FlashlightOff as FlashOffIcon
 } from '@mui/icons-material';
 import { BrowserMultiFormatReader } from '@zxing/library';
+import { useTranslation } from 'react-i18next';
 
 interface QRScannerProps {
   onScan: (data: string) => void;
@@ -30,6 +31,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
   onClose,
   continuous = false
 }) => {
+  const { t } = useTranslation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -69,7 +71,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
       const cameras = videoDevices.filter(device => device.kind === 'videoinput');
 
       if (cameras.length === 0) {
-        setError('카메라를 찾을 수 없습니다.');
+        setError(t('qrScanner.errors.cameraNotFound'));
         return;
       }
 
@@ -77,11 +79,11 @@ const QRScanner: React.FC<QRScannerProps> = ({
       startScanning(cameras[currentDeviceIndex].deviceId);
     } catch (err: any) {
       if (err.name === 'NotAllowedError') {
-        setError('카메라 권한이 거부되었습니다. 브라우저 설정에서 카메라 권한을 허용해주세요.');
+        setError(t('qrScanner.errors.cameraPermissionDenied'));
       } else if (err.name === 'NotFoundError') {
-        setError('카메라를 찾을 수 없습니다.');
+        setError(t('qrScanner.errors.cameraNotFound'));
       } else {
-        setError('카메라 초기화 실패: ' + err.message);
+        setError(t('qrScanner.errors.cameraInitFailed', { message: err.message }));
       }
     }
   };
@@ -148,7 +150,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
         }
       );
     } catch (err: any) {
-      setError('스캔 시작 실패: ' + err.message);
+      setError(t('qrScanner.errors.scanStartFailed', { message: err.message }));
       setIsScanning(false);
     }
   };
@@ -279,7 +281,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
           >
             <CircularProgress sx={{ color: '#fff', mb: 2 }} />
             <Typography variant="body2" sx={{ color: '#fff' }}>
-              카메라 준비 중...
+              {t('qrScanner.preparingCamera')}
             </Typography>
           </Box>
         )}
@@ -358,7 +360,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
           mt: 2
         }}
       >
-        QR 코드를 가이드 안에 맞춰주세요
+        {t('qrScanner.alignQRCode')}
       </Typography>
 
       {/* 성공 알림 */}
@@ -373,7 +375,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
           severity="success"
           sx={{ width: '100%' }}
         >
-          QR 코드 스캔 완료!
+          {t('qrScanner.scanComplete')}
         </Alert>
       </Snackbar>
     </Box>

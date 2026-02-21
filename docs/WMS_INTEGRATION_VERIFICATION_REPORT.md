@@ -9,7 +9,7 @@
 
 ## 📋 Executive Summary
 
-SoIce MES WMS 모듈의 통합 구현을 코드 레벨에서 검증한 결과, **모든 핵심 기능이 완전히 구현**되어 있으며, **QMS, Production, Purchase, Sales 모듈과의 통합이 코드 레벨에서 완벽하게 구현**되어 있음을 확인하였습니다.
+SDS MES WMS 모듈의 통합 구현을 코드 레벨에서 검증한 결과, **모든 핵심 기능이 완전히 구현**되어 있으며, **QMS, Production, Purchase, Sales 모듈과의 통합이 코드 레벨에서 완벽하게 구현**되어 있음을 확인하였습니다.
 
 ### 검증 결과 요약
 
@@ -712,7 +712,7 @@ cd backend
 ./mvnw spring-boot:run
 
 # 또는
-java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar
+java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar
 ```
 
 ---

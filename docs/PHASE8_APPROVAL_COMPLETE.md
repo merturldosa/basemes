@@ -6,7 +6,7 @@
 
 **구현 일자**: 2026-01-25
 **담당자**: Claude Code + Moon Myung-seop
-**모듈 위치**: SoIce MES Platform > Common Module > Approval Line Management
+**모듈 위치**: SDS MES Platform > Common Module > Approval Line Management
 
 ---
 

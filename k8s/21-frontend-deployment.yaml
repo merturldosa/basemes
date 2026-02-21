@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Frontend Deployment for SoIce MES Platform
+# Frontend Deployment for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: frontend
 spec:
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: frontend
 spec:
@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: soice-mes-frontend:latest  # Replace with your registry/image
+          image: sds-mes-frontend:latest  # Replace with your registry/image
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -55,12 +55,12 @@ spec:
             - name: VITE_API_BASE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: VITE_API_BASE_URL
             - name: VITE_WS_BASE_URL
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: VITE_WS_BASE_URL
 
           resources:
@@ -98,7 +98,7 @@ apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: frontend-hpa
-  namespace: soice-mes
+  namespace: sds-mes
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

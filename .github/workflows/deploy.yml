@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Deployment Workflow for SoIce MES Platform
+# Deployment Workflow for SDS MES Platform
 # @author Moon Myung-seop
 #
 # Triggers: Workflow dispatch, Version tags
@@ -30,7 +30,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  KUBE_NAMESPACE: soice-mes
+  KUBE_NAMESPACE: sds-mes
 
 jobs:
   # ─────────────────────────────────────────────────────────────
@@ -81,13 +81,13 @@ jobs:
         run: |
           # Note: In production, use external secret management
           # This is a placeholder - secrets should be managed securely
-          if ! kubectl get secret soice-mes-secret -n ${{ env.KUBE_NAMESPACE }} > /dev/null 2>&1; then
-            kubectl create secret generic soice-mes-secret \
+          if ! kubectl get secret sds-mes-secret -n ${{ env.KUBE_NAMESPACE }} > /dev/null 2>&1; then
+            kubectl create secret generic sds-mes-secret \
               --from-literal=POSTGRES_USER="${{ secrets.POSTGRES_USER }}" \
               --from-literal=POSTGRES_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
               --from-literal=REDIS_PASSWORD="${{ secrets.REDIS_PASSWORD }}" \
               --from-literal=JWT_SECRET="${{ secrets.JWT_SECRET }}" \
-              --from-literal=SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-service:5432/soice_mes" \
+              --from-literal=SPRING_DATASOURCE_URL="jdbc:postgresql://postgres-service:5432/sds_mes" \
               --from-literal=SPRING_DATASOURCE_USERNAME="${{ secrets.POSTGRES_USER }}" \
               --from-literal=SPRING_DATASOURCE_PASSWORD="${{ secrets.POSTGRES_PASSWORD }}" \
               --namespace=${{ env.KUBE_NAMESPACE }}
@@ -106,7 +106,7 @@ jobs:
 
       - name: Update backend image tag
         run: |
-          sed -i "s|image: soice-mes-backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ env.VERSION }}|g" k8s/20-backend-deployment.yaml
+          sed -i "s|image: sds-mes-backend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/backend:${{ env.VERSION }}|g" k8s/20-backend-deployment.yaml
 
       - name: Deploy Backend
         run: kubectl apply -f k8s/20-backend-deployment.yaml
@@ -116,7 +116,7 @@ jobs:
 
       - name: Update frontend image tag
         run: |
-          sed -i "s|image: soice-mes-frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ env.VERSION }}|g" k8s/21-frontend-deployment.yaml
+          sed -i "s|image: sds-mes-frontend:.*|image: ${{ env.REGISTRY }}/${{ github.repository }}/frontend:${{ env.VERSION }}|g" k8s/21-frontend-deployment.yaml
 
       - name: Deploy Frontend
         run: kubectl apply -f k8s/21-frontend-deployment.yaml
@@ -130,7 +130,7 @@ jobs:
       - name: Get deployment URL
         id: get-url
         run: |
-          INGRESS_IP=$(kubectl get ingress soice-mes-ingress -n ${{ env.KUBE_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          INGRESS_IP=$(kubectl get ingress sds-mes-ingress -n ${{ env.KUBE_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "url=https://${INGRESS_IP}" >> $GITHUB_OUTPUT
 
       - name: Verify deployment

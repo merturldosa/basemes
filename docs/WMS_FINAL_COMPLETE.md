@@ -2,10 +2,10 @@
 
 ## 📋 프로젝트 개요
 
-**프로젝트**: SoIce MES - WMS (Warehouse Management System) 모듈
+**프로젝트**: SDS MES - WMS (Warehouse Management System) 모듈
 **완료일**: 2026-01-24
 **개발자**: Moon Myung-seop (msmoon@softice.co.kr)
-**회사**: (주)소프트아이스
+**회사**: (주)스마트도킹스테이션
 **버전**: 1.0 (Production Ready)
 
 ---
@@ -430,7 +430,7 @@ ABC 분석
 ```bash
 cd backend
 mvn clean package -DskipTests
-java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar
+java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar
 ```
 
 #### Frontend
@@ -503,7 +503,7 @@ npm run preview
 
 ---
 
-**SoIce MES WMS 모듈이 완성되었습니다!** 🎉
+**SDS MES WMS 모듈이 완성되었습니다!** 🎉
 
 **이제 Production 환경에 배포 가능합니다!** 🚀
 
@@ -518,4 +518,4 @@ npm run preview
 **개발자**: Moon Myung-seop
 **Email**: msmoon@softice.co.kr
 **전화**: 010-4882-2035
-**회사**: (주)소프트아이스
+**회사**: (주)스마트도킹스테이션

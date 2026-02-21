@@ -23,7 +23,7 @@
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>SoIce MES Backend</name>
+    <name>SDS MES Backend</name>
     <description>Base MES Platform - Backend API Server</description>
 
     <organization>

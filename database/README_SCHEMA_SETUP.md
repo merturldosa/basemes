@@ -15,7 +15,7 @@ This happens because the PostgreSQL database exists, but the required schemas ha
 If you have PostgreSQL installed, run:
 
 ```bash
-psql -h localhost -U mes_admin -d soice_mes_dev -f database/create_schemas.sql
+psql -h localhost -U mes_admin -d sds_mes_dev -f database/create_schemas.sql
 ```
 
 When prompted, enter the password: `mes_password_2024`
@@ -26,7 +26,7 @@ When prompted, enter the password: `mes_password_2024`
 2. Connect to the database:
    - Host: localhost
    - Port: 5432
-   - Database: soice_mes_dev
+   - Database: sds_mes_dev
    - Username: mes_admin
    - Password: mes_password_2024
 
@@ -101,7 +101,7 @@ The following schemas are needed by the application:
 1. Restart the backend application:
    ```bash
    cd backend
-   java -jar target/soice-mes-backend-0.0.1-SNAPSHOT.jar
+   java -jar target/sds-mes-backend-0.0.1-SNAPSHOT.jar
    ```
 
 2. The application should start successfully
@@ -125,7 +125,7 @@ If you still get errors after creating schemas:
    ```
 
 3. **Verify database connection in application.yml:**
-   - URL: jdbc:postgresql://localhost:5432/soice_mes_dev
+   - URL: jdbc:postgresql://localhost:5432/sds_mes_dev
    - Username: mes_admin
    - Password: mes_password_2024
 

@@ -1,6 +1,6 @@
 # POP API Reference
 
-**SoIce MES - Point of Production API Documentation**
+**SDS MES - Point of Production API Documentation**
 **Version**: 1.0
 **Last Updated**: 2025-02-05
 **Author**: Moon Myung-seop

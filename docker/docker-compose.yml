@@ -1,7 +1,7 @@
 version: '3.9'
 
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# SoIce MES - Docker Compose Development Environment
+# SDS MES - Docker Compose Development Environment
 #
 # Services:
 #   - PostgreSQL 16 (Main Database)
@@ -20,12 +20,12 @@ services:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   postgres:
     image: postgres:16-alpine
-    container_name: soice-mes-postgres
+    container_name: sds-mes-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: mes_admin
       POSTGRES_PASSWORD: mes_password_dev_2026
-      POSTGRES_DB: soice_mes_dev
+      POSTGRES_DB: sds_mes_dev
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
       TZ: Asia/Seoul
     ports:
@@ -35,9 +35,9 @@ services:
       - ./postgres/init:/docker-entrypoint-initdb.d
       - ./postgres/backups:/backups
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mes_admin -d soice_mes_dev"]
+      test: ["CMD-SHELL", "pg_isready -U mes_admin -d sds_mes_dev"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -73,7 +73,7 @@ services:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   redis:
     image: redis:7-alpine
-    container_name: soice-mes-redis
+    container_name: sds-mes-redis
     restart: unless-stopped
     environment:
       TZ: Asia/Seoul
@@ -83,7 +83,7 @@ services:
       - redis_data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
-      - soice-mes-network
+      - sds-mes-network
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -96,7 +96,7 @@ services:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   pgadmin:
     image: dpage/pgadmin4:latest
-    container_name: soice-mes-pgadmin
+    container_name: sds-mes-pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: msmoon@softice.co.kr
@@ -110,7 +110,7 @@ services:
       - pgadmin_data:/var/lib/pgadmin
       - ./pgadmin/servers.json:/pgadmin4/servers.json
     networks:
-      - soice-mes-network
+      - sds-mes-network
     depends_on:
       postgres:
         condition: service_healthy
@@ -120,19 +120,19 @@ services:
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 volumes:
   postgres_data:
-    name: soice-mes-postgres-data
+    name: sds-mes-postgres-data
     driver: local
   redis_data:
-    name: soice-mes-redis-data
+    name: sds-mes-redis-data
     driver: local
   pgadmin_data:
-    name: soice-mes-pgadmin-data
+    name: sds-mes-pgadmin-data
     driver: local
 
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 # Networks
 #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 networks:
-  soice-mes-network:
-    name: soice-mes-network
+  sds-mes-network:
+    name: sds-mes-network
     driver: bridge

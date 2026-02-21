@@ -1,18 +1,18 @@
 # ═══════════════════════════════════════════════════════════════
-# ConfigMap for SoIce MES Platform
+# ConfigMap for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: soice-mes-config
-  namespace: soice-mes
+  name: sds-mes-config
+  namespace: sds-mes
   labels:
-    app: soice-mes-platform
+    app: sds-mes-platform
 data:
   # Database Configuration
-  POSTGRES_DB: "soice_mes"
+  POSTGRES_DB: "sds_mes"
   POSTGRES_HOST: "postgres-service"
   POSTGRES_PORT: "5432"
 

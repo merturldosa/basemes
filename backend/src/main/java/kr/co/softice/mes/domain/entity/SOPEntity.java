@@ -14,17 +14,17 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "sops",
+@Table(schema = "common", name = "SD_sops",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_sop_code", columnNames = {"tenant_id", "sop_code", "version"})
+        @UniqueConstraint(name = "uk_sd_sop_code", columnNames = {"tenant_id", "sop_code", "version"})
     },
     indexes = {
-        @Index(name = "idx_sop_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_sop_type", columnList = "sop_type"),
-        @Index(name = "idx_sop_category", columnList = "category"),
-        @Index(name = "idx_sop_status", columnList = "approval_status"),
-        @Index(name = "idx_sop_active", columnList = "is_active"),
-        @Index(name = "idx_sop_effective", columnList = "effective_date")
+        @Index(name = "idx_sd_sop_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_sop_type", columnList = "sop_type"),
+        @Index(name = "idx_sd_sop_category", columnList = "category"),
+        @Index(name = "idx_sd_sop_status", columnList = "approval_status"),
+        @Index(name = "idx_sd_sop_active", columnList = "is_active"),
+        @Index(name = "idx_sd_sop_effective", columnList = "effective_date")
     }
 )
 @Getter

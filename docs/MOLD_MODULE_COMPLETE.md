@@ -287,7 +287,7 @@ Continue with **Sales & After-Sales Module** to complete the order-to-cash proce
 
 The Mold Management Module is complete with excellent test coverage (90.3% average). This module provides comprehensive support for injection molding manufacturing, including shot count tracking, preventive maintenance, and production history. All 49 tests are passing, demonstrating production-ready quality.
 
-This module is a critical differentiator for SoIce MES in the injection molding industry, providing specialized functionality that generic MES systems lack.
+This module is a critical differentiator for SDS MES in the injection molding industry, providing specialized functionality that generic MES systems lack.
 
 ---
 **Completed by**: Claude Code (Sonnet 4.5)

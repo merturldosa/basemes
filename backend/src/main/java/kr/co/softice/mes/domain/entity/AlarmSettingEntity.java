@@ -12,15 +12,15 @@ import java.time.LocalTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "alarm_settings",
+@Table(schema = "common", name = "SD_alarm_settings",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_alarm_setting_user_type",
+        @UniqueConstraint(name = "uk_sd_alarm_setting_user_type",
                 columnNames = {"tenant_id", "user_id", "alarm_type"})
     },
     indexes = {
-        @Index(name = "idx_alarm_setting_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_alarm_setting_user", columnList = "user_id"),
-        @Index(name = "idx_alarm_setting_type", columnList = "alarm_type")
+        @Index(name = "idx_sd_alarm_setting_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_alarm_setting_user", columnList = "user_id"),
+        @Index(name = "idx_sd_alarm_setting_type", columnList = "alarm_type")
     }
 )
 @Getter

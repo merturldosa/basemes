@@ -286,5 +286,93 @@
     "date": "Please select a valid date",
     "future": "Please select a future date",
     "past": "Please select a past date"
+  },
+  "qrScanner": {
+    "errors": {
+      "cameraNotFound": "Camera not found.",
+      "cameraPermissionDenied": "Camera permission denied. Please allow camera access in your browser settings.",
+      "cameraInitFailed": "Camera initialization failed: {{message}}",
+      "scanStartFailed": "Scan start failed: {{message}}"
+    },
+    "preparingCamera": "Preparing camera...",
+    "alignQRCode": "Align the QR code within the guide",
+    "scanComplete": "QR code scan complete!"
+  },
+  "defectRecord": {
+    "title": "Defect Record",
+    "defectQuantity": "Defect Quantity",
+    "defectType": "Defect Type",
+    "defectReason": "Defect Reason",
+    "defectLocation": "Defect Location",
+    "severity": "Severity",
+    "capturePhoto": "Capture Defect Photo (Optional)",
+    "photoAttached": "Photo attached: {{name}}",
+    "defectTypes": {
+      "appearance": "Appearance Defect",
+      "dimension": "Dimension Defect",
+      "function": "Functional Defect",
+      "material": "Material Defect",
+      "assembly": "Assembly Defect",
+      "packaging": "Packaging Defect",
+      "other": "Other"
+    },
+    "severityLevels": {
+      "minor": "Minor",
+      "major": "Major",
+      "critical": "Critical"
+    },
+    "errors": {
+      "quantityMin": "Defect quantity must be at least 1",
+      "typeRequired": "Please select a defect type"
+    },
+    "placeholders": {
+      "defectReason": "Enter the cause of the defect",
+      "defectLocation": "e.g., Top edge, Center",
+      "notes": "Additional notes"
+    }
+  },
+  "workOrder": {
+    "status": {
+      "pending": "Pending",
+      "ready": "Ready",
+      "inProgress": "In Progress",
+      "paused": "Paused",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "start": "Start Work",
+      "resume": "Resume Work",
+      "pause": "Pause",
+      "complete": "Complete Work"
+    },
+    "labels": {
+      "process": "Process",
+      "progressRate": "Progress",
+      "goodQuantity": "Good",
+      "defectQuantity": "Defect",
+      "defectRate": "Defect Rate",
+      "operator": "Operator"
+    }
+  },
+  "sopChecklist": {
+    "required": "Required",
+    "critical": "Critical",
+    "pass": "Pass",
+    "fail": "Fail",
+    "passCompleted": "Pass Completed",
+    "failProcessed": "Fail Processed",
+    "notes": "Notes",
+    "enterFailReason": "Enter Fail Reason",
+    "addNotesOptional": "Add Notes (Optional)",
+    "placeholders": {
+      "failReason": "Enter the reason for failure or corrective action"
+    }
+  },
+  "dataGrid": {
+    "errors": {
+      "loadFailed": "An error occurred while loading data"
+    },
+    "scrollHint": "Scroll down to automatically load the next page"
   }
 }

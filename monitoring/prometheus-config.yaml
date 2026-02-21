@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Prometheus Configuration for SoIce MES Platform
+# Prometheus Configuration for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ global:
   scrape_interval: 15s
   evaluation_interval: 15s
   external_labels:
-    cluster: 'soice-mes-production'
+    cluster: 'sds-mes-production'
     environment: 'production'
 
 # Alertmanager configuration
@@ -67,7 +67,7 @@ scrape_configs:
       - role: pod
         namespaces:
           names:
-            - soice-mes
+            - sds-mes
     relabel_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
@@ -93,13 +93,13 @@ scrape_configs:
   # ─────────────────────────────────────────────────────────────
   # Backend (Spring Boot Actuator)
   # ─────────────────────────────────────────────────────────────
-  - job_name: 'soice-mes-backend'
+  - job_name: 'sds-mes-backend'
     metrics_path: '/actuator/prometheus'
     kubernetes_sd_configs:
       - role: pod
         namespaces:
           names:
-            - soice-mes
+            - sds-mes
     relabel_configs:
       - source_labels: [__meta_kubernetes_pod_label_app]
         action: keep

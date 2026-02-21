@@ -12,14 +12,14 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "sop_steps",
+@Table(schema = "common", name = "SD_sop_steps",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_sop_step", columnNames = {"sop_id", "step_number"})
+        @UniqueConstraint(name = "uk_sd_sop_step", columnNames = {"sop_id", "step_number"})
     },
     indexes = {
-        @Index(name = "idx_sop_step_sop", columnList = "sop_id"),
-        @Index(name = "idx_sop_step_number", columnList = "step_number"),
-        @Index(name = "idx_sop_step_critical", columnList = "is_critical")
+        @Index(name = "idx_sd_sop_step_sop", columnList = "sop_id"),
+        @Index(name = "idx_sd_sop_step_number", columnList = "step_number"),
+        @Index(name = "idx_sd_sop_step_critical", columnList = "is_critical")
     }
 )
 @Getter

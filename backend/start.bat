@@ -1,11 +1,11 @@
 @echo off
 REM ============================================
-REM SoIce MES Backend Start Script
+REM SDS MES Backend Start Script
 REM ============================================
 REM This script starts the backend server with Java 21
 
 echo ============================================
-echo SoIce MES Backend Server
+echo SDS MES Backend Server
 echo ============================================
 echo.
 
@@ -28,7 +28,7 @@ java -version
 echo.
 
 REM Start server
-echo Starting SoIce MES Backend Server...
+echo Starting SDS MES Backend Server...
 echo Server will start on port 8080
 echo Press Ctrl+C to stop the server
 echo.

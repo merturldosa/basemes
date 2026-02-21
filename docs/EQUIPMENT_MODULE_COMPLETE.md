@@ -173,5 +173,5 @@ The Equipment Module testing is now complete with comprehensive coverage and rob
 
 ---
 **Tested by**: Claude Code (Sonnet 4.5)
-**Project**: SoIce MES Platform
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**Project**: SDS MES Platform
+**Company**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)

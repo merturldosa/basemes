@@ -286,5 +286,93 @@
     "date": "请选择有效日期",
     "future": "请选择未来日期",
     "past": "请选择过去日期"
+  },
+  "qrScanner": {
+    "errors": {
+      "cameraNotFound": "未找到摄像头。",
+      "cameraPermissionDenied": "摄像头权限被拒绝。请在浏览器设置中允许摄像头访问。",
+      "cameraInitFailed": "摄像头初始化失败：{{message}}",
+      "scanStartFailed": "扫描启动失败：{{message}}"
+    },
+    "preparingCamera": "正在准备摄像头...",
+    "alignQRCode": "请将二维码对准引导框内",
+    "scanComplete": "二维码扫描完成！"
+  },
+  "defectRecord": {
+    "title": "不良记录",
+    "defectQuantity": "不良数量",
+    "defectType": "不良类型",
+    "defectReason": "不良原因",
+    "defectLocation": "不良位置",
+    "severity": "严重程度",
+    "capturePhoto": "拍摄不良照片（可选）",
+    "photoAttached": "已附照片：{{name}}",
+    "defectTypes": {
+      "appearance": "外观不良",
+      "dimension": "尺寸不良",
+      "function": "功能不良",
+      "material": "材质不良",
+      "assembly": "装配不良",
+      "packaging": "包装不良",
+      "other": "其他"
+    },
+    "severityLevels": {
+      "minor": "轻微",
+      "major": "主要",
+      "critical": "严重"
+    },
+    "errors": {
+      "quantityMin": "不良数量必须至少为1",
+      "typeRequired": "请选择不良类型"
+    },
+    "placeholders": {
+      "defectReason": "请输入不良发生原因",
+      "defectLocation": "例：顶部边缘、中央部",
+      "notes": "其他备注事项"
+    }
+  },
+  "workOrder": {
+    "status": {
+      "pending": "待处理",
+      "ready": "准备",
+      "inProgress": "进行中",
+      "paused": "暂停",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "actions": {
+      "start": "开始作业",
+      "resume": "恢复作业",
+      "pause": "暂停",
+      "complete": "完成作业"
+    },
+    "labels": {
+      "process": "工序",
+      "progressRate": "进度",
+      "goodQuantity": "合格品",
+      "defectQuantity": "不良品",
+      "defectRate": "不良率",
+      "operator": "操作员"
+    }
+  },
+  "sopChecklist": {
+    "required": "必须",
+    "critical": "重要",
+    "pass": "通过",
+    "fail": "失败",
+    "passCompleted": "通过完成",
+    "failProcessed": "失败已处理",
+    "notes": "备注",
+    "enterFailReason": "输入失败原因",
+    "addNotesOptional": "添加备注（可选）",
+    "placeholders": {
+      "failReason": "请输入失败原因或纠正措施"
+    }
+  },
+  "dataGrid": {
+    "errors": {
+      "loadFailed": "加载数据时发生错误"
+    },
+    "scrollHint": "向下滚动将自动加载下一页"
   }
 }

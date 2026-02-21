@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "approval_step_instances",
+@Table(schema = "common", name = "SD_approval_step_instances",
     indexes = {
-        @Index(name = "idx_approval_step_inst_instance", columnList = "instance_id"),
-        @Index(name = "idx_approval_step_inst_approver", columnList = "approver_id"),
-        @Index(name = "idx_approval_step_inst_status", columnList = "step_status"),
-        @Index(name = "idx_approval_step_inst_order", columnList = "instance_id, step_order")
+        @Index(name = "idx_sd_approval_step_inst_instance", columnList = "instance_id"),
+        @Index(name = "idx_sd_approval_step_inst_approver", columnList = "approver_id"),
+        @Index(name = "idx_sd_approval_step_inst_status", columnList = "step_status"),
+        @Index(name = "idx_sd_approval_step_inst_order", columnList = "instance_id, step_order")
     }
 )
 @Getter

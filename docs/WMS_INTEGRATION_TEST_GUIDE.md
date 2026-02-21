@@ -14,7 +14,7 @@
 
 ### 1. Backend 실행
 ```bash
-cd D:\prj\softice\prj\claude\SoIceMES\backend
+cd D:\prj\softice\prj\claude\SDMES\backend
 mvn spring-boot:run
 ```
 - 포트: `8080`
@@ -22,7 +22,7 @@ mvn spring-boot:run
 
 ### 2. Frontend 실행
 ```bash
-cd D:\prj\softice\prj\claude\SoIceMES\frontend
+cd D:\prj\softice\prj\claude\SDMES\frontend
 npm install  # 최초 1회
 npm run dev
 ```

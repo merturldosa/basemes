@@ -1,6 +1,6 @@
 # Docker 개발 환경 가이드
 
-SoIce MES 프로젝트의 Docker 기반 개발 환경 설정 및 사용 가이드입니다.
+SDS MES 프로젝트의 Docker 기반 개발 환경 설정 및 사용 가이드입니다.
 
 ---
 
@@ -32,9 +32,9 @@ docker-compose ps
 **예상 출력:**
 ```
 NAME                    STATUS              PORTS
-soice-mes-postgres      running             0.0.0.0:5432->5432/tcp
-soice-mes-redis         running             0.0.0.0:6379->6379/tcp
-soice-mes-pgadmin       running             0.0.0.0:5050->80/tcp
+sds-mes-postgres      running             0.0.0.0:5432->5432/tcp
+sds-mes-redis         running             0.0.0.0:6379->6379/tcp
+sds-mes-pgadmin       running             0.0.0.0:5050->80/tcp
 ```
 
 ### 3. 로그 확인
@@ -69,10 +69,10 @@ docker-compose down -v
 
 ```bash
 # Docker 컨테이너 내부 접속
-docker exec -it soice-mes-postgres psql -U mes_admin -d soice_mes_dev
+docker exec -it sds-mes-postgres psql -U mes_admin -d sds_mes_dev
 
 # 호스트에서 직접 접속 (psql 설치 필요)
-psql -h localhost -p 5432 -U mes_admin -d soice_mes_dev
+psql -h localhost -p 5432 -U mes_admin -d sds_mes_dev
 ```
 
 ### B. PgAdmin 웹 UI 접속
@@ -81,7 +81,7 @@ psql -h localhost -p 5432 -U mes_admin -d soice_mes_dev
 2. 로그인:
    - Email: `msmoon@softice.co.kr`
    - Password: `admin_password_2026`
-3. 좌측 "Servers" → "SoIce MES Development" 자동 연결
+3. 좌측 "Servers" → "SDS MES Development" 자동 연결
 
 ### C. 데이터베이스 구조
 
@@ -104,16 +104,16 @@ psql -h localhost -p 5432 -U mes_admin -d soice_mes_dev
 **백업:**
 ```bash
 # 전체 데이터베이스 백업
-docker exec soice-mes-postgres pg_dump -U mes_admin soice_mes_dev > ./postgres/backups/backup_$(date +%Y%m%d_%H%M%S).sql
+docker exec sds-mes-postgres pg_dump -U mes_admin sds_mes_dev > ./postgres/backups/backup_$(date +%Y%m%d_%H%M%S).sql
 
 # 특정 스키마만 백업
-docker exec soice-mes-postgres pg_dump -U mes_admin -n mes soice_mes_dev > ./postgres/backups/mes_backup.sql
+docker exec sds-mes-postgres pg_dump -U mes_admin -n mes sds_mes_dev > ./postgres/backups/mes_backup.sql
 ```
 
 **복원:**
 ```bash
 # 백업 파일 복원
-docker exec -i soice-mes-postgres psql -U mes_admin -d soice_mes_dev < ./postgres/backups/backup_20260117.sql
+docker exec -i sds-mes-postgres psql -U mes_admin -d sds_mes_dev < ./postgres/backups/backup_20260117.sql
 ```
 
 ---
@@ -124,7 +124,7 @@ docker exec -i soice-mes-postgres psql -U mes_admin -d soice_mes_dev < ./postgre
 
 ```bash
 # Docker 컨테이너 내부 접속
-docker exec -it soice-mes-redis redis-cli
+docker exec -it sds-mes-redis redis-cli
 
 # 호스트에서 직접 접속 (redis-cli 설치 필요)
 redis-cli -h localhost -p 6379
@@ -172,7 +172,7 @@ FLUSHALL
 # Database
 DB_HOST=localhost
 DB_PORT=5432
-DB_NAME=soice_mes_dev
+DB_NAME=sds_mes_dev
 DB_USER=mes_app
 DB_PASSWORD=mes_app_password_dev_2026
 

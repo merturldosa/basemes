@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Redis Deployment for SoIce MES Platform
+# Redis Deployment for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-service
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: redis
 spec:
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: redis
 spec:
@@ -54,7 +54,7 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: REDIS_PASSWORD
           volumeMounts:
             - name: redis-storage
@@ -98,7 +98,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: redis
 spec:

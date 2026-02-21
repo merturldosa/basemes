@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Container,
@@ -11,7 +11,6 @@ import {
   ListItem,
   ListItemText,
   Chip,
-  IconButton,
   Fab,
   Divider,
   Dialog,
@@ -24,7 +23,6 @@ import {
 import {
   QrCodeScanner as ScanIcon,
   CheckCircle as CheckIcon,
-  Error as ErrorIcon,
   Send as SendIcon,
   List as ListIcon
 } from '@mui/icons-material';

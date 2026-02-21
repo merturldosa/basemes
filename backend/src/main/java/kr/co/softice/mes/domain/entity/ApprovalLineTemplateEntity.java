@@ -14,14 +14,14 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "approval_line_templates",
+@Table(schema = "common", name = "SD_approval_line_templates",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_approval_template_code", columnNames = {"tenant_id", "template_code"})
+        @UniqueConstraint(name = "uk_sd_approval_template_code", columnNames = {"tenant_id", "template_code"})
     },
     indexes = {
-        @Index(name = "idx_approval_template_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_approval_template_doc_type", columnList = "document_type"),
-        @Index(name = "idx_approval_template_active", columnList = "is_active")
+        @Index(name = "idx_sd_approval_template_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_approval_template_doc_type", columnList = "document_type"),
+        @Index(name = "idx_sd_approval_template_active", columnList = "is_active")
     }
 )
 @Getter

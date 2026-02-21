@@ -1,4 +1,4 @@
-# SoIce MES - Quick Start Deployment
+# SDS MES - Quick Start Deployment
 
 > **快速部署指南** | **Quick Deployment Guide**
 > 5분 안에 시스템을 시작하세요
@@ -9,8 +9,8 @@
 
 ```bash
 # 1. 저장소 클론
-git clone https://github.com/your-org/SoIceMES.git
-cd SoIceMES
+git clone https://github.com/your-org/SDMES.git
+cd SDMES
 
 # 2. 모든 서비스 시작 (한 번의 명령으로!)
 docker-compose up -d
@@ -109,7 +109,7 @@ docker-compose up -d
 docker-compose logs backend
 
 # 데이터베이스 연결 확인
-docker-compose exec postgres psql -U soice_admin -d soice_mes -c "SELECT 1"
+docker-compose exec postgres psql -U sds_admin -d sds_mes -c "SELECT 1"
 
 # 백엔드 재시작
 docker-compose restart backend

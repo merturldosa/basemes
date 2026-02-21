@@ -4,7 +4,7 @@
 **테스트 대상**: WMS 모듈 통합 테스트
 **테스트 환경**:
 - Backend: http://localhost:8080
-- Database: PostgreSQL (soice_mes_dev)
+- Database: PostgreSQL (sds_mes_dev)
 - Tenant: DEMO001
 
 ---
@@ -280,7 +280,7 @@ X-Tenant-ID: DEMO001
 
 ### 테스트 환경 정보
 - **백엔드**: Spring Boot 3.2.1 + Java 21
-- **데이터베이스**: PostgreSQL 16 (soice_mes_dev)
+- **데이터베이스**: PostgreSQL 16 (sds_mes_dev)
 - **포트**: 8080
 - **Multi-Tenant**: DEMO001
 

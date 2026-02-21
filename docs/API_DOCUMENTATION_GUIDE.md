@@ -1,7 +1,7 @@
-# SoIce MES Platform - API Documentation Guide
+# SDS MES Platform - API Documentation Guide
 
 > **Author**: Moon Myung-seop (문명섭)
-> **Company**: SoftIce Co., Ltd. (주)소프트아이스
+> **Company**: SoftIce Co., Ltd. (주)스마트도킹스테이션
 > **Version**: 0.8.0
 > **Last Updated**: 2026-01-27
 
@@ -9,7 +9,7 @@
 
 ## 📋 Overview
 
-SoIce MES Platform provides a comprehensive REST API for managing manufacturing execution systems. This guide covers authentication, endpoints, request/response formats, and best practices.
+SDS MES Platform provides a comprehensive REST API for managing manufacturing execution systems. This guide covers authentication, endpoints, request/response formats, and best practices.
 
 **Base URL**: `http://localhost:8080/api`
 **API Documentation**: `http://localhost:8080/api/swagger-ui.html`
@@ -57,7 +57,7 @@ The API uses **JWT (JSON Web Token)** based authentication with Bearer token sch
     "user": {
       "id": 1,
       "username": "admin",
-      "email": "admin@soice.co.kr",
+      "email": "admin@sds-mes.com",
       "name": "관리자",
       "roles": ["ADMIN"]
     }

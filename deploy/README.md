@@ -1,4 +1,4 @@
-# SoIce MES Phase 2 배포 가이드
+# SDS MES Phase 2 배포 가이드
 
 Phase 2: POP Enhancement 배포를 위한 자동화 스크립트 모음입니다.
 
@@ -27,7 +27,7 @@ Phase 2: POP Enhancement 배포를 위한 자동화 스크립트 모음입니다
 
 ```bash
 # 프로젝트 루트에서 실행
-cd D:\prj\softice\prj\claude\SoIceMES
+cd D:\prj\softice\prj\claude\SDMES
 
 # 전체 배포 스크립트 실행
 ./deploy/05-deploy-all.sh
@@ -85,7 +85,7 @@ cd D:\prj\softice\prj\claude\SoIceMES
 **출력 예시**:
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-SoIce MES Phase 2 - Environment Check
+SDS MES Phase 2 - Environment Check
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. Checking Java...
@@ -121,7 +121,7 @@ Apache Maven 3.8.6
 ```bash
 export DB_HOST=localhost
 export DB_PORT=5432
-export DB_NAME=soice_mes_dev
+export DB_NAME=sds_mes_dev
 export DB_USER=mes_admin
 export DB_PASSWORD=mes_password_dev_2026
 ```
@@ -132,7 +132,7 @@ export DB_PASSWORD=mes_password_dev_2026
 ./deploy/02-migrate-database.sh
 
 # 커스텀 설정 사용
-DB_HOST=192.168.1.100 DB_NAME=soice_mes_prod ./deploy/02-migrate-database.sh
+DB_HOST=192.168.1.100 DB_NAME=sds_mes_prod ./deploy/02-migrate-database.sh
 ```
 
 **마이그레이션 방법**:
@@ -182,7 +182,7 @@ DB_HOST=192.168.1.100 DB_NAME=soice_mes_prod ./deploy/02-migrate-database.sh
   - n: 테스트 건너뛰기 (빠른 빌드)
 
 **출력 파일**:
-- `backend/target/soice-mes-0.0.1-SNAPSHOT.jar`
+- `backend/target/sds-mes-0.0.1-SNAPSHOT.jar`
 
 **JAR 실행 방법**:
 ```bash
@@ -191,7 +191,7 @@ cd backend
 mvn spring-boot:run
 
 # 방법 2: JAR 직접 실행
-java -jar backend/target/soice-mes-0.0.1-SNAPSHOT.jar
+java -jar backend/target/sds-mes-0.0.1-SNAPSHOT.jar
 ```
 
 **오류 해결**:
@@ -275,7 +275,7 @@ npm run preview
 ```
 ╔════════════════════════════════════════════════════════╗
 ║                                                        ║
-║      SoIce MES Phase 2 - Complete Deployment          ║
+║      SDS MES Phase 2 - Complete Deployment          ║
 ║                                                        ║
 ╚════════════════════════════════════════════════════════╝
 
@@ -300,7 +300,7 @@ Continue with database migration? (y/n)
 psql -U postgres
 
 -- 데이터베이스 생성
-CREATE DATABASE soice_mes_dev
+CREATE DATABASE sds_mes_dev
     WITH ENCODING = 'UTF8'
          LC_COLLATE = 'en_US.UTF-8'
          LC_CTYPE = 'en_US.UTF-8';
@@ -309,10 +309,10 @@ CREATE DATABASE soice_mes_dev
 CREATE USER mes_admin WITH PASSWORD 'mes_password_dev_2026';
 
 -- 권한 부여
-GRANT ALL PRIVILEGES ON DATABASE soice_mes_dev TO mes_admin;
+GRANT ALL PRIVILEGES ON DATABASE sds_mes_dev TO mes_admin;
 
 -- 스키마 생성
-\c soice_mes_dev
+\c sds_mes_dev
 CREATE SCHEMA mes AUTHORIZATION mes_admin;
 CREATE SCHEMA qms AUTHORIZATION mes_admin;
 CREATE SCHEMA wms AUTHORIZATION mes_admin;
@@ -320,7 +320,7 @@ CREATE SCHEMA wms AUTHORIZATION mes_admin;
 
 **연결 테스트**:
 ```bash
-psql -h localhost -p 5432 -U mes_admin -d soice_mes_dev -c "SELECT version();"
+psql -h localhost -p 5432 -U mes_admin -d sds_mes_dev -c "SELECT version();"
 ```
 
 ### 2. 필수 도구 설치 확인
@@ -367,7 +367,7 @@ git log --oneline -1
 
 ### 환경 준비
 - [ ] PostgreSQL 서버 실행 중
-- [ ] 데이터베이스 `soice_mes_dev` 생성됨
+- [ ] 데이터베이스 `sds_mes_dev` 생성됨
 - [ ] 사용자 `mes_admin` 생성 및 권한 부여됨
 - [ ] Java 17 이상 설치됨
 - [ ] Maven 3.6 이상 설치됨
@@ -417,7 +417,7 @@ choco install maven
 net start postgresql-x64-15
 
 # 연결 테스트
-psql -h localhost -p 5432 -U mes_admin -d soice_mes_dev
+psql -h localhost -p 5432 -U mes_admin -d sds_mes_dev
 
 # 비밀번호 확인 (application.yml과 일치해야 함)
 ```
@@ -498,7 +498,7 @@ cd backend
 mvn flyway:repair
 
 # 또는 수동으로 flyway_schema_history 테이블 확인
-psql -U mes_admin -d soice_mes_dev
+psql -U mes_admin -d sds_mes_dev
 SELECT * FROM flyway_schema_history;
 ```
 

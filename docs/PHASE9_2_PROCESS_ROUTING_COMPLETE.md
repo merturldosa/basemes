@@ -1,8 +1,8 @@
 # Phase 9-2: 공정 라우팅(Process Routing) 구현 완료 보고서
 
 **작성일**: 2026-01-27
-**작성자**: SoIce MES Development Team
-**프로젝트**: SoIce MES Platform
+**작성자**: SDS MES Development Team
+**프로젝트**: SDS MES Platform
 
 ---
 

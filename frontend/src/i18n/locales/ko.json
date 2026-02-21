@@ -286,5 +286,93 @@
     "date": "올바른 날짜를 선택해주세요",
     "future": "미래 날짜를 선택해주세요",
     "past": "과거 날짜를 선택해주세요"
+  },
+  "qrScanner": {
+    "errors": {
+      "cameraNotFound": "카메라를 찾을 수 없습니다.",
+      "cameraPermissionDenied": "카메라 권한이 거부되었습니다. 브라우저 설정에서 카메라 권한을 허용해주세요.",
+      "cameraInitFailed": "카메라 초기화 실패: {{message}}",
+      "scanStartFailed": "스캔 시작 실패: {{message}}"
+    },
+    "preparingCamera": "카메라 준비 중...",
+    "alignQRCode": "QR 코드를 가이드 안에 맞춰주세요",
+    "scanComplete": "QR 코드 스캔 완료!"
+  },
+  "defectRecord": {
+    "title": "불량 기록",
+    "defectQuantity": "불량 수량",
+    "defectType": "불량 유형",
+    "defectReason": "불량 사유",
+    "defectLocation": "불량 위치",
+    "severity": "심각도",
+    "capturePhoto": "불량 사진 촬영 (선택)",
+    "photoAttached": "사진 첨부됨: {{name}}",
+    "defectTypes": {
+      "appearance": "외관 불량",
+      "dimension": "치수 불량",
+      "function": "기능 불량",
+      "material": "재질 불량",
+      "assembly": "조립 불량",
+      "packaging": "포장 불량",
+      "other": "기타"
+    },
+    "severityLevels": {
+      "minor": "경미",
+      "major": "주요",
+      "critical": "심각"
+    },
+    "errors": {
+      "quantityMin": "불량 수량은 1 이상이어야 합니다",
+      "typeRequired": "불량 유형을 선택하세요"
+    },
+    "placeholders": {
+      "defectReason": "불량 발생 원인을 입력하세요",
+      "defectLocation": "예: 상단 모서리, 중앙부",
+      "notes": "추가 메모 사항"
+    }
+  },
+  "workOrder": {
+    "status": {
+      "pending": "대기",
+      "ready": "준비",
+      "inProgress": "진행중",
+      "paused": "일시정지",
+      "completed": "완료",
+      "cancelled": "취소"
+    },
+    "actions": {
+      "start": "작업 시작",
+      "resume": "작업 재개",
+      "pause": "일시정지",
+      "complete": "작업 완료"
+    },
+    "labels": {
+      "process": "공정",
+      "progressRate": "진행률",
+      "goodQuantity": "양품",
+      "defectQuantity": "불량",
+      "defectRate": "불량률",
+      "operator": "작업자"
+    }
+  },
+  "sopChecklist": {
+    "required": "필수",
+    "critical": "중요",
+    "pass": "통과 (Pass)",
+    "fail": "실패 (Fail)",
+    "passCompleted": "통과 완료",
+    "failProcessed": "실패 처리됨",
+    "notes": "메모",
+    "enterFailReason": "실패 사유 입력",
+    "addNotesOptional": "메모 추가 (선택)",
+    "placeholders": {
+      "failReason": "실패 사유 또는 조치 사항을 입력하세요"
+    }
+  },
+  "dataGrid": {
+    "errors": {
+      "loadFailed": "데이터를 불러오는 중 오류가 발생했습니다"
+    },
+    "scrollHint": "스크롤을 아래로 내리면 자동으로 다음 페이지가 로드됩니다"
   }
 }

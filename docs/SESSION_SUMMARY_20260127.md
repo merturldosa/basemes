@@ -468,8 +468,8 @@ The platform now has robust support for:
 
 ---
 **Session by**: Claude Code (Sonnet 4.5)
-**Project**: SoIce MES Platform
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**Project**: SDS MES Platform
+**Company**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)
 **Last Update**: 2026-01-27 (Module 13 Complete)
 **Modules Completed**: 13 modules (16 total with subcategories)
 **Total Tests**: 632 tests

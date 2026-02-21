@@ -10,14 +10,14 @@ import lombok.*;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "alarm_templates",
+@Table(schema = "common", name = "SD_alarm_templates",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_alarm_template_code", columnNames = {"tenant_id", "template_code"})
+        @UniqueConstraint(name = "uk_sd_alarm_template_code", columnNames = {"tenant_id", "template_code"})
     },
     indexes = {
-        @Index(name = "idx_alarm_template_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_alarm_template_type", columnList = "alarm_type"),
-        @Index(name = "idx_alarm_template_event", columnList = "event_type")
+        @Index(name = "idx_sd_alarm_template_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_alarm_template_type", columnList = "alarm_type"),
+        @Index(name = "idx_sd_alarm_template_event", columnList = "event_type")
     }
 )
 @Getter

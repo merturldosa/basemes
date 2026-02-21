@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "sop_executions",
+@Table(schema = "common", name = "SD_sop_executions",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_sop_exec_no", columnNames = {"tenant_id", "execution_no"})
+        @UniqueConstraint(name = "uk_sd_sop_exec_no", columnNames = {"tenant_id", "execution_no"})
     },
     indexes = {
-        @Index(name = "idx_sop_exec_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_sop_exec_sop", columnList = "sop_id"),
-        @Index(name = "idx_sop_exec_date", columnList = "execution_date"),
-        @Index(name = "idx_sop_exec_executor", columnList = "executor_id"),
-        @Index(name = "idx_sop_exec_status", columnList = "execution_status"),
-        @Index(name = "idx_sop_exec_reference", columnList = "reference_type, reference_id")
+        @Index(name = "idx_sd_sop_exec_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_sop_exec_sop", columnList = "sop_id"),
+        @Index(name = "idx_sd_sop_exec_date", columnList = "execution_date"),
+        @Index(name = "idx_sd_sop_exec_executor", columnList = "executor_id"),
+        @Index(name = "idx_sd_sop_exec_status", columnList = "execution_status"),
+        @Index(name = "idx_sd_sop_exec_reference", columnList = "reference_type, reference_id")
     }
 )
 @Getter

@@ -1,5 +1,5 @@
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- SoIce MES - Common Schema Migration V001
+-- SDS MES - Common Schema Migration V001
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- Purpose: Create common schema tables (multi-tenant core)
 -- Author: Moon Myung-seop <msmoon@softice.co.kr>

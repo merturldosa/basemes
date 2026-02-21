@@ -37,11 +37,11 @@
    ```bash
    # 실행 중이던 버전으로 복구
    cd backend
-   java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar
+   java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar
    ```
 
 2. **500 에러 원인 파악**
-   - 로그 파일 확인: `backend/logs/soice-mes-backend.log`
+   - 로그 파일 확인: `backend/logs/sds-mes-backend.log`
    - 실제 Exception 스택트레이스 분석
    - LazyInitializationException인지 다른 문제인지 확인
 
@@ -179,7 +179,7 @@ ls -lh backend/target/*.jar
 
 # 2. 백엔드 재시작
 cd backend
-java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar &
+java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar &
 
 # 3. 5초 대기 후 테스트
 sleep 5
@@ -188,7 +188,7 @@ curl http://localhost:8080/api/warehouses \
   -H "X-Tenant-ID: DEMO001"
 
 # 4. 에러 발생 시 로그 확인
-tail -100 logs/soice-mes-backend.log
+tail -100 logs/sds-mes-backend.log
 ```
 
 ### 2단계: 500 에러 간단 수정 (30분 이내)
@@ -209,7 +209,7 @@ WMS 통합 테스트 스크립트 실행
 cd backend
 # 기존 프로세스 종료 (이미 완료)
 # JAR 파일 실행
-java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar > ../backend_restart.log 2>&1 &
+java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar > ../backend_restart.log 2>&1 &
 echo $! > backend.pid
 sleep 10
 

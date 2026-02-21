@@ -6,7 +6,7 @@
 
 ```bash
 # 1. 터미널 열기 (Git Bash 또는 PowerShell)
-cd D:\prj\softice\prj\claude\SoIceMES\backend
+cd D:\prj\softice\prj\claude\SDMES\backend
 
 # 2. 컴파일 및 실행 (jar 파일 잠금 문제가 있다면)
 # 방법 A: Maven 직접 실행
@@ -15,7 +15,7 @@ mvn spring-boot:run
 # 방법 B: 기존 실행 중인 프로세스 종료 후 재실행
 # taskkill /F /IM java.exe
 # mvn clean package -DskipTests
-# java -jar target/soice-mes-backend-0.1.0-SNAPSHOT.jar
+# java -jar target/sds-mes-backend-0.1.0-SNAPSHOT.jar
 ```
 
 **확인**:
@@ -27,7 +27,7 @@ mvn spring-boot:run
 
 ```bash
 # 1. 새 터미널 열기
-cd D:\prj\softice\prj\claude\SoIceMES\frontend
+cd D:\prj\softice\prj\claude\SDMES\frontend
 
 # 2. 의존성 설치 (최초 1회만)
 npm install
@@ -199,7 +199,7 @@ mvn clean package -DskipTests
 
 ### 데이터베이스
 - PostgreSQL: `localhost:5432`
-- Database: `soice_mes`
+- Database: `sds_mes`
 - User: (환경 설정 확인)
 
 ---
@@ -208,7 +208,7 @@ mvn clean package -DskipTests
 
 **실행 전**:
 - [ ] PostgreSQL 실행 중
-- [ ] Database `soice_mes` 존재
+- [ ] Database `sds_mes` 존재
 - [ ] 필수 스키마 생성 (Flyway 마이그레이션 확인)
 - [ ] 포트 8080, 5173 사용 가능
 

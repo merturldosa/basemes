@@ -12,11 +12,11 @@ import java.time.LocalTime;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "working_hours",
+@Table(schema = "common", name = "SD_working_hours",
     indexes = {
-        @Index(name = "idx_working_hours_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_working_hours_default", columnList = "is_default"),
-        @Index(name = "idx_working_hours_effective", columnList = "tenant_id, effective_from, effective_to")
+        @Index(name = "idx_sd_working_hours_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_working_hours_default", columnList = "is_default"),
+        @Index(name = "idx_sd_working_hours_effective", columnList = "tenant_id, effective_from, effective_to")
     }
 )
 @Getter

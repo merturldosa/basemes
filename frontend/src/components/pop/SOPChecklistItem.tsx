@@ -16,6 +16,7 @@ import {
   Cancel as FailIcon,
   Notes as NotesIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 /**
  * SOP Checklist Item Component
@@ -45,6 +46,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
   onComplete,
   disabled = false,
 }) => {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [notes, setNotes] = useState(step.notes || '');
@@ -119,10 +121,10 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                 {step.stepTitle}
               </Typography>
               {step.isRequired && (
-                <Chip label="필수" size="small" color="error" />
+                <Chip label={t('sopChecklist.required')} size="small" color="error" />
               )}
               {step.isCritical && (
-                <Chip label="중요" size="small" color="warning" />
+                <Chip label={t('sopChecklist.critical')} size="small" color="warning" />
               )}
             </Box>
 
@@ -144,7 +146,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                   size="large"
                   sx={{ flex: 1, minHeight: 60 }}
                 >
-                  통과 (Pass)
+                  {t('sopChecklist.pass')}
                 </Button>
                 <Button
                   variant={result === false ? 'contained' : 'outlined'}
@@ -155,7 +157,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                   size="large"
                   sx={{ flex: 1, minHeight: 60 }}
                 >
-                  실패 (Fail)
+                  {t('sopChecklist.fail')}
                 </Button>
               </Box>
             )}
@@ -165,13 +167,13 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
               <Box sx={{ mt: 2 }}>
                 <Chip
                   icon={result ? <PassIcon /> : <FailIcon />}
-                  label={result ? '통과 완료' : '실패 처리됨'}
+                  label={result ? t('sopChecklist.passCompleted') : t('sopChecklist.failProcessed')}
                   color={result ? 'success' : 'error'}
                   variant="filled"
                 />
                 {step.notes && (
                   <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                    메모: {step.notes}
+                    {t('sopChecklist.notes')}: {step.notes}
                   </Typography>
                 )}
               </Box>
@@ -182,7 +184,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
               <Collapse in={showNotes}>
                 <Box sx={{ mt: 2, p: 2, bgcolor: 'error.lighter', borderRadius: 1 }}>
                   <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
-                    실패 사유 입력
+                    {t('sopChecklist.enterFailReason')}
                   </Typography>
                   <TextField
                     fullWidth
@@ -190,7 +192,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                     rows={3}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    placeholder="실패 사유 또는 조치 사항을 입력하세요"
+                    placeholder={t('sopChecklist.placeholders.failReason')}
                     sx={{ mb: 1 }}
                   />
                   <Box sx={{ display: 'flex', gap: 1 }}>
@@ -203,7 +205,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                       }}
                       fullWidth
                     >
-                      취소
+                      {t('common.buttons.cancel')}
                     </Button>
                     <Button
                       variant="contained"
@@ -212,7 +214,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                       disabled={!notes.trim()}
                       fullWidth
                     >
-                      확인
+                      {t('common.buttons.confirm')}
                     </Button>
                   </Box>
                 </Box>
@@ -227,7 +229,7 @@ const SOPChecklistItem: React.FC<SOPChecklistItemProps> = ({
                 size="small"
                 sx={{ mt: 1 }}
               >
-                메모 추가 (선택)
+                {t('sopChecklist.addNotesOptional')}
               </Button>
             )}
           </Box>

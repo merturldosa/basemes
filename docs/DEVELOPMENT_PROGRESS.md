@@ -1,4 +1,4 @@
-# SoIce MES Development Progress
+# SDS MES Development Progress
 
 **Last Updated**: 2026-01-23
 **Developer**: Moon Myung-seop (msmoon@softice.co.kr)
@@ -77,7 +77,7 @@
 #### Package Structure
 ```
 kr.co.softice.mes/
-├── SoIceMesApplication.java          # Main application class
+├── SDSMesApplication.java          # Main application class
 ├── common/                            # Common modules
 │   ├── config/                        # Configuration classes
 │   │   ├── WebMvcConfig.java          # CORS + Tenant Interceptor
@@ -292,7 +292,7 @@ kr.co.softice.mes/
   - Email: admin@softice.co.kr
   - Password: admin123
 - **PostgreSQL**: localhost:5432
-  - Database: soice_mes_dev
+  - Database: sds_mes_dev
   - User: mes_admin
   - Password: mes_password_dev_2026
 
@@ -570,7 +570,7 @@ List<WorkResultEntity> findByWorkOrderIdWithRelations(@Param("workOrderId") Long
 #### Tenant
 - **ID**: DEMO001
 - **Name**: 데모 회사
-- **Company**: (주)소프트아이스 데모
+- **Company**: (주)스마트도킹스테이션 데모
 
 #### Users
 | Username | Password | Role | Description |

@@ -19,6 +19,7 @@ import {
   GridPaginationModel,
   DataGridProps,
 } from '@mui/x-data-grid';
+import { useTranslation } from 'react-i18next';
 
 export interface EnhancedDataGridProps<T> extends Omit<DataGridProps, 'rows' | 'loading'> {
   /**
@@ -91,6 +92,7 @@ export default function EnhancedDataGrid<T extends Record<string, any>>({
   getRowId,
   ...otherProps
 }: EnhancedDataGridProps<T>) {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<T[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalElements, setTotalElements] = useState(0);
@@ -130,7 +132,7 @@ export default function EnhancedDataGrid<T extends Record<string, any>>({
       }
 
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '데이터를 불러오는 중 오류가 발생했습니다';
+      const errorMessage = err instanceof Error ? err.message : t('dataGrid.errors.loadFailed');
       setError(errorMessage);
 
       if (onError && err instanceof Error) {
@@ -234,7 +236,7 @@ export default function EnhancedDataGrid<T extends Record<string, any>>({
         >
           <Alert severity="info" onClose={() => setShowScrollHint(false)}>
             <Typography variant="caption">
-              스크롤을 아래로 내리면 자동으로 다음 페이지가 로드됩니다
+              {t('dataGrid.scrollHint')}
             </Typography>
           </Alert>
         </Box>

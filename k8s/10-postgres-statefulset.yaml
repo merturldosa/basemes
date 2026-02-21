@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# PostgreSQL StatefulSet for SoIce MES Platform
+# PostgreSQL StatefulSet for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: postgres-service
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: postgres
 spec:
@@ -26,7 +26,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: postgres
-  namespace: soice-mes
+  namespace: sds-mes
   labels:
     app: postgres
 spec:
@@ -50,24 +50,24 @@ spec:
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: soice-mes-secret
+                  name: sds-mes-secret
                   key: POSTGRES_PASSWORD
             - name: POSTGRES_INITDB_ARGS
               value: "--encoding=UTF-8 --locale=C"
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: soice-mes-config
+                  name: sds-mes-config
                   key: TZ
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata

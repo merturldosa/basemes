@@ -1,5 +1,5 @@
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--- SoIce MES - Initial Seed Data
+-- SDS MES - Initial Seed Data
 -- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 -- Purpose: Insert initial data for development and testing
 -- Author: Moon Myung-seop <msmoon@softice.co.kr>
@@ -23,7 +23,7 @@ INSERT INTO common.SD_Tenants (
 ) VALUES
 -- SoftIce (개발사)
 ('softice', 'SoftIce Development', 'SOFTICE',
- '(주)소프트아이스', '123-45-67890', '문명섭',
+ '(주)스마트도킹스테이션', '123-45-67890', '문명섭',
  'other', 'software_development',
  '경기도 성남시', '031-689-4707', 'info@softice.co.kr', 'www.softice.co.kr',
  '{"features": ["all"], "max_users": 9999}'::jsonb, 'active'),

@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Docker Build and Push Workflow for SoIce MES Platform
+# Docker Build and Push Workflow for SDS MES Platform
 # @author Moon Myung-seop
 #
 # Triggers: Push to main, Version tags

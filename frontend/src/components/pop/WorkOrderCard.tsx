@@ -19,6 +19,7 @@ import {
   Person as PersonIcon,
   Category as ProductIcon,
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Work Order Card Component
@@ -57,6 +58,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
   onComplete,
   onClick,
 }) => {
+  const { t } = useTranslation();
   const {
     workOrderId,
     workOrderNo,
@@ -82,12 +84,12 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
 
   // Status colors and labels
   const statusConfig = {
-    PENDING: { color: 'default', label: '대기', bgcolor: '#9e9e9e' },
-    READY: { color: 'info', label: '준비', bgcolor: '#2196f3' },
-    IN_PROGRESS: { color: 'success', label: '진행중', bgcolor: '#4caf50' },
-    PAUSED: { color: 'warning', label: '일시정지', bgcolor: '#ff9800' },
-    COMPLETED: { color: 'success', label: '완료', bgcolor: '#66bb6a' },
-    CANCELLED: { color: 'error', label: '취소', bgcolor: '#f44336' },
+    PENDING: { color: 'default', label: t('workOrder.status.pending'), bgcolor: '#9e9e9e' },
+    READY: { color: 'info', label: t('workOrder.status.ready'), bgcolor: '#2196f3' },
+    IN_PROGRESS: { color: 'success', label: t('workOrder.status.inProgress'), bgcolor: '#4caf50' },
+    PAUSED: { color: 'warning', label: t('workOrder.status.paused'), bgcolor: '#ff9800' },
+    COMPLETED: { color: 'success', label: t('workOrder.status.completed'), bgcolor: '#66bb6a' },
+    CANCELLED: { color: 'error', label: t('workOrder.status.cancelled'), bgcolor: '#f44336' },
   } as const;
 
   const currentStatus = statusConfig[status] || statusConfig.PENDING;
@@ -107,7 +109,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           size="large"
           fullWidth
         >
-          작업 시작
+          {t('workOrder.actions.start')}
         </Button>
       );
     }
@@ -125,7 +127,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           size="large"
           fullWidth
         >
-          작업 재개
+          {t('workOrder.actions.resume')}
         </Button>
       );
     }
@@ -144,7 +146,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
             size="large"
             sx={{ flex: 1 }}
           >
-            일시정지
+            {t('workOrder.actions.pause')}
           </Button>
           <Button
             variant="contained"
@@ -157,7 +159,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
             size="large"
             sx={{ flex: 1 }}
           >
-            작업 완료
+            {t('workOrder.actions.complete')}
           </Button>
         </Box>
       );
@@ -214,7 +216,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           </Typography>
           {processName && (
             <Typography variant="caption" color="text.secondary">
-              공정: {processName}
+              {t('workOrder.labels.process')}: {processName}
             </Typography>
           )}
         </Box>
@@ -225,7 +227,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
         <Box sx={{ mb: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body2" color="text.secondary">
-              진행률
+              {t('workOrder.labels.progressRate')}
             </Typography>
             <Typography variant="body2" fontWeight="bold">
               {actualQuantity} / {plannedQuantity} ({progressRate}%)
@@ -249,7 +251,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
         <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
           <Box sx={{ flex: 1 }}>
             <Typography variant="caption" color="text.secondary">
-              양품
+              {t('workOrder.labels.goodQuantity')}
             </Typography>
             <Typography variant="h6" color="success.main" fontWeight="bold">
               {goodQuantity}
@@ -257,7 +259,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           </Box>
           <Box sx={{ flex: 1 }}>
             <Typography variant="caption" color="text.secondary">
-              불량
+              {t('workOrder.labels.defectQuantity')}
             </Typography>
             <Typography variant="h6" color="error.main" fontWeight="bold">
               {defectQuantity}
@@ -265,7 +267,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           </Box>
           <Box sx={{ flex: 1 }}>
             <Typography variant="caption" color="text.secondary">
-              불량률
+              {t('workOrder.labels.defectRate')}
             </Typography>
             <Typography variant="h6" fontWeight="bold">
               {defectRate}%
@@ -278,7 +280,7 @@ const WorkOrderCard: React.FC<WorkOrderCardProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <PersonIcon fontSize="small" color="action" />
             <Typography variant="caption" color="text.secondary">
-              작업자: {assignedUserName}
+              {t('workOrder.labels.operator')}: {assignedUserName}
             </Typography>
           </Box>
         )}

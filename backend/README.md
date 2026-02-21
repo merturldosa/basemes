@@ -1,4 +1,4 @@
-# SoIce MES Backend
+# SDS MES Backend
 
 Spring Boot 기반 Base MES 플랫폼 백엔드 API 서버
 
@@ -108,7 +108,7 @@ mvn clean package -P production
 
 ```
 target/
-└── soice-mes-backend-0.1.0-SNAPSHOT.jar
+└── sds-mes-backend-0.1.0-SNAPSHOT.jar
 ```
 
 ---
@@ -244,7 +244,7 @@ taskkill /PID <프로세스ID> /F
 docker ps
 
 # PostgreSQL 로그 확인
-docker logs soice-mes-postgres
+docker logs sds-mes-postgres
 ```
 
 ---
@@ -259,4 +259,4 @@ Proprietary - All rights reserved by SoftIce Co., Ltd.
 
 **개발자**: Moon Myung-seop
 **이메일**: msmoon@softice.co.kr
-**회사**: (주)소프트아이스
+**회사**: (주)스마트도킹스테이션

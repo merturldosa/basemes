@@ -1,4 +1,4 @@
-# SoIce MES (Manufacturing Execution System)
+# SDS MES (Manufacturing Execution System)
 
 <div align="center">
 
@@ -16,7 +16,7 @@
 
 ## 📋 프로젝트 개요
 
-SoIce MES는 **(주)소프트아이스**가 개발하는 차세대 Base MES 플랫폼입니다.
+SDS MES는 **(주)스마트도킹스테이션**가 개발하는 차세대 Base MES 플랫폼입니다.
 의료기기, 화학, 전자 등 다양한 제조 산업에 **신속하게 커스터마이징** 가능한 설정 기반 아키텍처를 제공합니다.
 
 ### 핵심 특징
@@ -88,7 +88,7 @@ SoIce MES는 **(주)소프트아이스**가 개발하는 차세대 Base MES 플�
 ## 📂 프로젝트 구조
 
 ```
-SoIceMES/
+SDMES/
 ├── backend/                    # Spring Boot 백엔드
 │   ├── src/
 │   ├── pom.xml
@@ -126,7 +126,7 @@ SoIceMES/
 ```bash
 # 1. 저장소 클론
 git clone <repository-url>
-cd SoIceMES
+cd SDMES
 
 # 2. 전체 시스템 시작 (한 줄로!)
 docker-compose up -d
@@ -182,8 +182,8 @@ Docker Compose가 자동으로 설정합니다. 수동 설정이 필요한 경�
 
 ```bash
 # backend/.env.local
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/soice_mes
-SPRING_DATASOURCE_USERNAME=soice_admin
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/sds_mes
+SPRING_DATASOURCE_USERNAME=sds_admin
 SPRING_DATASOURCE_PASSWORD=<your-password>
 SPRING_REDIS_HOST=localhost
 SPRING_REDIS_PORT=6379
@@ -301,13 +301,13 @@ VITE_WS_BASE_URL=ws://localhost:8080/ws
 
 ## 🤝 기여
 
-이 프로젝트는 **(주)소프트아이스**의 소유입니다.
+이 프로젝트는 **(주)스마트도킹스테이션**의 소유입니다.
 
 ---
 
 ## 👥 팀
 
-**개발사**: (주)소프트아이스
+**개발사**: (주)스마트도킹스테이션
 **개발자**: 문명섭 (Moon Myung-seop)
 **이메일**: msmoon@softice.co.kr
 **전화**: 010-4882-2035

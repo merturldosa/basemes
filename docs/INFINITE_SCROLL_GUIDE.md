@@ -3,7 +3,7 @@
 **Version:** 1.3.0
 **Date:** 2026-01-27
 **Author:** Moon Myung-seop (msmoon@softice.co.kr)
-**Company:** (주)소프트아이스 SoftIce Co., Ltd.
+**Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ---
 
@@ -22,7 +22,7 @@
 
 ## 🎯 Overview
 
-The SoIce MES platform now includes comprehensive infinite scroll functionality to improve user experience when browsing large datasets. This implementation provides two approaches:
+The SDS MES platform now includes comprehensive infinite scroll functionality to improve user experience when browsing large datasets. This implementation provides two approaches:
 
 ### 1. **EnhancedDataGrid** - For Table/Grid Views
 - Server-side pagination with auto-load next page
@@ -855,7 +855,7 @@ For questions or issues:
 - **Developer:** Moon Myung-seop
 - **Email:** msmoon@softice.co.kr
 - **Phone:** 010-4882-2035
-- **Company:** (주)소프트아이스 SoftIce Co., Ltd.
+- **Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ---
 

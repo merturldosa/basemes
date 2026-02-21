@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Alertmanager Configuration for SoIce MES Platform
+# Alertmanager Configuration for SDS MES Platform
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ global:
   resolve_timeout: 5m
   # SMTP configuration (for email alerts)
   # smtp_smarthost: 'smtp.gmail.com:587'
-  # smtp_from: 'alerts@soice-mes.com'
+  # smtp_from: 'alerts@sds-mes.com'
   # smtp_auth_username: 'your-email@gmail.com'
   # smtp_auth_password: 'your-app-password'
 
@@ -65,15 +65,15 @@ receivers:
   - name: 'critical-alerts'
     # Email notifications
     # email_configs:
-    #   - to: 'oncall@soice-mes.com'
+    #   - to: 'oncall@sds-mes.com'
     #     headers:
-    #       Subject: '[CRITICAL] SoIce MES Alert'
+    #       Subject: '[CRITICAL] SDS MES Alert'
 
     # Slack notifications
     # slack_configs:
     #   - api_url: 'YOUR_SLACK_WEBHOOK_URL'
     #     channel: '#alerts-critical'
-    #     title: 'Critical Alert - SoIce MES'
+    #     title: 'Critical Alert - SDS MES'
     #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
     # PagerDuty
@@ -86,14 +86,14 @@ receivers:
     # slack_configs:
     #   - api_url: 'YOUR_SLACK_WEBHOOK_URL'
     #     channel: '#alerts-warning'
-    #     title: 'Warning - SoIce MES'
+    #     title: 'Warning - SDS MES'
 
   # Database team
   - name: 'database-team'
     # email_configs:
-    #   - to: 'database-team@soice-mes.com'
+    #   - to: 'database-team@sds-mes.com'
 
   # Development team
   - name: 'dev-team'
     # email_configs:
-    #   - to: 'dev-team@soice-mes.com'
+    #   - to: 'dev-team@sds-mes.com'

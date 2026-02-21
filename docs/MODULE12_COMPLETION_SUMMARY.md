@@ -356,7 +356,7 @@ Module 12 ranks **3rd highest** among all completed modules.
 
 ## Conclusion
 
-Module 12 completion adds critical enterprise infrastructure to the SoIce MES Platform:
+Module 12 completion adds critical enterprise infrastructure to the SDS MES Platform:
 
 ### ✅ Achievements
 - **4 services** with ≥80% coverage (target met)
@@ -386,11 +386,11 @@ Module 12 completion adds critical enterprise infrastructure to the SoIce MES Pl
 - **Services with 100% Coverage**: 10 services (including AuditLogService) ⭐
 - **Total Tests**: 573+ tests (519 from session summary + 54 from Module 12)
 
-The SoIce MES Platform continues to demonstrate world-class quality standards with comprehensive test coverage and production-ready features.
+The SDS MES Platform continues to demonstrate world-class quality standards with comprehensive test coverage and production-ready features.
 
 ---
 
 **Module Completed By**: Claude Code (Sonnet 4.5)
-**Project**: SoIce MES Platform
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**Project**: SDS MES Platform
+**Company**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)
 **Date**: 2026-01-27

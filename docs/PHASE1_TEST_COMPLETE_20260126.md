@@ -1,6 +1,6 @@
 # WMS Phase 1 단위 테스트 완료 보고서 🏆
 
-**프로젝트**: SoIce MES (Manufacturing Execution System)
+**프로젝트**: SDS MES (Manufacturing Execution System)
 **작성일**: 2026-01-26 19:00
 **작성자**: Claude Sonnet 4.5
 **Phase**: Phase 1 WMS 핵심 서비스 단위 테스트

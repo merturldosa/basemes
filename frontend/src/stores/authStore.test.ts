@@ -3,7 +3,7 @@
  * @author Moon Myung-seop
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { useAuthStore } from './authStore';
 import { mockLocalStorage } from '@/test/test-utils';
 import { act } from '@testing-library/react';

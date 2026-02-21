@@ -1,15 +1,15 @@
 {
   "Servers": {
     "1": {
-      "Name": "SoIce MES Development",
+      "Name": "SDS MES Development",
       "Group": "Servers",
       "Host": "postgres",
       "Port": 5432,
-      "MaintenanceDB": "soice_mes_dev",
+      "MaintenanceDB": "sds_mes_dev",
       "Username": "mes_admin",
       "Password": "mes_password_dev_2026",
       "SSLMode": "prefer",
-      "Comment": "SoIce MES Development Database"
+      "Comment": "SDS MES Development Database"
     }
   }
 }

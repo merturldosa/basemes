@@ -21,7 +21,7 @@ netstat -ano | grep 8080
 #### Option A: Database에 직접 테스트 데이터 삽입
 ```sql
 -- PostgreSQL에 접속
-psql -U postgres -d soice_mes_db
+psql -U postgres -d sds_mes_db
 
 -- 테스트 tenant 확인 또는 생성
 SELECT * FROM common.si_tenants WHERE tenant_id = 'tenant1';

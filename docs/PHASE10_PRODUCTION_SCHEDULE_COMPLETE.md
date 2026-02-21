@@ -2,7 +2,7 @@
 
 **작성일**: 2026-01-27
 **작성자**: Claude Code (Sonnet 4.5)
-**프로젝트**: SoIce MES Platform
+**프로젝트**: SDS MES Platform
 
 ---
 

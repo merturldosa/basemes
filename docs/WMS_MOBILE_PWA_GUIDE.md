@@ -12,7 +12,7 @@
 ## 개요
 
 ### Progressive Web App (PWA)
-SoIce MES WMS는 PWA로 구현되어 네이티브 앱과 유사한 사용자 경험을 제공합니다.
+SDS MES WMS는 PWA로 구현되어 네이티브 앱과 유사한 사용자 경험을 제공합니다.
 
 ### 주요 기능
 - 📱 **홈 화면 추가** - 앱처럼 설치 가능
@@ -289,7 +289,7 @@ npm run build
 
 #### 캐시 확인
 1. Application → Cache Storage
-2. "soice-mes-v1" 캐시 확인
+2. "sds-mes-v1" 캐시 확인
 3. 정적 리소스 캐시 확인
 
 ### 3. PWA 테스트

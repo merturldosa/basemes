@@ -25,8 +25,6 @@ import {
   Delete as DeleteIcon,
   CheckCircle as ActiveIcon,
   Cancel as InactiveIcon,
-  Build as MaintenanceIcon,
-  Warning as WarningIcon,
 } from '@mui/icons-material';
 import equipmentService, { Equipment, EquipmentCreateRequest, EquipmentUpdateRequest } from '../../services/equipmentService';
 

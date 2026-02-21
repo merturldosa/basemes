@@ -15,17 +15,17 @@ import java.util.List;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "approval_instances",
+@Table(schema = "common", name = "SD_approval_instances",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_approval_instance_document",
+        @UniqueConstraint(name = "uk_sd_approval_instance_document",
                 columnNames = {"tenant_id", "document_type", "document_id"})
     },
     indexes = {
-        @Index(name = "idx_approval_instance_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_approval_instance_status", columnList = "approval_status"),
-        @Index(name = "idx_approval_instance_document", columnList = "document_type, document_id"),
-        @Index(name = "idx_approval_instance_requester", columnList = "requester_id"),
-        @Index(name = "idx_approval_instance_date", columnList = "request_date")
+        @Index(name = "idx_sd_approval_instance_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_approval_instance_status", columnList = "approval_status"),
+        @Index(name = "idx_sd_approval_instance_document", columnList = "document_type, document_id"),
+        @Index(name = "idx_sd_approval_instance_requester", columnList = "requester_id"),
+        @Index(name = "idx_sd_approval_instance_date", columnList = "request_date")
     }
 )
 @Getter

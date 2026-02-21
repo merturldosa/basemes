@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# Multi-stage Dockerfile for SoIce MES Backend (Spring Boot)
+# Multi-stage Dockerfile for SDS MES Backend (Spring Boot)
 # @author Moon Myung-seop
 # ═══════════════════════════════════════════════════════════════
 

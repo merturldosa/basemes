@@ -25,7 +25,6 @@ import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Build as MaintenanceIcon,
 } from '@mui/icons-material';
 import moldMaintenanceService, { MoldMaintenance, MoldMaintenanceCreateRequest, MoldMaintenanceUpdateRequest } from '../../services/moldMaintenanceService';
 import moldService, { Mold } from '../../services/moldService';

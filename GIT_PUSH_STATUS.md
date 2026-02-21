@@ -4,13 +4,13 @@
 
 ### 1. All Files Committed
 **Commit Hash**: `12303b3`
-**Commit Message**: "Complete SoIce MES Platform Implementation (100% Complete)"
+**Commit Message**: "Complete SDS MES Platform Implementation (100% Complete)"
 **Files Changed**: 778 files
 **Lines Added**: 167,610 insertions
 
 ### 2. Commit History
 ```
-12303b3 Complete SoIce MES Platform Implementation (100% Complete)
+12303b3 Complete SDS MES Platform Implementation (100% Complete)
 4d3ae3a Phase 5: Advanced Features Implementation (95% -> 100%) 🎉
 cc43965 Phase 4: Integration Testing and Quality Assurance (90% -> 95%)
 6e75c12 Phase 3: Advanced Analytics and Reporting System (85% -> 90%)
@@ -18,7 +18,7 @@ cc43965 Phase 4: Integration Testing and Quality Assurance (90% -> 95%)
 824bff0 Add Weighing Management frontend integration
 99afd75 Implement Phase 1: Core MES functionality enhancements (30% → 70%)
 30faeb0 Add Docker environment and database schema
-3a2f6a7 Initial project setup - SoIce MES Platform
+3a2f6a7 Initial project setup - SDS MES Platform
 ```
 
 ### 3. Project Statistics
@@ -51,13 +51,13 @@ fatal: Could not read from remote repository.
 
 1. **Create a new GitHub repository** (on github.com):
    - Go to https://github.com/new
-   - Repository name: `SoIceMES` (or your preferred name)
+   - Repository name: `SDMES` (or your preferred name)
    - Visibility: Private (recommended for proprietary code)
    - Do NOT initialize with README, .gitignore, or license
 
 2. **Configure the remote**:
    ```bash
-   git remote add origin https://github.com/your-username/SoIceMES.git
+   git remote add origin https://github.com/your-username/SDMES.git
    ```
 
    Replace `your-username` with your actual GitHub username or organization name.
@@ -85,10 +85,10 @@ For SoftIce company repository:
 
 ```bash
 # For GitLab
-git remote add origin https://gitlab.com/softice/SoIceMES.git
+git remote add origin https://gitlab.com/softice/SDMES.git
 
 # For Bitbucket
-git remote add origin https://bitbucket.org/softice/SoIceMES.git
+git remote add origin https://bitbucket.org/softice/SDMES.git
 
 # Push
 git push -u origin main
@@ -105,14 +105,14 @@ After configuring the remote, verify with:
 git remote -v
 
 # Expected output:
-# origin  https://github.com/your-username/SoIceMES.git (fetch)
-# origin  https://github.com/your-username/SoIceMES.git (push)
+# origin  https://github.com/your-username/SDMES.git (fetch)
+# origin  https://github.com/your-username/SDMES.git (push)
 
 # Check branch tracking
 git branch -vv
 
 # Expected output:
-# * main 12303b3 [origin/main] Complete SoIce MES Platform Implementation (100% Complete)
+# * main 12303b3 [origin/main] Complete SDS MES Platform Implementation (100% Complete)
 ```
 
 ---
@@ -167,7 +167,7 @@ If you need assistance configuring the remote repository:
 **Developer**: Moon Myung-seop (문명섭)
 **Email**: msmoon@softice.co.kr
 **Phone**: 010-4882-2035
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**Company**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)
 
 ---
 

@@ -3,7 +3,7 @@
 -- =============================================================================
 -- Description: Creates quality management tables for quality standards and inspections
 -- Author: 문명섭 (Moon Myeong-seop)
--- Company: (주)소프트아이스 (SoftIce Co., Ltd.)
+-- Company: (주)스마트도킹스테이션 (SmartDockingStation Co., Ltd.)
 -- Date: 2026-01-23
 -- =============================================================================
 

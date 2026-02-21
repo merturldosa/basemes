@@ -237,9 +237,9 @@ Recommended continuation based on current progress:
 
 The Purchase Module testing is now complete with comprehensive coverage and robust test suites. All critical procurement workflows have been validated, including request approval, order management, and integration with inventory and supplier management. The module is ready for integration testing and production deployment.
 
-The procurement process from requisition to purchase order is fully tested and operational, providing a solid foundation for the complete procure-to-pay cycle in the SoIce MES platform.
+The procurement process from requisition to purchase order is fully tested and operational, providing a solid foundation for the complete procure-to-pay cycle in the SDS MES platform.
 
 ---
 **Tested by**: Claude Code (Sonnet 4.5)
-**Project**: SoIce MES Platform
-**Company**: (주)소프트아이스 (SoftIce Co., Ltd.)
+**Project**: SDS MES Platform
+**Company**: (주)스마트도킹스테이션 (SoftIce Co., Ltd.)

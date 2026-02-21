@@ -10,13 +10,13 @@ import lombok.*;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "approval_line_steps",
+@Table(schema = "common", name = "SD_approval_line_steps",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_approval_step_order", columnNames = {"template_id", "step_order"})
+        @UniqueConstraint(name = "uk_sd_approval_step_order", columnNames = {"template_id", "step_order"})
     },
     indexes = {
-        @Index(name = "idx_approval_step_template", columnList = "template_id"),
-        @Index(name = "idx_approval_step_order", columnList = "template_id, step_order")
+        @Index(name = "idx_sd_approval_step_template", columnList = "template_id"),
+        @Index(name = "idx_sd_approval_step_order", columnList = "template_id, step_order")
     }
 )
 @Getter

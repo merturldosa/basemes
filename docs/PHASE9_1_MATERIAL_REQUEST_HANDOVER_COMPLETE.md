@@ -1,11 +1,11 @@
 # Phase 9-1: Material Request & Handover UI - 완료 보고서
 
-**Project:** SoIce MES Platform
+**Project:** SDS MES Platform
 **Phase:** 9-1 - 불출 신청/지시 및 인수인계 UI 완성
 **Version:** 1.4.0
 **Date:** 2026-01-27
 **Author:** Moon Myung-seop (msmoon@softice.co.kr)
-**Company:** (주)소프트아이스 SoftIce Co., Ltd.
+**Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ---
 
@@ -853,7 +853,7 @@ const confirmHandover = async (handoverId: number) => {
 **Developer:** Moon Myung-seop (문명섭)
 **Email:** msmoon@softice.co.kr
 **Phone:** 010-4882-2035
-**Company:** (주)소프트아이스 SoftIce Co., Ltd.
+**Company:** (주)스마트도킹스테이션 SoftIce Co., Ltd.
 
 ---
 

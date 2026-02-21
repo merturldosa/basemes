@@ -10,16 +10,16 @@ import lombok.*;
  * @author Moon Myung-seop
  */
 @Entity
-@Table(schema = "common", name = "document_templates",
+@Table(schema = "common", name = "SD_document_templates",
     uniqueConstraints = {
-        @UniqueConstraint(name = "uk_template_code", columnNames = {"tenant_id", "template_code", "version"})
+        @UniqueConstraint(name = "uk_sd_template_code", columnNames = {"tenant_id", "template_code", "version"})
     },
     indexes = {
-        @Index(name = "idx_template_tenant", columnList = "tenant_id"),
-        @Index(name = "idx_template_type", columnList = "template_type"),
-        @Index(name = "idx_template_category", columnList = "category"),
-        @Index(name = "idx_template_active", columnList = "is_active"),
-        @Index(name = "idx_template_latest", columnList = "is_latest")
+        @Index(name = "idx_sd_template_tenant", columnList = "tenant_id"),
+        @Index(name = "idx_sd_template_type", columnList = "template_type"),
+        @Index(name = "idx_sd_template_category", columnList = "category"),
+        @Index(name = "idx_sd_template_active", columnList = "is_active"),
+        @Index(name = "idx_sd_template_latest", columnList = "is_latest")
     }
 )
 @Getter

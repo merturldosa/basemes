@@ -396,7 +396,7 @@ X-Tenant-ID: {tenantId}
 ```json
 {
   "info": {
-    "name": "SoIce MES - WMS Module",
+    "name": "SDS MES - WMS Module",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [

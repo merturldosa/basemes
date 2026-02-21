@@ -9,14 +9,14 @@
 set -e
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "SoIce MES Phase 2 - Database Migration"
+echo "SDS MES Phase 2 - Database Migration"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
 # Database configuration
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5432}"
-DB_NAME="${DB_NAME:-soice_mes_dev}"
+DB_NAME="${DB_NAME:-sds_mes_dev}"
 DB_USER="${DB_USER:-mes_admin}"
 DB_PASSWORD="${DB_PASSWORD:-mes_password_dev_2026}"
 
