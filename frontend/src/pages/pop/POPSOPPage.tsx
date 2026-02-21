@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Card,
@@ -60,6 +61,7 @@ interface SOPTemplate {
 }
 
 const POPSOPPage: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedSOP, setSelectedSOP] = useState<SOPTemplate | null>(null);
   const [activeStep, setActiveStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
@@ -210,10 +212,10 @@ const POPSOPPage: React.FC = () => {
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          SOP 체크리스트
+          {t('pages.popSOP.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          실행할 표준 작업 절차를 선택하세요
+          {t('pages.popSOP.subtitle')}
         </Typography>
 
         {sopTemplates.map((sop) => (
@@ -235,13 +237,13 @@ const POPSOPPage: React.FC = () => {
                     {sop.sopNo} - {sop.title}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    버전: {sop.version}
+                    {t('pages.popSOP.version')}: {sop.version}
                   </Typography>
                 </Box>
                 <Chip label={sop.category} size="small" color="primary" />
               </Box>
               <Typography variant="body2" color="text.secondary">
-                총 {sop.steps.length}단계
+                {t('pages.popSOP.totalSteps', { count: sop.steps.length })}
               </Typography>
             </CardContent>
           </Card>
@@ -261,11 +263,11 @@ const POPSOPPage: React.FC = () => {
               {selectedSOP.sopNo} - {selectedSOP.title}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              버전: {selectedSOP.version} • {selectedSOP.category}
+              {t('pages.popSOP.version')}: {selectedSOP.version} • {selectedSOP.category}
             </Typography>
           </Box>
           <Button variant="outlined" onClick={() => setSelectedSOP(null)}>
-            목록으로
+            {t('pages.popSOP.backToList')}
           </Button>
         </Box>
 
@@ -274,10 +276,10 @@ const POPSOPPage: React.FC = () => {
           <CardContent>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
               <Typography variant="body2" fontWeight="medium">
-                진행률
+                {t('pages.popSOP.progress')}
               </Typography>
               <Typography variant="body2" fontWeight="bold" color="primary">
-                {completedSteps.size} / {selectedSOP.steps.length} 단계 완료
+                {t('pages.popSOP.stepsCompleted', { completed: completedSteps.size, total: selectedSOP.steps.length })}
               </Typography>
             </Box>
             <LinearProgress
@@ -296,7 +298,7 @@ const POPSOPPage: React.FC = () => {
             <StepLabel
               optional={
                 step.isRequired && (
-                  <Chip label="필수" size="small" color="error" sx={{ mt: 0.5 }} />
+                  <Chip label={t('pages.popSOP.required')} size="small" color="error" sx={{ mt: 0.5 }} />
                 )
               }
             >
@@ -319,15 +321,15 @@ const POPSOPPage: React.FC = () => {
               {/* Media Badges */}
               <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
                 {step.hasImage && (
-                  <Chip icon={<ImageIcon />} label="이미지 가이드" size="small" variant="outlined" />
+                  <Chip icon={<ImageIcon />} label={t('pages.popSOP.imageGuide')} size="small" variant="outlined" />
                 )}
                 {step.hasVideo && (
-                  <Chip icon={<VideoIcon />} label="동영상 가이드" size="small" variant="outlined" />
+                  <Chip icon={<VideoIcon />} label={t('pages.popSOP.videoGuide')} size="small" variant="outlined" />
                 )}
                 {step.hasTimer && (
                   <Chip
                     icon={<TimerIcon />}
-                    label={`${step.timerDuration! / 60}분 소요`}
+                    label={t('pages.popSOP.minutesRequired', { minutes: step.timerDuration! / 60 })}
                     size="small"
                     variant="outlined"
                     color="primary"
@@ -339,7 +341,7 @@ const POPSOPPage: React.FC = () => {
               <Card sx={{ mb: 2, bgcolor: 'background.default' }}>
                 <CardContent>
                   <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-                    체크 항목
+                    {t('pages.popSOP.checkItems')}
                   </Typography>
                   <List dense>
                     {step.checkpoints.map((checkpoint, cpIndex) => (
@@ -369,7 +371,7 @@ const POPSOPPage: React.FC = () => {
                   onClick={handleBack}
                   variant="outlined"
                 >
-                  이전
+                  {t('common.buttons.previous')}
                 </Button>
                 {index === selectedSOP.steps.length - 1 ? (
                   <Button
@@ -378,7 +380,7 @@ const POPSOPPage: React.FC = () => {
                     disabled={!isStepComplete(step.id, step.checkpoints)}
                     startIcon={<CheckIcon />}
                   >
-                    완료
+                    {t('common.status.completed')}
                   </Button>
                 ) : (
                   <Button
@@ -386,7 +388,7 @@ const POPSOPPage: React.FC = () => {
                     onClick={handleNext}
                     disabled={step.isRequired && !isStepComplete(step.id, step.checkpoints)}
                   >
-                    다음
+                    {t('common.buttons.next')}
                   </Button>
                 )}
               </Box>
@@ -399,24 +401,24 @@ const POPSOPPage: React.FC = () => {
       {completedSteps.size === selectedSOP.steps.length && (
         <Alert severity="success" sx={{ mt: 3 }}>
           <Typography variant="body1" fontWeight="bold">
-            모든 단계가 완료되었습니다!
+            {t('pages.popSOP.allStepsCompleted')}
           </Typography>
           <Typography variant="body2">
-            서명하여 작업을 완료하세요
+            {t('pages.popSOP.signToComplete')}
           </Typography>
         </Alert>
       )}
 
       {/* Signature Dialog */}
       <Dialog open={openSignatureDialog} onClose={() => setOpenSignatureDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>작업 완료 서명</DialogTitle>
+        <DialogTitle>{t('pages.popSOP.signatureDialog.title')}</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>
-            SOP 절차를 완료했습니다. 서명하여 확인해주세요.
+            {t('pages.popSOP.signatureDialog.message')}
           </Alert>
           <TextField
             fullWidth
-            label="서명 (이름 입력)"
+            label={t('pages.popSOP.signatureDialog.signatureLabel')}
             value={signature}
             onChange={(e) => setSignature(e.target.value)}
             placeholder="홍길동"
@@ -434,17 +436,17 @@ const POPSOPPage: React.FC = () => {
           >
             <SignatureIcon sx={{ fontSize: 48, color: 'grey.400', mb: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              디지털 서명 패드
+              {t('pages.popSOP.signatureDialog.signaturePad')}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              (실제 구현 시 서명 캔버스)
+              {t('pages.popSOP.signatureDialog.signaturePadNote')}
             </Typography>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenSignatureDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenSignatureDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSign} variant="contained" disabled={!signature.trim()}>
-            서명 완료
+            {t('pages.popSOP.signatureDialog.signComplete')}
           </Button>
         </DialogActions>
       </Dialog>

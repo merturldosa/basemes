@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -44,6 +45,8 @@ import apiClient from '@/services/api';
 import { format } from 'date-fns';
 
 export default function RolesPage() {
+  const { t } = useTranslation();
+
   // State
   const [roles, setRoles] = useState<Role[]>([]);
   const [loading, setLoading] = useState(false);
@@ -94,7 +97,7 @@ export default function RolesPage() {
 
       setRoles(filteredRoles);
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '역할 목록 조회 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.roles.messages.loadFailed'), 'error');
     } finally {
       setLoading(false);
     }
@@ -114,7 +117,7 @@ export default function RolesPage() {
       });
       setAllPermissions(response.data || []);
     } catch (error: any) {
-      showSnackbar('권한 목록 조회 실패', 'error');
+      showSnackbar(t('pages.roles.messages.permissionsLoadFailed'), 'error');
     }
   };
 
@@ -124,7 +127,7 @@ export default function RolesPage() {
       const permissions = await roleService.getRolePermissions(roleId);
       setRolePermissions(permissions);
     } catch (error: any) {
-      showSnackbar('역할 권한 조회 실패', 'error');
+      showSnackbar(t('pages.roles.messages.rolePermissionsLoadFailed'), 'error');
     }
   };
 
@@ -139,17 +142,17 @@ export default function RolesPage() {
       if (editingRole) {
         // Update
         await roleService.updateRole(editingRole.roleId, formData as RoleUpdateRequest);
-        showSnackbar('역할이 수정되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.updated'), 'success');
       } else {
         // Create
         await roleService.createRole(formData as RoleCreateRequest);
-        showSnackbar('역할이 생성되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.created'), 'success');
       }
       setOpenDialog(false);
       resetForm();
       loadRoles();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '저장 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.roles.messages.saveFailed'), 'error');
     }
   };
 
@@ -159,12 +162,12 @@ export default function RolesPage() {
 
     try {
       await roleService.deleteRole(roleToDelete.roleId);
-      showSnackbar('역할이 삭제되었습니다', 'success');
+      showSnackbar(t('pages.roles.messages.deleted'), 'success');
       setDeleteDialogOpen(false);
       setRoleToDelete(null);
       loadRoles();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.roles.messages.deleteFailed'), 'error');
     }
   };
 
@@ -173,14 +176,14 @@ export default function RolesPage() {
     try {
       if (role.status === 'ACTIVE') {
         await roleService.deactivateRole(role.roleId);
-        showSnackbar('역할이 비활성화되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.deactivated'), 'success');
       } else {
         await roleService.activateRole(role.roleId);
-        showSnackbar('역할이 활성화되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.activated'), 'success');
       }
       loadRoles();
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.roles.messages.statusChangeFailed'), 'error');
     }
   };
 
@@ -201,15 +204,15 @@ export default function RolesPage() {
 
       if (hasPermission) {
         await roleService.removePermission(selectedRole.roleId, permission.permissionId);
-        showSnackbar('권한이 제거되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.permissionRemoved'), 'success');
       } else {
         await roleService.assignPermission(selectedRole.roleId, permission.permissionId);
-        showSnackbar('권한이 할당되었습니다', 'success');
+        showSnackbar(t('pages.roles.messages.permissionAssigned'), 'success');
       }
 
       await loadRolePermissions(selectedRole.roleId);
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '권한 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.roles.messages.permissionChangeFailed'), 'error');
     }
   };
 
@@ -249,29 +252,29 @@ export default function RolesPage() {
   const columns: GridColDef[] = [
     {
       field: 'roleCode',
-      headerName: '역할 코드',
+      headerName: t('pages.roles.fields.roleCode'),
       width: 150,
       flex: 1,
     },
     {
       field: 'roleName',
-      headerName: '역할 이름',
+      headerName: t('pages.roles.fields.roleName'),
       width: 200,
       flex: 1,
     },
     {
       field: 'description',
-      headerName: '설명',
+      headerName: t('common.labels.description'),
       width: 250,
       flex: 1,
     },
     {
       field: 'status',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value === 'ACTIVE' ? '활성' : '비활성'}
+          label={params.value === 'ACTIVE' ? t('common.status.active') : t('common.status.inactive')}
           color={params.value === 'ACTIVE' ? 'success' : 'default'}
           size="small"
         />
@@ -279,13 +282,13 @@ export default function RolesPage() {
     },
     {
       field: 'createdAt',
-      headerName: '생성일',
+      headerName: t('common.labels.createdAt'),
       width: 180,
       renderCell: (params) => format(new Date(params.value), 'yyyy-MM-dd HH:mm:ss'),
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 220,
       sortable: false,
       renderCell: (params) => (
@@ -294,7 +297,7 @@ export default function RolesPage() {
             size="small"
             color="secondary"
             onClick={() => handleOpenPermissionDialog(params.row)}
-            title="권한 관리"
+            title={t('pages.roles.actions.managePermissions')}
           >
             <PermissionIcon fontSize="small" />
           </IconButton>
@@ -302,7 +305,7 @@ export default function RolesPage() {
             size="small"
             color="primary"
             onClick={() => handleOpenEditDialog(params.row)}
-            title="수정"
+            title={t('common.buttons.edit')}
           >
             <EditIcon fontSize="small" />
           </IconButton>
@@ -310,7 +313,7 @@ export default function RolesPage() {
             size="small"
             color={params.row.status === 'ACTIVE' ? 'warning' : 'success'}
             onClick={() => handleToggleRoleStatus(params.row)}
-            title={params.row.status === 'ACTIVE' ? '비활성화' : '활성화'}
+            title={params.row.status === 'ACTIVE' ? t('pages.roles.actions.deactivate') : t('pages.roles.actions.activate')}
           >
             {params.row.status === 'ACTIVE' ? (
               <InactiveIcon fontSize="small" />
@@ -322,7 +325,7 @@ export default function RolesPage() {
             size="small"
             color="error"
             onClick={() => handleOpenDeleteDialog(params.row)}
-            title="삭제"
+            title={t('common.buttons.delete')}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -346,10 +349,10 @@ export default function RolesPage() {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          역할 관리
+          {t('pages.roles.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          사용자 역할을 관리합니다
+          {t('pages.roles.subtitle')}
         </Typography>
       </Box>
 
@@ -358,15 +361,15 @@ export default function RolesPage() {
         <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
           <TextField
             select
-            label="상태"
+            label={t('common.labels.status')}
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             size="small"
             sx={{ width: 150 }}
           >
-            <MenuItem value="ALL">전체</MenuItem>
-            <MenuItem value="ACTIVE">활성</MenuItem>
-            <MenuItem value="INACTIVE">비활성</MenuItem>
+            <MenuItem value="ALL">{t('pages.roles.filters.all')}</MenuItem>
+            <MenuItem value="ACTIVE">{t('common.status.active')}</MenuItem>
+            <MenuItem value="INACTIVE">{t('common.status.inactive')}</MenuItem>
           </TextField>
           <Stack direction="row" spacing={2}>
             <Button
@@ -374,14 +377,14 @@ export default function RolesPage() {
               startIcon={<RefreshIcon />}
               onClick={loadRoles}
             >
-              새로고침
+              {t('common.buttons.refresh')}
             </Button>
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={handleOpenCreateDialog}
             >
-              역할 추가
+              {t('pages.roles.actions.addRole')}
             </Button>
           </Stack>
         </Stack>
@@ -409,30 +412,30 @@ export default function RolesPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingRole ? '역할 수정' : '역할 추가'}</DialogTitle>
+        <DialogTitle>{editingRole ? t('pages.roles.dialogs.editTitle') : t('pages.roles.dialogs.createTitle')}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 2 }}>
             {!editingRole && (
               <TextField
-                label="역할 코드"
+                label={t('pages.roles.fields.roleCode')}
                 value={(formData as RoleCreateRequest).roleCode || ''}
                 onChange={(e) =>
                   setFormData({ ...formData, roleCode: e.target.value } as RoleCreateRequest)
                 }
                 fullWidth
                 required
-                helperText="예: ADMIN, USER, MANAGER"
+                helperText={t('pages.roles.fields.roleCodeHelper')}
               />
             )}
             <TextField
-              label="역할 이름"
+              label={t('pages.roles.fields.roleName')}
               value={formData.roleName}
               onChange={(e) => setFormData({ ...formData, roleName: e.target.value })}
               fullWidth
               required
             />
             <TextField
-              label="설명"
+              label={t('common.labels.description')}
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               fullWidth
@@ -442,9 +445,9 @@ export default function RolesPage() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveRole} variant="contained">
-            {editingRole ? '수정' : '생성'}
+            {editingRole ? t('common.buttons.edit') : t('pages.roles.actions.create')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -457,11 +460,11 @@ export default function RolesPage() {
         fullWidth
       >
         <DialogTitle>
-          권한 관리 - {selectedRole?.roleName}
+          {t('pages.roles.dialogs.permissionTitle')} - {selectedRole?.roleName}
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            이 역할에 할당할 권한을 선택하세요
+            {t('pages.roles.dialogs.permissionSubtitle')}
           </Typography>
 
           {Object.entries(groupedPermissions).map(([module, permissions]) => (
@@ -502,25 +505,25 @@ export default function RolesPage() {
           ))}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPermissionDialogOpen(false)}>닫기</Button>
+          <Button onClick={() => setPermissionDialogOpen(false)}>{t('common.buttons.close')}</Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>역할 삭제</DialogTitle>
+        <DialogTitle>{t('pages.roles.dialogs.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Typography>
-            정말로 <strong>{roleToDelete?.roleName}</strong> 역할을 삭제하시겠습니까?
+            {t('pages.roles.dialogs.deleteConfirm', { name: roleToDelete?.roleName })}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.roles.dialogs.deleteWarning')}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDeleteRole} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

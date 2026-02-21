@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -46,6 +47,7 @@ import sopService, {
 } from '../../services/sopService';
 
 const SOPsPage: React.FC = () => {
+  const { t } = useTranslation();
   const [sops, setSOPs] = useState<SOP[]>([]);
   const [selectedSOP, setSelectedSOP] = useState<SOP | null>(null);
   const [steps, setSteps] = useState<SOPStep[]>([]);
@@ -109,7 +111,7 @@ const SOPsPage: React.FC = () => {
       const data = await sopService.getSOPs();
       setSOPs(data || []);
     } catch (err: any) {
-      setError(err.message || 'SOP 목록 조회 실패');
+      setError(err.message || t('pages.sops.messages.loadFailed'));
       setSOPs([]);
     } finally {
       setLoading(false);
@@ -121,7 +123,7 @@ const SOPsPage: React.FC = () => {
       const sop = await sopService.getSOPById(sopId);
       setSteps(sop?.steps || []);
     } catch (err: any) {
-      setError(err.message || 'SOP 단계 조회 실패');
+      setError(err.message || t('pages.sops.messages.stepsLoadFailed'));
       setSteps([]);
     }
   };
@@ -175,19 +177,19 @@ const SOPsPage: React.FC = () => {
       handleCloseSOPDialog();
       loadSOPs();
     } catch (err: any) {
-      setError(err.message || 'SOP 저장 실패');
+      setError(err.message || t('pages.sops.messages.saveFailed'));
     }
   };
 
   // Step CRUD handlers
   const handleOpenStepDialog = (step?: SOPStep) => {
     if (!selectedSOP) {
-      setError('SOP를 먼저 선택하세요');
+      setError(t('pages.sops.messages.selectSOPFirst'));
       return;
     }
 
     if (selectedSOP.approvalStatus !== 'DRAFT' && selectedSOP.approvalStatus !== 'REJECTED') {
-      setError('DRAFT 또는 REJECTED 상태의 SOP만 편집 가능합니다');
+      setError(t('pages.sops.messages.onlyDraftEditable'));
       return;
     }
 
@@ -241,7 +243,7 @@ const SOPsPage: React.FC = () => {
       handleCloseStepDialog();
       loadSteps(selectedSOP.sopId);
     } catch (err: any) {
-      setError(err.message || 'SOP 단계 저장 실패');
+      setError(err.message || t('pages.sops.messages.stepSaveFailed'));
     }
   };
 
@@ -274,7 +276,7 @@ const SOPsPage: React.FC = () => {
       }
       handleCloseDeleteDialog();
     } catch (err: any) {
-      setError(err.message || '삭제 실패');
+      setError(err.message || t('pages.sops.messages.deleteFailed'));
     }
   };
 
@@ -288,7 +290,7 @@ const SOPsPage: React.FC = () => {
         setSelectedSOP(updated);
       }
     } catch (err: any) {
-      setError(err.message || '승인 요청 실패');
+      setError(err.message || t('pages.sops.messages.submitFailed'));
     }
   };
 
@@ -301,7 +303,7 @@ const SOPsPage: React.FC = () => {
         setSelectedSOP(updated);
       }
     } catch (err: any) {
-      setError(err.message || '승인 실패');
+      setError(err.message || t('pages.sops.messages.approveFailed'));
     }
   };
 
@@ -314,7 +316,7 @@ const SOPsPage: React.FC = () => {
         setSelectedSOP(updated);
       }
     } catch (err: any) {
-      setError(err.message || '반려 실패');
+      setError(err.message || t('pages.sops.messages.rejectFailed'));
     }
   };
 
@@ -327,28 +329,28 @@ const SOPsPage: React.FC = () => {
         setSelectedSOP(updated);
       }
     } catch (err: any) {
-      setError(err.message || '폐기 실패');
+      setError(err.message || t('pages.sops.messages.obsoleteFailed'));
     }
   };
 
   // SOP columns
   const sopColumns: GridColDef[] = [
-    { field: 'sopCode', headerName: 'SOP 코드', width: 150 },
-    { field: 'sopName', headerName: 'SOP 명칭', width: 250 },
+    { field: 'sopCode', headerName: t('pages.sops.fields.sopCode'), width: 150 },
+    { field: 'sopName', headerName: t('pages.sops.fields.sopName'), width: 250 },
     {
       field: 'sopType',
-      headerName: '유형',
+      headerName: t('common.labels.type'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip label={sopService.getTypeLabel(params.value)} size="small" />
       ),
     },
-    { field: 'category', headerName: '카테고리', width: 120 },
-    { field: 'targetProcess', headerName: '대상 공정', width: 150 },
-    { field: 'version', headerName: '버전', width: 80 },
+    { field: 'category', headerName: t('common.labels.category'), width: 120 },
+    { field: 'targetProcess', headerName: t('pages.sops.fields.targetProcess'), width: 150 },
+    { field: 'version', headerName: t('pages.sops.fields.version'), width: 80 },
     {
       field: 'approvalStatus',
-      headerName: '승인 상태',
+      headerName: t('pages.sops.fields.approvalStatus'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
@@ -358,14 +360,14 @@ const SOPsPage: React.FC = () => {
         />
       ),
     },
-    { field: 'effectiveDate', headerName: '시행일', width: 120 },
+    { field: 'effectiveDate', headerName: t('pages.sops.fields.effectiveDate'), width: 120 },
     {
       field: 'isActive',
-      headerName: '활성',
+      headerName: t('pages.sops.fields.isActive'),
       width: 80,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params.value ? '활성' : '비활성'}
+          label={params.value ? t('common.status.active') : t('common.status.inactive')}
           size="small"
           color={params.value ? 'success' : 'default'}
         />
@@ -373,7 +375,7 @@ const SOPsPage: React.FC = () => {
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 250,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -391,7 +393,7 @@ const SOPsPage: React.FC = () => {
             <IconButton
               size="small"
               onClick={() => handleSubmitForApproval(params.row.sopId)}
-              title="승인 요청"
+              title={t('pages.sops.actions.submitForApproval')}
             >
               <SubmitIcon fontSize="small" />
             </IconButton>
@@ -401,14 +403,14 @@ const SOPsPage: React.FC = () => {
               <IconButton
                 size="small"
                 onClick={() => handleApproveSOP(params.row.sopId, 1)}
-                title="승인"
+                title={t('pages.sops.actions.approve')}
               >
                 <ApproveIcon fontSize="small" color="success" />
               </IconButton>
               <IconButton
                 size="small"
                 onClick={() => handleRejectSOP(params.row.sopId)}
-                title="반려"
+                title={t('pages.sops.actions.reject')}
               >
                 <RejectIcon fontSize="small" color="error" />
               </IconButton>
@@ -418,7 +420,7 @@ const SOPsPage: React.FC = () => {
             <IconButton
               size="small"
               onClick={() => handleMarkObsolete(params.row.sopId)}
-              title="폐기"
+              title={t('pages.sops.actions.obsolete')}
             >
               <ObsoleteIcon fontSize="small" />
             </IconButton>
@@ -430,34 +432,34 @@ const SOPsPage: React.FC = () => {
 
   // Step columns
   const stepColumns: GridColDef[] = [
-    { field: 'stepNumber', headerName: '순서', width: 80 },
-    { field: 'stepTitle', headerName: '단계명', width: 250 },
+    { field: 'stepNumber', headerName: t('pages.sops.stepFields.stepNumber'), width: 80 },
+    { field: 'stepTitle', headerName: t('pages.sops.stepFields.stepTitle'), width: 250 },
     {
       field: 'stepType',
-      headerName: '유형',
+      headerName: t('common.labels.type'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip label={sopService.getTypeLabel(params.value || '')} size="small" />
       ),
     },
-    { field: 'estimatedDuration', headerName: '예상 시간(분)', width: 120 },
+    { field: 'estimatedDuration', headerName: t('pages.sops.stepFields.estimatedDuration'), width: 120 },
     {
       field: 'isCritical',
-      headerName: '중요',
+      headerName: t('pages.sops.stepFields.critical'),
       width: 80,
       renderCell: (params: GridRenderCellParams) =>
         params.value ? <Chip label="⚠️" size="small" color="warning" /> : null,
     },
     {
       field: 'isMandatory',
-      headerName: '필수',
+      headerName: t('pages.sops.stepFields.mandatory'),
       width: 80,
       renderCell: (params: GridRenderCellParams) =>
         params.value ? <Chip label="✓" size="small" color="primary" /> : null,
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 150,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -479,7 +481,7 @@ const SOPsPage: React.FC = () => {
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" gutterBottom>
-        SOP (표준 작업 절차) 관리
+        {t('pages.sops.title')}
       </Typography>
 
       {error && (
@@ -494,13 +496,13 @@ const SOPsPage: React.FC = () => {
           <Card>
             <CardContent>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                <Typography variant="h6">SOP 목록</Typography>
+                <Typography variant="h6">{t('pages.sops.sopList')}</Typography>
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   onClick={() => handleOpenSOPDialog()}
                 >
-                  SOP 생성
+                  {t('pages.sops.actions.createSOP')}
                 </Button>
               </Box>
 
@@ -535,12 +537,12 @@ const SOPsPage: React.FC = () => {
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  SOP 상세: {selectedSOP.sopName}
+                  {t('pages.sops.detail.title')}: {selectedSOP.sopName}
                 </Typography>
 
                 <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)} sx={{ mb: 2 }}>
-                  <Tab label="기본 정보" />
-                  <Tab label="SOP 단계" />
+                  <Tab label={t('pages.sops.detail.basicInfo')} />
+                  <Tab label={t('pages.sops.detail.sopSteps')} />
                 </Tabs>
 
                 {tabValue === 0 && (
@@ -548,19 +550,19 @@ const SOPsPage: React.FC = () => {
                     <Grid container spacing={2}>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          SOP 코드
+                          {t('pages.sops.fields.sopCode')}
                         </Typography>
                         <Typography variant="body1">{selectedSOP.sopCode}</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          버전
+                          {t('pages.sops.fields.version')}
                         </Typography>
                         <Typography variant="body1">{selectedSOP.version}</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          유형
+                          {t('common.labels.type')}
                         </Typography>
                         <Typography variant="body1">
                           {sopService.getTypeLabel(selectedSOP.sopType)}
@@ -568,7 +570,7 @@ const SOPsPage: React.FC = () => {
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          승인 상태
+                          {t('pages.sops.fields.approvalStatus')}
                         </Typography>
                         <Chip
                           label={sopService.getStatusLabel(selectedSOP.approvalStatus)}
@@ -581,19 +583,19 @@ const SOPsPage: React.FC = () => {
                       </Grid>
                       <Grid item xs={12}>
                         <Typography variant="body2" color="text.secondary">
-                          설명
+                          {t('common.labels.description')}
                         </Typography>
                         <Typography variant="body1">{selectedSOP.description}</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          시행일
+                          {t('pages.sops.fields.effectiveDate')}
                         </Typography>
                         <Typography variant="body1">{selectedSOP.effectiveDate}</Typography>
                       </Grid>
                       <Grid item xs={6}>
                         <Typography variant="body2" color="text.secondary">
-                          다음 검토일
+                          {t('pages.sops.fields.nextReviewDate')}
                         </Typography>
                         <Typography variant="body1">{selectedSOP.nextReviewDate}</Typography>
                       </Grid>
@@ -604,7 +606,7 @@ const SOPsPage: React.FC = () => {
                 {tabValue === 1 && (
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-                      <Typography variant="subtitle1">SOP 단계 ({steps.length}개)</Typography>
+                      <Typography variant="subtitle1">{t('pages.sops.detail.sopStepsCount', { count: steps.length })}</Typography>
                       <Button
                         variant="outlined"
                         size="small"
@@ -615,7 +617,7 @@ const SOPsPage: React.FC = () => {
                           selectedSOP.approvalStatus !== 'REJECTED'
                         }
                       >
-                        단계 추가
+                        {t('pages.sops.actions.addStep')}
                       </Button>
                     </Box>
 
@@ -640,13 +642,13 @@ const SOPsPage: React.FC = () => {
 
       {/* SOP Dialog */}
       <Dialog open={sopDialogOpen} onClose={handleCloseSOPDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{editingSOPId ? 'SOP 수정' : 'SOP 생성'}</DialogTitle>
+        <DialogTitle>{editingSOPId ? t('pages.sops.dialogs.editSOP') : t('pages.sops.dialogs.createSOP')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="SOP 코드"
+                label={t('pages.sops.fields.sopCode')}
                 value={sopForm.sopCode}
                 onChange={(e) => setSOPForm({ ...sopForm, sopCode: e.target.value })}
                 required
@@ -655,7 +657,7 @@ const SOPsPage: React.FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="버전"
+                label={t('pages.sops.fields.version')}
                 value={sopForm.version}
                 onChange={(e) => setSOPForm({ ...sopForm, version: e.target.value })}
               />
@@ -663,7 +665,7 @@ const SOPsPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="SOP 명칭"
+                label={t('pages.sops.fields.sopName')}
                 value={sopForm.sopName}
                 onChange={(e) => setSOPForm({ ...sopForm, sopName: e.target.value })}
                 required
@@ -671,25 +673,25 @@ const SOPsPage: React.FC = () => {
             </Grid>
             <Grid item xs={6}>
               <FormControl fullWidth>
-                <InputLabel>유형</InputLabel>
+                <InputLabel>{t('common.labels.type')}</InputLabel>
                 <Select
                   value={sopForm.sopType}
-                  label="유형"
+                  label={t('common.labels.type')}
                   onChange={(e) => setSOPForm({ ...sopForm, sopType: e.target.value })}
                 >
-                  <MenuItem value="PRODUCTION">생산</MenuItem>
-                  <MenuItem value="WAREHOUSE">창고</MenuItem>
-                  <MenuItem value="QUALITY">품질</MenuItem>
-                  <MenuItem value="FACILITY">설비</MenuItem>
-                  <MenuItem value="SAFETY">안전</MenuItem>
-                  <MenuItem value="MAINTENANCE">유지보수</MenuItem>
+                  <MenuItem value="PRODUCTION">{t('pages.sops.sopTypes.production')}</MenuItem>
+                  <MenuItem value="WAREHOUSE">{t('pages.sops.sopTypes.warehouse')}</MenuItem>
+                  <MenuItem value="QUALITY">{t('pages.sops.sopTypes.quality')}</MenuItem>
+                  <MenuItem value="FACILITY">{t('pages.sops.sopTypes.facility')}</MenuItem>
+                  <MenuItem value="SAFETY">{t('pages.sops.sopTypes.safety')}</MenuItem>
+                  <MenuItem value="MAINTENANCE">{t('pages.sops.sopTypes.maintenance')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="카테고리"
+                label={t('common.labels.category')}
                 value={sopForm.category}
                 onChange={(e) => setSOPForm({ ...sopForm, category: e.target.value })}
               />
@@ -697,7 +699,7 @@ const SOPsPage: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="대상 공정"
+                label={t('pages.sops.fields.targetProcess')}
                 value={sopForm.targetProcess}
                 onChange={(e) => setSOPForm({ ...sopForm, targetProcess: e.target.value })}
               />
@@ -707,7 +709,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={3}
-                label="설명"
+                label={t('common.labels.description')}
                 value={sopForm.description}
                 onChange={(e) => setSOPForm({ ...sopForm, description: e.target.value })}
               />
@@ -715,7 +717,7 @@ const SOPsPage: React.FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="필요 권한"
+                label={t('pages.sops.fields.requiredRole')}
                 value={sopForm.requiredRole}
                 onChange={(e) => setSOPForm({ ...sopForm, requiredRole: e.target.value })}
               />
@@ -728,28 +730,28 @@ const SOPsPage: React.FC = () => {
                     onChange={(e) => setSOPForm({ ...sopForm, restricted: e.target.checked })}
                   />
                 }
-                label="제한 SOP"
+                label={t('pages.sops.fields.restrictedSOP')}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseSOPDialog}>취소</Button>
+          <Button onClick={handleCloseSOPDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveSOPDialog} variant="contained">
-            저장
+            {t('common.buttons.save')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Step Dialog */}
       <Dialog open={stepDialogOpen} onClose={handleCloseStepDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{editingStepId ? 'SOP 단계 수정' : 'SOP 단계 추가'}</DialogTitle>
+        <DialogTitle>{editingStepId ? t('pages.sops.dialogs.editStep') : t('pages.sops.dialogs.addStep')}</DialogTitle>
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="단계명"
+                label={t('pages.sops.stepFields.stepTitle')}
                 value={stepForm.stepTitle}
                 onChange={(e) => setStepForm({ ...stepForm, stepTitle: e.target.value })}
                 required
@@ -757,17 +759,17 @@ const SOPsPage: React.FC = () => {
             </Grid>
             <Grid item xs={6}>
               <FormControl fullWidth>
-                <InputLabel>단계 유형</InputLabel>
+                <InputLabel>{t('pages.sops.stepFields.stepType')}</InputLabel>
                 <Select
                   value={stepForm.stepType}
-                  label="단계 유형"
+                  label={t('pages.sops.stepFields.stepType')}
                   onChange={(e) => setStepForm({ ...stepForm, stepType: e.target.value })}
                 >
-                  <MenuItem value="PREPARATION">준비</MenuItem>
-                  <MenuItem value="EXECUTION">실행</MenuItem>
-                  <MenuItem value="INSPECTION">검사</MenuItem>
-                  <MenuItem value="DOCUMENTATION">문서화</MenuItem>
-                  <MenuItem value="SAFETY">안전</MenuItem>
+                  <MenuItem value="PREPARATION">{t('pages.sops.stepTypes.preparation')}</MenuItem>
+                  <MenuItem value="EXECUTION">{t('pages.sops.stepTypes.execution')}</MenuItem>
+                  <MenuItem value="INSPECTION">{t('pages.sops.stepTypes.inspection')}</MenuItem>
+                  <MenuItem value="DOCUMENTATION">{t('pages.sops.stepTypes.documentation')}</MenuItem>
+                  <MenuItem value="SAFETY">{t('pages.sops.stepTypes.safety')}</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -775,7 +777,7 @@ const SOPsPage: React.FC = () => {
               <TextField
                 fullWidth
                 type="number"
-                label="예상 시간(분)"
+                label={t('pages.sops.stepFields.estimatedDuration')}
                 value={stepForm.estimatedDuration}
                 onChange={(e) =>
                   setStepForm({ ...stepForm, estimatedDuration: Number(e.target.value) })
@@ -787,7 +789,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={2}
-                label="단계 설명"
+                label={t('pages.sops.stepFields.stepDescription')}
                 value={stepForm.stepDescription}
                 onChange={(e) => setStepForm({ ...stepForm, stepDescription: e.target.value })}
               />
@@ -797,7 +799,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={3}
-                label="상세 작업 지침"
+                label={t('pages.sops.stepFields.detailedInstruction')}
                 value={stepForm.detailedInstruction}
                 onChange={(e) =>
                   setStepForm({ ...stepForm, detailedInstruction: e.target.value })
@@ -809,7 +811,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={2}
-                label="주의사항"
+                label={t('pages.sops.stepFields.cautionNotes')}
                 value={stepForm.cautionNotes}
                 onChange={(e) => setStepForm({ ...stepForm, cautionNotes: e.target.value })}
               />
@@ -819,7 +821,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={2}
-                label="품질 포인트"
+                label={t('pages.sops.stepFields.qualityPoints')}
                 value={stepForm.qualityPoints}
                 onChange={(e) => setStepForm({ ...stepForm, qualityPoints: e.target.value })}
               />
@@ -829,7 +831,7 @@ const SOPsPage: React.FC = () => {
                 fullWidth
                 multiline
                 rows={2}
-                label="체크리스트 (JSON)"
+                label={t('pages.sops.stepFields.checklistItems')}
                 value={stepForm.checklistItems}
                 onChange={(e) => setStepForm({ ...stepForm, checklistItems: e.target.value })}
                 placeholder='[{"item": "항목1", "required": true}, {"item": "항목2", "required": false}]'
@@ -843,7 +845,7 @@ const SOPsPage: React.FC = () => {
                     onChange={(e) => setStepForm({ ...stepForm, isCritical: e.target.checked })}
                   />
                 }
-                label="중요 단계"
+                label={t('pages.sops.stepFields.criticalStep')}
               />
             </Grid>
             <Grid item xs={6}>
@@ -854,34 +856,34 @@ const SOPsPage: React.FC = () => {
                     onChange={(e) => setStepForm({ ...stepForm, isMandatory: e.target.checked })}
                   />
                 }
-                label="필수 단계"
+                label={t('pages.sops.stepFields.mandatoryStep')}
               />
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseStepDialog}>취소</Button>
+          <Button onClick={handleCloseStepDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveStepDialog} variant="contained">
-            저장
+            {t('common.buttons.save')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
-        <DialogTitle>삭제 확인</DialogTitle>
+        <DialogTitle>{t('pages.sops.dialogs.deleteConfirmTitle')}</DialogTitle>
         <DialogContent>
           <Typography>
-            {deleteType === 'sop' ? 'SOP를' : 'SOP 단계를'} 삭제하시겠습니까?
+            {deleteType === 'sop' ? t('pages.sops.dialogs.deleteSOPConfirm') : t('pages.sops.dialogs.deleteStepConfirm')}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            삭제된 항목은 복구할 수 없습니다.
+            {t('pages.sops.dialogs.deleteWarning')}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog}>취소</Button>
+          <Button onClick={handleCloseDeleteDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleConfirmDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

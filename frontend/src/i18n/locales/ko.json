@@ -1172,6 +1172,294 @@
         "signaturePadNote": "(실제 구현 시 서명 캔버스)",
         "signComplete": "서명 완료"
       }
+    },
+    "roles": {
+      "title": "역할 관리",
+      "subtitle": "사용자 역할을 관리합니다",
+      "fields": {
+        "roleCode": "역할 코드",
+        "roleName": "역할 이름",
+        "roleCodeHelper": "예: ADMIN, USER, MANAGER"
+      },
+      "filters": {
+        "all": "전체"
+      },
+      "actions": {
+        "addRole": "역할 추가",
+        "create": "생성",
+        "managePermissions": "권한 관리",
+        "activate": "활성화",
+        "deactivate": "비활성화"
+      },
+      "dialogs": {
+        "createTitle": "역할 추가",
+        "editTitle": "역할 수정",
+        "deleteTitle": "역할 삭제",
+        "deleteConfirm": "정말로 <strong>{{name}}</strong> 역할을 삭제하시겠습니까?",
+        "deleteWarning": "이 작업은 되돌릴 수 없습니다.",
+        "permissionTitle": "권한 관리",
+        "permissionSubtitle": "이 역할에 할당할 권한을 선택하세요"
+      },
+      "messages": {
+        "loadFailed": "역할 목록 조회 실패",
+        "permissionsLoadFailed": "권한 목록 조회 실패",
+        "rolePermissionsLoadFailed": "역할 권한 조회 실패",
+        "created": "역할이 생성되었습니다",
+        "updated": "역할이 수정되었습니다",
+        "deleted": "역할이 삭제되었습니다",
+        "saveFailed": "저장 실패",
+        "deleteFailed": "삭제 실패",
+        "activated": "역할이 활성화되었습니다",
+        "deactivated": "역할이 비활성화되었습니다",
+        "statusChangeFailed": "상태 변경 실패",
+        "permissionAssigned": "권한이 할당되었습니다",
+        "permissionRemoved": "권한이 제거되었습니다",
+        "permissionChangeFailed": "권한 변경 실패"
+      }
+    },
+    "users": {
+      "title": "사용자 관리",
+      "subtitle": "시스템 사용자를 관리합니다",
+      "searchPlaceholder": "사용자명 또는 이메일 검색",
+      "fields": {
+        "username": "사용자명",
+        "fullName": "이름",
+        "email": "이메일",
+        "password": "비밀번호",
+        "preferredLanguage": "선호 언어",
+        "lastLoginAt": "마지막 로그인"
+      },
+      "filters": {
+        "all": "전체"
+      },
+      "actions": {
+        "addUser": "사용자 추가",
+        "create": "생성",
+        "activate": "활성화",
+        "deactivate": "비활성화"
+      },
+      "dialogs": {
+        "createTitle": "사용자 추가",
+        "editTitle": "사용자 수정",
+        "deleteTitle": "사용자 삭제",
+        "deleteConfirm": "정말로 {{name}} 사용자를 삭제하시겠습니까?",
+        "deleteWarning": "이 작업은 되돌릴 수 없습니다."
+      },
+      "languages": {
+        "ko": "한국어",
+        "en": "영어",
+        "zh": "중국어"
+      },
+      "messages": {
+        "created": "사용자가 생성되었습니다",
+        "updated": "사용자가 수정되었습니다",
+        "deleted": "사용자가 삭제되었습니다",
+        "saveFailed": "저장 실패",
+        "deleteFailed": "삭제 실패",
+        "activated": "사용자가 활성화되었습니다",
+        "deactivated": "사용자가 비활성화되었습니다",
+        "statusChangeFailed": "상태 변경 실패"
+      }
+    },
+    "equipments": {
+      "title": "설비 관리",
+      "fields": {
+        "equipmentCode": "설비 코드",
+        "equipmentName": "설비명",
+        "equipmentType": "설비 유형",
+        "category": "카테고리",
+        "manufacturer": "제조사",
+        "modelName": "모델명",
+        "serialNo": "시리얼 번호",
+        "location": "위치",
+        "capacity": "용량",
+        "maintenanceCycleDays": "보전 주기 (일)",
+        "standardCycleTime": "표준 사이클 타임",
+        "oeeTarget": "OEE 목표",
+        "nextMaintenanceDate": "다음 보전일",
+        "isActive": "활성 여부"
+      },
+      "types": {
+        "machine": "기계",
+        "mold": "금형",
+        "tool": "공구",
+        "facility": "시설",
+        "vehicle": "차량",
+        "other": "기타"
+      },
+      "status": {
+        "operational": "가동중",
+        "stopped": "정지",
+        "maintenance": "보전중",
+        "breakdown": "고장",
+        "retired": "폐기"
+      },
+      "actions": {
+        "register": "설비 등록"
+      },
+      "dialogs": {
+        "createTitle": "설비 등록",
+        "editTitle": "설비 수정",
+        "deleteTitle": "설비 삭제",
+        "deleteConfirm": "정말로 {{name}} 설비를 삭제하시겠습니까?"
+      },
+      "messages": {
+        "loadFailed": "설비 목록을 불러오는데 실패했습니다",
+        "created": "설비가 등록되었습니다",
+        "updated": "설비가 수정되었습니다",
+        "deleted": "설비가 삭제되었습니다",
+        "saveFailed": "설비 저장 실패",
+        "deleteFailed": "설비 삭제 실패",
+        "activated": "설비가 활성화되었습니다",
+        "deactivated": "설비가 비활성화되었습니다",
+        "statusChangeFailed": "상태 변경 실패"
+      }
+    },
+    "moldMaintenances": {
+      "title": "금형 보전 관리",
+      "fields": {
+        "maintenanceNo": "보전 번호",
+        "moldCode": "금형 코드",
+        "moldName": "금형명",
+        "mold": "금형",
+        "maintenanceType": "보전 유형",
+        "maintenanceDate": "보전 일시",
+        "shotCountBefore": "보전 전 샷수",
+        "shotCountBeforeLabel": "보전 전 샷수",
+        "shotCountReset": "샷수 리셋",
+        "shotCountResetLabel": "샷 카운트 리셋",
+        "maintenanceContent": "보전 내용",
+        "partsReplaced": "교체 부품",
+        "findings": "점검 소견",
+        "correctiveAction": "시정 조치",
+        "partsCost": "부품 비용",
+        "laborCost": "인건비",
+        "totalCost": "총 비용",
+        "laborHours": "작업 시간",
+        "laborHoursLabel": "작업 시간 (h)",
+        "technicianName": "담당 기술자",
+        "result": "결과",
+        "maintenanceResult": "보전 결과"
+      },
+      "types": {
+        "dailyCheck": "일상 점검",
+        "periodic": "정기 보전",
+        "shotBased": "샷수 기반",
+        "shotBasedMaint": "샷수 기반 보전",
+        "emergencyRepair": "긴급 수리",
+        "overhaul": "오버홀"
+      },
+      "results": {
+        "none": "미선택",
+        "completed": "완료",
+        "partial": "부분 완료",
+        "partialComplete": "부분 완료",
+        "failed": "실패"
+      },
+      "shotReset": {
+        "reset": "리셋",
+        "keep": "유지"
+      },
+      "actions": {
+        "register": "보전 등록"
+      },
+      "dialogs": {
+        "createTitle": "보전 등록",
+        "editTitle": "보전 수정",
+        "deleteTitle": "보전 삭제",
+        "deleteConfirm": "정말로 {{no}} 보전 기록을 삭제하시겠습니까?"
+      },
+      "messages": {
+        "loadFailed": "보전 목록을 불러오는데 실패했습니다",
+        "created": "보전이 등록되었습니다",
+        "updated": "보전이 수정되었습니다",
+        "deleted": "보전이 삭제되었습니다",
+        "saveFailed": "보전 저장 실패",
+        "deleteFailed": "보전 삭제 실패"
+      }
+    },
+    "sops": {
+      "title": "SOP (표준 작업 절차) 관리",
+      "sopList": "SOP 목록",
+      "fields": {
+        "sopCode": "SOP 코드",
+        "sopName": "SOP 이름",
+        "targetProcess": "대상 공정",
+        "version": "버전",
+        "approvalStatus": "승인 상태",
+        "effectiveDate": "시행일",
+        "nextReviewDate": "다음 검토일",
+        "isActive": "활성 여부",
+        "requiredRole": "필요 역할",
+        "restrictedSOP": "제한된 SOP"
+      },
+      "sopTypes": {
+        "production": "생산",
+        "warehouse": "창고",
+        "quality": "품질",
+        "facility": "시설",
+        "safety": "안전",
+        "maintenance": "보전"
+      },
+      "stepFields": {
+        "stepNumber": "단계 번호",
+        "stepTitle": "단계 제목",
+        "stepType": "단계 유형",
+        "stepDescription": "단계 설명",
+        "estimatedDuration": "예상 소요 시간 (분)",
+        "detailedInstruction": "상세 지시",
+        "cautionNotes": "주의 사항",
+        "qualityPoints": "품질 포인트",
+        "checklistItems": "체크리스트 항목 (JSON)",
+        "critical": "중요",
+        "mandatory": "필수",
+        "criticalStep": "중요 단계",
+        "mandatoryStep": "필수 단계"
+      },
+      "stepTypes": {
+        "preparation": "준비",
+        "execution": "실행",
+        "inspection": "검사",
+        "documentation": "문서화",
+        "safety": "안전"
+      },
+      "actions": {
+        "createSOP": "SOP 생성",
+        "addStep": "단계 추가",
+        "submitForApproval": "승인 요청",
+        "approve": "승인",
+        "reject": "반려",
+        "obsolete": "폐기 처리"
+      },
+      "detail": {
+        "title": "SOP 상세",
+        "basicInfo": "기본 정보",
+        "sopSteps": "SOP 단계",
+        "sopStepsCount": "총 {{count}}개 단계"
+      },
+      "dialogs": {
+        "createSOP": "SOP 생성",
+        "editSOP": "SOP 수정",
+        "addStep": "단계 추가",
+        "editStep": "단계 수정",
+        "deleteConfirmTitle": "삭제 확인",
+        "deleteSOPConfirm": "이 SOP를 삭제하시겠습니까?",
+        "deleteStepConfirm": "이 단계를 삭제하시겠습니까?",
+        "deleteWarning": "이 작업은 되돌릴 수 없습니다."
+      },
+      "messages": {
+        "loadFailed": "SOP 목록을 불러오는데 실패했습니다",
+        "stepsLoadFailed": "SOP 단계를 불러오는데 실패했습니다",
+        "saveFailed": "SOP 저장 실패",
+        "deleteFailed": "SOP 삭제 실패",
+        "selectSOPFirst": "먼저 SOP를 선택하세요",
+        "onlyDraftEditable": "초안 또는 반려 상태의 SOP만 수정할 수 있습니다",
+        "stepSaveFailed": "단계 저장 실패",
+        "submitFailed": "승인 요청 실패",
+        "approveFailed": "승인 실패",
+        "rejectFailed": "반려 실패",
+        "obsoleteFailed": "폐기 처리 실패"
+      }
     }
   }
 }

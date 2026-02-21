@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -42,6 +43,7 @@ interface ScanHistory {
 }
 
 const POPScannerPage: React.FC = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
   const [scanHistory, setScanHistory] = useState<ScanHistory[]>([]);
   const [snackbar, setSnackbar] = useState<{
@@ -51,10 +53,10 @@ const POPScannerPage: React.FC = () => {
   }>({ open: false, message: '', severity: 'success' });
 
   const scanTypes = [
-    { label: '작업 지시', value: 'work-order', icon: <WorkOrderIcon /> },
-    { label: 'LOT', value: 'lot', icon: <LotIcon /> },
-    { label: '제품', value: 'product', icon: <ProductIcon /> },
-    { label: '위치', value: 'location', icon: <LocationIcon /> },
+    { label: t('pages.popScanner.scanTypes.workOrder'), value: 'work-order', icon: <WorkOrderIcon /> },
+    { label: t('pages.popScanner.scanTypes.lot'), value: 'lot', icon: <LotIcon /> },
+    { label: t('pages.popScanner.scanTypes.product'), value: 'product', icon: <ProductIcon /> },
+    { label: t('pages.popScanner.scanTypes.location'), value: 'location', icon: <LocationIcon /> },
   ];
 
   const scanTypeToApiType: Record<string, ScanBarcodeRequest['type']> = {
@@ -77,7 +79,7 @@ const POPScannerPage: React.FC = () => {
       data: result.data,
       timestamp: result.timestamp,
       status: 'success',
-      message: `${currentScanType.label} 스캔 처리 중...`,
+      message: t('pages.popScanner.processing', { type: currentScanType.label }),
     };
     setScanHistory((prev) => [newScan, ...prev.slice(0, 9)]);
 
@@ -98,7 +100,7 @@ const POPScannerPage: React.FC = () => {
                   || apiResponse?.name
                   || apiResponse?.productName
                   || apiResponse?.workOrderNo
-                  || `${currentScanType.label} 스캔 완료`,
+                  || t('pages.popScanner.scanComplete', { type: currentScanType.label }),
               }
             : scan
         )
@@ -106,12 +108,12 @@ const POPScannerPage: React.FC = () => {
 
       setSnackbar({
         open: true,
-        message: `${currentScanType.label} 바코드 스캔 성공: ${result.data}`,
+        message: t('pages.popScanner.scanSuccess', { type: currentScanType.label, data: result.data }),
         severity: 'success',
       });
     } catch (error: any) {
       const errorMessage =
-        error?.response?.data?.message || error?.message || '스캔 처리 중 오류가 발생했습니다.';
+        error?.response?.data?.message || error?.message || t('pages.popScanner.scanError');
 
       // Mark the scan as failed with error message
       setScanHistory((prev) =>
@@ -128,7 +130,7 @@ const POPScannerPage: React.FC = () => {
 
       setSnackbar({
         open: true,
-        message: `스캔 실패: ${errorMessage}`,
+        message: t('pages.popScanner.scanFailed', { message: errorMessage }),
         severity: 'error',
       });
     }
@@ -136,10 +138,10 @@ const POPScannerPage: React.FC = () => {
 
   const getScanTypeInstructions = (type: string) => {
     const instructions: Record<string, string> = {
-      'work-order': '작업 지시서의 QR 코드 또는 바코드를 스캔하세요',
-      'lot': '자재 또는 제품의 LOT 번호 바코드를 스캔하세요',
-      'product': '제품 바코드를 스캔하여 정보를 확인하세요',
-      'location': '창고 위치의 QR 코드를 스캔하세요',
+      'work-order': t('pages.popScanner.instructions.workOrder'),
+      'lot': t('pages.popScanner.instructions.lot'),
+      'product': t('pages.popScanner.instructions.product'),
+      'location': t('pages.popScanner.instructions.location'),
     };
     return instructions[type] || '';
   };
@@ -148,10 +150,10 @@ const POPScannerPage: React.FC = () => {
     <Box sx={{ p: 3 }}>
       {/* Header */}
       <Typography variant="h4" gutterBottom fontWeight="bold">
-        바코드 스캐너
+        {t('pages.popScanner.title')}
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        스캔할 항목 유형을 선택하세요
+        {t('pages.popScanner.subtitle')}
       </Typography>
 
       {/* Scan Type Tabs */}
@@ -182,7 +184,7 @@ const POPScannerPage: React.FC = () => {
       {/* Scanner */}
       <BarcodeScanner
         onScan={handleScan}
-        title={`${currentScanType.label} 스캔`}
+        title={`${currentScanType.label} ${t('navigation.pop.scanner')}`}
         subtitle={getScanTypeInstructions(currentScanType.value)}
         showManualInput={true}
       />
@@ -192,7 +194,7 @@ const POPScannerPage: React.FC = () => {
         <Card sx={{ mt: 4 }}>
           <CardContent>
             <Typography variant="h6" gutterBottom fontWeight="bold">
-              스캔 기록
+              {t('pages.popScanner.scanHistory')}
             </Typography>
             <List>
               {scanHistory.map((scan, index) => (
@@ -219,7 +221,7 @@ const POPScannerPage: React.FC = () => {
                             variant="outlined"
                           />
                           {scan.status === 'error' && (
-                            <Chip label="실패" size="small" color="error" />
+                            <Chip label={t('pages.popScanner.failed')} size="small" color="error" />
                           )}
                         </Box>
                       }

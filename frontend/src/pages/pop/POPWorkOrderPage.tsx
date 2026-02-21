@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Card,
@@ -51,6 +52,7 @@ interface WorkOrder {
 }
 
 const POPWorkOrderPage: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<WorkOrder | null>(null);
   const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
   const [isWorking, setIsWorking] = useState(false);
@@ -181,10 +183,10 @@ const POPWorkOrderPage: React.FC = () => {
     return (
       <Box sx={{ p: 3 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          작업 지시 선택
+          {t('pages.popWorkOrder.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-          작업할 지시를 선택하거나 바코드를 스캔하세요
+          {t('pages.popWorkOrder.subtitle')}
         </Typography>
 
         <Button
@@ -194,7 +196,7 @@ const POPWorkOrderPage: React.FC = () => {
           fullWidth
           sx={{ mb: 3, py: 2 }}
         >
-          바코드 스캔으로 작업 지시 불러오기
+          {t('pages.popWorkOrder.scanBarcode')}
         </Button>
 
         <Grid container spacing={2}>
@@ -220,7 +222,7 @@ const POPWorkOrderPage: React.FC = () => {
                     {wo.productCode} - {wo.productName}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    목표 수량: {wo.targetQuantity} EA
+                    {t('pages.popWorkOrder.targetQuantity')}: {wo.targetQuantity} EA
                   </Typography>
                 </CardContent>
               </Card>
@@ -257,7 +259,7 @@ const POPWorkOrderPage: React.FC = () => {
             <CardContent>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <TimerIcon sx={{ mr: 1 }} />
-                <Typography variant="subtitle2">작업 시간</Typography>
+                <Typography variant="subtitle2">{t('pages.popWorkOrder.workTime')}</Typography>
               </Box>
               <Typography variant="h4" fontWeight="bold">
                 {formatTime(elapsedTime)}
@@ -273,11 +275,11 @@ const POPWorkOrderPage: React.FC = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <PersonIcon sx={{ mr: 1, color: 'text.secondary' }} />
                 <Typography variant="subtitle2" color="text.secondary">
-                  작업자
+                  {t('pages.popWorkOrder.operator')}
                 </Typography>
               </Box>
               <Typography variant="h6" fontWeight="bold">
-                {selectedWorkOrder.operatorName || '미배정'}
+                {selectedWorkOrder.operatorName || t('pages.popWorkOrder.unassigned')}
               </Typography>
             </CardContent>
           </Card>
@@ -288,7 +290,7 @@ const POPWorkOrderPage: React.FC = () => {
       <Card sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6" gutterBottom fontWeight="bold">
-            생산 진행률
+            {t('pages.popWorkOrder.productionProgress')}
           </Typography>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="h4" color="primary" fontWeight="bold">
@@ -304,7 +306,7 @@ const POPWorkOrderPage: React.FC = () => {
             sx={{ height: 10, borderRadius: 1, mb: 1 }}
           />
           <Typography variant="body2" color="text.secondary">
-            {getProgress().toFixed(1)}% 완료
+            {t('pages.popWorkOrder.percentComplete', { percent: getProgress().toFixed(1) })}
           </Typography>
         </CardContent>
       </Card>
@@ -315,7 +317,7 @@ const POPWorkOrderPage: React.FC = () => {
           <Card sx={{ bgcolor: 'success.light' }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="subtitle2" color="success.dark">
-                양품
+                {t('pages.popWorkOrder.goodQuantity')}
               </Typography>
               <Typography variant="h4" fontWeight="bold" color="success.dark">
                 {selectedWorkOrder.producedQuantity - selectedWorkOrder.defectQuantity}
@@ -327,7 +329,7 @@ const POPWorkOrderPage: React.FC = () => {
           <Card sx={{ bgcolor: 'error.light' }}>
             <CardContent sx={{ textAlign: 'center' }}>
               <Typography variant="subtitle2" color="error.dark">
-                불량
+                {t('pages.popWorkOrder.defectQuantity')}
               </Typography>
               <Typography variant="h4" fontWeight="bold" color="error.dark">
                 {selectedWorkOrder.defectQuantity}
@@ -342,7 +344,7 @@ const POPWorkOrderPage: React.FC = () => {
         <Card sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6" gutterBottom fontWeight="bold">
-              빠른 생산 입력
+              {t('pages.popWorkOrder.quickInput')}
             </Typography>
             <Grid container spacing={2}>
               {[1, 5, 10, 50, 100].map((qty) => (
@@ -377,7 +379,7 @@ const POPWorkOrderPage: React.FC = () => {
                   onClick={handleStartWork}
                   sx={{ py: 3, fontSize: '1.2rem' }}
                 >
-                  작업 시작
+                  {t('pages.popWorkOrder.startWork')}
                 </Button>
               </Grid>
             ) : (
@@ -391,7 +393,7 @@ const POPWorkOrderPage: React.FC = () => {
                   color="success"
                   sx={{ py: 3, fontSize: '1.2rem' }}
                 >
-                  작업 재개
+                  {t('pages.popWorkOrder.resumeWork')}
                 </Button>
               </Grid>
             )}
@@ -409,7 +411,7 @@ const POPWorkOrderPage: React.FC = () => {
                 onClick={handlePauseWork}
                 sx={{ py: 3 }}
               >
-                일시 정지
+                {t('pages.popWorkOrder.pauseWork')}
               </Button>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -422,7 +424,7 @@ const POPWorkOrderPage: React.FC = () => {
                 onClick={() => setOpenDefectDialog(true)}
                 sx={{ py: 3 }}
               >
-                불량 등록
+                {t('pages.popWorkOrder.registerDefect')}
               </Button>
             </Grid>
           </>
@@ -439,7 +441,7 @@ const POPWorkOrderPage: React.FC = () => {
               onClick={() => setOpenCompleteDialog(true)}
               sx={{ py: 3, fontSize: '1.2rem' }}
             >
-              작업 완료
+              {t('pages.popWorkOrder.completeWork')}
             </Button>
           </Grid>
         )}
@@ -447,11 +449,11 @@ const POPWorkOrderPage: React.FC = () => {
 
       {/* Defect Dialog */}
       <Dialog open={openDefectDialog} onClose={() => setOpenDefectDialog(false)}>
-        <DialogTitle>불량 등록</DialogTitle>
+        <DialogTitle>{t('pages.popWorkOrder.defectDialog.title')}</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="불량 수량"
+            label={t('pages.popWorkOrder.defectDialog.quantity')}
             type="number"
             value={defectQuantity}
             onChange={(e) => setDefectQuantity(e.target.value)}
@@ -459,7 +461,7 @@ const POPWorkOrderPage: React.FC = () => {
           />
           <TextField
             fullWidth
-            label="불량 사유"
+            label={t('pages.popWorkOrder.defectDialog.reason')}
             multiline
             rows={3}
             value={defectReason}
@@ -467,51 +469,51 @@ const POPWorkOrderPage: React.FC = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDefectDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenDefectDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button
             onClick={handleRecordDefect}
             variant="contained"
             color="error"
             disabled={!defectQuantity}
           >
-            등록
+            {t('pages.popWorkOrder.defectDialog.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Complete Dialog */}
       <Dialog open={openCompleteDialog} onClose={() => setOpenCompleteDialog(false)}>
-        <DialogTitle>작업 완료 확인</DialogTitle>
+        <DialogTitle>{t('pages.popWorkOrder.completeDialog.title')}</DialogTitle>
         <DialogContent>
           <Alert severity="info" sx={{ mb: 2 }}>
-            작업을 완료하시겠습니까?
+            {t('pages.popWorkOrder.completeDialog.confirmMessage')}
           </Alert>
           <List>
             <ListItem>
               <ListItemText
-                primary="생산 수량"
+                primary={t('pages.popWorkOrder.completeDialog.producedQuantity')}
                 secondary={`${selectedWorkOrder.producedQuantity} / ${selectedWorkOrder.targetQuantity} EA`}
               />
             </ListItem>
             <ListItem>
-              <ListItemText primary="불량 수량" secondary={`${selectedWorkOrder.defectQuantity} EA`} />
+              <ListItemText primary={t('pages.popWorkOrder.completeDialog.defectQuantity')} secondary={`${selectedWorkOrder.defectQuantity} EA`} />
             </ListItem>
             <ListItem>
-              <ListItemText primary="작업 시간" secondary={formatTime(elapsedTime)} />
+              <ListItemText primary={t('pages.popWorkOrder.completeDialog.workTime')} secondary={formatTime(elapsedTime)} />
             </ListItem>
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenCompleteDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenCompleteDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleCompleteWork} variant="contained" color="success">
-            완료
+            {t('common.status.completed')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {selectedWorkOrder.status === 'COMPLETED' && (
         <Alert severity="success" sx={{ mt: 3 }}>
-          작업이 완료되었습니다. 생산 실적: {selectedWorkOrder.producedQuantity} EA
+          {t('pages.popWorkOrder.completedMessage', { quantity: selectedWorkOrder.producedQuantity })}
         </Alert>
       )}
     </Box>

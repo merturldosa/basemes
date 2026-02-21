@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Typography,
@@ -39,6 +40,8 @@ import { format } from 'date-fns';
 import EnhancedDataGrid from '@/components/common/EnhancedDataGrid';
 
 export default function UsersPage() {
+  const { t } = useTranslation();
+
   // State
   const [searchText, setSearchText] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
@@ -90,17 +93,17 @@ export default function UsersPage() {
       if (editingUser) {
         // Update
         await userService.updateUser(editingUser.userId, formData as UserUpdateRequest);
-        showSnackbar('사용자가 수정되었습니다', 'success');
+        showSnackbar(t('pages.users.messages.updated'), 'success');
       } else {
         // Create
         await userService.createUser(formData as UserCreateRequest);
-        showSnackbar('사용자가 생성되었습니다', 'success');
+        showSnackbar(t('pages.users.messages.created'), 'success');
       }
       setOpenDialog(false);
       resetForm();
       setRefreshKey((prev) => prev + 1); // Trigger data reload
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '저장 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.users.messages.saveFailed'), 'error');
     }
   };
 
@@ -110,12 +113,12 @@ export default function UsersPage() {
 
     try {
       await userService.deleteUser(userToDelete.userId);
-      showSnackbar('사용자가 삭제되었습니다', 'success');
+      showSnackbar(t('pages.users.messages.deleted'), 'success');
       setDeleteDialogOpen(false);
       setUserToDelete(null);
       setRefreshKey((prev) => prev + 1); // Trigger data reload
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '삭제 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.users.messages.deleteFailed'), 'error');
     }
   };
 
@@ -124,14 +127,14 @@ export default function UsersPage() {
     try {
       if (user.status === 'ACTIVE') {
         await userService.deactivateUser(user.userId);
-        showSnackbar('사용자가 비활성화되었습니다', 'success');
+        showSnackbar(t('pages.users.messages.deactivated'), 'success');
       } else {
         await userService.activateUser(user.userId);
-        showSnackbar('사용자가 활성화되었습니다', 'success');
+        showSnackbar(t('pages.users.messages.activated'), 'success');
       }
       setRefreshKey((prev) => prev + 1); // Trigger data reload
     } catch (error: any) {
-      showSnackbar(error.response?.data?.message || '상태 변경 실패', 'error');
+      showSnackbar(error.response?.data?.message || t('pages.users.messages.statusChangeFailed'), 'error');
     }
   };
 
@@ -174,29 +177,29 @@ export default function UsersPage() {
   const columns: GridColDef[] = [
     {
       field: 'username',
-      headerName: '사용자명',
+      headerName: t('pages.users.fields.username'),
       width: 150,
       flex: 1,
     },
     {
       field: 'fullName',
-      headerName: '이름',
+      headerName: t('pages.users.fields.fullName'),
       width: 150,
       flex: 1,
     },
     {
       field: 'email',
-      headerName: '이메일',
+      headerName: t('pages.users.fields.email'),
       width: 200,
       flex: 1,
     },
     {
       field: 'status',
-      headerName: '상태',
+      headerName: t('common.labels.status'),
       width: 100,
       renderCell: (params) => (
         <Chip
-          label={params.value === 'ACTIVE' ? '활성' : '비활성'}
+          label={params.value === 'ACTIVE' ? t('common.status.active') : t('common.status.inactive')}
           color={params.value === 'ACTIVE' ? 'success' : 'default'}
           size="small"
         />
@@ -204,20 +207,20 @@ export default function UsersPage() {
     },
     {
       field: 'lastLoginAt',
-      headerName: '마지막 로그인',
+      headerName: t('pages.users.fields.lastLoginAt'),
       width: 180,
       renderCell: (params) =>
         params.value ? format(new Date(params.value), 'yyyy-MM-dd HH:mm:ss') : '-',
     },
     {
       field: 'createdAt',
-      headerName: '생성일',
+      headerName: t('common.labels.createdAt'),
       width: 180,
       renderCell: (params) => format(new Date(params.value), 'yyyy-MM-dd HH:mm:ss'),
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 180,
       sortable: false,
       renderCell: (params) => (
@@ -226,7 +229,7 @@ export default function UsersPage() {
             size="small"
             color="primary"
             onClick={() => handleOpenEditDialog(params.row)}
-            title="수정"
+            title={t('common.buttons.edit')}
           >
             <EditIcon fontSize="small" />
           </IconButton>
@@ -234,7 +237,7 @@ export default function UsersPage() {
             size="small"
             color={params.row.status === 'ACTIVE' ? 'warning' : 'success'}
             onClick={() => handleToggleUserStatus(params.row)}
-            title={params.row.status === 'ACTIVE' ? '비활성화' : '활성화'}
+            title={params.row.status === 'ACTIVE' ? t('pages.users.actions.deactivate') : t('pages.users.actions.activate')}
           >
             {params.row.status === 'ACTIVE' ? (
               <InactiveIcon fontSize="small" />
@@ -246,7 +249,7 @@ export default function UsersPage() {
             size="small"
             color="error"
             onClick={() => handleOpenDeleteDialog(params.row)}
-            title="삭제"
+            title={t('common.buttons.delete')}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -260,10 +263,10 @@ export default function UsersPage() {
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
-          사용자 관리
+          {t('pages.users.title')}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          시스템 사용자를 관리합니다
+          {t('pages.users.subtitle')}
         </Typography>
       </Box>
 
@@ -271,7 +274,7 @@ export default function UsersPage() {
       <Paper sx={{ p: 2, mb: 3 }}>
         <Stack direction="row" spacing={2} alignItems="center">
           <TextField
-            placeholder="사용자명 또는 이메일 검색"
+            placeholder={t('pages.users.searchPlaceholder')}
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && setRefreshKey((prev) => prev + 1)}
@@ -287,7 +290,7 @@ export default function UsersPage() {
           />
           <TextField
             select
-            label="상태"
+            label={t('common.labels.status')}
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value);
@@ -296,30 +299,30 @@ export default function UsersPage() {
             size="small"
             sx={{ width: 150 }}
           >
-            <MenuItem value="ALL">전체</MenuItem>
-            <MenuItem value="ACTIVE">활성</MenuItem>
-            <MenuItem value="INACTIVE">비활성</MenuItem>
+            <MenuItem value="ALL">{t('pages.users.filters.all')}</MenuItem>
+            <MenuItem value="ACTIVE">{t('common.status.active')}</MenuItem>
+            <MenuItem value="INACTIVE">{t('common.status.inactive')}</MenuItem>
           </TextField>
           <Button
             variant="outlined"
             startIcon={<SearchIcon />}
             onClick={() => setRefreshKey((prev) => prev + 1)}
           >
-            검색
+            {t('common.buttons.search')}
           </Button>
           <Button
             variant="outlined"
             startIcon={<RefreshIcon />}
             onClick={() => setRefreshKey((prev) => prev + 1)}
           >
-            새로고침
+            {t('common.buttons.refresh')}
           </Button>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={handleOpenCreateDialog}
           >
-            사용자 추가
+            {t('pages.users.actions.addUser')}
           </Button>
         </Stack>
       </Paper>
@@ -339,12 +342,12 @@ export default function UsersPage() {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>{editingUser ? '사용자 수정' : '사용자 추가'}</DialogTitle>
+        <DialogTitle>{editingUser ? t('pages.users.dialogs.editTitle') : t('pages.users.dialogs.createTitle')}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} sx={{ mt: 2 }}>
             {!editingUser && (
               <TextField
-                label="사용자명"
+                label={t('pages.users.fields.username')}
                 value={(formData as UserCreateRequest).username || ''}
                 onChange={(e) =>
                   setFormData({ ...formData, username: e.target.value } as UserCreateRequest)
@@ -354,7 +357,7 @@ export default function UsersPage() {
               />
             )}
             <TextField
-              label="이메일"
+              label={t('pages.users.fields.email')}
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -362,7 +365,7 @@ export default function UsersPage() {
               required
             />
             <TextField
-              label="이름"
+              label={t('pages.users.fields.fullName')}
               value={formData.fullName}
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               fullWidth
@@ -370,7 +373,7 @@ export default function UsersPage() {
             />
             {!editingUser && (
               <TextField
-                label="비밀번호"
+                label={t('pages.users.fields.password')}
                 type="password"
                 value={(formData as UserCreateRequest).password || ''}
                 onChange={(e) =>
@@ -382,40 +385,40 @@ export default function UsersPage() {
             )}
             <TextField
               select
-              label="선호 언어"
+              label={t('pages.users.fields.preferredLanguage')}
               value={formData.preferredLanguage || 'ko'}
               onChange={(e) => setFormData({ ...formData, preferredLanguage: e.target.value })}
               fullWidth
             >
-              <MenuItem value="ko">한국어</MenuItem>
-              <MenuItem value="en">English</MenuItem>
-              <MenuItem value="zh">中文</MenuItem>
+              <MenuItem value="ko">{t('pages.users.languages.ko')}</MenuItem>
+              <MenuItem value="en">{t('pages.users.languages.en')}</MenuItem>
+              <MenuItem value="zh">{t('pages.users.languages.zh')}</MenuItem>
             </TextField>
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSaveUser} variant="contained">
-            {editingUser ? '수정' : '생성'}
+            {editingUser ? t('common.buttons.edit') : t('pages.users.actions.create')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>사용자 삭제</DialogTitle>
+        <DialogTitle>{t('pages.users.dialogs.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Typography>
-            정말로 <strong>{userToDelete?.fullName}</strong> 사용자를 삭제하시겠습니까?
+            {t('pages.users.dialogs.deleteConfirm', { name: userToDelete?.fullName })}
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            이 작업은 되돌릴 수 없습니다.
+            {t('pages.users.dialogs.deleteWarning')}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>취소</Button>
+          <Button onClick={() => setDeleteDialogOpen(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDeleteUser} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

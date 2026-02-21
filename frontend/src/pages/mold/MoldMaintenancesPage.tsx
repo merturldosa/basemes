@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Box,
   Button,
@@ -30,6 +31,7 @@ import moldMaintenanceService, { MoldMaintenance, MoldMaintenanceCreateRequest, 
 import moldService, { Mold } from '../../services/moldService';
 
 const MoldMaintenancesPage: React.FC = () => {
+  const { t } = useTranslation();
   const [maintenances, setMaintenances] = useState<MoldMaintenance[]>([]);
   const [molds, setMolds] = useState<Mold[]>([]);
   const [loading, setLoading] = useState(false);
@@ -59,7 +61,7 @@ const MoldMaintenancesPage: React.FC = () => {
       const data = await moldMaintenanceService.getAll();
       setMaintenances(data || []);
     } catch (error) {
-      showSnackbar('보전 이력을 불러오는데 실패했습니다.', 'error');
+      showSnackbar(t('pages.moldMaintenances.messages.loadFailed'), 'error');
       setMaintenances([]);
     } finally {
       setLoading(false);
@@ -118,15 +120,15 @@ const MoldMaintenancesPage: React.FC = () => {
     try {
       if (selectedMaintenance) {
         await moldMaintenanceService.update(selectedMaintenance.maintenanceId, formData as MoldMaintenanceUpdateRequest);
-        showSnackbar('보전 이력이 수정되었습니다.', 'success');
+        showSnackbar(t('pages.moldMaintenances.messages.updated'), 'success');
       } else {
         await moldMaintenanceService.create(formData);
-        showSnackbar('보전 이력이 등록되었습니다.', 'success');
+        showSnackbar(t('pages.moldMaintenances.messages.created'), 'success');
       }
       handleCloseDialog();
       loadMaintenances();
     } catch (error) {
-      showSnackbar('보전 이력 저장에 실패했습니다.', 'error');
+      showSnackbar(t('pages.moldMaintenances.messages.saveFailed'), 'error');
     }
   };
 
@@ -134,12 +136,12 @@ const MoldMaintenancesPage: React.FC = () => {
     if (selectedMaintenance) {
       try {
         await moldMaintenanceService.delete(selectedMaintenance.maintenanceId);
-        showSnackbar('보전 이력이 삭제되었습니다.', 'success');
+        showSnackbar(t('pages.moldMaintenances.messages.deleted'), 'success');
         setOpenDeleteDialog(false);
         setSelectedMaintenance(null);
         loadMaintenances();
       } catch (error) {
-        showSnackbar('보전 이력 삭제에 실패했습니다.', 'error');
+        showSnackbar(t('pages.moldMaintenances.messages.deleteFailed'), 'error');
       }
     }
   };
@@ -150,11 +152,11 @@ const MoldMaintenancesPage: React.FC = () => {
 
   const getMaintenanceTypeChip = (type: string) => {
     const typeConfig: Record<string, { label: string; color: 'success' | 'error' | 'warning' | 'default' | 'info' }> = {
-      DAILY_CHECK: { label: '일상점검', color: 'info' },
-      PERIODIC: { label: '정기보전', color: 'success' },
-      SHOT_BASED: { label: 'Shot기준', color: 'warning' },
-      EMERGENCY_REPAIR: { label: '긴급수리', color: 'error' },
-      OVERHAUL: { label: '오버홀', color: 'warning' },
+      DAILY_CHECK: { label: t('pages.moldMaintenances.types.dailyCheck'), color: 'info' },
+      PERIODIC: { label: t('pages.moldMaintenances.types.periodic'), color: 'success' },
+      SHOT_BASED: { label: t('pages.moldMaintenances.types.shotBased'), color: 'warning' },
+      EMERGENCY_REPAIR: { label: t('pages.moldMaintenances.types.emergencyRepair'), color: 'error' },
+      OVERHAUL: { label: t('pages.moldMaintenances.types.overhaul'), color: 'warning' },
     };
     const config = typeConfig[type] || { label: type, color: 'default' };
     return <Chip label={config.label} color={config.color} size="small" />;
@@ -163,27 +165,27 @@ const MoldMaintenancesPage: React.FC = () => {
   const getResultChip = (result?: string) => {
     if (!result) return null;
     const resultConfig: Record<string, { label: string; color: 'success' | 'error' | 'warning' }> = {
-      COMPLETED: { label: '완료', color: 'success' },
-      PARTIAL: { label: '부분완료', color: 'warning' },
-      FAILED: { label: '실패', color: 'error' },
+      COMPLETED: { label: t('pages.moldMaintenances.results.completed'), color: 'success' },
+      PARTIAL: { label: t('pages.moldMaintenances.results.partial'), color: 'warning' },
+      FAILED: { label: t('pages.moldMaintenances.results.failed'), color: 'error' },
     };
     const config = resultConfig[result] || { label: result, color: 'warning' };
     return <Chip label={config.label} color={config.color} size="small" />;
   };
 
   const columns: GridColDef[] = [
-    { field: 'maintenanceNo', headerName: '보전 번호', width: 130 },
-    { field: 'moldCode', headerName: '금형 코드', width: 120 },
-    { field: 'moldName', headerName: '금형명', width: 150 },
+    { field: 'maintenanceNo', headerName: t('pages.moldMaintenances.fields.maintenanceNo'), width: 130 },
+    { field: 'moldCode', headerName: t('pages.moldMaintenances.fields.moldCode'), width: 120 },
+    { field: 'moldName', headerName: t('pages.moldMaintenances.fields.moldName'), width: 150 },
     {
       field: 'maintenanceType',
-      headerName: '보전 유형',
+      headerName: t('pages.moldMaintenances.fields.maintenanceType'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => getMaintenanceTypeChip(params.value),
     },
     {
       field: 'maintenanceDate',
-      headerName: '보전 일시',
+      headerName: t('pages.moldMaintenances.fields.maintenanceDate'),
       width: 160,
       renderCell: (params: GridRenderCellParams) => {
         return new Date(params.value).toLocaleString('ko-KR');
@@ -191,7 +193,7 @@ const MoldMaintenancesPage: React.FC = () => {
     },
     {
       field: 'shotCountBefore',
-      headerName: '보전 전 Shot',
+      headerName: t('pages.moldMaintenances.fields.shotCountBefore'),
       width: 120,
       renderCell: (params: GridRenderCellParams) => {
         return params.value?.toLocaleString() || '-';
@@ -199,11 +201,11 @@ const MoldMaintenancesPage: React.FC = () => {
     },
     {
       field: 'shotCountReset',
-      headerName: 'Shot 리셋',
+      headerName: t('pages.moldMaintenances.fields.shotCountReset'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => (
         <Chip
-          label={params.value ? '리셋' : '유지'}
+          label={params.value ? t('pages.moldMaintenances.shotReset.reset') : t('pages.moldMaintenances.shotReset.keep')}
           color={params.value ? 'warning' : 'default'}
           size="small"
         />
@@ -211,7 +213,7 @@ const MoldMaintenancesPage: React.FC = () => {
     },
     {
       field: 'totalCost',
-      headerName: '총 비용',
+      headerName: t('pages.moldMaintenances.fields.totalCost'),
       width: 110,
       renderCell: (params: GridRenderCellParams) => {
         return params.value ? `₩${params.value.toLocaleString()}` : '-';
@@ -219,22 +221,22 @@ const MoldMaintenancesPage: React.FC = () => {
     },
     {
       field: 'laborHours',
-      headerName: '작업시간',
+      headerName: t('pages.moldMaintenances.fields.laborHours'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => {
         return params.value ? `${params.value}h` : '-';
       },
     },
-    { field: 'technicianName', headerName: '작업자', width: 100 },
+    { field: 'technicianName', headerName: t('pages.moldMaintenances.fields.technicianName'), width: 100 },
     {
       field: 'maintenanceResult',
-      headerName: '결과',
+      headerName: t('pages.moldMaintenances.fields.result'),
       width: 100,
       renderCell: (params: GridRenderCellParams) => getResultChip(params.value),
     },
     {
       field: 'actions',
-      headerName: '작업',
+      headerName: t('common.labels.actions'),
       width: 120,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => (
@@ -266,14 +268,14 @@ const MoldMaintenancesPage: React.FC = () => {
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="h5" component="h1">
-            금형 보전 관리
+            {t('pages.moldMaintenances.title')}
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => handleOpenDialog()}
           >
-            보전 이력 등록
+            {t('pages.moldMaintenances.actions.register')}
           </Button>
         </Box>
 
@@ -293,15 +295,15 @@ const MoldMaintenancesPage: React.FC = () => {
 
       {/* Create/Edit Dialog */}
       <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md" fullWidth>
-        <DialogTitle>{selectedMaintenance ? '보전 이력 수정' : '보전 이력 등록'}</DialogTitle>
+        <DialogTitle>{selectedMaintenance ? t('pages.moldMaintenances.dialogs.editTitle') : t('pages.moldMaintenances.dialogs.createTitle')}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 1 }}>
             <FormControl required>
-              <InputLabel>금형</InputLabel>
+              <InputLabel>{t('pages.moldMaintenances.fields.mold')}</InputLabel>
               <Select
                 value={formData.moldId || ''}
                 onChange={(e) => setFormData({ ...formData, moldId: Number(e.target.value) })}
-                label="금형"
+                label={t('pages.moldMaintenances.fields.mold')}
                 disabled={!!selectedMaintenance}
               >
                 {molds.map((mold) => (
@@ -312,28 +314,28 @@ const MoldMaintenancesPage: React.FC = () => {
               </Select>
             </FormControl>
             <TextField
-              label="보전 번호"
+              label={t('pages.moldMaintenances.fields.maintenanceNo')}
               value={formData.maintenanceNo}
               onChange={(e) => setFormData({ ...formData, maintenanceNo: e.target.value })}
               required
               disabled={!!selectedMaintenance}
             />
             <FormControl required>
-              <InputLabel>보전 유형</InputLabel>
+              <InputLabel>{t('pages.moldMaintenances.fields.maintenanceType')}</InputLabel>
               <Select
                 value={formData.maintenanceType}
                 onChange={(e) => setFormData({ ...formData, maintenanceType: e.target.value })}
-                label="보전 유형"
+                label={t('pages.moldMaintenances.fields.maintenanceType')}
               >
-                <MenuItem value="DAILY_CHECK">일상점검</MenuItem>
-                <MenuItem value="PERIODIC">정기보전</MenuItem>
-                <MenuItem value="SHOT_BASED">Shot 기준 보전</MenuItem>
-                <MenuItem value="EMERGENCY_REPAIR">긴급수리</MenuItem>
-                <MenuItem value="OVERHAUL">오버홀</MenuItem>
+                <MenuItem value="DAILY_CHECK">{t('pages.moldMaintenances.types.dailyCheck')}</MenuItem>
+                <MenuItem value="PERIODIC">{t('pages.moldMaintenances.types.periodic')}</MenuItem>
+                <MenuItem value="SHOT_BASED">{t('pages.moldMaintenances.types.shotBasedMaint')}</MenuItem>
+                <MenuItem value="EMERGENCY_REPAIR">{t('pages.moldMaintenances.types.emergencyRepair')}</MenuItem>
+                <MenuItem value="OVERHAUL">{t('pages.moldMaintenances.types.overhaul')}</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label="보전 일시"
+              label={t('pages.moldMaintenances.fields.maintenanceDate')}
               type="datetime-local"
               value={formData.maintenanceDate}
               onChange={(e) => setFormData({ ...formData, maintenanceDate: e.target.value })}
@@ -341,7 +343,7 @@ const MoldMaintenancesPage: React.FC = () => {
               InputLabelProps={{ shrink: true }}
             />
             <TextField
-              label="보전 전 Shot 수"
+              label={t('pages.moldMaintenances.fields.shotCountBeforeLabel')}
               type="number"
               value={formData.shotCountBefore || ''}
               onChange={(e) => setFormData({ ...formData, shotCountBefore: parseInt(e.target.value) || undefined })}
@@ -353,31 +355,31 @@ const MoldMaintenancesPage: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, shotCountReset: e.target.checked })}
                 />
               }
-              label="Shot 수 리셋 (전체 오버홀 시)"
+              label={t('pages.moldMaintenances.fields.shotCountResetLabel')}
             />
             <TextField
-              label="보전 내용"
+              label={t('pages.moldMaintenances.fields.maintenanceContent')}
               value={formData.maintenanceContent || ''}
               onChange={(e) => setFormData({ ...formData, maintenanceContent: e.target.value })}
               multiline
               rows={2}
             />
             <TextField
-              label="교체 부품"
+              label={t('pages.moldMaintenances.fields.partsReplaced')}
               value={formData.partsReplaced || ''}
               onChange={(e) => setFormData({ ...formData, partsReplaced: e.target.value })}
               multiline
               rows={2}
             />
             <TextField
-              label="발견 사항"
+              label={t('pages.moldMaintenances.fields.findings')}
               value={formData.findings || ''}
               onChange={(e) => setFormData({ ...formData, findings: e.target.value })}
               multiline
               rows={2}
             />
             <TextField
-              label="조치 내용"
+              label={t('pages.moldMaintenances.fields.correctiveAction')}
               value={formData.correctiveAction || ''}
               onChange={(e) => setFormData({ ...formData, correctiveAction: e.target.value })}
               multiline
@@ -385,44 +387,44 @@ const MoldMaintenancesPage: React.FC = () => {
             />
             <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2 }}>
               <TextField
-                label="부품 비용"
+                label={t('pages.moldMaintenances.fields.partsCost')}
                 type="number"
                 value={formData.partsCost || ''}
                 onChange={(e) => setFormData({ ...formData, partsCost: parseFloat(e.target.value) || undefined })}
               />
               <TextField
-                label="인건비"
+                label={t('pages.moldMaintenances.fields.laborCost')}
                 type="number"
                 value={formData.laborCost || ''}
                 onChange={(e) => setFormData({ ...formData, laborCost: parseFloat(e.target.value) || undefined })}
               />
             </Box>
             <TextField
-              label="작업 시간 (시간)"
+              label={t('pages.moldMaintenances.fields.laborHoursLabel')}
               type="number"
               value={formData.laborHours || ''}
               onChange={(e) => setFormData({ ...formData, laborHours: parseInt(e.target.value) || undefined })}
             />
             <TextField
-              label="작업자명"
+              label={t('pages.moldMaintenances.fields.technicianName')}
               value={formData.technicianName || ''}
               onChange={(e) => setFormData({ ...formData, technicianName: e.target.value })}
             />
             <FormControl>
-              <InputLabel>보전 결과</InputLabel>
+              <InputLabel>{t('pages.moldMaintenances.fields.maintenanceResult')}</InputLabel>
               <Select
                 value={formData.maintenanceResult || ''}
                 onChange={(e) => setFormData({ ...formData, maintenanceResult: e.target.value })}
-                label="보전 결과"
+                label={t('pages.moldMaintenances.fields.maintenanceResult')}
               >
-                <MenuItem value="">선택 안함</MenuItem>
-                <MenuItem value="COMPLETED">완료</MenuItem>
-                <MenuItem value="PARTIAL">부분 완료</MenuItem>
-                <MenuItem value="FAILED">실패</MenuItem>
+                <MenuItem value="">{t('pages.moldMaintenances.results.none')}</MenuItem>
+                <MenuItem value="COMPLETED">{t('pages.moldMaintenances.results.completed')}</MenuItem>
+                <MenuItem value="PARTIAL">{t('pages.moldMaintenances.results.partialComplete')}</MenuItem>
+                <MenuItem value="FAILED">{t('pages.moldMaintenances.results.failed')}</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label="비고"
+              label={t('common.labels.remarks')}
               value={formData.remarks || ''}
               onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
               multiline
@@ -431,25 +433,25 @@ const MoldMaintenancesPage: React.FC = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog}>취소</Button>
+          <Button onClick={handleCloseDialog}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleSubmit} variant="contained">
-            {selectedMaintenance ? '수정' : '등록'}
+            {selectedMaintenance ? t('common.buttons.edit') : t('pages.moldMaintenances.actions.register')}
           </Button>
         </DialogActions>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
-        <DialogTitle>보전 이력 삭제</DialogTitle>
+        <DialogTitle>{t('pages.moldMaintenances.dialogs.deleteTitle')}</DialogTitle>
         <DialogContent>
           <Typography>
-            {selectedMaintenance?.maintenanceNo}을(를) 삭제하시겠습니까?
+            {t('pages.moldMaintenances.dialogs.deleteConfirm', { no: selectedMaintenance?.maintenanceNo })}
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenDeleteDialog(false)}>취소</Button>
+          <Button onClick={() => setOpenDeleteDialog(false)}>{t('common.buttons.cancel')}</Button>
           <Button onClick={handleDelete} color="error" variant="contained">
-            삭제
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

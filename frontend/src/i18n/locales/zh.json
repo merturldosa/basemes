@@ -1172,6 +1172,294 @@
         "signaturePadNote": "（实际实现时为签名画布）",
         "signComplete": "签名完成"
       }
+    },
+    "roles": {
+      "title": "角色管理",
+      "subtitle": "管理用户角色",
+      "fields": {
+        "roleCode": "角色代码",
+        "roleName": "角色名称",
+        "roleCodeHelper": "例：ADMIN, USER, MANAGER"
+      },
+      "filters": {
+        "all": "全部"
+      },
+      "actions": {
+        "addRole": "添加角色",
+        "create": "创建",
+        "managePermissions": "权限管理",
+        "activate": "激活",
+        "deactivate": "停用"
+      },
+      "dialogs": {
+        "createTitle": "添加角色",
+        "editTitle": "编辑角色",
+        "deleteTitle": "删除角色",
+        "deleteConfirm": "确定要删除角色<strong>{{name}}</strong>吗？",
+        "deleteWarning": "此操作无法撤销。",
+        "permissionTitle": "权限管理",
+        "permissionSubtitle": "选择要分配给此角色的权限"
+      },
+      "messages": {
+        "loadFailed": "加载角色列表失败",
+        "permissionsLoadFailed": "加载权限列表失败",
+        "rolePermissionsLoadFailed": "加载角色权限失败",
+        "created": "角色创建成功",
+        "updated": "角色更新成功",
+        "deleted": "角色删除成功",
+        "saveFailed": "保存失败",
+        "deleteFailed": "删除失败",
+        "activated": "角色已激活",
+        "deactivated": "角色已停用",
+        "statusChangeFailed": "状态更改失败",
+        "permissionAssigned": "权限已分配",
+        "permissionRemoved": "权限已移除",
+        "permissionChangeFailed": "权限更改失败"
+      }
+    },
+    "users": {
+      "title": "用户管理",
+      "subtitle": "管理系统用户",
+      "searchPlaceholder": "按用户名或邮箱搜索",
+      "fields": {
+        "username": "用户名",
+        "fullName": "姓名",
+        "email": "邮箱",
+        "password": "密码",
+        "preferredLanguage": "首选语言",
+        "lastLoginAt": "最后登录"
+      },
+      "filters": {
+        "all": "全部"
+      },
+      "actions": {
+        "addUser": "添加用户",
+        "create": "创建",
+        "activate": "激活",
+        "deactivate": "停用"
+      },
+      "dialogs": {
+        "createTitle": "添加用户",
+        "editTitle": "编辑用户",
+        "deleteTitle": "删除用户",
+        "deleteConfirm": "确定要删除用户{{name}}吗？",
+        "deleteWarning": "此操作无法撤销。"
+      },
+      "languages": {
+        "ko": "韩语",
+        "en": "英语",
+        "zh": "中文"
+      },
+      "messages": {
+        "created": "用户创建成功",
+        "updated": "用户更新成功",
+        "deleted": "用户删除成功",
+        "saveFailed": "保存失败",
+        "deleteFailed": "删除失败",
+        "activated": "用户已激活",
+        "deactivated": "用户已停用",
+        "statusChangeFailed": "状态更改失败"
+      }
+    },
+    "equipments": {
+      "title": "设备管理",
+      "fields": {
+        "equipmentCode": "设备代码",
+        "equipmentName": "设备名称",
+        "equipmentType": "设备类型",
+        "category": "类别",
+        "manufacturer": "制造商",
+        "modelName": "型号",
+        "serialNo": "序列号",
+        "location": "位置",
+        "capacity": "容量",
+        "maintenanceCycleDays": "维护周期（天）",
+        "standardCycleTime": "标准周期时间",
+        "oeeTarget": "OEE目标",
+        "nextMaintenanceDate": "下次维护日期",
+        "isActive": "活跃状态"
+      },
+      "types": {
+        "machine": "机器",
+        "mold": "模具",
+        "tool": "工具",
+        "facility": "设施",
+        "vehicle": "车辆",
+        "other": "其他"
+      },
+      "status": {
+        "operational": "运行中",
+        "stopped": "停止",
+        "maintenance": "维护中",
+        "breakdown": "故障",
+        "retired": "报废"
+      },
+      "actions": {
+        "register": "注册设备"
+      },
+      "dialogs": {
+        "createTitle": "注册设备",
+        "editTitle": "编辑设备",
+        "deleteTitle": "删除设备",
+        "deleteConfirm": "确定要删除设备{{name}}吗？"
+      },
+      "messages": {
+        "loadFailed": "加载设备列表失败",
+        "created": "设备注册成功",
+        "updated": "设备更新成功",
+        "deleted": "设备删除成功",
+        "saveFailed": "设备保存失败",
+        "deleteFailed": "设备删除失败",
+        "activated": "设备已激活",
+        "deactivated": "设备已停用",
+        "statusChangeFailed": "状态更改失败"
+      }
+    },
+    "moldMaintenances": {
+      "title": "模具维护管理",
+      "fields": {
+        "maintenanceNo": "维护编号",
+        "moldCode": "模具代码",
+        "moldName": "模具名称",
+        "mold": "模具",
+        "maintenanceType": "维护类型",
+        "maintenanceDate": "维护日期",
+        "shotCountBefore": "维护前射出次数",
+        "shotCountBeforeLabel": "维护前射出次数",
+        "shotCountReset": "射出次数重置",
+        "shotCountResetLabel": "重置射出计数",
+        "maintenanceContent": "维护内容",
+        "partsReplaced": "更换零件",
+        "findings": "检查结果",
+        "correctiveAction": "纠正措施",
+        "partsCost": "零件费用",
+        "laborCost": "人工费用",
+        "totalCost": "总费用",
+        "laborHours": "工时",
+        "laborHoursLabel": "工时 (h)",
+        "technicianName": "技术人员",
+        "result": "结果",
+        "maintenanceResult": "维护结果"
+      },
+      "types": {
+        "dailyCheck": "日常检查",
+        "periodic": "定期维护",
+        "shotBased": "射出次数基准",
+        "shotBasedMaint": "射出次数基准维护",
+        "emergencyRepair": "紧急维修",
+        "overhaul": "大修"
+      },
+      "results": {
+        "none": "未选择",
+        "completed": "完成",
+        "partial": "部分完成",
+        "partialComplete": "部分完成",
+        "failed": "失败"
+      },
+      "shotReset": {
+        "reset": "重置",
+        "keep": "保持"
+      },
+      "actions": {
+        "register": "注册维护"
+      },
+      "dialogs": {
+        "createTitle": "注册维护",
+        "editTitle": "编辑维护",
+        "deleteTitle": "删除维护",
+        "deleteConfirm": "确定要删除维护记录{{no}}吗？"
+      },
+      "messages": {
+        "loadFailed": "加载维护列表失败",
+        "created": "维护注册成功",
+        "updated": "维护更新成功",
+        "deleted": "维护删除成功",
+        "saveFailed": "维护保存失败",
+        "deleteFailed": "维护删除失败"
+      }
+    },
+    "sops": {
+      "title": "SOP（标准操作程序）管理",
+      "sopList": "SOP列表",
+      "fields": {
+        "sopCode": "SOP代码",
+        "sopName": "SOP名称",
+        "targetProcess": "目标工序",
+        "version": "版本",
+        "approvalStatus": "审批状态",
+        "effectiveDate": "生效日期",
+        "nextReviewDate": "下次审核日期",
+        "isActive": "活跃状态",
+        "requiredRole": "所需角色",
+        "restrictedSOP": "受限SOP"
+      },
+      "sopTypes": {
+        "production": "生产",
+        "warehouse": "仓库",
+        "quality": "质量",
+        "facility": "设施",
+        "safety": "安全",
+        "maintenance": "维护"
+      },
+      "stepFields": {
+        "stepNumber": "步骤编号",
+        "stepTitle": "步骤标题",
+        "stepType": "步骤类型",
+        "stepDescription": "步骤描述",
+        "estimatedDuration": "预计时间（分钟）",
+        "detailedInstruction": "详细说明",
+        "cautionNotes": "注意事项",
+        "qualityPoints": "质量要点",
+        "checklistItems": "检查项目（JSON）",
+        "critical": "关键",
+        "mandatory": "必须",
+        "criticalStep": "关键步骤",
+        "mandatoryStep": "必须步骤"
+      },
+      "stepTypes": {
+        "preparation": "准备",
+        "execution": "执行",
+        "inspection": "检查",
+        "documentation": "文档",
+        "safety": "安全"
+      },
+      "actions": {
+        "createSOP": "创建SOP",
+        "addStep": "添加步骤",
+        "submitForApproval": "提交审批",
+        "approve": "批准",
+        "reject": "驳回",
+        "obsolete": "标记为废弃"
+      },
+      "detail": {
+        "title": "SOP详情",
+        "basicInfo": "基本信息",
+        "sopSteps": "SOP步骤",
+        "sopStepsCount": "共{{count}}个步骤"
+      },
+      "dialogs": {
+        "createSOP": "创建SOP",
+        "editSOP": "编辑SOP",
+        "addStep": "添加步骤",
+        "editStep": "编辑步骤",
+        "deleteConfirmTitle": "删除确认",
+        "deleteSOPConfirm": "确定要删除此SOP吗？",
+        "deleteStepConfirm": "确定要删除此步骤吗？",
+        "deleteWarning": "此操作无法撤销。"
+      },
+      "messages": {
+        "loadFailed": "加载SOP列表失败",
+        "stepsLoadFailed": "加载SOP步骤失败",
+        "saveFailed": "SOP保存失败",
+        "deleteFailed": "SOP删除失败",
+        "selectSOPFirst": "请先选择SOP",
+        "onlyDraftEditable": "只有草稿或驳回状态的SOP才能编辑",
+        "stepSaveFailed": "步骤保存失败",
+        "submitFailed": "提交审批失败",
+        "approveFailed": "批准失败",
+        "rejectFailed": "驳回失败",
+        "obsoleteFailed": "标记废弃失败"
+      }
     }
   }
 }
