@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDS MES / WMS - 基于工业4.0的智能工厂平台</title>
+<title>SynDock MES / WMS - 基于工业4.0的智能工厂平台</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap');
 
@@ -868,6 +868,267 @@ body {
   color: rgba(255,255,255,0.6);
   font-weight: 500;
 }
+
+/* ===================== BRAND ECOSYSTEM SECTION ===================== */
+.brand-ecosystem {
+  margin-top: 16px;
+  padding: 18px 24px 14px;
+  background: linear-gradient(135deg, rgba(27,42,74,0.04) 0%, rgba(200,169,97,0.07) 100%);
+  border-radius: 14px;
+  border: 1px solid rgba(200,169,97,0.18);
+  position: relative;
+  overflow: hidden;
+}
+.brand-ecosystem::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--gold) 50%, transparent 95%);
+  opacity: 0.5;
+}
+.eco-header { text-align: center; margin-bottom: 14px; }
+.eco-tagline-main { font-size: 14px; font-weight: 700; color: var(--navy); letter-spacing: 1.5px; }
+.eco-tagline-sub { font-size: 10px; color: var(--gold); font-weight: 600; letter-spacing: 2.5px; margin-top: 2px; }
+.eco-mission { text-align: center; font-size: 9.5px; color: #666; line-height: 1.5; margin-bottom: 14px; max-width: 480px; margin-left: auto; margin-right: auto; }
+.eco-products { display: flex; justify-content: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+.eco-product { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 56px; }
+.eco-icon { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 7.5px; font-weight: 700; letter-spacing: 0.3px; box-shadow: 0 2px 8px rgba(27,42,74,0.2); }
+.eco-product-name { font-size: 7.5px; color: var(--dark); font-weight: 500; white-space: nowrap; }
+.eco-bottom-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.eco-diffs { display: flex; flex-wrap: wrap; gap: 8px 16px; flex: 1; }
+.eco-diff-item { display: flex; align-items: center; gap: 5px; font-size: 8.5px; color: var(--dark); font-weight: 400; }
+.eco-diff-dot { width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%); flex-shrink: 0; }
+.eco-qr-area { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+.eco-qr-box { width: 52px; height: 52px; border: 1.5px solid rgba(27,42,74,0.3); border-radius: 8px; display: flex; align-items: center; justify-content: center; background: white; position: relative; overflow: hidden; }
+.eco-qr-box svg { width: 40px; height: 40px; }
+.eco-qr-label { font-size: 7px; color: var(--steel); font-weight: 500; letter-spacing: 0.3px; }
+
+/* ===================== PAGE BOTTOM STRIP ===================== */
+.page-bottom-strip {
+  margin-top: auto;
+  padding: 16px 20px 14px;
+  background: linear-gradient(135deg, var(--navy) 0%, #0F1A30 100%);
+  border-radius: 10px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.page-bottom-strip::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 10%, var(--gold) 50%, transparent 90%);
+}
+.strip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.strip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+}
+.strip-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(200,169,97,0.3) 0%, transparent 100%);
+}
+.strip-items {
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+.strip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 1;
+}
+.strip-item-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: rgba(200,169,97,0.12);
+  border: 1px solid rgba(200,169,97,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.strip-item-text h4 {
+  font-size: 9px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 2px 0;
+}
+.strip-item-text p {
+  font-size: 7.5px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.4;
+  margin: 0;
+}
+/* ===================== PROCESS FLOW SECTION ===================== */
+.process-flow {
+  margin-top: 18px;
+  padding: 18px 20px 16px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(27,42,74,0.08);
+  box-shadow: 0 2px 12px rgba(27,42,74,0.06);
+}
+.process-flow-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+}
+.process-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  max-width: 100px;
+}
+.process-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 2px 8px rgba(27,42,74,0.2);
+}
+.process-step-label {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--navy);
+  text-align: center;
+}
+.process-step-desc {
+  font-size: 7.5px;
+  color: #888;
+  text-align: center;
+  line-height: 1.3;
+}
+.process-arrow {
+  color: var(--gold);
+  font-size: 16px;
+  margin: 0 2px;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+/* ===================== UX FEATURES SECTION ===================== */
+.ux-features {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+.ux-feature-card {
+  background: white;
+  border-radius: 10px;
+  padding: 14px 14px 12px;
+  border: 1px solid rgba(27,42,74,0.08);
+  box-shadow: 0 2px 8px rgba(27,42,74,0.05);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.ux-feature-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(27,42,74,0.06) 0%, rgba(200,169,97,0.1) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ux-feature-text h4 {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 3px 0;
+}
+.ux-feature-text p {
+  font-size: 7.5px;
+  color: #888;
+  line-height: 1.4;
+  margin: 0;
+}
+/* Cover Slogan */
+.cover-slogan {
+  margin: 14px 0 6px;
+  text-align: center;
+  position: relative;
+  padding: 0 20px;
+}
+.cover-slogan-main {
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 2px;
+  line-height: 1.3;
+}
+.cover-slogan-sub {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: 3.5px;
+  margin-top: 4px;
+}
+
+/* Cover Solutions Lineup */
+.cover-solutions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin: 14px 0 10px;
+  flex-wrap: wrap;
+}
+.cover-solution-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.cover-solution-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(200,169,97,0.1);
+  border: 1px solid rgba(200,169,97,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cover-solution-label {
+  font-size: 8px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
 </style>
 </head>
 <body>
@@ -891,7 +1152,7 @@ body {
   </svg>
 
   <div class="cover-content">
-    <div class="cover-brand">SOFTICE CO., LTD.</div>
+    <div class="cover-brand">S Y N D O C K</div>
     <div class="cover-brand-bar"></div>
 
     <!-- Smart Factory Illustration SVG -->
@@ -1021,9 +1282,61 @@ body {
       </svg>
     </div>
 
-    <div class="cover-main-title">SDS MES / WMS</div>
+    <div class="cover-main-title">SynDock MES / WMS</div>
     <div class="cover-subtitle">基于工业4.0的智能工厂平台</div>
     <div class="cover-tagline">从制造执行到仓库管理 — 一个统一平台</div>
+
+    <!-- Slogan -->
+    <div class="cover-slogan">
+      <div class="cover-slogan-main">"Synchronize Your Factory."</div>
+      <div class="cover-slogan-sub">Predict. Connect. Optimize.</div>
+    </div>
+
+    <!-- Solution Lineup -->
+    <div class="cover-solutions">
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="6" width="16" height="11" rx="2" stroke="#C8A961" stroke-width="1.3"/><path d="M5.5 6V4.5a4.5 4.5 0 019 0V6" stroke="#C8A961" stroke-width="1.2"/><circle cx="10" cy="12" r="1.5" fill="#C8A961"/></svg>
+        </div>
+        <span class="cover-solution-label">MES</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="13" rx="2" stroke="#C8A961" stroke-width="1.3"/><line x1="2" y1="9" x2="18" y2="9" stroke="#C8A961" stroke-width="1"/><line x1="7" y1="9" x2="7" y2="17" stroke="#C8A961" stroke-width="1"/><line x1="13" y1="9" x2="13" y2="17" stroke="#C8A961" stroke-width="1"/></svg>
+        </div>
+        <span class="cover-solution-label">WMS</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#C8A961" stroke-width="1.3"/><path d="M7 10.5l2.5 2.5 4-5" stroke="#C8A961" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="cover-solution-label">AI</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="2" width="14" height="16" rx="2" stroke="#C8A961" stroke-width="1.3"/><line x1="6.5" y1="6.5" x2="13.5" y2="6.5" stroke="#C8A961" stroke-width="1"/><line x1="6.5" y1="10" x2="13.5" y2="10" stroke="#C8A961" stroke-width="1"/><line x1="6.5" y1="13.5" x2="11" y2="13.5" stroke="#C8A961" stroke-width="1"/></svg>
+        </div>
+        <span class="cover-solution-label">Portal</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3v4M10 7l5 3M10 7L5 10" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round"/><circle cx="10" cy="3" r="2" fill="#C8A961" opacity="0.8"/><circle cx="15" cy="10" r="2" fill="#C8A961" opacity="0.8"/><circle cx="5" cy="10" r="2" fill="#C8A961" opacity="0.8"/><circle cx="15" cy="16" r="2" fill="#C8A961" opacity="0.8"/><circle cx="5" cy="16" r="2" fill="#C8A961" opacity="0.8"/><path d="M15 10v6M5 10v6" stroke="#C8A961" stroke-width="1.2"/></svg>
+        </div>
+        <span class="cover-solution-label">SCM</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 14l3.5-3.5 2.5 2.5L13 8.5l4 3.5" stroke="#C8A961" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="3" width="16" height="14" rx="2" stroke="#C8A961" stroke-width="1.3"/></svg>
+        </div>
+        <span class="cover-solution-label">Insight</span>
+      </div>
+      <div class="cover-solution-item">
+        <div class="cover-solution-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L4 6v7l6 5 6-5V6L10 2z" stroke="#C8A961" stroke-width="1.3" stroke-linejoin="round"/><path d="M10 9v5" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round"/><circle cx="10" cy="7" r="1.2" fill="#C8A961"/></svg>
+        </div>
+        <span class="cover-solution-label">Alarm</span>
+      </div>
+    </div>
 
     <div class="cover-divider"></div>
 
@@ -1231,6 +1544,96 @@ body {
       <div class="value-prop-text">多语言支持（韩/英/中）</div>
     </div>
   </div>
+
+    <!-- Implementation Process Flow -->
+    <div class="process-flow">
+      <div class="process-flow-title">SynDock 实施流程</div>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="process-step-num">1</div>
+          <div class="process-step-label">需求分析</div>
+          <div class="process-step-desc">现场诊断与<br>业务流程评估</div>
+        </div>
+        <div class="process-arrow">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M2 7h14M12 3l4 4-4 4" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">2</div>
+          <div class="process-step-label">定制设计</div>
+          <div class="process-step-desc">行业模块选择<br>与个性化定制</div>
+        </div>
+        <div class="process-arrow">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M2 7h14M12 3l4 4-4 4" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">3</div>
+          <div class="process-step-label">部署实施</div>
+          <div class="process-step-desc">系统安装与<br>数据迁移</div>
+        </div>
+        <div class="process-arrow">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M2 7h14M12 3l4 4-4 4" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">4</div>
+          <div class="process-step-label">培训交付</div>
+          <div class="process-step-desc">用户培训与<br>操作手册交付</div>
+        </div>
+        <div class="process-arrow">
+          <svg width="20" height="14" viewBox="0 0 20 14" fill="none"><path d="M2 7h14M12 3l4 4-4 4" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="process-step">
+          <div class="process-step-num">5</div>
+          <div class="process-step-label">运维支持</div>
+          <div class="process-step-desc">7x24技术支持<br>与持续更新</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 2 Bottom: SynDock Advantage -->
+    <div class="page-bottom-strip">
+      <div class="strip-header">
+        <span class="strip-title">SynDock Advantage</span>
+        <div class="strip-divider"></div>
+      </div>
+      <div class="strip-items">
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#C8A961" stroke-width="1.2"/><path d="M5.5 8.5L7 10l3.5-4" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>AI预测引擎</h4>
+            <p>数据驱动的需求预测<br>与生产计划自动优化</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="5" height="5" rx="1" stroke="#C8A961" stroke-width="1.1"/><rect x="9" y="3" width="5" height="5" rx="1" stroke="#C8A961" stroke-width="1.1"/><rect x="5.5" y="8" width="5" height="5" rx="1" stroke="#C8A961" stroke-width="1.1"/><line x1="7" y1="5.5" x2="9" y2="5.5" stroke="#C8A961" stroke-width="0.8"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>模块化架构</h4>
+            <p>行业定制配置<br>实现快速部署与扩展</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 11l3-3 2 2 4-5" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="2" y="2" width="12" height="12" rx="2" stroke="#C8A961" stroke-width="1.1"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>实时集成</h4>
+            <p>ERP、IoT、条码等<br>外部系统无缝对接</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C5 2 3 4.5 3 7c0 2 1.5 3 2 4h6c.5-1 2-2 2-4 0-2.5-2-5-5-5z" stroke="#C8A961" stroke-width="1.1"/><line x1="6" y1="13" x2="10" y2="13" stroke="#C8A961" stroke-width="1.1" stroke-linecap="round"/><line x1="6.5" y1="14.5" x2="9.5" y2="14.5" stroke="#C8A961" stroke-width="1.1" stroke-linecap="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>云原生部署</h4>
+            <p>基于Docker/K8s<br>零停机弹性扩展</p>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <!-- ================================================================
@@ -1387,7 +1790,7 @@ body {
 
       <!-- Bottom legend line -->
       <line x1="36" y1="390" x2="516" y2="390" stroke="#E2E0DB" stroke-width="0.5"/>
-      <text x="276" y="408" text-anchor="middle" font-size="8.5" fill="#999">SDS MES/WMS 系统架构概览</text>
+      <text x="276" y="408" text-anchor="middle" font-size="8.5" fill="#999">SynDock MES/WMS 系统架构概览</text>
     </svg>
   </div>
 
@@ -1445,6 +1848,52 @@ body {
       </div>
     </div>
   </div>
+
+    <!-- Page 3 Bottom: Security & Infrastructure -->
+    <div class="page-bottom-strip">
+      <div class="strip-header">
+        <span class="strip-title">Security & Infrastructure</span>
+        <div class="strip-divider"></div>
+      </div>
+      <div class="strip-items">
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L3 4v4c0 3.5 2.5 5.5 5 6.5 2.5-1 5-3 5-6.5V4L8 1.5z" stroke="#C8A961" stroke-width="1.1" stroke-linejoin="round"/><path d="M6 8l1.5 1.5L10 7" stroke="#C8A961" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>数据加密</h4>
+            <p>AES-256传输/存储加密<br>SSL/TLS安全通信</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="7" width="10" height="7" rx="1.5" stroke="#C8A961" stroke-width="1.1"/><path d="M5.5 7V5a2.5 2.5 0 015 0v2" stroke="#C8A961" stroke-width="1.1"/><circle cx="8" cy="11" r="1" fill="#C8A961"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>基于角色的访问控制</h4>
+            <p>JWT认证与细粒度<br>权限管理体系</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#C8A961" stroke-width="1.1"/><path d="M8 4v4l3 2" stroke="#C8A961" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>高可用性 (HA)</h4>
+            <p>双机冗余配置<br>自动故障切换恢复</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#C8A961" stroke-width="1.1"/><circle cx="5" cy="8" r="1.5" stroke="#C8A961" stroke-width="0.8"/><circle cx="8" cy="8" r="1.5" stroke="#C8A961" stroke-width="0.8"/><circle cx="11" cy="8" r="1.5" stroke="#C8A961" stroke-width="0.8"/><path d="M5 6.5V5M8 6.5V5M11 6.5V5" stroke="#C8A961" stroke-width="0.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>7x24小时监控</h4>
+            <p>系统健康实时监控<br>异常自动预警通知</p>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <!-- ================================================================
@@ -1473,7 +1922,7 @@ body {
 
           <!-- Top nav -->
           <rect x="0" y="0" width="280" height="18" fill="#1B2A4A"/>
-          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SDS MES</text>
+          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SynDock</text>
           <circle cx="260" cy="9" r="5" fill="rgba(255,255,255,0.2)"/>
           <text x="260" y="12" text-anchor="middle" font-size="5" fill="white">U</text>
 
@@ -1557,7 +2006,7 @@ body {
 
           <!-- Top nav -->
           <rect x="0" y="0" width="280" height="18" fill="#1B2A4A"/>
-          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SDS MES</text>
+          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SynDock</text>
 
           <!-- Sidebar -->
           <rect x="0" y="18" width="45" height="147" fill="#243656"/>
@@ -1673,7 +2122,7 @@ body {
 
           <!-- Top nav -->
           <rect x="0" y="0" width="280" height="18" fill="#1B2A4A"/>
-          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SDS MES</text>
+          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SynDock</text>
 
           <!-- Sidebar -->
           <rect x="0" y="18" width="45" height="147" fill="#243656"/>
@@ -1760,7 +2209,7 @@ body {
 
           <!-- Top nav -->
           <rect x="0" y="0" width="280" height="18" fill="#1B2A4A"/>
-          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SDS MES</text>
+          <text x="10" y="13" font-size="7" fill="white" font-weight="500">SynDock</text>
 
           <!-- Sidebar -->
           <rect x="0" y="18" width="45" height="147" fill="#243656"/>
@@ -1875,6 +2324,110 @@ body {
       <div class="screen-caption">仓库管理 - 库存状态</div>
     </div>
   </div>
+
+    <!-- UX Features -->
+    <div class="ux-features">
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="2" width="14" height="14" rx="2" stroke="#4A6FA5" stroke-width="1.2"/><rect x="5" y="5" width="3.5" height="3.5" rx="0.5" fill="#C8A961" opacity="0.6"/><rect x="9.5" y="5" width="3.5" height="3.5" rx="0.5" fill="#4A6FA5" opacity="0.4"/><rect x="5" y="9.5" width="8" height="3.5" rx="0.5" fill="#4A6FA5" opacity="0.25"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>响应式布局</h4>
+          <p>自适应网格系统<br>适配任意屏幕尺寸</p>
+        </div>
+      </div>
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7" stroke="#4A6FA5" stroke-width="1.2"/><path d="M9 5v4l2.5 2.5" stroke="#4A6FA5" stroke-width="1.2" stroke-linecap="round"/><circle cx="9" cy="9" r="1" fill="#C8A961"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>实时自动刷新</h4>
+          <p>基于WebSocket的<br>数据实时同步</p>
+        </div>
+      </div>
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14V8l6-5 6 5v6a1 1 0 01-1 1H4a1 1 0 01-1-1z" stroke="#4A6FA5" stroke-width="1.2" stroke-linejoin="round"/><rect x="7" y="11" width="4" height="4" rx="0.5" stroke="#4A6FA5" stroke-width="1"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>无限滚动</h4>
+          <p>海量数据无缝<br>流畅浏览体验</p>
+        </div>
+      </div>
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="14" height="12" rx="2" stroke="#4A6FA5" stroke-width="1.2"/><path d="M2 7h14" stroke="#4A6FA5" stroke-width="1"/><circle cx="5" cy="5" r="0.8" fill="#C8A961"/><circle cx="7.5" cy="5" r="0.8" fill="#C8A961"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>拖拽操作</h4>
+          <p>直观的日程管理<br>与任务分配界面</p>
+        </div>
+      </div>
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 6v6l6 4 6-4V6L9 2z" stroke="#4A6FA5" stroke-width="1.2" stroke-linejoin="round"/><path d="M3 6l6 4 6-4M9 10v6" stroke="#4A6FA5" stroke-width="1" opacity="0.5"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>深色模式</h4>
+          <p>车间环境专用<br>护眼显示主题</p>
+        </div>
+      </div>
+      <div class="ux-feature-card">
+        <div class="ux-feature-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2" width="12" height="14" rx="2" stroke="#4A6FA5" stroke-width="1.2"/><path d="M7 6h4M7 9h4M7 12h2" stroke="#4A6FA5" stroke-width="1" stroke-linecap="round"/><path d="M3 5h1M3 8h1M3 11h1" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="ux-feature-text">
+          <h4>Excel导出</h4>
+          <p>所有报表支持<br>Excel/PDF下载</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page 4 Bottom: Multi-Device Support -->
+    <div class="page-bottom-strip">
+      <div class="strip-header">
+        <span class="strip-title">Multi-Device Support</span>
+        <div class="strip-divider"></div>
+      </div>
+      <div class="strip-items">
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2" width="13" height="9" rx="1.5" stroke="#C8A961" stroke-width="1.1"/><line x1="5" y1="13" x2="11" y2="13" stroke="#C8A961" stroke-width="1.1" stroke-linecap="round"/><line x1="8" y1="11" x2="8" y2="13" stroke="#C8A961" stroke-width="1.1"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>桌面端</h4>
+            <p>高分辨率仪表盘<br>与综合管理界面</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="1.5" width="10" height="13" rx="1.5" stroke="#C8A961" stroke-width="1.1"/><line x1="6" y1="12.5" x2="10" y2="12.5" stroke="#C8A961" stroke-width="0.8" stroke-linecap="round"/><rect x="4.5" y="3.5" width="7" height="7" rx="0.5" stroke="#C8A961" stroke-width="0.7"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>平板电脑</h4>
+            <p>现场巡检专用<br>触控优化界面</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="4.5" y="1" width="7" height="14" rx="1.5" stroke="#C8A961" stroke-width="1.1"/><line x1="6.5" y1="12.5" x2="9.5" y2="12.5" stroke="#C8A961" stroke-width="0.8" stroke-linecap="round"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>移动端</h4>
+            <p>实时通知接收<br>与审批处理应用</p>
+          </div>
+        </div>
+        <div class="strip-item">
+          <div class="strip-item-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1" stroke="#C8A961" stroke-width="1.1"/><rect x="4" y="5" width="8" height="4" rx="0.5" fill="rgba(200,169,97,0.2)" stroke="#C8A961" stroke-width="0.7"/><circle cx="8" cy="11.5" r="0.8" fill="#C8A961"/></svg>
+          </div>
+          <div class="strip-item-text">
+            <h4>POP终端</h4>
+            <p>车间操作员专用<br>触控交互界面</p>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <!-- ================================================================
@@ -2082,6 +2635,80 @@ body {
     </div>
   </div>
 
+    <!-- Brand Ecosystem Section -->
+    <div class="brand-ecosystem">
+      <div class="eco-header">
+        <div class="eco-tagline-main">Synchronize Your Factory.</div>
+        <div class="eco-tagline-sub">Predict. Connect. Optimize.</div>
+      </div>
+      <div class="eco-mission">
+        AI驱动的工业决策平台 &mdash; 从车间设备到MES、WMS、ERP、SCM，<br>
+        将数据、人员和AI预测同步连接的智能工厂集成枢纽
+      </div>
+      <div class="eco-products">
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="6" width="14" height="9" rx="1.5" stroke="#C8A961" stroke-width="1.2"/><path d="M5 6V4a4 4 0 018 0v2" stroke="#C8A961" stroke-width="1.2"/><circle cx="9" cy="11" r="1.5" fill="#C8A961"/></svg></div>
+          <span class="eco-product-name">SynDock MES</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="4" width="14" height="11" rx="1.5" stroke="#C8A961" stroke-width="1.2"/><line x1="2" y1="8" x2="16" y2="8" stroke="#C8A961" stroke-width="1"/><line x1="6" y1="8" x2="6" y2="15" stroke="#C8A961" stroke-width="1"/><line x1="11" y1="8" x2="11" y2="15" stroke="#C8A961" stroke-width="1"/></svg></div>
+          <span class="eco-product-name">SynDock WMS</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#C8A961" stroke-width="1.2"/><path d="M6 9.5L8.5 12l4-5" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="eco-product-name">SynDock AI</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="2" width="12" height="14" rx="2" stroke="#C8A961" stroke-width="1.2"/><line x1="6" y1="6" x2="12" y2="6" stroke="#C8A961" stroke-width="1"/><line x1="6" y1="9" x2="12" y2="9" stroke="#C8A961" stroke-width="1"/><line x1="6" y1="12" x2="10" y2="12" stroke="#C8A961" stroke-width="1"/></svg></div>
+          <span class="eco-product-name">SynDock Portal</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v4M9 7l4 2M9 7L5 9" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round"/><circle cx="9" cy="3" r="1.5" fill="#C8A961"/><circle cx="13" cy="9" r="1.5" fill="#C8A961"/><circle cx="5" cy="9" r="1.5" fill="#C8A961"/><circle cx="13" cy="14" r="1.5" fill="#C8A961"/><circle cx="5" cy="14" r="1.5" fill="#C8A961"/><path d="M13 9v5M5 9v5" stroke="#C8A961" stroke-width="1.2"/></svg></div>
+          <span class="eco-product-name">SynDock SCM</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 12l3-3 2.5 2L12 7l3 3" stroke="#C8A961" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="10" r="1" fill="#C8A961"/><rect x="2" y="3" width="14" height="12" rx="1.5" stroke="#C8A961" stroke-width="1.2"/></svg></div>
+          <span class="eco-product-name">SynDock Insight</span>
+        </div>
+        <div class="eco-product">
+          <div class="eco-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 6v6l6 4 6-4V6L9 2z" stroke="#C8A961" stroke-width="1.2" stroke-linejoin="round"/><path d="M9 8v4" stroke="#C8A961" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="6" r="1" fill="#C8A961"/></svg></div>
+          <span class="eco-product-name">SynDock Alarm</span>
+        </div>
+      </div>
+      <div class="eco-bottom-row">
+        <div class="eco-diffs">
+          <div class="eco-diff-item"><span class="eco-diff-dot"></span>AI驱动智能决策支持</div>
+          <div class="eco-diff-item"><span class="eco-diff-dot"></span>行业定制模块化架构</div>
+          <div class="eco-diff-item"><span class="eco-diff-dot"></span>ASP云端门户服务</div>
+          <div class="eco-diff-item"><span class="eco-diff-dot"></span>快速定制化部署系统</div>
+        </div>
+        <div class="eco-qr-area">
+          <div class="eco-qr-box">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="12" height="12" rx="1" stroke="#1B2A4A" stroke-width="1.5"/>
+              <rect x="5" y="5" width="6" height="6" fill="#1B2A4A"/>
+              <rect x="26" y="2" width="12" height="12" rx="1" stroke="#1B2A4A" stroke-width="1.5"/>
+              <rect x="29" y="5" width="6" height="6" fill="#1B2A4A"/>
+              <rect x="2" y="26" width="12" height="12" rx="1" stroke="#1B2A4A" stroke-width="1.5"/>
+              <rect x="5" y="29" width="6" height="6" fill="#1B2A4A"/>
+              <rect x="17" y="2" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="17" y="8" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="2" y="17" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="8" y="17" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="17" y="17" width="6" height="6" rx="1" fill="#C8A961"/>
+              <rect x="26" y="17" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="32" y="17" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="17" y="26" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="26" y="26" width="3" height="3" fill="#1B2A4A"/>
+              <rect x="32" y="32" width="6" height="6" fill="#1B2A4A"/>
+              <rect x="23" y="32" width="3" height="3" fill="#1B2A4A"/>
+            </svg>
+          </div>
+          <span class="eco-qr-label">syndock.ai</span>
+        </div>
+      </div>
+    </div>
+
   <!-- Premium Footer -->
   <div class="page-footer-section">
     <div class="footer-tech-bar">
@@ -2101,8 +2728,8 @@ body {
     </div>
     <div class="footer-bar">
       <div class="footer-bar-left">&copy; 2026 SmartDockingStation Co., Ltd. 版权所有</div>
-      <div class="footer-bar-center">SDS MES / WMS v2.0</div>
-      <div class="footer-bar-right">www.smartdocking.io</div>
+      <div class="footer-bar-center">SynDock MES / WMS v2.0</div>
+      <div class="footer-bar-right">syndock.ai</div>
     </div>
   </div>
 </div>
