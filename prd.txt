@@ -53,6 +53,52 @@
 	전화번호: 010-4882-2035
 	이메일: msmoon.asi@gmail.com
 
+개발 회사에 브랜드:
+주식회사 스마트도킹스테이션, SmartDockingStation Co., Ltd. 이 상호에 대한 한 단어로 사용할 수 있는 브랜드를 만들어 줄수 있어요? 이 회사는 산업용 알람 발송 시스템과 스마트 팩토리 분야에 CRM MIS ERP MES WMS FMS  SCM 등에 솔루션을 모듈별 단계별 AI로 예측 기술을 통해 담당자에게 예측과 제시 또는 제안을 등을 하는 기술이 포함된 솔루션을 개발 납품하고 이 시스템을 ASP로 포털로 운영하여 중소형 생산공장에 서비스를 개발 납품하는 회사에요.
+
+개인 고객인 쇼핑몰 또는 전용몰에서 또는 고객사가 소중대량에 B2C B2B 주문부터 시작하여 생산 배송에서 발생한 모든 단계별 정보와 예측을 세부적인 단계별로 데이터를 제시하고 고객과 고객사에 요청에 대한 주문을 예측하고 준비하고 생산하고 물류와 배송까지 일괄 처리 할수 있는 포털 시스템과 솔루션 개발을 하고 배포하는 것이 이 회사에 목표 입니다.
+
+🔷 SynDock 의미 정리
+Syn = Synchronize / Synergy / System Intelligence
+Dock = 연결, 통합, 집결, 플랫폼 허브
+
+👉 현장 설비 · MES · WMS · ERP · SCM
+👉 데이터 · 사람 · AI 예측
+👉 알람 · 제안 · 의사결정
+
+이 모든 것을 “동기화하여 연결하는 허브”
+
+🔷 브랜드 확장성
+SynDock AI
+SynDock Portal
+SynDock MES
+SynDock Alarm
+SynDock Insight
+SynDock Predict
+SynDock Cloud
+
+🔷 브랜드 슬로건 제안
+"Synchronize Your Factory."
+"Where Data Meets Decision."
+"Predict. Connect. Optimize."
+"Smart Docking for Smart Factories."
+"From Alarm to Insight."
+
+🔷 상표 전략 제안
+가능하면 다음도 확보하는 것이 좋습니다:
+SynDock.co.kr
+syndock.ai
+SynDockAI
+SynDock Systems
+
+🔷 제가 보는 브랜드 포지션
+SynDock은
+"산업용 알람 회사"가 아니라
+👉 AI 기반 산업 의사결정 플랫폼 회사
+👉 "산업 데이터 통합 허브"
+👉 "예측형 스마트팩토리 운영체계"
+
+
 납품처:
 	회사명: (주)스마트팩토리
 	대표자: 홍길동
